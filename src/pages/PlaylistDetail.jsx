@@ -1,0 +1,605 @@
+import React, { useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
+import { useLanguage } from "../utils/LanguageContext";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import { BiPlayCircle, BiTrash, BiEdit, BiArrowBack } from "react-icons/bi";
+import { MdPlaylistAdd } from "react-icons/md";
+import { FaPlay, FaClock, FaVideo } from "react-icons/fa";
+import { formats } from "./Video";
+import ShareModalPlaylist from "../components/ModalSharePlaylist";
+
+// Animaciones
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const shimmer = keyframes`
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+`;
+
+// Contenedor principal
+const PageContainer = styled.div`
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  color: ${({ theme }) => theme.text};
+  background-color: ${({ theme }) => theme.bg};
+  min-height: 100vh;
+  padding-top: 80px;
+  
+  @media (max-width: 768px) {
+    padding: 10px;
+    padding-top: 70px;
+  }
+`;
+
+// Header con gradiente
+const HeaderSection = styled.div`
+  background: linear-gradient(135deg, 
+    ${({ theme }) => theme.bgLighter} 0%, 
+    ${({ theme }) => theme.soft} 50%,
+    ${({ theme }) => theme.bgLighter} 100%
+  );
+  border-radius: 24px;
+  padding: 40px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255, 62, 108, 0.1), 
+      transparent
+    );
+    animation: ${shimmer} 3s infinite;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ff3e6c 0%, #0b67dc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+
+  svg {
+    font-size: 40px;
+    color: #ff3e6c;
+    -webkit-text-fill-color: initial;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 24px;
+    svg {
+      font-size: 28px;
+    }
+  }
+`;
+
+const Description = styled.p`
+  font-size: 16px;
+  color: ${({ theme }) => theme.textSoft};
+  position: relative;
+  z-index: 1;
+  margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+`;
+
+const MetaInfo = styled.div`
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+  
+  @media (max-width: 768px) {
+    gap: 16px;
+  }
+`;
+
+const MetaItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: ${({ theme }) => theme.textSoft};
+  font-size: 14px;
+  
+  svg {
+    color: #0b67dc;
+  }
+`;
+
+const ActionButtons = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  position: relative;
+  z-index: 1;
+  
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
+`;
+
+const Button = styled.button`
+  background: ${({ primary, theme }) => primary 
+    ? 'linear-gradient(135deg, #ff3e6c 0%, #0b67dc 100%)'
+    : theme.soft};
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 14px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 62, 108, 0.3);
+  }
+  
+  @media (max-width: 768px) {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+`;
+
+// Grid de videos
+const VideoGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+// Tarjeta de video
+const VideoCard = styled.div`
+  background: linear-gradient(145deg, 
+    ${({ theme }) => theme.bgLighter} 0%, 
+    ${({ theme }) => theme.soft} 100%
+  );
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  position: relative;
+  animation: ${fadeIn} 0.6s ease-out;
+  animation-delay: ${({ index }) => index * 0.05}s;
+  animation-fill-mode: both;
+
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(255, 62, 108, 0.2);
+  }
+`;
+
+const ThumbnailContainer = styled.div`
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  overflow: hidden;
+`;
+
+const Thumbnail = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  
+  ${VideoCard}:hover & {
+    transform: scale(1.1);
+  }
+`;
+
+const PlayOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  
+  ${VideoCard}:hover & {
+    opacity: 1;
+  }
+  
+  svg {
+    font-size: 48px;
+    color: white;
+    transition: transform 0.3s ease;
+  }
+  
+  ${VideoCard}:hover svg {
+    transform: scale(1.2);
+  }
+`;
+
+const DurationBadge = styled.div`
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+`;
+
+const VideoInfo = styled.div`
+  padding: 16px;
+`;
+
+const VideoTitle = styled.h3`
+  color: ${({ theme }) => theme.text};
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+`;
+
+const VideoMeta = styled.div`
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  color: ${({ theme }) => theme.textSoft};
+  margin-bottom: 12px;
+`;
+
+const VideoActions = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const ActionButton = styled.button`
+  background: ${({ theme }) => theme.soft};
+  color: ${({ theme }) => theme.text};
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  font-weight: 500;
+
+  &:hover {
+    background: ${({ danger }) => danger ? '#ff3e6c' : '#0b67dc'};
+    color: white;
+  }
+`;
+
+const EmptyState = styled.div`
+  text-align: center;
+  padding: 60px 20px;
+  color: ${({ theme }) => theme.textSoft};
+  
+  svg {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+  }
+  
+  h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: ${({ theme }) => theme.text};
+  }
+  
+  p {
+    font-size: 14px;
+  }
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  color: ${({ theme }) => theme.text};
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid ${({ theme }) => theme.soft};
+    border-top-color: #ff3e6c;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  p {
+    margin-top: 20px;
+    font-size: 16px;
+    color: ${({ theme }) => theme.textSoft};
+  }
+`;
+
+export const PlaylistDetailPage = () => {
+  const { language, t } = useLanguage();
+  const navigate = useNavigate();
+  const { userId, playlistId } = useParams();
+  
+  const [playlist, setPlaylist] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPlaylist();
+  }, [playlistId]);
+
+  const fetchPlaylist = async () => {
+    try {
+      const response = await axios.get(`/users/playlists/${userId}/${playlistId}`);
+      setPlaylist(response.data);
+    } catch (error) {
+      console.error("¡Error cargando playlist!", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePlayVideo = (videoId) => {
+    navigate(`/video/${videoId}`);
+  };
+
+  const handleRemoveVideo = async (videoId) => {
+    try {
+      await axios.delete(`/users/playlists/${userId}/${playlistId}/${videoId}`);
+      fetchPlaylist();
+    } catch (error) {
+      console.error("¡Error eliminando video de la playlist!", error);
+    }
+  };
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+    return d.toLocaleDateString(language, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const formatDuration = (duration) => {
+    if (!duration) return '';
+    // Si es un número (segundos), usar la función formats
+    if (typeof duration === 'number' || !isNaN(duration)) {
+      return formats(Number(duration));
+    }
+    // Si es string en formato HH:MM:SS o MM:SS
+    const parts = duration.split(':');
+    if (parts.length === 3) {
+      return `${parts[1]}:${parts[2]}`;
+    }
+    return duration;
+  };
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <LoadingContainer>
+          <div className="spinner" />
+          <p>{t("loadingPlaylist")}</p>
+        </LoadingContainer>
+      </PageContainer>
+    );
+  }
+
+  if (!playlist) {
+    return (
+      <PageContainer>
+        <EmptyState>
+          <MdPlaylistAdd />
+          <h3>{t("playlistNotFound")}</h3>
+          <p>{t("playlistNotFoundDescription")}</p>
+          <Button onClick={() => navigate(-1)} style={{ marginTop: '20px' }}>
+            <BiArrowBack />
+            {t("back")}
+          </Button>
+        </EmptyState>
+      </PageContainer>
+    );
+  }
+
+  return (
+    <PageContainer>
+      <HeaderSection>
+        <Title>
+          <MdPlaylistAdd />
+          {playlist.name}
+        </Title>
+
+        {playlist.description && (
+          <Description>{playlist.description}</Description>
+        )}
+
+        <MetaInfo>
+          <MetaItem>
+            <FaVideo />
+            {playlist.videos?.length || 0} {t("videos")}
+          </MetaItem>
+          <MetaItem>
+            <FaClock />
+            {t("created")}: {formatDate(playlist.createdAt)}
+          </MetaItem>
+        </MetaInfo>
+
+        <ActionButtons>
+          <Button onClick={() => navigate(-1)}>
+            <BiArrowBack />
+            {t("back")}
+          </Button>
+          <Button 
+            primary 
+            onClick={() => {
+              if (playlist.videos?.length > 0) {
+                navigate(`/playlist-player/${userId}/${playlistId}`);
+              }
+            }}
+            disabled={playlist.videos?.length === 0}
+          >
+            <FaPlay />
+            {t("playAll")}
+          </Button>
+          <ShareModalPlaylist 
+            playlistId={playlistId}
+            playlistName={playlist.name}
+            videoCount={playlist.videos?.length || 0}
+          />
+        </ActionButtons>
+      </HeaderSection>
+
+      {playlist.videos?.length === 0 ? (
+        <EmptyState>
+          <FaVideo />
+          <h3>{t("playlistEmpty")}</h3>
+          <p>{t("playlistEmptyDescription")}</p>
+          <Button
+            primary
+            onClick={() => navigate(`/history/${userId}`)}
+            style={{ marginTop: "20px" }}
+          >
+            <MdPlaylistAdd />
+            {t("goToHistory")}
+          </Button>
+        </EmptyState>
+      ) : (
+        <VideoGrid>
+          {playlist.videos?.map((videoItem, index) => (
+            <VideoCard
+              key={videoItem._id || index}
+              index={index}
+              onClick={() =>
+                handlePlayVideo(videoItem.videoId?._id || videoItem.videoId)
+              }
+            >
+              <ThumbnailContainer>
+                <Thumbnail
+                  src={videoItem.videoId?.imgUrl || "/placeholder.jpg"}
+                  alt={videoItem.videoTitle}
+                />
+                <PlayOverlay>
+                  <FaPlay />
+                </PlayOverlay>
+                {videoItem.videoDuration && (
+                  <DurationBadge>
+                    {formatDuration(videoItem.videoDuration)}
+                  </DurationBadge>
+                )}
+              </ThumbnailContainer>
+
+              <VideoInfo>
+                <VideoTitle>{videoItem.videoTitle}</VideoTitle>
+                <VideoMeta>
+                  <span>
+                    {t("added")}:{" "}
+                    {formatDate(videoItem.addedAt || playlist.updatedAt)}
+                  </span>
+                </VideoMeta>
+                <VideoActions>
+                  <ActionButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePlayVideo(
+                        videoItem.videoId?._id || videoItem.videoId,
+                      );
+                    }}
+                  >
+                    <BiPlayCircle />
+                    {t("play")}
+                  </ActionButton>
+                  <ActionButton
+                    danger
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveVideo(
+                        videoItem.videoId?._id || videoItem.videoId,
+                      );
+                    }}
+                  >
+                    <BiTrash />
+                    {t("delete")}
+                  </ActionButton>
+                </VideoActions>
+              </VideoInfo>
+            </VideoCard>
+          ))}
+        </VideoGrid>
+      )}
+    </PageContainer>
+  );
+};

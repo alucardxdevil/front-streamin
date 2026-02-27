@@ -1,0 +1,858 @@
+import React, { useEffect, useState, useRef } from "react";
+import styled, { css, keyframes } from "styled-components";
+import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
+import { BiLike, BiDislike } from "react-icons/bi";
+import Comments from "../components/Comments";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { dislike, fetchSuccess, like } from "../redux/videoSlice";
+import { follows } from "../redux/userSlice";
+import { formatTimeago } from "../utils/timeago";
+import { useLanguage } from "../utils/LanguageContext";
+import axios from "axios";
+import { Recommendation } from "../components/Recommendation";
+import { RecommendationRandom } from "../components/RecommendationRandom";
+import { DescriptionMore } from "../components/DescriptionMore";
+import VideoReproducer2 from "../components/Reproducer/VideoReproducer2";
+import ShareModal from "../components/ModalShare";
+import ClassificationInfo from "../components/ClasificationInfo";
+import defaultProfile from "../img/profileUser.png";
+import LoginRequired from "../components/ModalLogin";
+import { RiPlayList2Fill } from "react-icons/ri";
+
+
+/* ================= ANIMATIONS ================= */
+
+const pulse = keyframes`
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+`;
+
+/* ================= LAYOUT ================= */
+
+const ContainerO = styled.div`
+  display: grid;
+  grid-template-columns: 260px 1fr 260px;
+  gap: 16px;
+  max-width: 1800px;
+  margin: 17px auto;
+  padding: 40px 28px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: 220px 1fr;
+    gap: 12px;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    padding: 12px;
+    margin-top: 60px;
+  }
+`;
+
+
+const Side = styled.div`
+  @media (max-width: 1200px) {
+    &:last-child {
+      display: none;
+    }
+    
+    &:first-child {
+      margin-bottom: 20px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    order: 3;
+  }
+
+  /* Add more space between the two recommendation sides */
+  &:nth-child(3) {
+    margin-top: 24px;
+  }
+`;
+
+const Content = styled.div`
+  width: 100%;
+`;
+
+/* ================= VIDEO ================= */
+
+const VideoWrapper = styled.div`
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: -5px;
+`;
+
+/* ================= GRID ================= */
+
+const InfoGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 330px;
+  gap: 3px;
+  margin: 5px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+/* ================= CARDS ================= */
+
+const Card = styled.div`
+  background: ${({ theme }) => theme.bgLighter};
+  border-radius: 16px;
+  padding: 12px;
+  display: grid;
+  flex-direction: column;
+`;
+
+/* ================= VIDEO INFO ================= */
+
+const VideoTitle = styled.h1`
+  color: ${({ theme }) => theme.text || "white"};
+  font-size: 17px;
+  margin-bottom: 6px;
+`;
+
+const Meta = styled.div`
+  font-size: 13px;
+  color: ${({ theme }) => theme.textSoft || "#aaa"};
+  /* margin-bottom: 12px; */
+`;
+
+const Actions = styled.div`
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  color: ${({ theme }) => theme.text || "white"};
+`;
+
+const Action = styled.div`
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  cursor: pointer;
+`;
+
+/* ================= CREATOR ================= */
+
+const CreatorRow = styled.div`
+  display: flex;
+  gap: 14px;
+  align-items: center;
+`;
+
+const Avatar = styled.img`
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+`;
+
+const CreatorInfo = styled.div`
+  flex: 1;
+  color: ${({ theme }) => theme.text || "white"};
+`;
+
+const FollowBtn = styled.button`
+  background: ${({ following }) => (following ? "#1f1f1f" : "#0b67dc")};
+  color: white;
+  border-radius: 10px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+
+  ${({ following }) =>
+    !following &&
+    css`
+      animation: ${pulse} 1.2s infinite;
+    `}
+`;
+
+/* ================= DESCRIPTION ================= */
+
+const DescriptionCard = styled(Card)`
+  margin-top: 6px;
+  color: ${({ theme }) => theme.text};
+  font-size: 14px;
+`;
+
+const ExactDate = styled.span`
+  font-size: 11px;
+  color: ${({ theme }) => theme.textSoft || "#aaa"};
+  opacity: 0.6;
+`;
+
+/* ================= FORMATS (NO TOCAR) ================= */
+
+export const formats = (seconds) => {
+  if (isNaN(seconds)) return "00:00";
+  const date = new Date(seconds * 1000);
+  const hh = date.getUTCHours();
+  const mm = date.getUTCMinutes();
+  const ss = date.getUTCSeconds().toString().padStart(2, "0");
+  if (hh) return `${hh}:${mm.toString().padStart(2, "0")}:${ss}`;
+  return `${mm}:${ss}`;
+};
+
+const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  width: 100%;
+`;
+
+const Spinner = styled.div`
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-left-color: #e94560;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
+/* ================= PLAYLIST MODAL ================= */
+
+const PlaylistModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+`;
+
+const PlaylistModalContent = styled.div`
+  background: ${({ theme }) => theme.bgLighter};
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 520px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid ${({ theme }) => theme.soft};
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+    border-radius: 16px;
+  }
+`;
+
+const PlaylistModalTitle = styled.h2`
+  color: ${({ theme }) => theme.text};
+  margin-bottom: 24px;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  svg {
+    color: #ff3e6c;
+  }
+`;
+
+const PlaylistInputGroup = styled.div`
+  margin-bottom: 18px;
+`;
+
+const PlaylistLabel = styled.label`
+  display: block;
+  margin-bottom: 8px;
+  color: ${({ theme }) => theme.text};
+  font-weight: 600;
+  font-size: 14px;
+`;
+
+const PlaylistInput = styled.input`
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid ${({ theme }) => theme.soft};
+  border-radius: 12px;
+  background: ${({ theme }) => theme.bg};
+  color: ${({ theme }) => theme.text};
+  font-size: 15px;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: #ff3e6c;
+    box-shadow: 0 0 0 3px rgba(255, 62, 108, 0.1);
+  }
+  
+  &::placeholder {
+    color: ${({ theme }) => theme.textSoft};
+  }
+`;
+
+const PlaylistActions = styled.div`
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const PlaylistButton = styled.button`
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  
+  ${({ cancel }) => cancel && `
+    background: ${({ theme }) => theme.soft};
+    color: ${({ theme }) => theme.text};
+    
+    &:hover {
+      background: ${({ theme }) => theme.bg};
+      transform: translateY(-1px);
+    }
+  `}
+
+  ${({ confirm }) => confirm && `
+    background: linear-gradient(135deg, #ff3e6c 0%, #0b67dc 100%);
+    color: white;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 62, 108, 0.3);
+    }
+  `}
+`;
+
+const PlaylistList = styled.div`
+  max-height: 180px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 16px;
+  padding-right: 4px;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.soft};
+    border-radius: 3px;
+  }
+`;
+
+const PlaylistItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: ${({ theme }) => theme.bg};
+  border-radius: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  border: 2px solid transparent;
+  
+  &:hover {
+    background: ${({ theme }) => theme.soft};
+    border-color: #ff3e6c;
+  }
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const PlaylistItemInfo = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+
+const PlaylistItemTitle = styled.h4`
+  color: ${({ theme }) => theme.text};
+  font-size: 15px;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const PlaylistItemMeta = styled.div`
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: ${({ theme }) => theme.textSoft};
+`;
+
+const PlaylistIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #ff3e6c 0%, #0b67dc 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  flex-shrink: 0;
+`;
+
+const CreateNewSection = styled.div`
+  background: ${({ theme }) => theme.bg};
+  border-radius: 12px;
+  padding: 20px;
+  border: 2px dashed ${({ theme }) => theme.soft};
+  margin-top: 16px;
+`;
+
+const SectionLabel = styled.p`
+  color: ${({ theme }) => theme.textSoft};
+  font-size: 13px;
+  margin: 0 0 16px 0;
+  text-align: center;
+`;
+
+const Divider = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: ${({ theme }) => theme.textSoft};
+  font-size: 13px;
+  
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: ${({ theme }) => theme.soft};
+  }
+`;
+
+const SuccessMessage = styled.div`
+  background: rgba(0, 200, 0, 0.15);
+  color: #00ff00;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+`;
+
+/* ================= COMPONENT ================= */
+
+const Video = () => {
+  const { currentUser } = useSelector((state) => state.user);
+  const { currentVideo } = useSelector((state) => state.video);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const path = useLocation().pathname.split("/")[2];
+  const { t, language } = useLanguage();
+
+  const [channel, setChannel] = useState({});
+  const [currentPlayingVideoId, setCurrentPlayingVideoId] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [nextVideoId, setNextVideoId] = useState(null);
+  
+  // Playlist modal state
+  const [showPlaylistModal, setShowPlaylistModal] = useState(false);
+  const [playlists, setPlaylists] = useState([]);
+  const [playlistMessage, setPlaylistMessage] = useState("");
+  const [modalData, setModalData] = useState({
+    name: '',
+    description: '',
+    videoId: null
+  });
+
+  const openLoginModal = () => setShowLoginModal(true);
+  const closeLoginModal = () => setShowLoginModal(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const videoRes = await axios.get(`/videos/find/${path}`);
+        const channelRes = await axios.get(`/users/find/${videoRes.data.userId}`);
+        setChannel(channelRes.data);
+        dispatch(fetchSuccess(videoRes.data));
+        setCurrentPlayingVideoId(videoRes.data._id);
+        // Update document title with video title
+        document.title = `${videoRes.data.title} | stream-in`;
+      } catch (err) {
+        console.error("Error cargando video:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [path, dispatch]);
+
+  // Update document title when currentVideo changes
+  useEffect(() => {
+    if (currentVideo?.title) {
+      document.title = `${currentVideo.title} | stream-in`;
+    }
+    return () => {
+      // Reset title when leaving the page
+      document.title = "stream-in";
+    };
+  }, [currentVideo]);
+
+  const handleLike = async () => {
+    if (!currentUser) return openLoginModal();
+    const res = currentVideo.likes.includes(currentUser._id)
+      ? await axios.put(`/users/notlike/${currentVideo._id}`)
+      : await axios.put(`/users/like/${currentVideo._id}`);
+    if (res.status === 200) dispatch(like(currentUser._id));
+  };
+
+  const handleDislike = async () => {
+    if (!currentUser) return openLoginModal();
+    const res = currentVideo.dislikes.includes(currentUser._id)
+      ? await axios.put(`/users/notdislike/${currentVideo._id}`)
+      : await axios.put(`/users/dislike/${currentVideo._id}`);
+    if (res.status === 200) dispatch(dislike(currentUser._id));
+  };
+
+  const handleSub = async () => {
+    if (!currentUser) return openLoginModal();
+    currentUser.followsProfile.includes(channel._id)
+      ? await axios.put(`/users/unfol/${channel._id}`)
+      : await axios.put(`/users/fol/${channel._id}`);
+    dispatch(follows(channel._id));
+  };
+
+  // Playlist functions
+  const openPlaylistModal = () => {
+    if (!currentUser) return openLoginModal();
+    setModalData({ ...modalData, videoId: currentVideo._id });
+    fetchPlaylists();
+    setShowPlaylistModal(true);
+  };
+
+  const closePlaylistModal = () => {
+    setShowPlaylistModal(false);
+    setModalData({ name: '', description: '', videoId: null });
+    setPlaylistMessage("");
+  };
+
+  const fetchPlaylists = async () => {
+    try {
+      const response = await axios.get(`/users/playlists/${currentUser._id}`);
+      // Filtrar playlist de favoritos (solo se actualiza al dar like a un video)
+      const filteredPlaylists = response.data.playlists.filter(
+        playlist => playlist.name !== "Favorites" && playlist.name !== "Mis videos favoritos"
+      );
+      setPlaylists(filteredPlaylists);
+    } catch (error) {
+      console.error("Error cargando playlists:", error);
+    }
+  };
+
+  const handleCreatePlaylist = async () => {
+    try {
+      await axios.post(`/users/playlists`, {
+        userId: currentUser._id,
+        name: modalData.name,
+        description: modalData.description,
+        videoId: modalData.videoId
+      });
+      fetchPlaylists();
+      setModalData({ name: '', description: '', videoId: null });
+    } catch (error) {
+      console.error("Error creando playlist:", error);
+    }
+  };
+
+  const handleAddToPlaylist = async (playlistId, videoId) => {
+    try {
+      await axios.put(`/users/playlists/${currentUser._id}/${playlistId}/${videoId}`);
+      setPlaylistMessage(t("videoAddedToPlaylist"));
+      setTimeout(() => {
+        closePlaylistModal();
+      }, 1500);
+    } catch (error) {
+      // Si el video ya está en la playlist
+      if (error.response?.data?.message?.includes('ya existe') || error.response?.status === 400) {
+        setPlaylistMessage(t("videoAlreadyInPlaylist"));
+      } else {
+        setPlaylistMessage(t("errorAddingVideoToPlaylist"));
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (currentVideo?._id) {
+      axios.put(`/videos/view/${currentVideo._id}`);
+      // Agregar video al historial
+      if (currentUser) {
+        axios.post(`/users/history`, {
+          userId: currentUser._id,
+          videoId: currentVideo._id,
+          videoTitle: currentVideo.title,
+          videoDuration: currentVideo.duration
+        }).catch(error => {
+          console.error("Error al agregar al historial:", error);
+        });
+      }
+    }
+  }, [currentVideo?._id]);
+
+  // Obtener un video recomendado aleatorio
+  useEffect(() => {
+    const fetchNextVideo = async () => {
+      if (!currentVideo?.tags) return;
+      try {
+        const res = await axios.get(`/videos/tags?tags=${currentVideo.tags}`);
+        const filteredVideos = res.data.filter(v => v._id !== currentVideo._id);
+        if (filteredVideos.length > 0) {
+          // Seleccionar un video aleatorio
+          const randomIndex = Math.floor(Math.random() * filteredVideos.length);
+          setNextVideoId(filteredVideos[randomIndex]._id);
+        }
+      } catch (err) {
+        console.error("Error obteniendo siguiente video:", err);
+      }
+    };
+    fetchNextVideo();
+  }, [currentVideo]);
+
+  // Función callback para el autoplay
+  const handleVideoEnd = () => {
+    if (nextVideoId) {
+      navigate(`/video/${nextVideoId}`);
+    }
+  };
+
+  const formatExactDate = (dateStr) => {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "";
+    const day = d.getDate().toString().padStart(2, "0");
+    const month = (d.getMonth() + 1).toString().padStart(2, "0");
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  const exactDate = formatExactDate(currentVideo?.createdAt);
+  
+
+  return (
+    <ContainerO>
+      <Side>
+        <RecommendationRandom currentPlayingVideoId={currentPlayingVideoId} />
+      </Side>
+
+      {loading ? (
+        <LoadingWrapper>
+          <Spinner />
+        </LoadingWrapper>
+      ) : (
+        currentVideo && (
+          <Content>
+            <VideoWrapper>
+              <VideoReproducer2 onVideoEnd={handleVideoEnd} countdown={10} />
+            </VideoWrapper>
+
+            <DescriptionCard>
+              <VideoTitle>{currentVideo.title}</VideoTitle>
+              <Meta>
+                {formatTimeago(currentVideo.createdAt, language)}
+                {exactDate && <ExactDate>({exactDate})</ExactDate>} •{" "}
+                {currentVideo.views.toLocaleString()} {t("views")}
+              </Meta>
+            </DescriptionCard>
+            <InfoGrid>
+              {/* VIDEO INFO */}
+              <Card>
+                <Actions>
+                  <Action onClick={handleLike}>
+                    <BiLike
+                      size={26}
+                      color={
+                        currentVideo.likes.includes(currentUser?._id)
+                          ? "#0b67dc"
+                          : "white"
+                      }
+                    />
+                    {currentVideo.likes.length}
+                  </Action>
+
+                  <Action onClick={handleDislike}>
+                    <BiDislike
+                      size={26}
+                      color={
+                        currentVideo.dislikes.includes(currentUser?._id)
+                          ? "#e94560"
+                          : "white"
+                      }
+                    />
+                    {currentVideo.dislikes.length}
+                  </Action>
+
+                  <ClassificationInfo />
+                  <ShareModal videoId={currentVideo._id} />
+
+                  <Action onClick={openPlaylistModal}>
+                    <RiPlayList2Fill /> {t("save")}
+                  </Action>
+                </Actions>
+              </Card>
+
+              {/* CREATOR */}
+              <Card>
+                <CreatorRow>
+                  <Link to={`/profileUser/${channel.slug || channel._id}`}>
+                    <Avatar
+                      src={channel.img || defaultProfile}
+                      alt={`Foto de perfil de ${channel.name}`}
+                    />
+                  </Link>
+
+                  <CreatorInfo>
+                    <strong>{channel.name}</strong>
+                    <div style={{ fontSize: 12, color: "#aaa" }}>
+                      {channel.follows} {t("followers")}
+                    </div>
+                  </CreatorInfo>
+
+                  <FollowBtn
+                    following={currentUser?.followsProfile.includes(
+                      channel._id,
+                    )}
+                    onClick={handleSub}
+                  >
+                    {currentUser?.followsProfile.includes(channel._id)
+                      ? t("following")
+                      : t("follow")}
+                  </FollowBtn>
+                </CreatorRow>
+              </Card>
+            </InfoGrid>
+
+            <DescriptionCard>
+              <DescriptionMore
+                initialContent={currentVideo.description}
+                fullContent={currentVideo.description}
+              />
+            </DescriptionCard>
+
+            <Comments videoId={currentVideo._id} />
+          </Content>
+        )
+      )}
+
+      <Side>
+        <Recommendation
+          tags={currentVideo?.tags}
+          currentPlayingVideoId={currentPlayingVideoId}
+        />
+      </Side>
+
+      <LoginRequired open={showLoginModal} onClose={closeLoginModal} />
+
+      {/* Playlist Modal */}
+      {showPlaylistModal && (
+        <PlaylistModalOverlay onClick={closePlaylistModal}>
+          <PlaylistModalContent onClick={(e) => e.stopPropagation()}>
+            <PlaylistModalTitle>
+              <RiPlayList2Fill />
+              Guardar en playlist
+            </PlaylistModalTitle>
+
+            {playlistMessage && (
+              <SuccessMessage>{playlistMessage}</SuccessMessage>
+            )}
+
+            {playlists.length > 0 && (
+              <>
+                <PlaylistList>
+                  {playlists.map((playlist) => (
+                    <PlaylistItem
+                      key={playlist._id}
+                      onClick={() => handleAddToPlaylist(playlist._id, modalData.videoId)}
+                    >
+                      <PlaylistIcon>
+                        <RiPlayList2Fill />
+                      </PlaylistIcon>
+                      <PlaylistItemInfo>
+                        <PlaylistItemTitle>{playlist.name}</PlaylistItemTitle>
+                        <PlaylistItemMeta>
+                          <span>{playlist.videos?.length || 0} videos</span>
+                        </PlaylistItemMeta>
+                      </PlaylistItemInfo>
+                    </PlaylistItem>
+                  ))}
+                </PlaylistList>
+                <Divider>o crear nueva</Divider>
+              </>
+            )}
+
+            <CreateNewSection>
+              <SectionLabel>Crear una nueva playlist</SectionLabel>
+              <PlaylistInputGroup>
+                <PlaylistLabel>Nombre</PlaylistLabel>
+                <PlaylistInput
+                  type="text"
+                  placeholder={t("myPlaylist")}
+                  value={modalData.name}
+                  onChange={(e) => setModalData({ ...modalData, name: e.target.value })}
+                />
+              </PlaylistInputGroup>
+              <PlaylistInputGroup>
+                <PlaylistLabel>Descripción (opcional)</PlaylistLabel>
+                <PlaylistInput
+                  type="text"
+                  placeholder={t("playlistDescription")}
+                  value={modalData.description}
+                  onChange={(e) => setModalData({ ...modalData, description: e.target.value })}
+                />
+              </PlaylistInputGroup>
+              <PlaylistActions>
+                <PlaylistButton cancel onClick={closePlaylistModal}>
+                  Cancelar
+                </PlaylistButton>
+                <PlaylistButton
+                  confirm
+                  onClick={handleCreatePlaylist}
+                  disabled={!modalData.name.trim()}
+                >
+                  Crear y guardar
+                </PlaylistButton>
+              </PlaylistActions>
+            </CreateNewSection>
+          </PlaylistModalContent>
+        </PlaylistModalOverlay>
+      )}
+    </ContainerO>
+  );
+};
+
+export default Video;

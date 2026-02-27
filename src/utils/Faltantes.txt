@@ -1,0 +1,12 @@
+* Mostar todos los trends.
+* Los botones de compartir(agregar mas iconos), y agregar la clasificación de los videos. Arreglar el cuadro de dialogo.
+* Hacerla responsive!!!!! Falta el reproductor.
+* Hacer que los comentarios tengan la opcion de mostrar más y mostrar menos.
+* Agregar en las recomendaciones el scrolling un máximo de 10 videos, al llegar a ese, cargar más recomendaciones.
+* Arreglar el botón de follow, si estan activos no mostrar el boton de follow si es su mismo canal.
+* Arreglar el total de views
+* Arregla el login en las pestañas de profile, etc. Si esta o no loggeado.
+* Que sea el mismo upload en todas las cargas o edicion de archivos. Se muestre de difernete color, dependiendo lo ques es y el boton.
+* Agregar el contenido restante en todas las pestañas.
+* Arreglar el boton de reproducir nuevamente.
+* No mostrar el id de usuario o video y protegerlo con el nombre.
