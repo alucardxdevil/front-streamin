@@ -52,4 +52,5 @@ export const getHLSSegmentUrl = (key, videoId) => {
   return `${base}?key=${encodeURIComponent(key)}${vidParam}`
 }
 
-export default { getStreamUrl, getSessionUrl, getHLSSegmentUrl }
+const streamUrlUtils = { getStreamUrl, getSessionUrl, getHLSSegmentUrl }
+export default streamUrlUtils
