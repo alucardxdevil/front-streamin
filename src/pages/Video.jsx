@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import styled, { css, keyframes } from "styled-components";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 import { BiLike, BiDislike } from "react-icons/bi";
@@ -36,11 +36,15 @@ const ContainerO = styled.div`
   grid-template-columns: 260px 1fr 260px;
   gap: 16px;
   max-width: 1800px;
-  margin: 17px auto;
-  padding: 40px 28px;
+  /* margin-top = altura exacta del navbar (60px), sin espacio extra */
+  margin: 60px auto 0;
+  /* Sin padding-top para que el ad quede pegado al navbar */
+  padding: 0 28px 40px;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  /* Alinear las columnas laterales desde el tope del contenedor */
+  align-items: start;
 
   @media (max-width: 1200px) {
     grid-template-columns: 220px 1fr;
@@ -51,11 +55,22 @@ const ContainerO = styled.div`
     grid-template-columns: 1fr;
     padding: 12px;
     margin-top: 60px;
+    /* Usar clip en lugar de hidden para no crear un scroll container
+       que rompería el position: sticky del reproductor */
+    overflow-x: clip;
   }
 `;
 
 
 const Side = styled.div`
+  /* Sticky: la columna lateral se queda fija al hacer scroll,
+     top = altura exacta del navbar (60px) para que el ad quede pegado */
+  position: sticky;
+  top: 2px;
+  /* Altura máxima = viewport - navbar */
+  max-height: calc(100vh - 60px);
+  overflow: hidden;
+
   @media (max-width: 1200px) {
     &:last-child {
       display: none;
@@ -68,16 +83,16 @@ const Side = styled.div`
 
   @media (max-width: 768px) {
     order: 3;
-  }
-
-  /* Add more space between the two recommendation sides */
-  &:nth-child(3) {
-    margin-top: 24px;
+    position: static;
+    max-height: none;
+    overflow: visible;
   }
 `;
 
 const Content = styled.div`
   width: 100%;
+  /* Espacio superior para el contenido central (video + info) */
+  padding-top: 12px;
 `;
 
 /* ================= VIDEO ================= */
@@ -88,6 +103,15 @@ const VideoWrapper = styled.div`
   border-radius: 14px;
   overflow: hidden;
   margin-bottom: -5px;
+
+  /* ── Mobile: el reproductor es fixed, este div actúa como spacer
+     para que el contenido no quede debajo del reproductor fijo.
+     La altura es 56.25vw (relación 16:9 del ancho completo). ── */
+  @media (max-width: 768px) {
+    height: 56.25vw;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
 `;
 
 /* ================= GRID ================= */
@@ -608,22 +632,31 @@ const Video = () => {
     }
   };
 
-  useEffect(() => {
-    if (currentVideo?._id) {
-      axios.put(`/videos/view/${currentVideo._id}`);
-      // Agregar video al historial
-      if (currentUser) {
-        axios.post(`/users/history`, {
-          userId: currentUser._id,
-          videoId: currentVideo._id,
-          videoTitle: currentVideo.title,
-          videoDuration: currentVideo.duration
-        }).catch(error => {
-          console.error("Error al agregar al historial:", error);
-        });
-      }
+  /**
+   * Callback que se pasa al reproductor (VideoReproducer2).
+   * Se invoca UNA SOLA VEZ por sesión cuando el usuario ha visto ≥50% del video.
+   * Aquí se registra la vista y se agrega el video al historial.
+   */
+  const handleViewCounted = useCallback(() => {
+    if (!currentVideo?._id) return;
+
+    // Registrar la vista en el servidor
+    axios.put(`/videos/view/${currentVideo._id}`).catch((err) => {
+      console.error("Error registrando vista:", err);
+    });
+
+    // Agregar al historial solo si el usuario está autenticado
+    if (currentUser) {
+      axios.post(`/users/history`, {
+        userId: currentUser._id,
+        videoId: currentVideo._id,
+        videoTitle: currentVideo.title,
+        videoDuration: currentVideo.duration,
+      }).catch((error) => {
+        console.error("Error al agregar al historial:", error);
+      });
     }
-  }, [currentVideo?._id]);
+  }, [currentVideo?._id, currentVideo?.title, currentVideo?.duration, currentUser]);
 
   // Obtener un video recomendado aleatorio
   useEffect(() => {
@@ -678,7 +711,11 @@ const Video = () => {
         currentVideo && (
           <Content>
             <VideoWrapper>
-              <VideoReproducer2 onVideoEnd={handleVideoEnd} countdown={10} />
+              <VideoReproducer2
+                onVideoEnd={handleVideoEnd}
+                countdown={10}
+                onViewCounted={handleViewCounted}
+              />
             </VideoWrapper>
 
             <DescriptionCard>

@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
-import app from "../firebase";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaCloudUploadAlt, FaVideo } from "react-icons/fa";
+import { uploadToB2 } from "../utils/uploadB2";
 
 const Container = styled.div`
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,19 +28,6 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   gap: 22px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
-  animation: scaleIn 0.25s ease;
-
-  @keyframes scaleIn {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
 `;
 
 const Header = styled.div`
@@ -67,10 +47,6 @@ const Close = styled.button`
   color: ${({ theme }) => theme.textSoft || "#aaa"};
   font-size: 22px;
   cursor: pointer;
-
-  &:hover {
-    color: ${({ theme }) => theme.text || "#fff"};
-  }
 `;
 
 const Section = styled.div`
@@ -108,7 +84,6 @@ const VideoTitle = styled.p`
   font-size: 14px;
   font-weight: 500;
   margin: 0;
-  color: ${({ theme }) => theme.text || "#fff"};
 `;
 
 const VideoDuration = styled.span`
@@ -123,11 +98,6 @@ const Input = styled.input`
   padding: 12px;
   color: ${({ theme }) => theme.text || "#fff"};
   font-size: 15px;
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.text || "#fff"};
-  }
 `;
 
 const Textarea = styled.textarea`
@@ -146,14 +116,7 @@ const UploadBox = styled.label`
   padding: 16px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.2s ease;
   color: ${({ theme }) => theme.textSoft || "#aaa"};
-
-  &:hover {
-    border-color: ${({ theme }) => theme.accent || "#3ea6ff"};
-    color: ${({ theme }) => theme.accent || "#3ea6ff"};
-    background: rgba(62, 166, 255, 0.1);
-  }
 
   input {
     display: none;
@@ -166,15 +129,8 @@ const VideoUploadBox = styled.label`
   padding: 24px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.2s ease;
   color: ${({ theme }) => theme.textSoft || "#aaa"};
   background: ${({ theme }) => theme.bg || "#202020"};
-
-  &:hover {
-    border-color: ${({ theme }) => theme.accent || "#ff3e6c"};
-    color: ${({ theme }) => theme.accent || "#ff3e6c"};
-    background: rgba(255, 62, 108, 0.1);
-  }
 
   input {
     display: none;
@@ -192,7 +148,6 @@ const ProgressBar = styled.div`
     height: 100%;
     width: ${({ value }) => value}%;
     background: linear-gradient(90deg, #3ea6ff, #6f6cff);
-    transition: width 0.3s ease;
   }
 `;
 
@@ -207,7 +162,6 @@ const VideoProgressBar = styled.div`
     height: 100%;
     width: ${({ value }) => value}%;
     background: linear-gradient(90deg, #ff3e6c, #ff6b8a);
-    transition: width 0.3s ease;
   }
 `;
 
@@ -215,6 +169,14 @@ const CompleteText = styled.div`
   font-size: 14px;
   font-weight: 600;
   color: #4caf50;
+`;
+
+const ErrorText = styled.div`
+  font-size: 13px;
+  color: #ff5252;
+  padding: 8px;
+  background: rgba(255, 82, 82, 0.1);
+  border-radius: 8px;
 `;
 
 const PreviewImage = styled.img`
@@ -243,11 +205,14 @@ export const EditVideo = ({ setOpen, videoId }) => {
   const [video, setVideo] = useState(null);
   const [imgPorc, setImgPorc] = useState(0);
   const [videoPorc, setVideoPorc] = useState(0);
+  const [imgComplete, setImgComplete] = useState(false);
+  const [videoComplete, setVideoComplete] = useState(false);
   const [previewImg, setPreviewImg] = useState(null);
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true);
   const [originalData, setOriginalData] = useState(null);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -261,12 +226,14 @@ export const EditVideo = ({ setOpen, videoId }) => {
           description: res.data.description,
           imgUrl: res.data.imgUrl,
           videoUrl: res.data.videoUrl,
+          imgKey: res.data.imgKey,
+          videoKey: res.data.videoKey,
         });
         setTags(res.data.tags || []);
         setPreviewImg(res.data.imgUrl);
         setLoading(false);
       } catch (err) {
-        console.error("Error cargando video:", err);
+        console.error("Error:", err);
         setLoading(false);
       }
     };
@@ -281,56 +248,79 @@ export const EditVideo = ({ setOpen, videoId }) => {
     setTags(e.target.value.split(",").map((tag) => tag.trim()));
   };
 
-  const uploadFile = (file, type) => {
-    const storage = getStorage(app);
-    const fileName = `${Date.now()}_${file.name}`;
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+  const handleImgChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.match(/image\/(jpeg|png|webp)/)) {
+      setError("Solo JPG, PNG, WebP");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setError("Máximo 10 MB");
+      return;
+    }
+    setError(null);
+    setImg(file);
+    setImgComplete(false);
+    setImgPorc(0);
+    setPreviewImg(URL.createObjectURL(file));
+  };
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        if (type === "videoUrl") {
-          setVideoPorc(Math.round(progress));
-        } else {
-          setImgPorc(Math.round(progress));
-        }
-      },
-      console.error,
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setInputs((prev) => ({ ...prev, [type]: url }));
-        });
-      },
-    );
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.match(/video\/(mp4|webm|x-matroska)/)) {
+      setError("Solo MP4, WebM, MKV");
+      return;
+    }
+    if (file.size > 500 * 1024 * 1024) {
+      setError("Máximo 500 MB");
+      return;
+    }
+    setError(null);
+    setVideo(file);
+    setVideoComplete(false);
+    setVideoPorc(0);
   };
 
   useEffect(() => {
-    if (img) {
-      uploadFile(img, "imgUrl");
-      setPreviewImg(URL.createObjectURL(img));
-    }
+    if (!img || imgComplete) return;
+    uploadToB2(img, (p) => setImgPorc(p))
+      .then((data) => {
+        setInputs((prev) => ({ ...prev, imgUrl: data.publicUrl, imgKey: data.fileKey }));
+        setImgComplete(true);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setImgPorc(0);
+      });
   }, [img]);
 
   useEffect(() => {
-    if (video) {
-      uploadFile(video, "videoUrl");
-    }
+    if (!video || videoComplete) return;
+    uploadToB2(video, (p) => setVideoPorc(p))
+      .then((data) => {
+        setInputs((prev) => ({ ...prev, videoUrl: data.publicUrl, videoKey: data.fileKey }));
+        setVideoComplete(true);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setVideoPorc(0);
+      });
   }, [video]);
 
-  const isUploading = (imgPorc > 0 && imgPorc < 100) || (videoPorc > 0 && videoPorc < 100);
+  const isUploading =
+    (imgPorc > 0 && imgPorc < 100) || (videoPorc > 0 && videoPorc < 100);
 
   const handleSave = async () => {
     try {
-      const res = await axios.put(`/videos/${videoId}`, { ...inputs, tags });
+      const res = await axios.put(`/videos/${videoId}`, { ...inputs, tags }, {
+        withCredentials: true,
+      });
       setOpen(false);
-      if (res.status === 200) {
-        navigate(0);
-      }
+      if (res.status === 200) navigate(0);
     } catch (err) {
-      console.error("Error guardando video:", err);
+      setError(err.response?.data?.message || "Error");
     }
   };
 
@@ -338,9 +328,7 @@ export const EditVideo = ({ setOpen, videoId }) => {
     return (
       <Container>
         <Modal>
-          <div style={{ textAlign: "center", padding: "40px" }}>
-            Cargando...
-          </div>
+          <div style={{ textAlign: "center", padding: "40px" }}>Cargando...</div>
         </Modal>
       </Container>
     );
@@ -354,78 +342,61 @@ export const EditVideo = ({ setOpen, videoId }) => {
           <Close onClick={() => setOpen(false)}>✕</Close>
         </Header>
 
-        {/* Video actual */}
+        {error && <ErrorText>{error}</ErrorText>}
+
         <Section>
           <Label>Video actual</Label>
           <CurrentVideo>
-            <VideoIcon>
-              <FaVideo />
-            </VideoIcon>
+            <VideoIcon><FaVideo /></VideoIcon>
             <VideoInfo>
-              <VideoTitle>{inputs.title || "Video sin título"}</VideoTitle>
+              <VideoTitle>{inputs.title || "Sin título"}</VideoTitle>
               {originalData?.duration && (
                 <VideoDuration>
-                  Duración: {Math.floor(originalData.duration / 60)}:{String(originalData.duration % 60).padStart(2, '0')}
+                  Duración:{" "}
+                  {Math.floor(originalData.duration / 60)}:
+                  {String(originalData.duration % 60).padStart(2, "0")}
                 </VideoDuration>
               )}
             </VideoInfo>
           </CurrentVideo>
         </Section>
 
-        {/* Cambiar video */}
         <Section>
           <Label>Reemplazar video</Label>
           {videoPorc > 0 && videoPorc < 100 && (
-            <VideoProgressBar value={videoPorc}>
-              <div />
-            </VideoProgressBar>
+            <VideoProgressBar value={videoPorc}><div /></VideoProgressBar>
           )}
-          {videoPorc === 100 && <CompleteText>✔ Video cargado completamente</CompleteText>}
-          {videoPorc === 0 && (
+          {videoComplete && <CompleteText>✔ Video cargado</CompleteText>}
+          {!videoComplete && videoPorc === 0 && (
             <VideoUploadBox>
               <FaCloudUploadAlt style={{ fontSize: "32px", marginBottom: "8px" }} />
-              <div>Click para seleccionar un nuevo video</div>
-              <div style={{ fontSize: "12px", marginTop: "4px" }}>
-                Formatos soportados: MP4, WebM, MKV
-              </div>
+              <div>Click para seleccionar video</div>
+              <div style={{ fontSize: "12px", marginTop: "4px" }}>MP4, WebM, MKV</div>
               <input
                 type="file"
                 accept="video/mp4,video/webm,video/x-matroska"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  if (file) {
-                    setVideo(file);
-                  }
-                }}
+                onChange={handleVideoChange}
+                disabled={videoComplete}
               />
             </VideoUploadBox>
           )}
         </Section>
 
-        {/* Thumbnail */}
         <Section>
-          <Label>Miniatura (imagen)</Label>
+          <Label>Miniatura</Label>
           {previewImg && <PreviewImage src={previewImg} />}
           {imgPorc > 0 && imgPorc < 100 && (
-            <ProgressBar value={imgPorc}>
-              <div />
-            </ProgressBar>
+            <ProgressBar value={imgPorc}><div /></ProgressBar>
           )}
-          {imgPorc === 100 && <CompleteText>✔ Imagen cargada completamente</CompleteText>}
-          {imgPorc === 0 && (
+          {imgComplete && <CompleteText>✔ Imagen cargada</CompleteText>}
+          {!imgComplete && imgPorc === 0 && (
             <UploadBox>
-              Click para cambiar imagen (JPG, PNG)
+              Click para cambiar imagen
               <input
                 type="file"
-                accept="image/jpeg, image/jpg, image/png"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  if (file && !file.type.match(/image\/(jpeg|png)/)) {
-                    alert("Solo se permiten archivos JPG y PNG");
-                    return;
-                  }
-                  setImg(file);
-                }}
+                accept="image/jpeg, image/jpg, image/png, image/webp"
+                onChange={handleImgChange}
+                disabled={imgComplete}
               />
             </UploadBox>
           )}
@@ -435,7 +406,7 @@ export const EditVideo = ({ setOpen, videoId }) => {
           <Label>Título</Label>
           <Input
             name="title"
-            placeholder="Título del video"
+            placeholder="Título"
             value={inputs.title || ""}
             onChange={handleChange}
           />
@@ -446,23 +417,23 @@ export const EditVideo = ({ setOpen, videoId }) => {
           <Textarea
             rows={4}
             name="description"
-            placeholder="Describe tu video..."
+            placeholder="Descripción"
             value={inputs.description || ""}
             onChange={handleChange}
           />
         </Section>
 
         <Section>
-          <Label>Etiquetas (tags)</Label>
+          <Label>Etiquetas</Label>
           <Input
-            placeholder="música, tutorial, react"
+            placeholder="música, tutorial"
             value={tags.join(", ")}
             onChange={handleTags}
           />
         </Section>
 
         <SaveButton disabled={isUploading} onClick={handleSave}>
-          {isUploading ? "Guardando..." : "Guardar cambios"}
+          {isUploading ? "Guardando..." : "Guardar"}
         </SaveButton>
       </Modal>
     </Container>

@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import styled, { keyframes } from "styled-components";
 import ReactPlayer from "react-player";
 import { CircularProgress } from "@mui/material";
+import useStreamSession from "../../hooks/useStreamSession";
+import { getStreamUrl } from "../../utils/streamUrl";
 
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -68,6 +70,15 @@ const VideoWrapper = styled.div`
   background: radial-gradient(circle at top, #0f0f0f 0%, #000 80%);
   animation: ${fadeIn} 0.6s ease-in;
   width: 100%;
+
+  /* ── Mobile: fijo debajo del navbar, no se mueve al hacer scroll ── */
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 60px; /* Altura del navbar */
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
 `;
 
 const PlayerWrapper = styled.div`
@@ -79,7 +90,7 @@ const PlayerWrapper = styled.div`
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 6px 30px rgba(0, 0, 0, 0.7);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: ${({ $showControls }) => ($showControls ? "auto" : "none")};
   user-select: none;
 
@@ -87,10 +98,60 @@ const PlayerWrapper = styled.div`
     transform: scale(1.002);
   }
 
+  /* ── Desktop: mini-player flotante en esquina inferior derecha ── */
+  @media (min-width: 769px) {
+    ${({ $sticky }) => $sticky && `
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      width: 320px;
+      padding-top: 0;
+      height: 180px; /* 320 * 9/16 */
+      z-index: 9999;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.08);
+      transform: none;
+      cursor: pointer;
+      overflow: hidden;
+    `}
+  }
+
+  /* ── Mobile ── */
   @media (max-width: 768px) {
     width: 100%;
-    border-radius: 10px;
+    border-radius: 0;
     cursor: pointer;
+    padding-top: 56.25%;
+  }
+`;
+
+/* Botón de cerrar el mini-player (solo desktop) */
+const StickyCloseBtn = styled.button`
+  display: none;
+
+  @media (min-width: 769px) {
+    display: ${({ $visible }) => ($visible ? "flex" : "none")};
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
   }
 `;
 
@@ -153,6 +214,14 @@ const CenterControls = styled.div`
   justify-content: center;
   pointer-events: auto;
   z-index: 6;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+
+  /* En mini-player: ocultar los controles centrales */
+  ${({ $sticky }) => $sticky && `
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, calc(-50% + 8px));
+  `}
 
   @media (max-width: 768px) {
     gap: 24px;
@@ -518,6 +587,23 @@ const MenuDivider = styled.div`
   margin: 4px 0;
 `;
 
+/* ===== Timeline que se simplifica en mini-player ===== */
+const MiniTimelineContainer = styled.div`
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+
+  ${({ $sticky }) => $sticky && `
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    pointer-events: none;
+  `}
+
+  ${({ $sticky }) => !$sticky && `
+    opacity: 1;
+    max-height: 40px;
+  `}
+`;
+
 /* ===== Countdown Overlay ===== */
 const CountdownOverlay = styled.div`
   position: absolute;
@@ -602,6 +688,14 @@ const TopBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+
+  /* En mini-player: ocultar el top bar */
+  ${({ $sticky }) => $sticky && `
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+  `}
 `;
 
 const VideoTitle = styled.div`
@@ -657,10 +751,21 @@ const SPEED_OPTIONS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 const QUALITY_OPTIONS = ["Auto", "1080p", "720p", "480p", "360p"];
 
 /* =========== MAIN COMPONENT =========== */
-export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
+export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCounted }) {
   const { currentVideo } = useSelector((s) => s.video);
   const { currentUser } = useSelector((s) => s.user || {});
   const { t } = useLanguage();
+
+  // ── Token de sesión anónimo (Capa 3 de protección) ────────────────────────
+  // Permite que usuarios sin registro vean videos, pero solo a través del proxy
+  const { sessionToken, sessionReady } = useStreamSession();
+
+  // ── URL del proxy (nunca expone la URL directa de B2) ─────────────────────
+  // getStreamUrl() construye la URL correcta para desarrollo y producción
+  // Si el video tiene _id, usar el proxy; si no, usar videoUrl como fallback
+  const proxyVideoUrl = currentVideo?._id
+    ? getStreamUrl(currentVideo._id)
+    : currentVideo?.videoUrl || null;
 
   // Core state
   const [playing, setPlaying] = useState(true);
@@ -676,7 +781,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
 
   // UI state
   const [showControls, setShowControls] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [durationDBSaved, setDurationDBSaved] = useState(false);
@@ -684,6 +789,9 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
   const [seeking, setSeeking] = useState(false);
   const [hoverTime, setHoverTime] = useState(null);
   const [hoverPos, setHoverPos] = useState(0);
+  // Sticky player state (solo mobile)
+  const [isStickyActive, setIsStickyActive] = useState(false);
+  const [stickyDismissed, setStickyDismissed] = useState(false);
 
   // Menu state
   const [menuOpen, setMenuOpen] = useState(false);
@@ -697,12 +805,24 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
   const hideTimeout = useRef(null);
   const playerRef = useRef(null);
   const playerContainerRef = useRef(null);
+  const playerWrapperRef = useRef(null); // Ref para el wrapper del player (sticky)
   const countdownTimerRef = useRef(null);
   const timelineRef = useRef(null);
   const volumeTrackRef = useRef(null);
   const menuRef = useRef(null);
   const clickTimeoutRef = useRef(null);
   const videoReadyRef = useRef(false); // Track if video has been initially loaded
+  const bufferingRef = useRef(false);  // Track active buffering state
+  const loadingTimerRef = useRef(null); // Debounce timer for loading state
+  const playingRef = useRef(playing);  // Ref para acceder al estado playing en callbacks
+
+  /**
+   * Flag de sesión para el conteo de vistas.
+   * Se usa un ref (no state) para evitar re-renders y garantizar
+   * que la lógica de tracking no se ejecute más de una vez por video.
+   * Se resetea a `false` cada vez que cambia el video (ver useEffect de reset).
+   */
+  const viewCountedRef = useRef(false);
 
   /* ========== Show feedback icon ========== */
   const showFeedback = useCallback((icon) => {
@@ -833,11 +953,39 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
 
   /* ========== Progress ========== */
   const handleProgress = useCallback((state) => {
+    // Actualizar la barra de progreso solo si no se está haciendo seek manual
     if (!seeking) {
       setPlayed(state.played);
     }
     setLoaded(state.loaded);
-  }, [seeking]);
+
+    /**
+     * ── LÓGICA DE CONTEO DE VISTAS ──
+     *
+     * Condiciones para registrar una vista:
+     *  1. El callback `onViewCounted` debe estar definido (pasado desde Video.jsx).
+     *  2. La vista NO debe haberse contado ya en esta sesión (`viewCountedRef.current === false`).
+     *  3. El usuario debe haber visto al menos el 50% del video (`state.played >= 0.5`).
+     *
+     * Por qué usamos `viewCountedRef` en lugar de state:
+     *  - Un ref no provoca re-renders, lo que evita efectos secundarios.
+     *  - Su valor persiste entre renders sin necesidad de incluirlo en dependencias.
+     *  - Se resetea a `false` en el useEffect de reset de video (ver abajo).
+     *
+     * Casos edge manejados:
+     *  - Seek adelante al 50%+: `state.played` ya supera 0.5, se cuenta igualmente.
+     *  - Rebobinar después de contar: el flag ya está en `true`, no se vuelve a contar.
+     *  - Replay del video: el useEffect de reset pone el flag en `false` de nuevo,
+     *    pero solo si el usuario navega a otro video. Si hace replay del mismo video
+     *    sin cambiar de ruta, el flag permanece en `true` (comportamiento intencional:
+     *    una vista por sesión de reproducción del mismo video).
+     */
+    if (onViewCounted && !viewCountedRef.current && state.played >= 0.5) {
+      // Marcar como contada ANTES de llamar al callback para evitar race conditions
+      viewCountedRef.current = true;
+      onViewCounted();
+    }
+  }, [seeking, onViewCounted]);
 
   /* ========== Fullscreen ========== */
   const toggleFullScreen = useCallback(() => {
@@ -1006,8 +1154,22 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
     setLoaded(0);
     setMenuOpen(false);
     setMenuView("main");
+    // Mostrar spinner solo brevemente al cambiar de video, se ocultará en onReady
     setLoading(true);
     videoReadyRef.current = false; // Reset video ready state
+    bufferingRef.current = false;  // Reset buffering state
+    // Limpiar timer de debounce si existe
+    if (loadingTimerRef.current) {
+      clearTimeout(loadingTimerRef.current);
+      loadingTimerRef.current = null;
+    }
+
+    /**
+     * Resetear el flag de vista al cambiar de video.
+     * Esto permite que el nuevo video pueda registrar su propia vista
+     * cuando el usuario alcance el 50% de reproducción.
+     */
+    viewCountedRef.current = false;
 
     // Scroll to top when video changes
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1020,11 +1182,75 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
     };
   }, [currentVideo]);
 
+  /* ========== Sticky Player ========== */
+
+  // Sincronizar playingRef con el estado playing (para callbacks del IntersectionObserver)
+  useEffect(() => {
+    playingRef.current = playing;
+  }, [playing]);
+
+  /**
+   * Mini-player flotante en DESKTOP (≥769px):
+   * Usa IntersectionObserver para detectar cuando el player sale del viewport.
+   * Cuando sale y el video está reproduciéndose, activa el mini-player flotante
+   * en la esquina inferior derecha.
+   */
+  useEffect(() => {
+    const isDesktop = () => window.innerWidth >= 769;
+
+    const wrapper = playerWrapperRef.current;
+    if (!wrapper) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const isVisible = entry.isIntersecting;
+        // Activar mini-player solo en desktop cuando el player sale del viewport
+        if (!isVisible && playingRef.current && !stickyDismissed && isDesktop()) {
+          setIsStickyActive(true);
+        } else {
+          setIsStickyActive(false);
+        }
+      },
+      {
+        threshold: 0,
+        rootMargin: "0px 0px -50px 0px",
+      }
+    );
+
+    observer.observe(wrapper);
+
+    // Desactivar mini-player si se redimensiona a mobile
+    const handleResize = () => {
+      if (!isDesktop()) {
+        setIsStickyActive(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [stickyDismissed]);
+
+  // Desactivar mini-player desktop cuando el video se pausa o termina
+  useEffect(() => {
+    if (!playing || videoEnded) {
+      setIsStickyActive(false);
+    }
+  }, [playing, videoEnded]);
+
+  // Resetear el estado de dismiss al cambiar de video
+  useEffect(() => {
+    setStickyDismissed(false);
+  }, [currentVideo]);
+
   /* ========== Cleanup ========== */
   useEffect(() => {
     return () => {
       if (hideTimeout.current) clearTimeout(hideTimeout.current);
       if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+      if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
     };
   }, []);
 
@@ -1168,15 +1394,34 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
   /* ============= RENDER ============= */
   return (
     <VideoWrapper>
-      <PlayerWrapper
-        ref={playerContainerRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        $showControls={showControls}
-      >
+      {/*
+        Contenedor de posición: siempre en el flujo del documento.
+        El IntersectionObserver observa este elemento para detectar
+        cuándo el player sale del viewport (solo desktop).
+      */}
+      <div ref={playerWrapperRef} style={{ width: "100%", position: "relative" }}>
+        <PlayerWrapper
+          ref={playerContainerRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          $showControls={showControls}
+          $sticky={isStickyActive}
+        >
+          {/* Botón para cerrar el mini-player (solo desktop) */}
+          <StickyCloseBtn
+            $visible={isStickyActive}
+            onClick={(e) => {
+              e.stopPropagation();
+              setStickyDismissed(true);
+              setIsStickyActive(false);
+            }}
+            title="Cerrar mini reproductor"
+          >
+            ✕
+          </StickyCloseBtn>
         <ReactPlayer
           ref={playerRef}
-          url={currentVideo?.videoUrl}
+          url={proxyVideoUrl}
           width="100%"
           height="100%"
           playing={playing}
@@ -1206,24 +1451,93 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
             }
           }}
           onReady={() => {
+            // El video está listo para reproducirse: ocultar spinner inmediatamente
             videoReadyRef.current = true;
+            bufferingRef.current = false;
+            if (loadingTimerRef.current) {
+              clearTimeout(loadingTimerRef.current);
+              loadingTimerRef.current = null;
+            }
             setLoading(false);
           }}
           onBuffer={() => {
-            // Only show loading during initial buffer, not during normal playback
-            if (!videoReadyRef.current && playing) setLoading(true);
+            // Mostrar spinner con un pequeño debounce (300ms) para evitar
+            // flashes de spinner en micro-interrupciones de red
+            bufferingRef.current = true;
+            if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
+            loadingTimerRef.current = setTimeout(() => {
+              // Solo mostrar si aún estamos en buffering
+              if (bufferingRef.current) {
+                setLoading(true);
+              }
+            }, 300);
           }}
           onBufferEnd={() => {
-            // Only hide loading if we're still in initial buffer phase
-            if (!videoReadyRef.current) setLoading(false);
+            // El buffer se completó: ocultar spinner siempre
+            bufferingRef.current = false;
+            if (loadingTimerRef.current) {
+              clearTimeout(loadingTimerRef.current);
+              loadingTimerRef.current = null;
+            }
+            setLoading(false);
           }}
           onPlay={() => {
+            // Al iniciar reproducción, ocultar spinner y limpiar estado
+            bufferingRef.current = false;
+            if (loadingTimerRef.current) {
+              clearTimeout(loadingTimerRef.current);
+              loadingTimerRef.current = null;
+            }
             setLoading(false);
             if (videoEnded) setVideoEnded(false);
           }}
           onError={(e) => {
             console.log("ReactPlayer error:", e);
+            bufferingRef.current = false;
+            if (loadingTimerRef.current) {
+              clearTimeout(loadingTimerRef.current);
+              loadingTimerRef.current = null;
+            }
             setLoading(false);
+          }}
+          progressInterval={500}
+          config={{
+            file: {
+              attributes: {
+                // Precargar metadatos para reducir tiempo de carga inicial
+                preload: "auto",
+                // Reproducción inline en móviles (evita pantalla completa forzada en iOS)
+                playsInline: true,
+              },
+              // Configuración de hls.js para streaming adaptativo
+              hlsOptions: {
+                // Usar Web Worker para parsing (mejor rendimiento)
+                enableWorker: true,
+                // Buffer adelante: 30s es suficiente para VOD
+                maxBufferLength: 30,
+                // Buffer máximo total
+                maxMaxBufferLength: 120,
+                // Mantener 60s de buffer trasero para seek rápido
+                backBufferLength: 60,
+                // Empezar en calidad automática (ABR)
+                startLevel: -1,
+                // Estimación inicial de ancho de banda (1Mbps)
+                abrEwmaDefaultEstimate: 1000000,
+                // Reintentos en errores de red
+                fragLoadingMaxRetry: 4,
+                manifestLoadingMaxRetry: 3,
+                levelLoadingMaxRetry: 3,
+                // Tiempo de espera antes de reintentar (ms)
+                fragLoadingRetryDelay: 1000,
+                // No usar modo de baja latencia (es VOD, no live)
+                lowLatencyMode: false,
+                // PROTECCIÓN: Inyectar token de sesión en cada solicitud XHR de hls.js
+                // Esto incluye el manifest, playlists de calidad y cada fragmento .ts
+                xhrSetup: sessionToken
+                  ? (xhr) => { xhr.setRequestHeader("X-Session-Token", sessionToken); }
+                  : undefined,
+              },
+            },
           }}
           style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
         />
@@ -1290,13 +1604,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
 
         {/* ===== CONTROLS ===== */}
         <ControlsWrapper $show={showControls || videoEnded}>
-          {/* Top bar */}
-          <TopBar>
+          {/* Top bar: se oculta en mini-player */}
+          <TopBar $sticky={isStickyActive}>
             <VideoTitle>{currentVideo?.title}</VideoTitle>
           </TopBar>
 
-          {/* Center controls */}
-          <CenterControls>
+          {/* Center controls: se ocultan en mini-player */}
+          <CenterControls $sticky={isStickyActive}>
             <CenterButton
               onClick={(e) => {
                 e.stopPropagation();
@@ -1336,63 +1650,81 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
 
           {/* Bottom controls */}
           <BottomControls onClick={(e) => e.stopPropagation()}>
-            {/* Timeline */}
-            <TimelineContainer
-              ref={timelineRef}
-              onMouseMove={handleTimelineMouseMove}
-              onMouseLeave={handleTimelineMouseLeave}
-              onMouseDown={handleTimelineMouseDown}
-            >
-              <TimelineBar className="timeline-bar">
-                <BufferedBar style={{ width: `${loaded * 100}%` }} />
-                <PlayedBar style={{ width: `${played * 100}%` }} />
-                <TimelineKnob
-                  className="timeline-knob"
-                  style={{ left: `calc(${played * 100}% - 7px)` }}
-                />
-              </TimelineBar>
+            {/* Timeline: se oculta en mini-player */}
+            <MiniTimelineContainer $sticky={isStickyActive}>
+              <TimelineContainer
+                ref={timelineRef}
+                onMouseMove={handleTimelineMouseMove}
+                onMouseLeave={handleTimelineMouseLeave}
+                onMouseDown={handleTimelineMouseDown}
+              >
+                <TimelineBar className="timeline-bar">
+                  <BufferedBar style={{ width: `${loaded * 100}%` }} />
+                  <PlayedBar style={{ width: `${played * 100}%` }} />
+                  <TimelineKnob
+                    className="timeline-knob"
+                    style={{ left: `calc(${played * 100}% - 7px)` }}
+                  />
+                </TimelineBar>
 
-              {hoverTime !== null && (
-                <TimelineTooltip
-                  className="timeline-tooltip"
-                  style={{ left: `${hoverPos}px` }}
-                >
-                  {formatTime(hoverTime)}
-                </TimelineTooltip>
-              )}
-            </TimelineContainer>
+                {hoverTime !== null && (
+                  <TimelineTooltip
+                    className="timeline-tooltip"
+                    style={{ left: `${hoverPos}px` }}
+                  >
+                    {formatTime(hoverTime)}
+                  </TimelineTooltip>
+                )}
+              </TimelineContainer>
+            </MiniTimelineContainer>
 
             {/* Control row */}
             <ControlRow>
               <ControlGroup>
-                {/* Play/Pause */}
+                {/* Play/Pause — siempre visible */}
                 <ControlBtn onClick={handlePlayPause} title={playing ? `${t("pause")} (K)` : `${t("play")} (K)`}>
                   {videoEnded ? <RiRestartLine style={{ fontSize: 22 }} /> : playing ? <PauseIcon /> : <PlayArrowIcon />}
                 </ControlBtn>
 
-                {/* Skip back */}
+                {/* Skip back — se oculta en mini-player con transición suave */}
                 <ControlBtn
                   onClick={() => {
                     const ct = playerRef.current?.getCurrentTime() || 0;
                     playerRef.current?.seekTo(Math.max(0, ct - 10));
                   }}
                   title={`${t("rewind10")} (J)`}
+                  style={{
+                    opacity: isStickyActive ? 0 : 1,
+                    maxWidth: isStickyActive ? 0 : "44px",
+                    overflow: "hidden",
+                    padding: isStickyActive ? 0 : undefined,
+                    transition: "opacity 0.3s ease, max-width 0.3s ease, padding 0.3s ease",
+                    pointerEvents: isStickyActive ? "none" : "auto",
+                  }}
                 >
                   <Replay10Icon />
                 </ControlBtn>
 
-                {/* Skip forward */}
+                {/* Skip forward — se oculta en mini-player con transición suave */}
                 <ControlBtn
                   onClick={() => {
                     const ct = playerRef.current?.getCurrentTime() || 0;
                     playerRef.current?.seekTo(Math.min(duration, ct + 10));
                   }}
                   title={`${t("forward10")} (L)`}
+                  style={{
+                    opacity: isStickyActive ? 0 : 1,
+                    maxWidth: isStickyActive ? 0 : "44px",
+                    overflow: "hidden",
+                    padding: isStickyActive ? 0 : undefined,
+                    transition: "opacity 0.3s ease, max-width 0.3s ease, padding 0.3s ease",
+                    pointerEvents: isStickyActive ? "none" : "auto",
+                  }}
                 >
                   <Forward10Icon />
                 </ControlBtn>
 
-                {/* Volume */}
+                {/* Volume — siempre visible */}
                 <VolumeContainer>
                   <ControlBtn onClick={handleMuteToggle} title={muted ? `${t("unmute")} (M)` : `${t("mute")} (M)`}>
                     {volumeIcon}
@@ -1408,13 +1740,23 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
                   </VolumeSliderWrap>
                 </VolumeContainer>
 
-                {/* Time */}
+                {/* Time — siempre visible */}
                 <TimeDisplay>
                   {formatTime(currentTime)} / {formatTime(duration)}
                 </TimeDisplay>
               </ControlGroup>
 
-              <ControlGroup>
+              {/* Grupo derecho: se oculta en mini-player con transición suave */}
+              <ControlGroup
+                style={{
+                  opacity: isStickyActive ? 0 : 1,
+                  maxWidth: isStickyActive ? 0 : "300px",
+                  overflow: "hidden",
+                  transition: "opacity 0.3s ease, max-width 0.3s ease",
+                  pointerEvents: isStickyActive ? "none" : "auto",
+                  flexShrink: 0,
+                }}
+              >
                 {/* Captions toggle */}
                 <ControlBtn
                   onClick={() => setCaptionsEnabled((p) => !p)}
@@ -1459,6 +1801,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5 }) {
           </BottomControls>
         </ControlsWrapper>
       </PlayerWrapper>
+      </div>
     </VideoWrapper>
   );
 }
