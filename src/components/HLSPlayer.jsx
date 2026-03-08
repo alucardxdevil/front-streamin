@@ -77,7 +77,7 @@ const HLSPlayer = ({
 
     try {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token')
-      const res = await axios.get(`/api/transcode/status/${videoId}`, {
+      const res = await axios.get(`/transcode/status/${videoId}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       })
 

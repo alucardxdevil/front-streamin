@@ -23,7 +23,9 @@
 import { useState, useRef, useCallback } from 'react'
 import axios from 'axios'
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api'
+// API_BASE ya está configurado globalmente en axiosConfig.js (baseURL de axios)
+// Para las llamadas a B2 (presigned URL), se usa axios sin baseURL (URL absoluta externa)
+// Para las llamadas al backend, se usan rutas relativas que axios resuelve con baseURL
 
 /**
  * Estados del proceso de upload:
@@ -57,7 +59,7 @@ const useVideoUpload = () => {
     const formData = new FormData()
     formData.append('file', imageFile)
 
-    const res = await axios.post(`${API_BASE}/upload/image`, formData, {
+    const res = await axios.post(`/upload/image`, formData, {
       headers: {
         ...getAuthHeaders(),
         'Content-Type': 'multipart/form-data',
@@ -73,7 +75,7 @@ const useVideoUpload = () => {
   // ── Paso 2: Obtener presigned URL para el video ────────────────────────────
   const getVideoPresignedUrl = async (videoFile) => {
     const res = await axios.post(
-      `${API_BASE}/transcode/presigned-upload`,
+      `/transcode/presigned-upload`,
       {
         fileName: videoFile.name,
         contentType: videoFile.type,
@@ -104,7 +106,7 @@ const useVideoUpload = () => {
   // ── Paso 4: Encolar transcodificación ──────────────────────────────────────
   const enqueueTranscode = async ({ rawKey, title, description, tags, imgUrl, imgKey, fileSize }) => {
     const res = await axios.post(
-      `${API_BASE}/transcode/enqueue`,
+      `/transcode/enqueue`,
       { rawKey, title, description, tags, imgUrl, imgKey, fileSize },
       { headers: getAuthHeaders() }
     )
@@ -118,7 +120,7 @@ const useVideoUpload = () => {
 
     const poll = async () => {
       try {
-        const res = await axios.get(`${API_BASE}/transcode/status/${id}`, {
+        const res = await axios.get(`/transcode/status/${id}`, {
           headers: getAuthHeaders(),
         })
 
