@@ -19,6 +19,10 @@
 | **Root directory** | `front` |
 | **Node.js version** | `18` (o superior) |
 
+> **IMPORTANTE:** El proyecto usa **npm** (no yarn). El archivo `yarn.lock` fue eliminado para evitar conflictos con Yarn 4 en Cloudflare Pages. Cloudflare Pages detectará el `package-lock.json` y usará npm automáticamente.
+>
+> **NO usar** `npx wrangler deploy` — ese comando es para Cloudflare Workers, no para Pages. Cloudflare Pages hace el deploy automáticamente al hacer push al repositorio.
+
 ### 3. Variables de Entorno (Production)
 
 En **Settings → Environment Variables → Production**, agrega:
