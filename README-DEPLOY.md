@@ -92,6 +92,50 @@ En desarrollo, el proxy de CRA redirige:
 
 ## Notas Importantes
 
-1. **CORS**: El backend debe tener el dominio de Cloudflare Pages en `ALLOWED_ORIGINS`
-2. **HTTPS**: Si el backend no tiene SSL, los navegadores pueden bloquear peticiones HTTP desde HTTPS. Considera usar un proxy Nginx con SSL en el servidor.
-3. **Cookies**: Las cookies de sesión requieren `SameSite=None; Secure` si el frontend es HTTPS y el backend es HTTP.
+### ⚠️ CRÍTICO: Mixed Content (HTTPS → HTTP)
+
+El frontend en Cloudflare Pages usa **HTTPS**. Si el backend (`89.167.94.4`) usa **HTTP**, los navegadores bloquearán todas las peticiones con el error:
+```
+Mixed Content: The page at 'https://...' was loaded over HTTPS, but requested an insecure XMLHttpRequest endpoint 'http://89.167.94.4/api/...'
+```
+
+**Soluciones (elige una):**
+
+**Opción A — Cloudflare Tunnel (recomendada, gratis):**
+1. Instala `cloudflared` en el servidor: `curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared`
+2. Autentica: `cloudflared tunnel login`
+3. Crea un tunnel: `cloudflared tunnel create stream-in-backend`
+4. Configura el tunnel para exponer el puerto 5000 con un subdominio HTTPS
+5. Actualiza `REACT_APP_API_URL` en `.env.production` con la URL HTTPS del tunnel
+
+**Opción B — Nginx + Let's Encrypt:**
+```bash
+# En el servidor 89.167.94.4
+apt install nginx certbot python3-certbot-nginx
+certbot --nginx -d api.tudominio.com
+# Configura Nginx como reverse proxy al puerto 5000
+```
+Luego actualiza `REACT_APP_API_URL=https://api.tudominio.com`
+
+**Opción C — Certificado SSL directo en Node.js:**
+Configura HTTPS directamente en el servidor Express con un certificado SSL.
+
+---
+
+### ⚠️ Firebase OAuth: Dominio no autorizado
+
+Si usas Google Sign-In con Firebase, debes agregar el dominio de Cloudflare Pages a los dominios autorizados:
+
+1. Ve a [Firebase Console](https://console.firebase.google.com/)
+2. Selecciona el proyecto `stream-inbeta-a37dd`
+3. Authentication → Settings → **Authorized domains**
+4. Agrega: `front-streamin.pages.dev` (y el subdominio específico si es necesario)
+
+---
+
+### CORS en el backend
+
+El backend debe tener el dominio de Cloudflare Pages en `ALLOWED_ORIGINS`:
+```env
+ALLOWED_ORIGINS=https://front-streamin.pages.dev,https://a9e4016b.front-streamin.pages.dev
+```
