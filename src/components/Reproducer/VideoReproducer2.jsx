@@ -783,21 +783,29 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   // Permite que usuarios sin registro vean videos, pero solo a través del proxy
   const { sessionToken, sessionReady } = useStreamSession();
 
+  // ── Verificar si el video está listo para reproducción ───────────────────
+  // Videos legacy (sin hlsMasterUrl pero con videoUrl) se tratan como "ready"
+  const videoStatus = currentVideo?.status || 'ready';
+  const isLegacyVideo = !currentVideo?.hlsMasterUrl && (currentVideo?.videoUrl || currentVideo?.videoKey);
+  const isVideoReady = videoStatus === 'ready' || isLegacyVideo;
+
   // ── URL del proxy (nunca expone la URL directa de B2) ─────────────────────
   // getStreamUrl() construye la URL correcta para desarrollo y producción
   // Se incluye el sessionToken como query param _st para que las peticiones
   // nativas del navegador (que no pueden enviar headers personalizados) lo incluyan.
-  // IMPORTANTE: No generar URL hasta que el sessionToken esté disponible,
-  // para evitar que ReactPlayer haga la primera petición sin autenticación.
+  // IMPORTANTE: No generar URL hasta que el sessionToken esté disponible
+  // y el video esté en estado "ready".
   const proxyVideoUrl = useMemo(() => {
     if (currentVideo?._id) {
+      // No intentar reproducir si el video no está listo
+      if (!isVideoReady) return null;
       // Esperar a que el token de sesión esté disponible antes de generar la URL
       if (!sessionToken) return null;
       return getStreamUrl(currentVideo._id, sessionToken);
     }
     // Fallback para videos sin _id (legacy)
     return currentVideo?.videoUrl || null;
-  }, [currentVideo?._id, currentVideo?.videoUrl, sessionToken]);
+  }, [currentVideo?._id, currentVideo?.videoUrl, sessionToken, isVideoReady]);
 
   // Core state
   const [playing, setPlaying] = useState(true);
@@ -1483,6 +1491,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 // Reproducción inline en móviles (evita pantalla completa forzada en iOS)
                 playsInline: true,
               },
+              // Forzar uso de hls.js para URLs del proxy que no terminan en .m3u8
+              // El proxy devuelve Content-Type: application/vnd.apple.mpegurl
+              // pero ReactPlayer necesita saber que es HLS para usar hls.js
+              forceHLS: currentVideo?.hlsMasterUrl ? true : false,
               // Configuración de hls.js para streaming adaptativo
               hlsOptions: {
                 // Usar Web Worker para parsing (mejor rendimiento)
@@ -1516,8 +1528,26 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
         />}
 
+        {/* Mensaje cuando el video está procesándose */}
+        {!isVideoReady && currentVideo?._id && (
+          <div style={{
+            position: "absolute", top: 0, left: 0, width: "100%", height: "100%",
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+            background: "#000", color: "#fff", gap: "16px", padding: "20px", textAlign: "center"
+          }}>
+            <CircularProgress sx={{ color: "#fff" }} />
+            <span style={{ fontSize: "16px", opacity: 0.9 }}>
+              {videoStatus === 'processing'
+                ? (t?.("videoProcessing") || "El video se está procesando. Por favor espera unos minutos...")
+                : videoStatus === 'error'
+                ? (t?.("videoError") || "Hubo un error al procesar este video.")
+                : (t?.("videoPending") || "El video está en cola de procesamiento. Estará disponible pronto...")}
+            </span>
+          </div>
+        )}
+
         {/* Spinner mientras se obtiene el token de sesión */}
-        {!proxyVideoUrl && currentVideo?._id && (
+        {isVideoReady && !proxyVideoUrl && currentVideo?._id && (
           <div style={{
             position: "absolute", top: 0, left: 0, width: "100%", height: "100%",
             display: "flex", alignItems: "center", justifyContent: "center", background: "#000"
