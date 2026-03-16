@@ -1426,6 +1426,14 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           height="100%"
           playing={playing}
           muted={muted}
+          config={{
+            file: {
+              attributes: {
+                crossOrigin: "use-credentials", // Incluir cookies para autenticación en el proxy
+              },
+            },
+          }}
+          controls={false}
           volume={volume}
           playbackRate={playbackRate}
           onProgress={handleProgress}
