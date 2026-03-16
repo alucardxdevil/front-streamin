@@ -15,15 +15,11 @@ import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import Replay10Icon from "@mui/icons-material/Replay10";
 import Forward10Icon from "@mui/icons-material/Forward10";
-import PictureInPictureAltIcon from "@mui/icons-material/PictureInPictureAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
-import ClosedCaptionIcon from "@mui/icons-material/ClosedCaption";
-import ClosedCaptionDisabledIcon from "@mui/icons-material/ClosedCaptionDisabled";
 import SpeedIcon from "@mui/icons-material/Speed";
 import CheckIcon from "@mui/icons-material/Check";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import HighQualityIcon from "@mui/icons-material/HighQuality";
-import SubtitlesIcon from "@mui/icons-material/Subtitles";
 
 import screenfull from "screenfull";
 import { useSelector } from "react-redux";
@@ -499,13 +495,13 @@ const VolumeSliderThumb = styled.div`
 const MenuOverlay = styled.div`
   position: absolute;
   bottom: 56px;
-  right: 12px;
+  right: 0;
   background: rgba(20, 20, 20, 0.96);
   backdrop-filter: blur(16px);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-  min-width: 260px;
+  min-width: 220px;
   max-height: 340px;
   overflow-y: auto;
   z-index: 50;
@@ -521,9 +517,18 @@ const MenuOverlay = styled.div`
   }
 
   @media (max-width: 768px) {
-    min-width: 220px;
-    right: 8px;
-    bottom: 50px;
+    min-width: 180px;
+    right: 0;
+    bottom: 48px;
+    max-height: 260px;
+    font-size: 13px;
+  }
+
+  @media (max-width: 480px) {
+    min-width: 160px;
+    right: 0;
+    bottom: 44px;
+    max-height: 220px;
   }
 `;
 
@@ -547,6 +552,11 @@ const MenuHeader = styled.div`
     font-size: 18px !important;
     color: #aaa;
   }
+
+  @media (max-width: 768px) {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
 `;
 
 const MenuItem = styled.div`
@@ -568,17 +578,30 @@ const MenuItem = styled.div`
   & svg {
     font-size: 18px !important;
   }
+
+  @media (max-width: 768px) {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
 `;
 
 const MenuItemLeft = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+
+  @media (max-width: 768px) {
+    gap: 8px;
+  }
 `;
 
 const MenuItemRight = styled.span`
   color: #888;
   font-size: 12px;
+
+  @media (max-width: 768px) {
+    font-size: 11px;
+  }
 `;
 
 const MenuDivider = styled.div`
@@ -777,7 +800,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [quality, setQuality] = useState("Auto");
-  const [captionsEnabled, setCaptionsEnabled] = useState(false);
 
   // UI state
   const [showControls, setShowControls] = useState(true);
@@ -795,7 +817,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   // Menu state
   const [menuOpen, setMenuOpen] = useState(false);
-  const [menuView, setMenuView] = useState("main"); // main, speed, quality, captions
+  const [menuView, setMenuView] = useState("main"); // main, speed, quality
 
   // Feedback animation
   const [feedbackIcon, setFeedbackIcon] = useState(null);
@@ -999,21 +1021,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     const onChange = () => setIsFullscreen(screenfull.isFullscreen);
     screenfull.on("change", onChange);
     return () => screenfull.off("change", onChange);
-  }, []);
-
-  /* ========== Picture-in-Picture ========== */
-  const togglePiP = useCallback(async () => {
-    try {
-      const videoEl = playerContainerRef.current?.querySelector("video");
-      if (!videoEl) return;
-      if (document.pictureInPictureElement) {
-        await document.exitPictureInPicture();
-      } else {
-        await videoEl.requestPictureInPicture();
-      }
-    } catch (err) {
-      console.log("PiP not supported:", err.message);
-    }
   }, []);
 
   /* ========== Countdown ========== */
@@ -1323,44 +1330,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
       );
     }
 
-    if (menuView === "captions") {
-      return (
-        <>
-          <MenuHeader onClick={() => setMenuView("main")}>
-            <ArrowBackIosNewIcon /> Subtítulos
-          </MenuHeader>
-          <MenuItem
-            $active={!captionsEnabled}
-            onClick={() => {
-              setCaptionsEnabled(false);
-              setMenuView("main");
-            }}
-          >
-            <MenuItemLeft>
-              {!captionsEnabled && <CheckIcon />}
-              <span style={{ marginLeft: !captionsEnabled ? 0 : 28 }}>
-                {captionsEnabled ? t("captionsOn") : t("captionsOff")}
-              </span>
-            </MenuItemLeft>
-          </MenuItem>
-          <MenuItem
-            $active={captionsEnabled}
-            onClick={() => {
-              setCaptionsEnabled(true);
-              setMenuView("main");
-            }}
-          >
-            <MenuItemLeft>
-              {captionsEnabled && <CheckIcon />}
-              <span style={{ marginLeft: captionsEnabled ? 0 : 28 }}>
-                Español (auto)
-              </span>
-            </MenuItemLeft>
-          </MenuItem>
-        </>
-      );
-    }
-
     // Main menu
     return (
       <>
@@ -1378,14 +1347,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             <span>Calidad</span>
           </MenuItemLeft>
           <MenuItemRight>{qualityLabel}</MenuItemRight>
-        </MenuItem>
-        <MenuDivider />
-        <MenuItem onClick={() => setMenuView("captions")}>
-          <MenuItemLeft>
-            <SubtitlesIcon />
-            <span>Subtítulos</span>
-          </MenuItemLeft>
-          <MenuItemRight>{captionsEnabled ? t("captionsOn") : t("captionsOff")}</MenuItemRight>
         </MenuItem>
       </>
     );
@@ -1426,13 +1387,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           height="100%"
           playing={playing}
           muted={muted}
-          config={{
-            file: {
-              attributes: {
-                crossOrigin: "use-credentials", // Incluir cookies para autenticación en el proxy
-              },
-            },
-          }}
           controls={false}
           volume={volume}
           playbackRate={playbackRate}
@@ -1512,6 +1466,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           config={{
             file: {
               attributes: {
+                crossOrigin: "use-credentials", // Incluir cookies para autenticación en el proxy
                 // Precargar metadatos para reducir tiempo de carga inicial
                 preload: "auto",
                 // Reproducción inline en móviles (evita pantalla completa forzada en iOS)
@@ -1755,56 +1710,45 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               </ControlGroup>
 
               {/* Grupo derecho: se oculta en mini-player con transición suave */}
-              <ControlGroup
+              {/* menuRef envuelve todo el grupo para que el click fuera cierre el menú */}
+              <div
+                ref={menuRef}
                 style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "2px",
                   opacity: isStickyActive ? 0 : 1,
-                  maxWidth: isStickyActive ? 0 : "300px",
+                  maxWidth: isStickyActive ? 0 : "340px",
                   overflow: "hidden",
                   transition: "opacity 0.3s ease, max-width 0.3s ease",
                   pointerEvents: isStickyActive ? "none" : "auto",
                   flexShrink: 0,
                 }}
               >
-                {/* Captions toggle */}
-                <ControlBtn
-                  onClick={() => setCaptionsEnabled((p) => !p)}
-                  title={`${t("subtitles")} (C)`}
-                  style={{ color: captionsEnabled ? "#5fa8ff" : undefined }}
-                >
-                  {captionsEnabled ? <ClosedCaptionIcon /> : <ClosedCaptionDisabledIcon />}
-                </ControlBtn>
-
                 {/* Settings */}
-                <div ref={menuRef} style={{ position: "relative" }}>
-                  <ControlBtn
-                    onClick={toggleMenu}
-                    title={t("settings")}
-                    style={{
-                      color: menuOpen ? "#5fa8ff" : undefined,
-                      transition: "transform 0.3s ease, color 0.15s ease",
-                      transform: menuOpen ? "rotate(30deg)" : "rotate(0deg)",
-                    }}
-                  >
-                    <SettingsIcon />
-                  </ControlBtn>
-
-                  {menuOpen && (
-                    <MenuOverlay>
-                      {renderMenuContent()}
-                    </MenuOverlay>
-                  )}
-                </div>
-
-                {/* PiP */}
-                <ControlBtn onClick={togglePiP} title={t("pictureInPicture")}>
-                  <PictureInPictureAltIcon />
+                <ControlBtn
+                  onClick={toggleMenu}
+                  title={t("settings")}
+                  style={{
+                    color: menuOpen && menuView === "main" ? "#5fa8ff" : undefined,
+                    transition: "transform 0.3s ease, color 0.15s ease",
+                    transform: menuOpen ? "rotate(30deg)" : "rotate(0deg)",
+                  }}
+                >
+                  <SettingsIcon />
                 </ControlBtn>
+
+                {menuOpen && (
+                  <MenuOverlay>
+                    {renderMenuContent()}
+                  </MenuOverlay>
+                )}
 
                 {/* Fullscreen */}
                 <ControlBtn onClick={toggleFullScreen} title={isFullscreen ? `${t("exitFullscreen")} (F)` : `${t("fullscreen")} (F)`}>
                   {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
                 </ControlBtn>
-              </ControlGroup>
+              </div>
             </ControlRow>
           </BottomControls>
         </ControlsWrapper>
