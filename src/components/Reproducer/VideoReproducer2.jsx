@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import styled, { keyframes } from "styled-components";
 import ReactPlayer from "react-player";
 import { CircularProgress } from "@mui/material";
@@ -785,10 +785,19 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   // ── URL del proxy (nunca expone la URL directa de B2) ─────────────────────
   // getStreamUrl() construye la URL correcta para desarrollo y producción
-  // Si el video tiene _id, usar el proxy; si no, usar videoUrl como fallback
-  const proxyVideoUrl = currentVideo?._id
-    ? getStreamUrl(currentVideo._id)
-    : currentVideo?.videoUrl || null;
+  // Se incluye el sessionToken como query param _st para que las peticiones
+  // nativas del navegador (que no pueden enviar headers personalizados) lo incluyan.
+  // IMPORTANTE: No generar URL hasta que el sessionToken esté disponible,
+  // para evitar que ReactPlayer haga la primera petición sin autenticación.
+  const proxyVideoUrl = useMemo(() => {
+    if (currentVideo?._id) {
+      // Esperar a que el token de sesión esté disponible antes de generar la URL
+      if (!sessionToken) return null;
+      return getStreamUrl(currentVideo._id, sessionToken);
+    }
+    // Fallback para videos sin _id (legacy)
+    return currentVideo?.videoUrl || null;
+  }, [currentVideo?._id, currentVideo?.videoUrl, sessionToken]);
 
   // Core state
   const [playing, setPlaying] = useState(true);
@@ -1380,7 +1389,9 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           >
             ✕
           </StickyCloseBtn>
-        <ReactPlayer
+        {/* Solo renderizar ReactPlayer cuando la sesión esté lista y tengamos URL.
+            Esto evita que se haga la primera petición sin token de sesión. */}
+        {proxyVideoUrl && <ReactPlayer
           ref={playerRef}
           url={proxyVideoUrl}
           width="100%"
@@ -1466,7 +1477,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           config={{
             file: {
               attributes: {
-                crossOrigin: "use-credentials", // Incluir cookies para autenticación en el proxy
+                crossOrigin: "anonymous", // No necesitamos cookies; el token va en la URL (_st) y en headers (X-Session-Token)
                 // Precargar metadatos para reducir tiempo de carga inicial
                 preload: "auto",
                 // Reproducción inline en móviles (evita pantalla completa forzada en iOS)
@@ -1503,7 +1514,17 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             },
           }}
           style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
-        />
+        />}
+
+        {/* Spinner mientras se obtiene el token de sesión */}
+        {!proxyVideoUrl && currentVideo?._id && (
+          <div style={{
+            position: "absolute", top: 0, left: 0, width: "100%", height: "100%",
+            display: "flex", alignItems: "center", justifyContent: "center", background: "#000"
+          }}>
+            <CircularProgress sx={{ color: "#fff" }} />
+          </div>
+        )}
 
         {/* Clickable overlay for play/pause and fullscreen */}
         <ClickOverlay

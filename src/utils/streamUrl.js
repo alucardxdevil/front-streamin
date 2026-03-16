@@ -23,11 +23,19 @@ const BACKEND_URL =
  * Construye la URL del proxy para un video específico.
  *
  * @param {string} videoId - ID del video en MongoDB
+ * @param {string} [sessionToken] - Token de sesión anónimo (se agrega como query param _st)
  * @returns {string} URL del proxy de streaming
  */
-export const getStreamUrl = (videoId) => {
+export const getStreamUrl = (videoId, sessionToken) => {
   if (!videoId) return null
-  return `${BACKEND_URL}/api/stream/video/${videoId}`
+  const base = `${BACKEND_URL}/api/stream/video/${videoId}`
+  // Incluir el token de sesión como query parameter para que las peticiones
+  // nativas del navegador (como las de <video> o ReactPlayer) lo envíen.
+  // El middleware del servidor acepta _st como fallback cuando no hay header X-Session-Token.
+  if (sessionToken) {
+    return `${base}?_st=${encodeURIComponent(sessionToken)}`
+  }
+  return base
 }
 
 /**

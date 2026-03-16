@@ -36,6 +36,7 @@ axios.interceptors.request.use(
     const isBackendRequest =
       url.startsWith('/') ||
       url.includes('89.167.94.4') ||
+      url.includes('api.stream-in.com') ||
       url.includes('localhost')
 
     if (isBackendRequest) {
@@ -55,9 +56,14 @@ axios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expirado o inválido — limpiar sesión local
-      localStorage.removeItem('token')
-      sessionStorage.removeItem('token')
+      // Solo limpiar token de autenticación si el 401 viene de un endpoint de auth/usuario,
+      // NO de endpoints de streaming (que usan tokens de sesión anónimos diferentes)
+      const url = error.config?.url || ''
+      const isStreamEndpoint = url.includes('/stream/')
+      if (!isStreamEndpoint) {
+        localStorage.removeItem('token')
+        sessionStorage.removeItem('token')
+      }
     }
     return Promise.reject(error)
   }
