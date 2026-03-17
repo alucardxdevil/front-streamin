@@ -784,10 +784,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const { sessionToken, sessionReady } = useStreamSession();
 
   // ── Verificar si el video está listo para reproducción ───────────────────
-  // Videos legacy (sin hlsMasterUrl pero con videoUrl) se tratan como "ready"
+  // Un video puede reproducirse si:
+  // 1. Tiene HLS listo (hlsMasterUrl + status 'ready')
+  // 2. Tiene un archivo de video directo (videoUrl o videoKey)
   const videoStatus = currentVideo?.status || 'ready';
-  const isLegacyVideo = !currentVideo?.hlsMasterUrl && (currentVideo?.videoUrl || currentVideo?.videoKey);
-  const isVideoReady = videoStatus === 'ready' || isLegacyVideo;
+  const hasDirectVideo = currentVideo?.videoUrl || currentVideo?.videoKey;
+  const hasHLS = currentVideo?.hlsMasterUrl && videoStatus === 'ready';
+  const isVideoReady = hasHLS || !!hasDirectVideo;
 
   // ── URL del proxy (nunca expone la URL directa de B2) ─────────────────────
   // getStreamUrl() construye la URL correcta para desarrollo y producción
@@ -1494,7 +1497,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               // Forzar uso de hls.js para URLs del proxy que no terminan en .m3u8
               // El proxy devuelve Content-Type: application/vnd.apple.mpegurl
               // pero ReactPlayer necesita saber que es HLS para usar hls.js
-              forceHLS: currentVideo?.hlsMasterUrl ? true : false,
+              forceHLS: hasHLS,
               // Configuración de hls.js para streaming adaptativo
               hlsOptions: {
                 // Usar Web Worker para parsing (mejor rendimiento)
