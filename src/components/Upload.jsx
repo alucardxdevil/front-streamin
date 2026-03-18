@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { uploadToB2 } from "../utils/uploadB2";
+import { useLanguage } from "../utils/LanguageContext";
 
 /* =======================
    🎨 STYLED COMPONENTS
@@ -176,6 +177,7 @@ export const Upload = ({ setOpen }) => {
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
   const [error, setError] = useState(null);
+  const { t } = useLanguage();
 
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -198,11 +200,11 @@ export const Upload = ({ setOpen }) => {
     const file = e.target.files[0];
     if (!file) return;
     if (!file.type.match(/image\/(jpeg|png|webp)/)) {
-      setError("Solo JPG, PNG y WebP");
+      setError(t("onlyJpgPngWebp"));
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      setError("Imagen máximo 10 MB");
+      setError(t("imageMax10Mb"));
       return;
     }
     setError(null);
@@ -216,11 +218,11 @@ export const Upload = ({ setOpen }) => {
     const file = e.target.files[0];
     if (!file) return;
     if (!file.type.match(/video\/(mp4|webm|x-matroska)/)) {
-      setError("Solo MP4, WebM y MKV");
+      setError(t("onlyMp4WebmMkv"));
       return;
     }
     if (file.size > 500 * 1024 * 1024) {
-      setError("Video máximo 500 MB");
+      setError(t("videoMax500Mb"));
       return;
     }
     setError(null);
@@ -262,7 +264,7 @@ export const Upload = ({ setOpen }) => {
 
   const handleUpload = async () => {
     if (!imgData || !videoData) {
-      setError("Espera a que terminen de subir");
+      setError(t("waitForUpload"));
       return;
     }
     try {
@@ -281,7 +283,7 @@ export const Upload = ({ setOpen }) => {
       setOpen(false);
       if (res.status === 200) navigate(`/video/${res.data._id}`);
     } catch (err) {
-      setError(err.response?.data?.message || "Error al guardar");
+      setError(err.response?.data?.message || t("errorSaving"));
     }
   };
 
@@ -289,21 +291,21 @@ export const Upload = ({ setOpen }) => {
     <Container>
       <Modal>
         <Header>
-          <Title>Subir video</Title>
+          <Title>{t("uploadVideo")}</Title>
           <Close onClick={() => setOpen(false)}>✕</Close>
         </Header>
 
         {error && <ErrorText>{error}</ErrorText>}
 
         <Section>
-          <Label>Imagen de miniatura</Label>
+          <Label>{t("thumbnailImage")}</Label>
           {previewImg && <PreviewImage src={previewImg} />}
           <UploadBox>
             {imgPorc > 0 && imgPorc < 100 && (
               <ProgressBar value={imgPorc}><div /></ProgressBar>
             )}
-            {imgComplete && <CompleteText>✔ Imagen subida</CompleteText>}
-            {!imgComplete && imgPorc === 0 && "Click para subir imagen"}
+            {imgComplete && <CompleteText>✔ {t("imageUploaded")}</CompleteText>}
+            {!imgComplete && imgPorc === 0 && t("clickToUploadImage")}
             <input
               type="file"
               accept="image/jpeg, image/jpg, image/png, image/webp"
@@ -314,14 +316,14 @@ export const Upload = ({ setOpen }) => {
         </Section>
 
         <Section>
-          <Label>Archivo de video</Label>
+          <Label>{t("videoFile")}</Label>
           {previewVideo && <PreviewVideo src={previewVideo} controls />}
           <UploadBox>
             {videoPorc > 0 && videoPorc < 100 && (
               <ProgressBar value={videoPorc}><div /></ProgressBar>
             )}
-            {videoComplete && <CompleteText>✔ Video subido</CompleteText>}
-            {!videoComplete && videoPorc === 0 && "Click para subir video"}
+            {videoComplete && <CompleteText>✔ {t("videoUploaded")}</CompleteText>}
+            {!videoComplete && videoPorc === 0 && t("clickToUploadVideo")}
             <input
               type="file"
               accept="video/mp4, video/webm, video/x-matroska"
@@ -332,27 +334,27 @@ export const Upload = ({ setOpen }) => {
         </Section>
 
         <Section>
-          <Label>Título</Label>
+          <Label>{t("title")}</Label>
           <Input
             name="title"
-            placeholder="Título del video"
+            placeholder={t("videoTitlePlaceholder")}
             onChange={handleChange}
           />
         </Section>
 
         <Section>
-          <Label>Descripción</Label>
+          <Label>{t("description")}</Label>
           <Textarea
             rows={4}
             name="description"
-            placeholder="Descripción..."
+            placeholder={t("descriptionPlaceholder")}
             onChange={handleChange}
           />
         </Section>
 
         <Section>
-          <Label>Etiquetas</Label>
-          <Input placeholder="música, tutorial" onChange={handleTags} />
+          <Label>{t("tags")}</Label>
+          <Input placeholder={t("tagsPlaceholder")} onChange={handleTags} />
         </Section>
 
         <SaveButton
@@ -360,10 +362,10 @@ export const Upload = ({ setOpen }) => {
           onClick={handleUpload}
         >
           {isUploading
-            ? "Subiendo..."
+            ? t("uploading")
             : !imgComplete || !videoComplete
-            ? "Espera..."
-            : "Publicar"}
+            ? t("wait")
+            : t("publish")}
         </SaveButton>
       </Modal>
     </Container>

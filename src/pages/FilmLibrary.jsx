@@ -4,6 +4,7 @@ import styled from "styled-components";
 import CardSec from "../components/CardSec";
 import { keyframes } from "styled-components";
 import { FaFilm, FaVideo } from "react-icons/fa";
+import { useLanguage } from "../utils/LanguageContext";
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
@@ -126,6 +127,7 @@ const EmptyState = styled.div`
 const FilmLibrary = ({ type }) => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -146,13 +148,13 @@ const FilmLibrary = ({ type }) => {
   const getTitle = () => {
     switch (type) {
       case "random":
-        return "Videos Aleatorios";
+        return t("randomVideos");
       case "trend":
-        return "Videos en Tendencia";
+        return t("trendingVideos");
       case "sub":
-        return "Videos Suscritos";
+        return t("subscribedVideos");
       default:
-        return "Biblioteca de Videos";
+        return t("videoLibrary");
     }
   };
 
@@ -165,7 +167,7 @@ const FilmLibrary = ({ type }) => {
         <HeaderInfo>
           <Title>{getTitle()}</Title>
           <VideoCount>
-            {videos.length} {videos.length === 1 ? "video" : "videos"} disponibles
+            {videos.length} {videos.length === 1 ? t("video") : t("videos")} {t("videosAvailable")}
           </VideoCount>
         </HeaderInfo>
       </HeaderSection>
@@ -187,8 +189,8 @@ const FilmLibrary = ({ type }) => {
       ) : videos.length === 0 ? (
         <EmptyState>
           <FaVideo />
-          <h3>No hay videos</h3>
-          <p>No se encontraron videos en esta categoría</p>
+          <h3>{t("noVideosAvailable")}</h3>
+          <p>{t("noVideosInCategory")}</p>
         </EmptyState>
       ) : (
         <VideosGrid>

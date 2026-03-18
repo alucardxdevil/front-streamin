@@ -130,14 +130,14 @@ const Support = () => {
         <Input
           type="text"
           name="name"
-          placeholder={t("name")}
+          placeholder={t("yourName")}
           value={formData.name}
           onChange={handleChange}
         />
         <Input
           type="email"
           name="email"
-          placeholder={t("email")}
+          placeholder={t("yourEmail")}
           value={formData.email}
           onChange={handleChange}
         />

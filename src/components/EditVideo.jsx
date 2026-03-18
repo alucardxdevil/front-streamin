@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaCloudUploadAlt, FaVideo } from "react-icons/fa";
 import { uploadToB2 } from "../utils/uploadB2";
+import { useLanguage } from "../utils/LanguageContext";
 
 const Container = styled.div`
   position: fixed;
@@ -213,6 +214,7 @@ export const EditVideo = ({ setOpen, videoId }) => {
   const [loading, setLoading] = useState(true);
   const [originalData, setOriginalData] = useState(null);
   const [error, setError] = useState(null);
+  const { t } = useLanguage();
 
   const navigate = useNavigate();
 
@@ -252,11 +254,11 @@ export const EditVideo = ({ setOpen, videoId }) => {
     const file = e.target.files[0];
     if (!file) return;
     if (!file.type.match(/image\/(jpeg|png|webp)/)) {
-      setError("Solo JPG, PNG, WebP");
+      setError(t("onlyJpgPngWebp"));
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      setError("Máximo 10 MB");
+      setError(t("max10Mb"));
       return;
     }
     setError(null);
@@ -270,11 +272,11 @@ export const EditVideo = ({ setOpen, videoId }) => {
     const file = e.target.files[0];
     if (!file) return;
     if (!file.type.match(/video\/(mp4|webm|x-matroska)/)) {
-      setError("Solo MP4, WebM, MKV");
+      setError(t("onlyMp4WebmMkv"));
       return;
     }
     if (file.size > 500 * 1024 * 1024) {
-      setError("Máximo 500 MB");
+      setError(t("max500Mb"));
       return;
     }
     setError(null);
@@ -328,7 +330,7 @@ export const EditVideo = ({ setOpen, videoId }) => {
     return (
       <Container>
         <Modal>
-          <div style={{ textAlign: "center", padding: "40px" }}>Cargando...</div>
+          <div style={{ textAlign: "center", padding: "40px" }}>{t("loading")}</div>
         </Modal>
       </Container>
     );
@@ -338,21 +340,21 @@ export const EditVideo = ({ setOpen, videoId }) => {
     <Container>
       <Modal>
         <Header>
-          <Title>Editar video</Title>
+          <Title>{t("editVideo")}</Title>
           <Close onClick={() => setOpen(false)}>✕</Close>
         </Header>
 
         {error && <ErrorText>{error}</ErrorText>}
 
         <Section>
-          <Label>Video actual</Label>
+          <Label>{t("currentVideo")}</Label>
           <CurrentVideo>
             <VideoIcon><FaVideo /></VideoIcon>
             <VideoInfo>
-              <VideoTitle>{inputs.title || "Sin título"}</VideoTitle>
+              <VideoTitle>{inputs.title || t("noTitle")}</VideoTitle>
               {originalData?.duration && (
                 <VideoDuration>
-                  Duración:{" "}
+                  {t("duration")}:{" "}
                   {Math.floor(originalData.duration / 60)}:
                   {String(originalData.duration % 60).padStart(2, "0")}
                 </VideoDuration>
@@ -362,16 +364,16 @@ export const EditVideo = ({ setOpen, videoId }) => {
         </Section>
 
         <Section>
-          <Label>Reemplazar video</Label>
+          <Label>{t("replaceVideo")}</Label>
           {videoPorc > 0 && videoPorc < 100 && (
             <VideoProgressBar value={videoPorc}><div /></VideoProgressBar>
           )}
-          {videoComplete && <CompleteText>✔ Video cargado</CompleteText>}
+          {videoComplete && <CompleteText>✔ {t("videoUploaded")}</CompleteText>}
           {!videoComplete && videoPorc === 0 && (
             <VideoUploadBox>
               <FaCloudUploadAlt style={{ fontSize: "32px", marginBottom: "8px" }} />
-              <div>Click para seleccionar video</div>
-              <div style={{ fontSize: "12px", marginTop: "4px" }}>MP4, WebM, MKV</div>
+              <div>{t("clickToSelectVideo")}</div>
+              <div style={{ fontSize: "12px", marginTop: "4px" }}>{t("videoFormats")}</div>
               <input
                 type="file"
                 accept="video/mp4,video/webm,video/x-matroska"
@@ -383,15 +385,15 @@ export const EditVideo = ({ setOpen, videoId }) => {
         </Section>
 
         <Section>
-          <Label>Miniatura</Label>
+          <Label>{t("thumbnail")}</Label>
           {previewImg && <PreviewImage src={previewImg} />}
           {imgPorc > 0 && imgPorc < 100 && (
             <ProgressBar value={imgPorc}><div /></ProgressBar>
           )}
-          {imgComplete && <CompleteText>✔ Imagen cargada</CompleteText>}
+          {imgComplete && <CompleteText>✔ {t("imageUploaded")}</CompleteText>}
           {!imgComplete && imgPorc === 0 && (
             <UploadBox>
-              Click para cambiar imagen
+              {t("clickToChangeImage")}
               <input
                 type="file"
                 accept="image/jpeg, image/jpg, image/png, image/webp"
@@ -403,37 +405,37 @@ export const EditVideo = ({ setOpen, videoId }) => {
         </Section>
 
         <Section>
-          <Label>Título</Label>
+          <Label>{t("title")}</Label>
           <Input
             name="title"
-            placeholder="Título"
+            placeholder={t("title")}
             value={inputs.title || ""}
             onChange={handleChange}
           />
         </Section>
 
         <Section>
-          <Label>Descripción</Label>
+          <Label>{t("description")}</Label>
           <Textarea
             rows={4}
             name="description"
-            placeholder="Descripción"
+            placeholder={t("description")}
             value={inputs.description || ""}
             onChange={handleChange}
           />
         </Section>
 
         <Section>
-          <Label>Etiquetas</Label>
+          <Label>{t("tags")}</Label>
           <Input
-            placeholder="música, tutorial"
+            placeholder={t("tagsPlaceholder")}
             value={tags.join(", ")}
             onChange={handleTags}
           />
         </Section>
 
         <SaveButton disabled={isUploading} onClick={handleSave}>
-          {isUploading ? "Guardando..." : "Guardar"}
+          {isUploading ? t("saving") : t("save")}
         </SaveButton>
       </Modal>
     </Container>

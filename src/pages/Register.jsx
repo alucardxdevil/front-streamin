@@ -484,10 +484,6 @@ const Register = () => {
 
   return (
     <>
-      <TopBar>
-        <TopLink onClick={() => navigate("/terms")}>Terms</TopLink>
-        <TopLink onClick={() => navigate("/help")}>Help</TopLink>
-      </TopBar>
 
       <PageWrapper>
         <ContentContainer>

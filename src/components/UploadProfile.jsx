@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { uploadToB2 } from "../utils/uploadB2";
+import { useLanguage } from "../utils/LanguageContext";
 
 const Container = styled.div`
   position: fixed;
@@ -158,6 +159,7 @@ export const UploadProfile = ({ setOpen }) => {
   const [previewBanner, setPreviewBanner] = useState(null);
   const [inputs, setInputs] = useState({});
   const [error, setError] = useState(null);
+  const { t } = useLanguage();
 
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -177,11 +179,11 @@ export const UploadProfile = ({ setOpen }) => {
     const file = e.target.files[0];
     if (!file) return;
     if (!file.type.match(/image\/(jpeg|png|webp)/)) {
-      setError("Solo JPG, PNG, WebP");
+      setError(t("onlyJpgPngWebp"));
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      setError("Máximo 5 MB");
+      setError(t("max5Mb"));
       return;
     }
     setError(null);
@@ -195,11 +197,11 @@ export const UploadProfile = ({ setOpen }) => {
     const file = e.target.files[0];
     if (!file) return;
     if (!file.type.match(/image\/(jpeg|png|webp)/)) {
-      setError("Solo JPG, PNG, WebP");
+      setError(t("onlyJpgPngWebp"));
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      setError("Máximo 10 MB");
+      setError(t("max10Mb"));
       return;
     }
     setError(null);
@@ -245,7 +247,7 @@ export const UploadProfile = ({ setOpen }) => {
       setOpen(false);
       if (res.status === 200) navigate("/signin");
     } catch (err) {
-      setError(err.response?.data?.message || "Error al guardar");
+      setError(err.response?.data?.message || t("errorSaving"));
     }
   };
 
@@ -253,21 +255,21 @@ export const UploadProfile = ({ setOpen }) => {
     <Container>
       <Modal>
         <Header>
-          <Title>Editar perfil</Title>
+          <Title>{t("editProfile")}</Title>
           <Close onClick={() => setOpen(false)}>✕</Close>
         </Header>
 
         {error && <ErrorText>{error}</ErrorText>}
 
         <Section>
-          <Label>Imagen de perfil</Label>
+          <Label>{t("profileImage")}</Label>
           {previewImg && <Preview src={previewImg} />}
           <UploadBox>
             {imgPorc > 0 && imgPorc < 100 && (
               <ProgressBar value={imgPorc}><div /></ProgressBar>
             )}
-            {imgComplete && <CompleteText>✔ Imagen subida</CompleteText>}
-            {!imgComplete && imgPorc === 0 && "Click para subir imagen"}
+            {imgComplete && <CompleteText>✔ {t("imageUploaded")}</CompleteText>}
+            {!imgComplete && imgPorc === 0 && t("clickToUploadImage")}
             <input
               type="file"
               accept="image/jpeg, image/jpg, image/png, image/webp"
@@ -278,29 +280,29 @@ export const UploadProfile = ({ setOpen }) => {
         </Section>
 
         <Section>
-          <Label>Nombre</Label>
-          <Input name="name" placeholder="Tu nombre" onChange={handleChanges} />
+          <Label>{t("name")}</Label>
+          <Input name="name" placeholder={t("yourName")} onChange={handleChanges} />
         </Section>
 
         <Section>
-          <Label>Descripción</Label>
+          <Label>{t("description")}</Label>
           <Textarea
             rows={4}
             name="descriptionAccount"
-            placeholder="Sobre ti..."
+            placeholder={t("aboutYou")}
             onChange={handleChanges}
           />
         </Section>
 
         <Section>
-          <Label>Banner</Label>
+          <Label>{t("banner")}</Label>
           {previewBanner && <Preview src={previewBanner} />}
           <UploadBox>
             {imgBannerPorc > 0 && imgBannerPorc < 100 && (
               <ProgressBar value={imgBannerPorc}><div /></ProgressBar>
             )}
-            {imgBannerComplete && <CompleteText>✔ Banner subido</CompleteText>}
-            {!imgBannerComplete && imgBannerPorc === 0 && "Click para subir banner"}
+            {imgBannerComplete && <CompleteText>✔ {t("bannerUploaded")}</CompleteText>}
+            {!imgBannerComplete && imgBannerPorc === 0 && t("clickToUploadBanner")}
             <input
               type="file"
               accept="image/jpeg, image/jpg, image/png, image/webp"
@@ -311,7 +313,7 @@ export const UploadProfile = ({ setOpen }) => {
         </Section>
 
         <SaveButton disabled={isUploading} onClick={handleUpload}>
-          {isUploading ? "Subiendo..." : "Guardar"}
+          {isUploading ? t("uploading") : t("save")}
         </SaveButton>
       </Modal>
     </Container>

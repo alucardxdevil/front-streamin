@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components';
 import Card from './Card';
+import { useLanguage } from "../utils/LanguageContext";
 
 const Container = styled.div`
   flex: 1.5;
@@ -125,6 +126,7 @@ export const RecommendationRandom = ({ type, currentPlayingVideoId }) => {
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
   const lastCardRef = useRef();
+  const { t } = useLanguage();
 
   const itemsPerPage = 10;
 
@@ -181,12 +183,12 @@ export const RecommendationRandom = ({ type, currentPlayingVideoId }) => {
       {/* Espacio reservado para publicidad — se reemplazará con el componente de anuncio */}
       <AdPlaceholder>
         <AdIcon>📢</AdIcon>
-        <AdLabel>Publicidad</AdLabel>
+        <AdLabel>{t("adLabel")}</AdLabel>
       </AdPlaceholder>
 
       {/* Las cards de recomendación hacen scroll independientemente del ad */}
       <ScrollableCards>
-        <h3 style={{ color: "white", justifyContent: "center", display: "flex" }}>Video Random</h3>
+        <h3 style={{ color: "white", justifyContent: "center", display: "flex" }}>{t("randomVideos")}</h3>
         <Hr />
         {videos.map((video, index) => {
           if (videos.length === index + 1) {
@@ -203,8 +205,8 @@ export const RecommendationRandom = ({ type, currentPlayingVideoId }) => {
             );
           }
         })}
-        {loading && <Loading>Cargando más videos...</Loading>}
-        {!hasMore && !loading && <Loading>No hay más videos aleatorios</Loading>}
+        {loading && <Loading>{t("loadingMoreVideos")}</Loading>}
+        {!hasMore && !loading && <Loading>{t("noMoreRandomVideos")}</Loading>}
       </ScrollableCards>
     </Container>
   );

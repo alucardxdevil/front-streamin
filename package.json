@@ -44,7 +44,7 @@
     "eject": "react-scripts eject",
     "ci": "npm install && npm run build"
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:3000",
   "eslintConfig": {
     "extends": [
       "react-app",

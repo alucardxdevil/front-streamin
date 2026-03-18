@@ -227,7 +227,7 @@ const Terms = () => {
   const sections = [
     {
       icon: <Gavel />,
-      title: "Aceptación de los Términos",
+      title: t("acceptanceOfTerms"),
       content: (
         <>
           <Paragraph>
@@ -243,7 +243,7 @@ const Terms = () => {
     },
     {
       icon: <Public />,
-      title: "Uso del Sitio",
+      title: t("siteUsage"),
       content: (
         <>
           <Paragraph>
@@ -260,7 +260,7 @@ const Terms = () => {
     },
     {
       icon: <PermMedia />,
-      title: "Contenido del Usuario",
+      title: t("userContent"),
       content: (
         <>
           <Paragraph>
@@ -282,7 +282,7 @@ const Terms = () => {
     },
     {
       icon: <Copyright />,
-      title: "Propiedad Intelectual",
+      title: t("intellectualProperty"),
       content: (
         <>
           <Paragraph>
@@ -296,7 +296,7 @@ const Terms = () => {
     },
     {
       icon: <Security />,
-      title: "Seguridad del Sitio",
+      title: t("siteSecurity"),
       content: (
         <>
           <Paragraph>
@@ -313,7 +313,7 @@ const Terms = () => {
     },
     {
       icon: <Block />,
-      title: "Suspensión o Terminación de Cuenta",
+      title: t("accountSuspension"),
       content: (
         <>
           <Paragraph>
@@ -327,7 +327,7 @@ const Terms = () => {
     },
     {
       icon: <Business />,
-      title: "Limitación de Responsabilidad",
+      title: t("liabilityLimitation"),
       content: (
         <>
           <Paragraph>
@@ -344,7 +344,7 @@ const Terms = () => {
     },
     {
       icon: <Update />,
-      title: "Modificaciones a los Términos",
+      title: t("termsModifications"),
       content: (
         <>
           <Paragraph>
@@ -360,7 +360,7 @@ const Terms = () => {
     },
     {
       icon: <TrendingUp />,
-      title: "Ley Aplicable",
+      title: t("applicableLaw"),
       content: (
         <>
           <Paragraph>
@@ -371,7 +371,7 @@ const Terms = () => {
     },
     {
       icon: <ContactMail />,
-      title: "Contacto",
+      title: t("contactSection"),
       content: (
         <>
           <Paragraph>
@@ -396,7 +396,7 @@ const Terms = () => {
       <Subtitle>
         {t("termsPageSubtitle")}
       </Subtitle>
-      <LastUpdated>{t("lastUpdatedLabel")}: 22 de Febrero de 2026</LastUpdated>
+      <LastUpdated>{t("termsDate")}</LastUpdated>
 
       {sections.map((section, index) => (
         <SectionCard key={index}>

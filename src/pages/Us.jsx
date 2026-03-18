@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useLanguage } from "../utils/LanguageContext";
 import {
   ExpandMore,
   ExpandLess,
@@ -182,6 +183,7 @@ const ContactLink = styled.a`
 
 const Us = () => {
   const [openSections, setOpenSections] = useState(new Set([0]));
+  const { t } = useLanguage();
 
   const toggleSection = (index) => {
     setOpenSections((prev) => {
@@ -198,7 +200,7 @@ const Us = () => {
   const sections = [
     {
       icon: <Gavel />,
-      title: "Aceptación de los Términos",
+      title: t("acceptanceOfTermsUs"),
       content: (
         <>
           <Paragraph>
@@ -217,7 +219,7 @@ const Us = () => {
     },
     {
       icon: <Public />,
-      title: "Descripción del Servicio",
+      title: t("serviceDescription"),
       content: (
         <>
           <Paragraph>
@@ -239,7 +241,7 @@ const Us = () => {
     },
     {
       icon: <Person />,
-      title: "Cuentas de Usuario",
+      title: t("userAccounts"),
       content: (
         <>
           <Paragraph>
@@ -264,7 +266,7 @@ const Us = () => {
     },
     {
       icon: <Copyright />,
-      title: "Contenido y Propiedad Intelectual",
+      title: t("contentAndIP"),
       content: (
         <>
           <Paragraph>
@@ -292,7 +294,7 @@ const Us = () => {
     },
     {
       icon: <Block />,
-      title: "Conducta Prohibida",
+      title: t("prohibitedConduct"),
       content: (
         <>
           <Paragraph>
@@ -317,7 +319,7 @@ const Us = () => {
     },
     {
       icon: <MonetizationOn />,
-      title: "Monetización y Pagos",
+      title: t("monetizationAndPayments"),
       content: (
         <>
           <Paragraph>
@@ -341,7 +343,7 @@ const Us = () => {
     },
     {
       icon: <Security />,
-      title: "Privacidad y Protección de Datos",
+      title: t("privacyAndData"),
       content: (
         <>
           <Paragraph>
@@ -365,7 +367,7 @@ const Us = () => {
     },
     {
       icon: <Shield />,
-      title: "Limitación de Responsabilidad",
+      title: t("liabilityLimitationUs"),
       content: (
         <>
           <Paragraph>
@@ -397,7 +399,7 @@ const Us = () => {
     },
     {
       icon: <Warning />,
-      title: "Indemnización",
+      title: t("indemnification"),
       content: (
         <>
           <Paragraph>
@@ -416,7 +418,7 @@ const Us = () => {
     },
     {
       icon: <Update />,
-      title: "Modificaciones a los Términos",
+      title: t("termsModificationsUs"),
       content: (
         <>
           <Paragraph>
@@ -439,7 +441,7 @@ const Us = () => {
     },
     {
       icon: <ContactMail />,
-      title: "Contacto y Resolución de Disputas",
+      title: t("contactAndDisputes"),
       content: (
         <>
           <Paragraph>
@@ -469,12 +471,11 @@ const Us = () => {
 
   return (
     <Container>
-      <Title>Términos y Condiciones</Title>
+      <Title>{t("termsTitleUs")}</Title>
       <Subtitle>
-        En stream-in nos importa que entiendas tus derechos y responsabilidades.
-        Hemos escrito estos términos de la forma más clara posible.
+        {t("termsSubtitleUs")}
       </Subtitle>
-      <LastUpdated>Última actualización: Enero 2025</LastUpdated>
+      <LastUpdated>{t("lastUpdatedUs")}</LastUpdated>
 
       {sections.map((section, index) => {
         const isOpen = openSections.has(index);

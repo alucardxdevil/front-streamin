@@ -11,6 +11,7 @@ import Card from "../components/Card";
 import { useDispatch, useSelector } from "react-redux";
 import { follows } from '../redux/userSlice';
 import { FaTimes } from "react-icons/fa";
+import { useLanguage } from "../utils/LanguageContext";
 
 // Animaciones
 const fadeIn = keyframes`
@@ -517,6 +518,7 @@ export const Search = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const urlQuery = parseQuery(location.search);
+  const { t } = useLanguage();
 
   // input state (local controlled input)
   const [input, setInput] = useState(urlQuery);
@@ -672,7 +674,7 @@ export const Search = () => {
       <HeaderSection>
         <Title>
           <FaSearch />
-          Buscar
+          {t("search")}
         </Title>
         
         <Description>Encuentra videos, canales y creadores</Description>
@@ -681,7 +683,7 @@ export const Search = () => {
           <SearchBox as="form" onSubmit={onSubmit}>
             <SearchIcon />
             <Input
-              placeholder="Buscar videos, canales, temas..."
+              placeholder={t("searchVideosPlaceholder")}
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
@@ -719,7 +721,7 @@ export const Search = () => {
           onClick={() => setTab("users")}
         >
           <FaUsers />
-          Usuarios
+          {t("users")}
           {usersCount > 0 && <TabCount>{usersCount}</TabCount>}
         </Tab>
         <Tab 
@@ -727,7 +729,7 @@ export const Search = () => {
           onClick={() => setTab("videos")}
         >
           <FaVideo />
-          Videos
+          {t("videos")}
           {videosCount > 0 && <TabCount>{videosCount}</TabCount>}
         </Tab>
       </TabsContainer>
@@ -740,7 +742,7 @@ export const Search = () => {
             <Section>
               <SectionHeader>
                 <SectionTitle>
-                  <FaUserCircle /> Usuarios
+                  <FaUserCircle /> {t("users")}
                 </SectionTitle>
               </SectionHeader>
               <UserCarousel>
@@ -761,7 +763,7 @@ export const Search = () => {
             <Section>
               <SectionHeader>
                 <SectionTitle>
-                  <FaFilm /> Videos
+                  <FaFilm /> {t("videos")}
                 </SectionTitle>
               </SectionHeader>
               <VideosGrid>
@@ -805,7 +807,7 @@ export const Search = () => {
                 </SectionTitle>
 
                 <FiltersRow>
-                  <ResultsCount>{usersCount} resultados</ResultsCount>
+                  <ResultsCount>{usersCount} {t("results")}</ResultsCount>
                   <Select
                     value={userSort}
                     onChange={(e) => setUserSort(e.target.value)}
@@ -819,8 +821,8 @@ export const Search = () => {
               {usersCount === 0 ? (
                 <Message>
                   <FaUsers />
-                  <h3>No se encontraron usuarios</h3>
-                  <p>Intenta con otros términos de búsqueda</p>
+                  <h3>{t("noUsersFound")}</h3>
+                  <p>{t("tryOtherSearchTerms")}</p>
                 </Message>
               ) : (
                 <UserCarousel>
@@ -844,8 +846,8 @@ export const Search = () => {
                         }}
                       >
                         {currentUser?.followsProfile.includes(u._id)
-                          ? "Siguiendo"
-                          : "Seguir"}
+                          ? t("following")
+                          : t("follow")}
                       </CardButton>
                     </UserCardCarousel>
                   ))}
@@ -864,7 +866,7 @@ export const Search = () => {
 
                 <FiltersRow>
                   <ResultsCount>
-                    {videosCount} resultados
+                    {videosCount} {t("results")}
                   </ResultsCount>
                   <Select
                     value={videoSort}
@@ -880,8 +882,8 @@ export const Search = () => {
               {videosCount === 0 ? (
                 <Message>
                   <FaVideo />
-                  <h3>No se encontraron videos</h3>
-                  <p>Intenta con otros términos de búsqueda</p>
+                  <h3>{t("noVideosFound")}</h3>
+                  <p>{t("tryOtherSearchTerms")}</p>
                 </Message>
               ) : (
                 <>
@@ -893,7 +895,7 @@ export const Search = () => {
 
                   {hasMoreVideos && (
                     <LoadMoreButton onClick={loadMoreVideos}>
-                      Cargar más videos
+                      {t("loadMoreVideos")}
                     </LoadMoreButton>
                   )}
                 </>

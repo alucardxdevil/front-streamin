@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components';
 import Card from './Card';
+import { useLanguage } from "../utils/LanguageContext";
 
 const Container = styled.div`
   flex: 1.5;
@@ -125,6 +126,7 @@ export const Recommendation = ({tags, currentPlayingVideoId}) => {
     const [hasMore, setHasMore] = useState(true);
     const observer = useRef();
     const lastCardRef = useRef();
+    const { t } = useLanguage();
 
     const itemsPerPage = 10;
 
@@ -182,13 +184,13 @@ export const Recommendation = ({tags, currentPlayingVideoId}) => {
             {/* Espacio reservado para publicidad — se reemplazará con el componente de anuncio */}
             <AdPlaceholder>
                 <AdIcon>📢</AdIcon>
-                <AdLabel>Publicidad</AdLabel>
+                <AdLabel>{t("adLabel")}</AdLabel>
             </AdPlaceholder>
 
             {/* Las cards de recomendación hacen scroll independientemente del ad */}
             <ScrollableCards>
                 <h3 style={{ color: "white", justifyContent: "center", display: "flex" }}>
-                    Video Relation
+                    {t("relatedVideos")}
                 </h3>
                 <Hr />
                 {videos.map((video, index) => {
@@ -206,8 +208,8 @@ export const Recommendation = ({tags, currentPlayingVideoId}) => {
                         );
                     }
                 })}
-                {loading && <Loading>Cargando más videos...</Loading>}
-                {!hasMore && !loading && <Loading>No hay más videos relacionados</Loading>}
+                {loading && <Loading>{t("loadingMoreVideos")}</Loading>}
+                {!hasMore && !loading && <Loading>{t("noMoreRelatedVideos")}</Loading>}
             </ScrollableCards>
         </Container>
     );
