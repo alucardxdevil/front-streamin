@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { uploadToB2 } from "../utils/uploadB2";
+import useVideoUpload from "../utils/useVideoUpload";
 import { useLanguage } from "../utils/LanguageContext";
 
 /* =======================
@@ -161,32 +160,65 @@ const SaveButton = styled.button`
   pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
 `;
 
+const StatusText = styled.div`
+  font-size: 13px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.textSoft || "#aaa"};
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const Spinner = styled.span`
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid ${({ theme }) => theme.soft || "#444"};
+  border-top-color: #3ea6ff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+`;
+
 /* =======================
    ⚛️ COMPONENT
 ======================= */
 
 export const Upload = ({ setOpen }) => {
-  const [img, setImg] = useState(null);
-  const [video, setVideo] = useState(null);
-  const [imgPorc, setImgPorc] = useState(0);
-  const [videoPorc, setVideoPorc] = useState(0);
-  const [imgComplete, setImgComplete] = useState(false);
-  const [videoComplete, setVideoComplete] = useState(false);
+  // Archivos seleccionados (solo para preview local)
+  const [imgFile, setImgFile] = useState(null);
+  const [videoFile, setVideoFile] = useState(null);
   const [previewImg, setPreviewImg] = useState(null);
   const [previewVideo, setPreviewVideo] = useState(null);
+
+  // Metadata del video
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
-  const [error, setError] = useState(null);
-  const { t } = useLanguage();
+  const [localError, setLocalError] = useState(null);
 
+  const { t } = useLanguage();
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  const [imgData, setImgData] = useState(null);
-  const [videoData, setVideoData] = useState(null);
+  // Hook de upload + transcodificación HLS
+  const {
+    upload,
+    cancel,
+    state,
+    uploadProgress,
+    transcodeProgress,
+    videoId,
+    error: uploadError,
+    isUploading,
+    isProcessing,
+    isReady,
+    hasError,
+  } = useVideoUpload();
 
-  const isUploading =
-    (imgPorc > 0 && imgPorc < 100) || (videoPorc > 0 && videoPorc < 100);
+  const error = localError || uploadError;
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -200,17 +232,15 @@ export const Upload = ({ setOpen }) => {
     const file = e.target.files[0];
     if (!file) return;
     if (!file.type.match(/image\/(jpeg|png|webp)/)) {
-      setError(t("onlyJpgPngWebp"));
+      setLocalError(t("onlyJpgPngWebp"));
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      setError(t("imageMax10Mb"));
+      setLocalError(t("imageMax10Mb"));
       return;
     }
-    setError(null);
-    setImg(file);
-    setImgComplete(false);
-    setImgPorc(0);
+    setLocalError(null);
+    setImgFile(file);
     setPreviewImg(URL.createObjectURL(file));
   };
 
@@ -218,99 +248,150 @@ export const Upload = ({ setOpen }) => {
     const file = e.target.files[0];
     if (!file) return;
     if (!file.type.match(/video\/(mp4|webm|x-matroska)/)) {
-      setError(t("onlyMp4WebmMkv"));
+      setLocalError(t("onlyMp4WebmMkv"));
       return;
     }
     if (file.size > 500 * 1024 * 1024) {
-      setError(t("videoMax500Mb"));
+      setLocalError(t("videoMax500Mb"));
       return;
     }
-    setError(null);
-    setVideo(file);
-    setVideoComplete(false);
-    setVideoPorc(0);
+    setLocalError(null);
+    setVideoFile(file);
     setPreviewVideo(URL.createObjectURL(file));
   };
 
-  // Subir imagen directo a B2 al seleccionarla
-  useEffect(() => {
-    if (!img || imgComplete) return;
-    uploadToB2(img, (progress) => setImgPorc(progress))
-      .then((data) => {
-        setImgData(data);
-        setInputs((prev) => ({ ...prev, imgUrl: data.publicUrl }));
-        setImgComplete(true);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setImgPorc(0);
-      });
-  }, [img]);
-
-  // Subir video directo a B2 al seleccionarlo
-  useEffect(() => {
-    if (!video || videoComplete) return;
-    uploadToB2(video, (progress) => setVideoPorc(progress))
-      .then((data) => {
-        setVideoData(data);
-        setInputs((prev) => ({ ...prev, videoUrl: data.publicUrl }));
-        setVideoComplete(true);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setVideoPorc(0);
-      });
-  }, [video]);
-
+  /**
+   * Flujo completo de upload + transcodificación HLS:
+   *  1. Sube miniatura a B2 (vía proxy del servidor)
+   *  2. Obtiene presigned URL para el video
+   *  3. Sube MP4 directamente a B2 (sin pasar por el servidor)
+   *  4. Encola transcodificación en el backend (BullMQ + FFmpeg)
+   *  5. Hace polling hasta que status === 'ready'
+   *  6. Navega al video cuando está listo
+   */
   const handleUpload = async () => {
-    if (!imgData || !videoData) {
-      setError(t("waitForUpload"));
+    if (!imgFile || !videoFile) {
+      setLocalError(t("waitForUpload"));
       return;
     }
+    if (!inputs.title || !inputs.description) {
+      setLocalError(t("titleAndDescriptionRequired") || "Título y descripción son requeridos");
+      return;
+    }
+
+    setLocalError(null);
+
     try {
-      const res = await axios.post(
-        "/videos",
-        {
-          ...inputs,
-          tags,
-          imgKey: imgData.fileKey,
-          videoKey: videoData.fileKey,
-          fileType: "video",
-          fileSize: video?.size || 0,
-        },
-        { withCredentials: true }
-      );
-      setOpen(false);
-      if (res.status === 200) navigate(`/video/${res.data._id}`);
+      const result = await upload({
+        videoFile,
+        imageFile: imgFile,
+        title: inputs.title,
+        description: inputs.description,
+        tags,
+      });
+
+      // El hook hace polling automático. Cuando isReady === true,
+      // el videoId estará disponible y podemos navegar.
+      // La navegación se maneja en el useEffect de abajo.
     } catch (err) {
-      setError(err.response?.data?.message || t("errorSaving"));
+      // El error ya se maneja dentro del hook (state === 'error')
+      console.error("[Upload] Error:", err.message);
     }
   };
+
+  // Navegar al video cuando la transcodificación termine
+  React.useEffect(() => {
+    if (isReady && videoId) {
+      setOpen(false);
+      navigate(`/video/${videoId}`);
+    }
+  }, [isReady, videoId, navigate, setOpen]);
+
+  // Determinar texto y estado del botón
+  const getButtonText = () => {
+    if (isUploading) return `${t("uploading")} ${uploadProgress}%`;
+    if (isProcessing) return `${t("processing") || "Procesando"} ${transcodeProgress}%`;
+    if (isReady) return t("ready") || "¡Listo!";
+    if (!imgFile || !videoFile) return t("wait");
+    return t("publish");
+  };
+
+  const isButtonDisabled =
+    isUploading || isProcessing || !imgFile || !videoFile || !inputs.title || !inputs.description;
+
+  // Determinar texto de estado
+  const getStatusMessage = () => {
+    switch (state) {
+      case "uploading":
+        return t("uploadingToCloud") || "Subiendo archivo a la nube...";
+      case "enqueuing":
+        return t("preparingTranscode") || "Preparando transcodificación...";
+      case "processing":
+        return t("transcodingHLS") || "Transcodificando a HLS (múltiples calidades)...";
+      case "ready":
+        return t("videoReady") || "¡Video listo para reproducir!";
+      case "error":
+        return null; // Se muestra en ErrorText
+      default:
+        return null;
+    }
+  };
+
+  const statusMessage = getStatusMessage();
 
   return (
     <Container>
       <Modal>
         <Header>
           <Title>{t("uploadVideo")}</Title>
-          <Close onClick={() => setOpen(false)}>✕</Close>
+          <Close
+            onClick={() => {
+              if (isUploading || isProcessing) cancel();
+              setOpen(false);
+            }}
+          >
+            ✕
+          </Close>
         </Header>
 
         {error && <ErrorText>{error}</ErrorText>}
+
+        {/* Estado de progreso */}
+        {statusMessage && (
+          <StatusText>
+            {(isUploading || isProcessing) && <Spinner />}
+            {statusMessage}
+          </StatusText>
+        )}
+
+        {/* Barra de progreso de subida */}
+        {isUploading && uploadProgress > 0 && (
+          <ProgressBar value={uploadProgress}>
+            <div />
+          </ProgressBar>
+        )}
+
+        {/* Barra de progreso de transcodificación */}
+        {isProcessing && transcodeProgress > 0 && (
+          <ProgressBar value={transcodeProgress}>
+            <div />
+          </ProgressBar>
+        )}
 
         <Section>
           <Label>{t("thumbnailImage")}</Label>
           {previewImg && <PreviewImage src={previewImg} />}
           <UploadBox>
-            {imgPorc > 0 && imgPorc < 100 && (
-              <ProgressBar value={imgPorc}><div /></ProgressBar>
+            {imgFile ? (
+              <CompleteText>✔ {imgFile.name}</CompleteText>
+            ) : (
+              t("clickToUploadImage")
             )}
-            {imgComplete && <CompleteText>✔ {t("imageUploaded")}</CompleteText>}
-            {!imgComplete && imgPorc === 0 && t("clickToUploadImage")}
             <input
               type="file"
               accept="image/jpeg, image/jpg, image/png, image/webp"
               onChange={handleImgChange}
-              disabled={imgComplete}
+              disabled={isUploading || isProcessing}
             />
           </UploadBox>
         </Section>
@@ -319,16 +400,16 @@ export const Upload = ({ setOpen }) => {
           <Label>{t("videoFile")}</Label>
           {previewVideo && <PreviewVideo src={previewVideo} controls />}
           <UploadBox>
-            {videoPorc > 0 && videoPorc < 100 && (
-              <ProgressBar value={videoPorc}><div /></ProgressBar>
+            {videoFile ? (
+              <CompleteText>✔ {videoFile.name}</CompleteText>
+            ) : (
+              t("clickToUploadVideo")
             )}
-            {videoComplete && <CompleteText>✔ {t("videoUploaded")}</CompleteText>}
-            {!videoComplete && videoPorc === 0 && t("clickToUploadVideo")}
             <input
               type="file"
               accept="video/mp4, video/webm, video/x-matroska"
               onChange={handleVideoChange}
-              disabled={videoComplete}
+              disabled={isUploading || isProcessing}
             />
           </UploadBox>
         </Section>
@@ -339,6 +420,7 @@ export const Upload = ({ setOpen }) => {
             name="title"
             placeholder={t("videoTitlePlaceholder")}
             onChange={handleChange}
+            disabled={isUploading || isProcessing}
           />
         </Section>
 
@@ -349,23 +431,21 @@ export const Upload = ({ setOpen }) => {
             name="description"
             placeholder={t("descriptionPlaceholder")}
             onChange={handleChange}
+            disabled={isUploading || isProcessing}
           />
         </Section>
 
         <Section>
           <Label>{t("tags")}</Label>
-          <Input placeholder={t("tagsPlaceholder")} onChange={handleTags} />
+          <Input
+            placeholder={t("tagsPlaceholder")}
+            onChange={handleTags}
+            disabled={isUploading || isProcessing}
+          />
         </Section>
 
-        <SaveButton
-          disabled={isUploading || !imgComplete || !videoComplete}
-          onClick={handleUpload}
-        >
-          {isUploading
-            ? t("uploading")
-            : !imgComplete || !videoComplete
-            ? t("wait")
-            : t("publish")}
+        <SaveButton disabled={isButtonDisabled} onClick={handleUpload}>
+          {getButtonText()}
         </SaveButton>
       </Modal>
     </Container>
