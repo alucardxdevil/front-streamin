@@ -771,7 +771,6 @@ const formatTime = (sec) => {
 };
 
 const SPEED_OPTIONS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-const QUALITY_OPTIONS = ["Auto", "1080p", "720p", "480p", "360p"];
 
 /* =========== MAIN COMPONENT =========== */
 export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCounted }) {
@@ -791,6 +790,18 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const hasDirectVideo = currentVideo?.videoUrl || currentVideo?.videoKey;
   const hasHLS = currentVideo?.hlsMasterUrl && videoStatus === 'ready';
   const isVideoReady = hasHLS || !!hasDirectVideo;
+
+  // ── Calidades disponibles dinámicamente desde el video ─────────────────────
+  // El backend guarda en currentVideo.qualities las calidades reales generadas
+  // (ej: ["480p", "360p", "240p"] para un video de baja resolución)
+  const availableQualities = useMemo(() => {
+    const quals = currentVideo?.qualities;
+    if (quals && Array.isArray(quals) && quals.length > 0) {
+      return ["Auto", ...quals];
+    }
+    // Fallback si no hay qualities (videos legacy)
+    return ["Auto"];
+  }, [currentVideo?.qualities]);
 
   // ── URL del proxy (nunca expone la URL directa de B2) ─────────────────────
   // getStreamUrl() construye la URL correcta para desarrollo y producción
@@ -857,6 +868,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const bufferingRef = useRef(false);  // Track active buffering state
   const loadingTimerRef = useRef(null); // Debounce timer for loading state
   const playingRef = useRef(playing);  // Ref para acceder al estado playing en callbacks
+  const hlsRef = useRef(null);         // Referencia a la instancia de hls.js
+  const [hlsLevels, setHlsLevels] = useState([]); // Niveles HLS detectados por hls.js
 
   /**
    * Flag de sesión para el conteo de vistas.
@@ -872,6 +885,53 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     setFeedbackIcon({ icon, key: feedbackKey.current });
     setTimeout(() => setFeedbackIcon(null), 600);
   }, []);
+
+  /* ========== HLS Quality Control ========== */
+  /**
+   * Obtiene la instancia de hls.js desde ReactPlayer.
+   * ReactPlayer expone el player interno via getInternalPlayer('hls').
+   */
+  const getHlsInstance = useCallback(() => {
+    try {
+      const internal = playerRef.current?.getInternalPlayer('hls');
+      return internal || null;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  /**
+   * Cambia la calidad del video via hls.js.
+   * - "Auto" → currentLevel = -1 (ABR automático)
+   * - "720p" → busca el nivel con esa resolución y lo fija
+   */
+  const handleQualityChange = useCallback((q) => {
+    setQuality(q);
+    const hls = getHlsInstance();
+    if (!hls) return;
+
+    if (q === "Auto") {
+      hls.currentLevel = -1;
+      console.log("[HLS] Calidad: Auto (ABR)");
+      return;
+    }
+
+    // Buscar el nivel que coincida con la calidad seleccionada
+    const targetHeight = parseInt(q); // "480p" → 480
+    if (isNaN(targetHeight)) return;
+
+    const levelIndex = hls.levels?.findIndex((level) => {
+      // Comparar por height del nivel HLS
+      return level.height === targetHeight;
+    });
+
+    if (levelIndex !== undefined && levelIndex >= 0) {
+      hls.currentLevel = levelIndex;
+      console.log(`[HLS] Calidad fijada: ${q} (nivel ${levelIndex})`);
+    } else {
+      console.warn(`[HLS] No se encontró nivel para ${q}`);
+    }
+  }, [getHlsInstance]);
 
   /* ========== Save duration once ========== */
   const handleDuration = async (d) => {
@@ -1181,6 +1241,9 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     setLoaded(0);
     setMenuOpen(false);
     setMenuView("main");
+    setQuality("Auto");           // Reset calidad a Auto
+    setHlsLevels([]);             // Limpiar niveles HLS
+    hlsRef.current = null;        // Limpiar referencia hls.js
     // Mostrar spinner solo brevemente al cambiar de video, se ocultará en onReady
     setLoading(true);
     videoReadyRef.current = false; // Reset video ready state
@@ -1329,12 +1392,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           <MenuHeader onClick={() => setMenuView("main")}>
             <ArrowBackIosNewIcon /> Calidad
           </MenuHeader>
-          {QUALITY_OPTIONS.map((q) => (
+          {availableQualities.map((q) => (
             <MenuItem
               key={q}
               $active={quality === q}
               onClick={() => {
-                setQuality(q);
+                handleQualityChange(q);
                 setMenuView("main");
               }}
             >
@@ -1443,6 +1506,46 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               loadingTimerRef.current = null;
             }
             setLoading(false);
+
+            // Capturar instancia de hls.js para control de calidad
+            const hls = getHlsInstance();
+            if (hls) {
+              hlsRef.current = hls;
+              // Escuchar cuando se cargan los niveles del manifest
+              const onManifestParsed = (event, data) => {
+                const levels = hls.levels || [];
+                setHlsLevels(levels);
+                console.log(`[HLS] Manifest parseado: ${levels.length} niveles`, levels.map(l => `${l.height}p`));
+              };
+              // Escuchar errores HLS para recuperación automática
+              const onHlsError = (event, data) => {
+                if (data.fatal) {
+                  console.error(`[HLS] Error fatal: ${data.type} - ${data.details}`);
+                  switch (data.type) {
+                    case 'networkError':
+                      console.log('[HLS] Intentando recuperar de error de red...');
+                      hls.startLoad();
+                      break;
+                    case 'mediaError':
+                      console.log('[HLS] Intentando recuperar de error de media...');
+                      hls.recoverMediaError();
+                      break;
+                    default:
+                      console.error('[HLS] Error no recuperable');
+                      break;
+                  }
+                }
+              };
+              // Usar los eventos de hls.js directamente
+              if (hls.constructor?.Events) {
+                hls.on(hls.constructor.Events.MANIFEST_PARSED, onManifestParsed);
+                hls.on(hls.constructor.Events.ERROR, onHlsError);
+              }
+              // Si los niveles ya están cargados (manifest ya parseado)
+              if (hls.levels && hls.levels.length > 0) {
+                setHlsLevels(hls.levels);
+              }
+            }
           }}
           onBuffer={() => {
             // Mostrar spinner con un pequeño debounce (300ms) para evitar
@@ -1475,8 +1578,14 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             setLoading(false);
             if (videoEnded) setVideoEnded(false);
           }}
-          onError={(e) => {
-            console.log("ReactPlayer error:", e);
+          onError={(e, data) => {
+            // Los errores hlsError no fatales son normales durante ABR switching
+            // Solo loguear si es relevante
+            if (data?.type === 'hlsError' && !data?.fatal) {
+              console.log("[HLS] Error no fatal (recuperable):", data?.details);
+              return;
+            }
+            console.warn("ReactPlayer error:", e, data);
             bufferingRef.current = false;
             if (loadingTimerRef.current) {
               clearTimeout(loadingTimerRef.current);
@@ -1505,21 +1614,29 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 // Buffer adelante: 30s es suficiente para VOD
                 maxBufferLength: 30,
                 // Buffer máximo total
-                maxMaxBufferLength: 120,
-                // Mantener 60s de buffer trasero para seek rápido
-                backBufferLength: 60,
-                // Empezar en calidad automática (ABR)
+                maxMaxBufferLength: 60,
+                // Mantener 30s de buffer trasero para seek rápido
+                backBufferLength: 30,
+                // Empezar en calidad automática (ABR) — -1 = auto
                 startLevel: -1,
                 // Estimación inicial de ancho de banda (1Mbps)
                 abrEwmaDefaultEstimate: 1000000,
                 // Reintentos en errores de red
-                fragLoadingMaxRetry: 4,
-                manifestLoadingMaxRetry: 3,
-                levelLoadingMaxRetry: 3,
+                fragLoadingMaxRetry: 6,
+                manifestLoadingMaxRetry: 4,
+                levelLoadingMaxRetry: 4,
                 // Tiempo de espera antes de reintentar (ms)
                 fragLoadingRetryDelay: 1000,
+                manifestLoadingRetryDelay: 1000,
+                levelLoadingRetryDelay: 1000,
+                // Timeouts de carga (ms)
+                fragLoadingTimeOut: 20000,
+                manifestLoadingTimeOut: 15000,
+                levelLoadingTimeOut: 15000,
                 // No usar modo de baja latencia (es VOD, no live)
                 lowLatencyMode: false,
+                // Permitir recuperación automática de errores de audio
+                enableSoftwareAES: true,
                 // PROTECCIÓN: Inyectar token de sesión en cada solicitud XHR de hls.js
                 // Esto incluye el manifest, playlists de calidad y cada fragmento .ts
                 xhrSetup: sessionToken
