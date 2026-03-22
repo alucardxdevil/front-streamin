@@ -903,12 +903,18 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   /**
    * Cambia la calidad del video via hls.js.
    * - "Auto" → currentLevel = -1 (ABR automático)
-   * - "720p" → busca el nivel con esa resolución y lo fija
+   * - "720p" → busca el nivel por URL, height, width o índice
+   *
+   * Estrategia de búsqueda (en orden):
+   *  1. URL del nivel contiene el nombre del perfil (ej: "480p/")
+   *  2. height del nivel coincide con el valor numérico
+   *  3. width del nivel coincide con el ancho del perfil
+   *  4. Índice basado en el orden de qualities del backend
    */
   const handleQualityChange = useCallback((q) => {
     setQuality(q);
     const hls = getHlsInstance();
-    if (!hls) return;
+    if (!hls || !hls.levels || hls.levels.length === 0) return;
 
     if (q === "Auto") {
       hls.currentLevel = -1;
@@ -916,22 +922,47 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
       return;
     }
 
-    // Buscar el nivel que coincida con la calidad seleccionada
-    const targetHeight = parseInt(q); // "480p" → 480
-    if (isNaN(targetHeight)) return;
+    const targetValue = parseInt(q); // "480p" → 480
+    const profileName = q.toLowerCase(); // "480p"
 
-    const levelIndex = hls.levels?.findIndex((level) => {
-      // Comparar por height del nivel HLS
-      return level.height === targetHeight;
+    // Estrategia 1: Buscar por URL del nivel (más confiable)
+    let levelIndex = hls.levels.findIndex((level) => {
+      const url = level.url?.[0] || level.uri || "";
+      return url.includes(`${profileName}/`) || url.includes(`/${profileName}`);
     });
 
-    if (levelIndex !== undefined && levelIndex >= 0) {
-      hls.currentLevel = levelIndex;
-      console.log(`[HLS] Calidad fijada: ${q} (nivel ${levelIndex})`);
-    } else {
-      console.warn(`[HLS] No se encontró nivel para ${q}`);
+    // Estrategia 2: Buscar por height
+    if (levelIndex < 0 && !isNaN(targetValue)) {
+      levelIndex = hls.levels.findIndex((level) => level.height === targetValue);
     }
-  }, [getHlsInstance]);
+
+    // Estrategia 3: Buscar por width (para perfiles definidos por width)
+    if (levelIndex < 0 && !isNaN(targetValue)) {
+      // Mapeo de nombre de perfil a width esperado
+      const widthMap = { "1080p": 1920, "720p": 1280, "480p": 854, "360p": 640, "240p": 426 };
+      const targetWidth = widthMap[profileName];
+      if (targetWidth) {
+        levelIndex = hls.levels.findIndex((level) => level.width === targetWidth);
+      }
+    }
+
+    // Estrategia 4: Usar índice basado en el orden de qualities del backend
+    if (levelIndex < 0) {
+      const quals = currentVideo?.qualities || [];
+      const qIndex = quals.indexOf(q);
+      if (qIndex >= 0 && qIndex < hls.levels.length) {
+        levelIndex = qIndex;
+      }
+    }
+
+    if (levelIndex >= 0) {
+      hls.currentLevel = levelIndex;
+      const level = hls.levels[levelIndex];
+      console.log(`[HLS] Calidad fijada: ${q} (nivel ${levelIndex}, ${level.width}x${level.height})`);
+    } else {
+      console.warn(`[HLS] No se encontró nivel para ${q}. Niveles disponibles:`, hls.levels.map((l, i) => `${i}: ${l.width}x${l.height}`));
+    }
+  }, [getHlsInstance, currentVideo?.qualities]);
 
   /* ========== Save duration once ========== */
   const handleDuration = async (d) => {
