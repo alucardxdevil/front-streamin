@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { BiArrowBack, BiUser } from "react-icons/bi";
 import { FaUsers, FaUserFriends } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { useLanguage } from "../utils/LanguageContext";
 
 // Animaciones
 const fadeIn = keyframes`
@@ -390,6 +391,7 @@ const Following = () => {
   const [loading, setLoading] = useState(true);
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchFollowingUsers = async () => {
@@ -439,7 +441,7 @@ const Following = () => {
       <PageContainer>
         <LoadingContainer>
           <div className="spinner" />
-          <p>Cargando perfiles...</p>
+          <p>{t("loadingProfiles")}</p>
         </LoadingContainer>
       </PageContainer>
     );
@@ -450,8 +452,8 @@ const Following = () => {
       <PageContainer>
         <EmptyState>
           <FaUserFriends />
-          <h3>Inicia sesión para ver los perfiles que sigues</h3>
-          <p>Podrás ver y gestionar los perfiles que sigues</p>
+          <h3>{t("loginToSeeFollowing")}</h3>
+          <p>{t("canManageProfiles")}</p>
         </EmptyState>
       </PageContainer>
     );
@@ -462,26 +464,26 @@ const Following = () => {
       <HeaderSection>
         <Title>
           <FaUsers />
-          Perfiles que sigues
+          {t("followingPageTitle")}
         </Title>
         
-        <Description>Tu lista de creadores y canales favoritos</Description>
+        <Description>{t("yourListOfFavoriteCreators")}</Description>
         
         <MetaInfo>
           <MetaItem>
             <FaUserFriends />
-            {users.length} perfiles
+            {users.length} {t("profilesCount")}
           </MetaItem>
           <MetaItem>
             <BiUser />
-            Actualizado recientemente
+            {t("recentlyUpdated")}
           </MetaItem>
         </MetaInfo>
         
         <ActionButtons>
           <Button onClick={() => navigate(-1)}>
             <BiArrowBack />
-            Volver
+            {t("back")}
           </Button>
         </ActionButtons>
       </HeaderSection>
@@ -489,8 +491,8 @@ const Following = () => {
       {users.length === 0 ? (
         <EmptyState>
           <FaUserFriends />
-          <h3>No sigues ningún perfil aún</h3>
-          <p>Explora y sigue a tus creadores favoritos para verlos aquí</p>
+          <h3>{t("noFollowAnyProfileYet")}</h3>
+          <p>{t("exploreAndFollowYourFavoriteCreators")}</p>
         </EmptyState>
       ) : (
         <UserGrid>
@@ -509,7 +511,7 @@ const Following = () => {
                 ) : (
                   <Banner 
                     src="https://images.unsplash.com/photo-1557683316-973673baf926?w=800"
-                    alt="Banner por defecto"
+                    alt={t("defaultBanner")}
                   />
                 )}
               </BannerContainer>
@@ -527,9 +529,9 @@ const Following = () => {
               <UserInfo>
                 <UserName>{user.name}</UserName>
                 <UserStats>
-                  <span>{user.follows || 0} seguidores</span>
+                  <span>{user.follows || 0} {t("followers")}</span>
                   {user.totalViews && (
-                    <span>{user.totalViews.toLocaleString()} vistas</span>
+                    <span>{user.totalViews.toLocaleString()} {t("views")}</span>
                   )}
                 </UserStats>
                 {user.descriptionAccount && (
@@ -540,7 +542,7 @@ const Following = () => {
                   onClick={(e) => handleUnfollow(e, user._id)}
                 >
                   <FaUserFriends />
-                  Siguiendo
+                  {t("following")}
                 </FollowButton>
               </UserInfo>
             </UserCard>

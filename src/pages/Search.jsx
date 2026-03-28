@@ -677,7 +677,7 @@ export const Search = () => {
           {t("search")}
         </Title>
         
-        <Description>Encuentra videos, canales y creadores</Description>
+        <Description>{t("searchDescription")}</Description>
         
         <SearchHeader>
           <SearchBox as="form" onSubmit={onSubmit}>
@@ -697,9 +697,9 @@ export const Search = () => {
               value={videoSort}
               onChange={(e) => setVideoSort(e.target.value)}
             >
-              <option value="relevance">Relevancia</option>
-              <option value="views">Más vistos</option>
-              <option value="recent">Más recientes</option>
+              <option value="relevance">{t("searchRelevance")}</option>
+              <option value="views">{t("searchMostViewed")}</option>
+              <option value="recent">{t("searchMostRecent")}</option>
             </Select>
           </Controls>
         </SearchHeader>
@@ -711,7 +711,7 @@ export const Search = () => {
           onClick={() => setTab("all")}
         >
           {getTabIcon('all')}
-          Todo
+          {t("searchAll")}
           {(usersCount > 0 || videosCount > 0) && (
             <TabCount>{usersCount + videosCount}</TabCount>
           )}
@@ -783,7 +783,7 @@ export const Search = () => {
       {!loading && error && (
         <Message>
           <FaSearch />
-          <h3>Error al buscar</h3>
+          <h3>{t("searchError")}</h3>
           <p>{error}</p>
         </Message>
       )}
@@ -791,8 +791,8 @@ export const Search = () => {
       {!loading && !error && !urlQuery && (
         <Message>
           <FaSearch />
-          <h3>Comienza a buscar</h3>
-          <p>Ingresa un término de búsqueda para encontrar videos y usuarios</p>
+          <h3>{t("searchStart")}</h3>
+          <p>{t("searchStartDescription")}</p>
         </Message>
       )}
 
@@ -812,8 +812,8 @@ export const Search = () => {
                     value={userSort}
                     onChange={(e) => setUserSort(e.target.value)}
                   >
-                    <option value="relevance">Relevancia</option>
-                    <option value="followers">Más seguidos</option>
+                    <option value="relevance">{t("searchRelevance")}</option>
+                    <option value="followers">{t("searchMostFollowed")}</option>
                   </Select>
                 </FiltersRow>
               </SectionHeader>
@@ -835,7 +835,7 @@ export const Search = () => {
                       <BigAvatar src={u.img || defaultProfile} />
                       <UserName title={u.name}>{u.name}</UserName>
                       <FollowersCount>
-                        {u.follows?.toLocaleString() || 0} seguidores
+                        {u.follows?.toLocaleString() || 0} {t("followers")}
                       </FollowersCount>
                       <CardButton
                         following={currentUser?.followsProfile.includes(u._id)}
@@ -861,7 +861,7 @@ export const Search = () => {
             <Section>
               <SectionHeader>
                 <SectionTitle>
-                  <FaFilm /> Videos
+                  <FaFilm /> {t("searchVideos")}
                 </SectionTitle>
 
                 <FiltersRow>

@@ -63,6 +63,30 @@ const translations = {
     goToHistory: "Ir al Historial",
     added: "Agregado",
 
+    // Following page
+    loadingProfiles: "Cargando perfiles...",
+    loginToSeeFollowing: "Inicia sesión para ver los perfiles que sigues",
+    canManageProfiles: "Podrás ver y gestionar los perfiles que sigues",
+    followingPageTitle: "Perfiles que sigues",
+    yourListOfFavoriteCreators: "Tu lista de creadores y canales favoritos",
+    profilesCount: "perfiles",
+    noFollowAnyProfileYet: "No sigues ningún perfil aún",
+    exploreAndFollowYourFavoriteCreators: "Explora y sigue a tus creadores favoritos para verlos aquí",
+    defaultBanner: "Banner por defecto",
+
+    // Search page
+    searchAll: "Todo",
+    searchUsers: "Usuarios",
+    searchVideos: "Videos",
+    searchRelevance: "Relevancia",
+    searchMostViewed: "Más vistos",
+    searchMostRecent: "Más recientes",
+    searchMostFollowed: "Más seguidos",
+    searchDescription: "Encuentra videos, canales y creadores",
+    searchError: "Error al buscar",
+    searchStart: "Comienza a buscar",
+    searchStartDescription: "Ingresa un término de búsqueda para encontrar videos y usuarios",
+
     //Sigin
     signinTitle: "Bienvenido de nuevo",
     signinSubtitle: "Inicia sesión en tu cuenta de stream-in",
@@ -628,6 +652,30 @@ const translations = {
     playlistEmptyDescription: "Add videos from your playback history",
     goToHistory: "Go to History",
     added: "Added",
+
+    // Following page
+    loadingProfiles: "Loading profiles...",
+    loginToSeeFollowing: "Log in to see the profiles you follow",
+    canManageProfiles: "You can view and manage the profiles you follow",
+    followingPageTitle: "Profiles you follow",
+    yourListOfFavoriteCreators: "Your list of favorite creators and channels",
+    profilesCount: "profiles",
+    noFollowAnyProfileYet: "You do not follow any profile yet",
+    exploreAndFollowYourFavoriteCreators: "Explore and follow your favorite creators to see them here",
+    defaultBanner: "Default banner",
+
+    // Search page
+    searchAll: "All",
+    searchUsers: "Users",
+    searchVideos: "Videos",
+    searchRelevance: "Relevance",
+    searchMostViewed: "Most viewed",
+    searchMostRecent: "Most recent",
+    searchMostFollowed: "Most followed",
+    searchDescription: "Find videos, channels and creators",
+    searchError: "Error searching",
+    searchStart: "Start searching",
+    searchStartDescription: "Enter a search term to find videos and users",
 
     views: "views",
 
