@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useLanguage } from '../utils/LanguageContext';
 
 // Componentes estilizados
 const HiddenInput = styled.input`
@@ -22,6 +23,7 @@ const StyledButton = styled.button`
 
 // Componente principal
 const FileInputButton = () => {
+  const { t } = useLanguage();
   const fileInputRef = React.createRef();
 
   // const handleButtonClick = () => {
@@ -43,7 +45,7 @@ const FileInputButton = () => {
         // onChange={handleFileChange}
       />
       <StyledButton>
-        Subir Archivo
+        {t("uploadFile")}
       </StyledButton>
     </div>
   );

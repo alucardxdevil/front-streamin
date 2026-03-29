@@ -531,6 +531,29 @@ const translations = {
     showMoreText: "Ver más",
     showLessText: "Ver menos",
 
+    // Delete Alert
+    deleteVideoTitle: "¿Eliminar video?",
+    cancelDelete: "Cancelar",
+    confirmDelete: "Eliminar",
+
+    // Description More
+    showLess: "↑ menos",
+    showMore: "↓ más",
+
+    // Hidden Input
+    uploadFile: "Subir Archivo",
+
+    // Modal Login
+    signInRequired: "Se requiere iniciar sesión",
+    signInRequiredDesc: "Debes iniciar sesión para realizar esta acción.",
+    signIn: "Iniciar sesión",
+    cancel: "Cancelar",
+
+    // Navbbar
+    terms: "Términos",
+    help: "Ayuda",
+    us: "Nosotros",
+
     // Trending
     trendingNow: "Tendencias",
     TopTenWorld: "Top 10 mundial",
@@ -1145,6 +1168,12 @@ const translations = {
     noVideosAvailable: "No videos",
     noVideosInCategory: "No videos found in this category",
 
+    //Share Modal
+    shareTitle: "Share video",
+    copyLink: "Copy link",
+    linkCopied: "Link copied to clipboard",
+    close: "Close",
+
     // Comments
     addComment: "Add a comment...",
     comment: "Post",
@@ -1158,6 +1187,29 @@ const translations = {
     showLessComments: "Show less",
     showMoreText: "Show more",
     showLessText: "Show less",
+
+    // Delete Alert
+    deleteVideoTitle: "Delete video?",
+    cancelDelete: "Cancel",
+    confirmDelete: "Delete",
+
+    // Description More
+    showLess: "↑ less",
+    showMore: "↓ more",
+
+    // Hidden Input
+    uploadFile: "Upload File",
+
+    // Modal Login
+    signInRequired: "Sign In Required",
+    signInRequiredDesc: "You must sign in to perform this action.",
+    signIn: "Sign In",
+    cancel: "Cancel",
+
+    // Navbbar
+    terms: "Terms",
+    help: "Help",
+    us: "Us",
   },
 
   pt: {
@@ -1557,6 +1609,42 @@ const translations = {
     showLessComments: "Ver menos",
     showMoreText: "Ver mais",
     showLessText: "Ver menos",
+
+    //Share Modal
+    shareTitle: "Compartilhar vídeo",
+    copyLink: "Copiar enlace",
+    linkCopied: "Enlace copiado para a área de transferência",
+    close: "Fechar",
+
+    // Recommendation
+    relatedVideos: "Vídeos Relacionados",
+    noMoreRelatedVideos: "Não há mais vídeos relacionados",
+    randomVideos: "Vídeos Aleatórios",
+    noMoreRandomVideos: "Não há mais vídeos aleatórios",
+    loadingMoreVideos: "Carregando mais vídeos...",
+
+    // Delete Alert
+    deleteVideoTitle: "Excluir vídeo?",
+    cancelDelete: "Cancelar",
+    confirmDelete: "Excluir",
+
+    // Description More
+    showLess: "↑ menos",
+    showMore: "↓ mais",
+
+    // Hidden Input
+    uploadFile: "Enviar Arquivo",
+
+    // Modal Login
+    signInRequired: "Início de sessão necessário",
+    signInRequiredDesc: "Deve iniciar sessão para realizar esta ação.",
+    signIn: "Iniciar sessão",
+    cancel: "Cancelar",
+
+    // Navbbar
+    terms: "Termos",
+    help: "Ajuda",
+    us: "Sobre nós",
   },
 
   de: {
@@ -1956,6 +2044,42 @@ const translations = {
     showLessComments: "Weniger anzeigen",
     showMoreText: "Mehr anzeigen",
     showLessText: "Weniger anzeigen",
+
+    //Share Modal
+    shareTitle: "Video teilen",
+    copyLink: "Link kopieren",
+    linkCopied: "Link in Zwischenablage kopiert",
+    close: "Schließen",
+
+    // Delete Alert
+    deleteVideoTitle: "Video löschen?",
+    cancelDelete: "Abbrechen",
+    confirmDelete: "Löschen",
+
+    // Description More
+    showLess: "↑ weniger",
+    showMore: "↓ mehr",
+
+    // Hidden Input
+    uploadFile: "Datei hochladen",
+
+    // Modal Login
+    signInRequired: "Anmeldung erforderlich",
+    signInRequiredDesc: "Sie müssen sich anmelden, um diese Aktion durchzuführen.",
+    signIn: "Anmelden",
+    cancel: "Abbrechen",
+
+    // Navbbar
+    terms: "Nutzungsbedingungen",
+    help: "Hilfe",
+    us: "Über uns",
+
+    // Recommendation
+    relatedVideos: "Verwandte Videos",
+    noMoreRelatedVideos: "Keine weiteren verwandten Videos",
+    randomVideos: "Zufällige Videos",
+    noMoreRandomVideos: "Keine weiteren zufälligen Videos",
+    loadingMoreVideos: "Weitere Videos werden geladen...",
   }
 };
 

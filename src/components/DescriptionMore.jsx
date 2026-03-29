@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { useLanguage } from "../utils/LanguageContext";
 
 const Container = styled.div`
   position: relative;
@@ -23,6 +24,7 @@ const ButtonMore = styled.button`
 `;
 
 export const DescriptionMore = ({ fullContent }) => {
+  const { t } = useLanguage();
   const [mostrarCompleto, setMostrarCompleto] = useState(false);
   const [mostrarBoton, setMostrarBoton] = useState(false);
   const textRef = useRef(null);
@@ -53,7 +55,7 @@ export const DescriptionMore = ({ fullContent }) => {
       </Text>
       {mostrarBoton && (
         <ButtonMore onClick={toggleMostrarCompleto}>
-          {mostrarCompleto ? "↑ less" : "↓ more"}
+          {mostrarCompleto ? t("showLess") : t("showMore")}
         </ButtonMore>
       )}
     </Container>

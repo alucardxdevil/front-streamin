@@ -6,8 +6,7 @@ import { formats } from "../pages/Video";
 import defaultProfile from '../img/profileUser.png';
 import { useLanguage } from "../utils/LanguageContext";
 import { formatTimeago } from "../utils/timeago";
-import { FaPlay, FaEye, FaHeart } from "react-icons/fa";
-import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
+import { FaPlay } from "react-icons/fa";
 
 // Animaciones
 const fadeIn = keyframes`
@@ -315,23 +314,13 @@ const Card = ({ type, video }) => {
         )}
         <Texts>
           <Title title={video?.title}>{video?.title}</Title>
-          <ChannelName>{channel.name || "Usuario"}</ChannelName>
+          <ChannelName>{channel.name || "User"}</ChannelName>
           <Info>
             <InfoItem> {formattedViews} {t("views")}
             </InfoItem>
             <Separator>•</Separator>
             <span>{formatTimeago(video?.createdAt, language)}</span>
           </Info>
-          {/* {type !== "sm" && (
-            <QuickStats>
-              <StatItem style={{ color: '#4ade80' }}>
-                <BiSolidLike /> {video?.likes?.length || 0}
-              </StatItem>
-              <StatItem style={{ color: '#f87171' }}>
-                <BiSolidDislike /> {video?.dislikes?.length || 0}
-              </StatItem>
-            </QuickStats>
-          )} */}
         </Texts>
       </Details>
     </Container>

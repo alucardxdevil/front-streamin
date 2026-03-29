@@ -2,6 +2,7 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
+import { useLanguage } from "../utils/LanguageContext";
 
 const rotate180 = keyframes`
   from {
@@ -70,6 +71,7 @@ const BackButtonCircle = styled.button`
 
 export const BackButton = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleBack = () => {
     navigate(-1);
@@ -77,7 +79,7 @@ export const BackButton = () => {
 
   return (
     <ButtonContainer>
-      <BackButtonCircle onClick={handleBack} title="Volver">
+      <BackButtonCircle onClick={handleBack} title={t("back")}>
         <BiArrowBack />
       </BackButtonCircle>
     </ButtonContainer>

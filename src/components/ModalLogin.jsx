@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../utils/LanguageContext";
 
 const Backdrop = styled.div`
   position: fixed;
@@ -90,18 +91,19 @@ const ButtonSecondary = styled.button`
 `;
 
 const LoginRequired = ({ open, onClose }) => {
+  const { t } = useLanguage();
   if (!open) return null;
 
   return (
     <Backdrop onClick={onClose}>
       <ModalBox onClick={(e) => e.stopPropagation()}>
-        <Title>Sign In Required</Title>
-        <Text>You must sign in to perform this action.</Text>
+        <Title>{t("signInRequired")}</Title>
+        <Text>{t("signInRequiredDesc")}</Text>
 
         <Link to="/signin" style={{ textDecoration: "none" }}>
-          <ButtonPrimary>Sign In</ButtonPrimary>
+          <ButtonPrimary>{t("signIn")}</ButtonPrimary>
         </Link>
-        <ButtonSecondary onClick={onClose}>Cancel</ButtonSecondary>
+        <ButtonSecondary onClick={onClose}>{t("cancel")}</ButtonSecondary>
       </ModalBox>
     </Backdrop>
   );

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FiX } from "react-icons/fi";
+import { useLanguage } from "../utils/LanguageContext";
 
 const Overlay = styled.div`
   position: fixed;
@@ -109,6 +110,7 @@ const Button = styled.button`
 
 export const DeleteAlert = ({ setOpenO, videoId }) => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleDelete = async () => {
     try {
@@ -130,16 +132,16 @@ export const DeleteAlert = ({ setOpenO, videoId }) => {
         <Close onClick={() => setOpenO(false)}>
           <FiX />
         </Close>
-        <Title>Delete video?</Title>
+        <Title>{t("deleteVideoTitle")}</Title>
         <VideoTitle title={videoId.title}>
           {videoId.title}
         </VideoTitle>
         <ButtonGroup>
           <Button variant="cancel" onClick={() => setOpenO(false)}>
-            Cancel
+            {t("cancelDelete")}
           </Button>
           <Button variant="confirm" onClick={handleDelete}>
-            Delete
+            {t("confirmDelete")}
           </Button>
         </ButtonGroup>
       </Popover>

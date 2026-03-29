@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { format } from "timeago.js";
 import { formats } from "../pages/Video";
-import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import { FiEdit3, FiTrash2 } from "react-icons/fi";
 import { EditVideo } from "./EditVideo";
 import { DeleteAlert } from "./DeleteAlert";
 import defaultProfile from "../img/profileUser.png";
+import { useLanguage } from "../utils/LanguageContext";
 
 const Wrapper = styled.div`
   margin-bottom: 20px;
@@ -249,6 +249,7 @@ const Overlay = styled.div`
 
 const CardSec = ({ video }) => {
   const [channel, setChannel] = useState({});
+  const { t } = useLanguage();
 
   const formattedTotalDuration = formats(video.duration);
 
@@ -293,7 +294,7 @@ const CardSec = ({ video }) => {
             </ChannelInfo>
             
             <MetaInfo>
-              <Views>{formattedViews} vistas</Views>
+              <Views>{formattedViews} {t("views")}</Views>
               <Dot>•</Dot>
               <span>{format(video.createdAt)}</span>
             </MetaInfo>
@@ -302,11 +303,11 @@ const CardSec = ({ video }) => {
           <ActionsSection>
             <EditButton onClick={() => setOpen(true)}>
               <FiEdit3 />
-              Editar
+              {t("edit")}
             </EditButton>
             <DeleteButton onClick={() => setOpenO(true)}>
               <FiTrash2 />
-              Eliminar
+              {t("delete")}
             </DeleteButton>
           </ActionsSection>
         </Container>
