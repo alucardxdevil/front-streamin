@@ -169,18 +169,18 @@ export default function ShareModalPlaylist({ playlistId, playlistName, videoCoun
     setTimeout(() => setToast(false), 3000);
   };
 
-  const shareText = `¡Mira esta playlist "${playlistName}" con ${videoCount} videos en stream-in!`;
+  const shareText = t("sharePlaylistText", "", { playlistName, videoCount });
 
   return (
     <>
       <ButtonO onClick={() => setOpen(true)}>
-        <ReplyOutlinedIcon /> {t("shareTitle") || "Compartir"}
+        <ReplyOutlinedIcon /> {t("sharePlaylist") || "Share Playlist"}
       </ButtonO>
 
       {open && (
         <Overlay onClick={() => setOpen(false)}>
           <Modal onClick={(e) => e.stopPropagation()}>
-            <Title>{t("sharePlaylist") || "Compartir Playlist"}</Title>
+            <Title>{t("sharePlaylist") || "Share Playlist"}</Title>
             
             <PlaylistInfo>
               <PlaylistName>{playlistName}</PlaylistName>

@@ -821,7 +821,7 @@ const Video = () => {
           <PlaylistModalContent onClick={(e) => e.stopPropagation()}>
             <PlaylistModalTitle>
               <RiPlayList2Fill />
-              Guardar en playlist
+              {t("savePlaylist")}
             </PlaylistModalTitle>
 
             {playlistMessage && (
@@ -848,14 +848,14 @@ const Video = () => {
                     </PlaylistItem>
                   ))}
                 </PlaylistList>
-                <Divider>o crear nueva</Divider>
+                <Divider>{t("optionNewPlaylist")}</Divider>
               </>
             )}
 
             <CreateNewSection>
-              <SectionLabel>Crear una nueva playlist</SectionLabel>
+              <SectionLabel>{t("createNewPlaylist")}</SectionLabel>
               <PlaylistInputGroup>
-                <PlaylistLabel>Nombre</PlaylistLabel>
+                <PlaylistLabel>{t("namePlaylist")}</PlaylistLabel>
                 <PlaylistInput
                   type="text"
                   placeholder={t("myPlaylist")}
@@ -864,7 +864,7 @@ const Video = () => {
                 />
               </PlaylistInputGroup>
               <PlaylistInputGroup>
-                <PlaylistLabel>Descripción (opcional)</PlaylistLabel>
+                <PlaylistLabel>{t("descriptionOptionPlaylist")}</PlaylistLabel>
                 <PlaylistInput
                   type="text"
                   placeholder={t("playlistDescription")}
@@ -874,14 +874,14 @@ const Video = () => {
               </PlaylistInputGroup>
               <PlaylistActions>
                 <PlaylistButton cancel onClick={closePlaylistModal}>
-                  Cancelar
+                  {t("cancelPlaylist")}
                 </PlaylistButton>
                 <PlaylistButton
                   confirm
                   onClick={handleCreatePlaylist}
                   disabled={!modalData.name.trim()}
                 >
-                  Crear y guardar
+                  {t("createAndSave")}
                 </PlaylistButton>
               </PlaylistActions>
             </CreateNewSection>

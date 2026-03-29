@@ -375,6 +375,8 @@ const translations = {
     like: "Me gusta",
     dislike: "No me gusta",
 
+    //
+
     // Upload
     uploadVideo: "Subir Video",
     title: "Título",
@@ -510,12 +512,21 @@ const translations = {
     myPlaylist: "Mi playlist",
     playlistDescription: "Descripción de la playlist",
     createNew: "Crear nueva",
+    savePlaylist: "Guargar en playlist",
+    optionNewPlaylist: "o crear una nueva",
+    createNewPlaylist: "Crear una nueva playlist",
+    namePlaylist: "Nombre de la playlist",
+    descriptionOptionPlaylist: "Descripción (opcional)",
+    createAndSave: "Crear y guardar",
+    cancelPlaylist: "Cancel",
 
     //Share Modal
     shareTitle: "Compartir video",
     copyLink: "Copiar enlace",
     linkCopied: "Enlace copiado al portapapeles",
     close: "Cerrar",
+    sharePlaylist: "Compartir Playlist",
+    sharePlaylistText: "¡Mira esta playlist \"${playlistName}\" con ${videoCount} videos en stream-in!",
 
     // Comments
     addComment: "Añadir un comentario...",
@@ -1119,6 +1130,13 @@ const translations = {
     myPlaylist: "My playlist",
     playlistDescription: "Playlist description",
     createNew: "Create new",
+    savePlaylist: "Save to playlist",
+    optionNewPlaylist: "or create a new one",
+    createNewPlaylist: "Create new playlist",
+    namePlaylist: "Playlist name",
+    descriptionOptionPlaylist: "Description (optional)",
+    createAndSave: "Create and save",
+    cancelPlaylist: "Cancel",
     
     // Trends page
     trendingNow: "Trending Now",
@@ -1173,6 +1191,8 @@ const translations = {
     copyLink: "Copy link",
     linkCopied: "Link copied to clipboard",
     close: "Close",
+    sharePlaylist: "Share Playlist",
+    sharePlaylistText: "Check out this playlist \"${playlistName}\" with ${videoCount} videos on stream-in!",
 
     // Comments
     addComment: "Add a comment...",
@@ -1557,6 +1577,13 @@ const translations = {
     myPlaylist: "Minha playlist",
     playlistDescription: "Descrição da playlist",
     createNew: "Criar nova",
+    savePlaylist: "Salvar na playlist",
+    optionNewPlaylist: "ou criar uma nova",
+    createNewPlaylist: "Criar nova playlist",
+    namePlaylist: "Nome da playlist",
+    descriptionOptionPlaylist: "Descrição (opcional)",
+    createAndSave: "Criar e salvar",
+    cancelPlaylist: "Cancelar",
     
     // Trends page
     serverError: "Não foi possível carregar as informações. Por favor, verifique se o servidor está funcionando.",
@@ -1615,6 +1642,8 @@ const translations = {
     copyLink: "Copiar enlace",
     linkCopied: "Enlace copiado para a área de transferência",
     close: "Fechar",
+    sharePlaylist: "Compartilhar Playlist",
+    sharePlaylistText: "Confira esta playlist \"${playlistName}\" com ${videoCount} vídeos no stream-in!",
 
     // Recommendation
     relatedVideos: "Vídeos Relacionados",
@@ -1992,6 +2021,13 @@ const translations = {
     myPlaylist: "Meine Playlist",
     playlistDescription: "Playlist-Beschreibung",
     createNew: "Neu erstellen",
+    savePlaylist: "In Playlist speichern",
+    optionNewPlaylist: "oder eine neue erstellen",
+    createNewPlaylist: "Neue Playlist erstellen",
+    namePlaylist: "Name der Playlist",
+    descriptionOptionPlaylist: "Beschreibung (optional)",
+    createAndSave: "Erstellen und speichern",
+    cancelPlaylist: "Abbrechen",
     
     // Trends page
     serverError: "Die Informationen konnten nicht geladen werden. Bitte überprüfen Sie, ob der Server funktioniert.",
@@ -2050,6 +2086,8 @@ const translations = {
     copyLink: "Link kopieren",
     linkCopied: "Link in Zwischenablage kopiert",
     close: "Schließen",
+    sharePlaylist: "Playlist teilen",
+    sharePlaylistText: "Schau dir diese Playlist \"${playlistName}\" mit ${videoCount} Videos auf stream-in an!",
 
     // Delete Alert
     deleteVideoTitle: "Video löschen?",
