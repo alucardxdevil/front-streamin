@@ -281,16 +281,40 @@ const Settings = ({ themeMode, setThemeMode }) => {
             </SettingInfo>
             <LangOptions>
               <LangOption $active={language === "es"} onClick={() => setLanguage("es")}>
-                🇲🇽 {t("spanish")}
+               {t("spanish")}
               </LangOption>
               <LangOption $active={language === "en"} onClick={() => setLanguage("en")}>
-                🇺🇸 {t("english")}
+               {t("english")}
               </LangOption>
               <LangOption $active={language === "pt"} onClick={() => setLanguage("pt")}>
-                🇧🇷 {t("portuguese")}
+               {t("portuguese")}
               </LangOption>
               <LangOption $active={language === "de"} onClick={() => setLanguage("de")}>
-                🇩🇪 {t("german")}
+               {t("german")}
+              </LangOption>
+              <LangOption $active={language === "fr"} onClick={() => setLanguage("fr")}>
+               {t("french")}
+              </LangOption>
+              <LangOption $active={language === "zh"} onClick={() => setLanguage("zh")}>
+               {t("chinese")}
+              </LangOption>
+              <LangOption $active={language === "jp"} onClick={() => setLanguage("jp")}>
+               {t("japanese")}
+              </LangOption>
+              <LangOption $active={language === "ru"} onClick={() => setLanguage("ru")}>
+                {t("russian")}
+              </LangOption>
+              <LangOption $active={language === "it"} onClick={() => setLanguage("it")}>
+                {t("italian")}
+              </LangOption>
+              <LangOption $active={language === "ko"} onClick={() => setLanguage("ko")}>
+                {t("korean")}
+              </LangOption>
+               <LangOption $active={language === "ar"} onClick={() => setLanguage("ar")}>
+                {t("arabic")}
+              </LangOption>
+               <LangOption $active={language === "hi"} onClick={() => setLanguage("hi")}>
+                {t("hindi")}
               </LangOption>
             </LangOptions>
           </SettingRow>
