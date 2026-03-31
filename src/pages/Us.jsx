@@ -498,7 +498,7 @@ const Us = () => {
 
       <Footer>
         <FooterText>
-          © 2025 stream-in. Todos los derechos reservados. Si tienes dudas sobre
+          © 2026 stream-in. Todos los derechos reservados. Si tienes dudas sobre
           estos términos, no dudes en{" "}
           <ContactLink href="mailto:legal@streamin.com">contactarnos</ContactLink>.
         </FooterText>

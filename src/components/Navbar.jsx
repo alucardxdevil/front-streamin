@@ -305,7 +305,7 @@ const Navbar = ({ themeMode, setThemeMode }) => {
         <Wrapper>
           <Left>
             <Navbbar />
-            <ImgLogo src={LogoNav} alt="Logo de Stream-In" onClick={() => navigate(`/`)} />
+            <ImgLogo src={LogoNav} alt="Logo de stream-In" onClick={() => navigate(`/`)} />
           </Left>
 
           <Center>

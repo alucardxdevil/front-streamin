@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { pulse } from 'react-animations';
 import { useDispatch, useSelector } from 'react-redux';
 import { follows } from '../redux/userSlice';
 import defaultProfile from '../img/profileUser.png'

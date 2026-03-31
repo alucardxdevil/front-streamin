@@ -157,7 +157,7 @@ const translations = {
 
     // Help
     helpCenter: "Centro de Ayuda",
-    helpSubtitle: "Encuentra respuestas a tus preguntas, guías de uso y todo lo que necesitas para aprovechar Stream-In al máximo.",
+    helpSubtitle: "Encuentra respuestas a tus preguntas, guías de uso y todo lo que necesitas para aprovechar stream-in al máximo.",
     searchHelp: "Buscar en el centro de ayuda...",
     helpCategories: "Categorías de ayuda",
     faq: "Preguntas frecuentes",
@@ -179,7 +179,7 @@ const translations = {
     generalSettingsDesc: "Notificaciones, idioma, tema y preferencias.",
 
     // Help FAQ
-    faq1Q: "¿Cómo creo una cuenta en Stream-In?",
+    faq1Q: "¿Cómo creo una cuenta en stream-in?",
     faq1A: 'Haz clic en el botón "Registrarse" en la esquina superior derecha. Completa el formulario con tu nombre, correo electrónico y contraseña. Recibirás un correo de confirmación para activar tu cuenta.',
     faq2Q: "¿Cómo subo un video a la plataforma?",
     faq2A: 'Una vez que hayas iniciado sesión, haz clic en el ícono de subir (flecha hacia arriba) en la barra de navegación. Selecciona tu archivo de video, agrega un título, descripción y miniatura, y haz clic en "Publicar".',
@@ -194,7 +194,7 @@ const translations = {
     faq7Q: "¿Cómo puedo recuperar mi contraseña?",
     faq7A: 'En la pantalla de inicio de sesión, haz clic en "¿Olvidaste tu contraseña?". Ingresa tu correo electrónico registrado y te enviaremos un enlace para restablecer tu contraseña.',
     faq8Q: "¿Hay una aplicación móvil disponible?",
-    faq8A: "Estamos trabajando en la versión móvil de Stream-In para Android e iOS. ¡Pronto estará disponible! Mientras tanto, puedes acceder desde el navegador de tu dispositivo móvil.",
+    faq8A: "Estamos trabajando en la versión móvil de stream-in para Android e iOS. ¡Pronto estará disponible! Mientras tanto, puedes acceder desde el navegador de tu dispositivo móvil.",
 
     // Help Quick Links
     techSupport: "Soporte técnico",
@@ -439,7 +439,7 @@ const translations = {
 
     // Settings
     settingsTitle: "Configuración",
-    settingsSubtitle: "Personaliza tu experiencia en Stream-In",
+    settingsSubtitle: "Personaliza tu experiencia en stream-in",
     appearance: "Apariencia",
     appearanceDesc: "Elige el tema visual de la plataforma",
     dark: "Oscuro",
@@ -810,7 +810,7 @@ const translations = {
 
     // Help
     helpCenter: "Help Center",
-    helpSubtitle: "Find answers to your questions, usage guides, and everything you need to get the most out of Stream-In.",
+    helpSubtitle: "Find answers to your questions, usage guides, and everything you need to get the most out of stream-in.",
     searchHelp: "Search the help center...",
     helpCategories: "Help categories",
     faq: "Frequently asked questions",
@@ -832,7 +832,7 @@ const translations = {
     generalSettingsDesc: "Notifications, language, theme and preferences.",
 
     // Help FAQ
-    faq1Q: "How do I create an account on Stream-In?",
+    faq1Q: "How do I create an account on stream-in?",
     faq1A: 'Click the "Register" button in the top right corner. Fill out the form with your name, email and password. You will receive a confirmation email to activate your account.',
     faq2Q: "How do I upload a video to the platform?",
     faq2A: 'Once you are logged in, click the upload icon (arrow up) in the navigation bar. Select your video file, add a title, description and thumbnail, and click "Publish".',
@@ -847,7 +847,7 @@ const translations = {
     faq7Q: "How can I recover my password?",
     faq7A: 'On the login screen, click "Forgot your password?". Enter your registered email and we will send you a link to reset your password.',
     faq8Q: "Is a mobile app available?",
-    faq8A: "We are working on the mobile version of Stream-In for Android and iOS. It will be available soon! In the meantime, you can access it from your mobile device's browser.",
+    faq8A: "We are working on the mobile version of stream-in for Android and iOS. It will be available soon! In the meantime, you can access it from your mobile device's browser.",
 
     // Help Quick Links
     techSupport: "Technical support",
@@ -1090,7 +1090,7 @@ const translations = {
 
     // Settings
     settingsTitle: "Settings",
-    settingsSubtitle: "Customize your Stream-In experience",
+    settingsSubtitle: "Customize your stream-in experience",
     appearance: "Appearance",
     appearanceDesc: "Choose the visual theme of the platform",
     dark: "Dark",
@@ -1349,7 +1349,7 @@ const translations = {
 
     // Help
     helpCenter: "Central de Ajuda",
-    helpSubtitle: "Encontre respostas para suas perguntas, guias de uso e tudo o que você precisa para aproveitar o Stream-In ao máximo.",
+    helpSubtitle: "Encontre respostas para suas perguntas, guias de uso e tudo o que você precisa para aproveitar o stream-in ao máximo.",
     searchHelp: "Pesquisar na central de ajuda...",
     helpCategories: "Categorias de ajuda",
     faq: "Perguntas frequentes",
@@ -1371,7 +1371,7 @@ const translations = {
     generalSettingsDesc: "Notificações, idioma, tema e preferências.",
 
     // Help FAQ
-    faq1Q: "Como crio uma conta no Stream-In?",
+    faq1Q: "Como crio uma conta no stream-in?",
     faq1A: 'Clique no botão "Registrar" no canto superior direito. Preencha o formulário com seu nome, e-mail e senha. Você receberá um e-mail de confirmação para ativar sua conta.',
     faq2Q: "Como envio um vídeo para a plataforma?",
     faq2A: 'Depois de fazer login, clique no ícone de upload (seta para cima) na barra de navegação. Selecione seu arquivo de vídeo, adicione um título, descrição e miniatura, e clique em "Publicar".',
@@ -1386,7 +1386,7 @@ const translations = {
     faq7Q: "Como posso recuperar minha senha?",
     faq7A: 'Na tela de login, clique em "Esqueceu sua senha?". Digite seu e-mail registrado e enviaremos um link para redefinir sua senha.',
     faq8Q: "Existe um aplicativo móvel disponível?",
-    faq8A: "Estamos trabalhando na versão móvel do Stream-In para Android e iOS. Em breve estará disponível! Enquanto isso, você pode acessar pelo navegador do seu dispositivo móvel.",
+    faq8A: "Estamos trabalhando na versão móvel do stream-in para Android e iOS. Em breve estará disponível! Enquanto isso, você pode acessar pelo navegador do seu dispositivo móvel.",
 
     // Help Quick Links
     techSupport: "Suporte técnico",
@@ -1537,7 +1537,7 @@ const translations = {
 
     // Settings
     settingsTitle: "Configurações",
-    settingsSubtitle: "Personalize sua experiência no Stream-In",
+    settingsSubtitle: "Personalize sua experiência no stream-in",
     appearance: "Aparência",
     appearanceDesc: "Escolha o tema visual da plataforma",
     dark: "Escuro",
@@ -1793,7 +1793,7 @@ const translations = {
 
     // Help
     helpCenter: "Hilfe-Center",
-    helpSubtitle: "Finde Antworten auf deine Fragen, Anleitungen und alles, was du brauchst, um das Beste aus Stream-In herauszuholen.",
+    helpSubtitle: "Finde Antworten auf deine Fragen, Anleitungen und alles, was du brauchst, um das Beste aus stream-in herauszuholen.",
     searchHelp: "Im Hilfe-Center suchen...",
     helpCategories: "Hilfekategorien",
     faq: "Häufig gestellte Fragen",
@@ -1815,7 +1815,7 @@ const translations = {
     generalSettingsDesc: "Benachrichtigungen, Sprache, Design und Präferenzen.",
 
     // Help FAQ
-    faq1Q: "Wie erstelle ich ein Konto bei Stream-In?",
+    faq1Q: "Wie erstelle ich ein Konto bei stream-in?",
     faq1A: 'Klicke oben rechts auf die Schaltfläche "Registrieren". Fülle das Formular mit deinem Namen, deiner E-Mail und deinem Passwort aus. Du erhältst eine Bestätigungs-E-Mail zur Aktivierung deines Kontos.',
     faq2Q: "Wie lade ich ein Video auf die Plattform hoch?",
     faq2A: 'Sobald du angemeldet bist, klicke auf das Upload-Symbol (Pfeil nach oben) in der Navigationsleiste. Wähle deine Videodatei aus, füge Titel, Beschreibung und Vorschaubild hinzu und klicke auf "Veröffentlichen".',
@@ -1830,7 +1830,7 @@ const translations = {
     faq7Q: "Wie kann ich mein Passwort zurücksetzen?",
     faq7A: 'Klicke auf dem Anmeldebildschirm auf "Passwort vergessen?". Gib deine registrierte E-Mail-Adresse ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.',
     faq8Q: "Gibt es eine mobile App?",
-    faq8A: "Wir arbeiten an einer mobilen Version von Stream-In für Android und iOS. Sie wird bald verfügbar sein! In der Zwischenzeit kannst du über den Browser deines Mobilgeräts darauf zugreifen.",
+    faq8A: "Wir arbeiten an einer mobilen Version von stream-in für Android und iOS. Sie wird bald verfügbar sein! In der Zwischenzeit kannst du über den Browser deines Mobilgeräts darauf zugreifen.",
 
     // Help Quick Links
     techSupport: "Technischer Support",
@@ -1981,7 +1981,7 @@ const translations = {
 
     // Settings
     settingsTitle: "Einstellungen",
-    settingsSubtitle: "Passe dein Stream-In-Erlebnis an",
+    settingsSubtitle: "Passe dein stream-in-Erlebnis an",
     appearance: "Darstellung",
     appearanceDesc: "Wähle das visuelle Design der Plattform",
     dark: "Dunkel",
@@ -2284,7 +2284,7 @@ const translations = {
 
     // Help
     helpCenter: "Центр помощи",
-    helpSubtitle: "Найдите ответы на вопросы, руководства и всё необходимое, чтобы использовать Stream-In по максимуму.",
+    helpSubtitle: "Найдите ответы на вопросы, руководства и всё необходимое, чтобы использовать stream-in по максимуму.",
     searchHelp: "Поиск в центре помощи...",
     helpCategories: "Категории помощи",
     faq: "Часто задаваемые вопросы",
@@ -2306,7 +2306,7 @@ const translations = {
     generalSettingsDesc: "Уведомления, язык, тема и предпочтения.",
 
     // Help FAQ
-    faq1Q: "Как создать аккаунт в Stream-In?",
+    faq1Q: "Как создать аккаунт в stream-in?",
     faq1A: 'Нажмите кнопку "Зарегистрироваться" в правом верхнем углу. Заполните форму. Вы получите письмо для подтверждения активации аккаунта.',
     faq2Q: "Как загрузить видео на платформу?",
     faq2A: 'После входа в систему нажмите на иконку загрузки (стрелка вверх) в навигационной панели. Выберите файл, добавьте название, описание и нажмите "Опубликовать".',
@@ -2553,7 +2553,7 @@ const translations = {
 
     // Settings
     settingsTitle: "Настройки",
-    settingsSubtitle: "Настройте Stream-In под себя",
+    settingsSubtitle: "Настройте stream-in под себя",
     appearance: "Внешний вид",
     appearanceDesc: "Выберите визуальную тему платформы",
     dark: "Темная",
@@ -2874,7 +2874,7 @@ const translations = {
 
     // Help (帮助中心)
     helpCenter: "帮助中心",
-    helpSubtitle: "查找常见问题解答、使用指南，获取充分利用 Stream-In 所需的一切。",
+    helpSubtitle: "查找常见问题解答、使用指南，获取充分利用 stream-in 所需的一切。",
     searchHelp: "在帮助中心搜索...",
     helpCategories: "帮助类别",
     faq: "常见问题",
@@ -2896,7 +2896,7 @@ const translations = {
     generalSettingsDesc: "通知、语言、主题和偏好。",
 
     // Help FAQ (常见问题)
-    faq1Q: "如何在 Stream-In 创建账号？",
+    faq1Q: "如何在 stream-in 创建账号？",
     faq1A: "点击右上角的“注册”按钮。填写包含姓名、邮箱和密码的表格。您将收到一封激活账号的确认邮件。",
     faq2Q: "如何向平台上传视频？",
     faq2A: "登录后，点击导航栏中的上传图标（向上箭头）。选择视频文件，添加标题、描述和封面图，然后点击“发布”。",
@@ -2911,7 +2911,7 @@ const translations = {
     faq7Q: "如何找回密码？",
     faq7A: "在登录界面点击“忘记密码？”。输入注册邮箱，我们将向您发送重置链接。",
     faq8Q: "有手机 App 吗？",
-    faq8A: "我们正在开发适用于 Android 和 iOS 的 Stream-In 移动版。即将推出！目前，您可以通过手机浏览器访问。",
+    faq8A: "我们正在开发适用于 Android 和 iOS 的 stream-in 移动版。即将推出！目前，您可以通过手机浏览器访问。",
 
     // Help Quick Links (快速链接)
     techSupport: "技术支持",
@@ -3141,7 +3141,7 @@ const translations = {
 
     // Settings (设置)
     settingsTitle: "设置",
-    settingsSubtitle: "自定义您的 Stream-In 体验",
+    settingsSubtitle: "自定义您的 stream-in 体验",
     appearance: "外观",
     appearanceDesc: "选择平台的视觉主题",
     dark: "深色",
@@ -3460,7 +3460,7 @@ const translations = {
 
     // Help (ヘルプ)
     helpCenter: "ヘルプセンター",
-    helpSubtitle: "質問への回答やガイドなど、Stream-Inを活用するための情報をご案内します。",
+    helpSubtitle: "質問への回答やガイドなど、stream-inを活用するための情報をご案内します。",
     searchHelp: "ヘルプを検索...",
     helpCategories: "カテゴリ",
     faq: "よくある質問",
@@ -3723,7 +3723,7 @@ const translations = {
 
     // Settings (設定)
     settingsTitle: "設定",
-    settingsSubtitle: "Stream-In のエクスペリエンスをカスタマイズ",
+    settingsSubtitle: "stream-In のエクスペリエンスをカスタマイズ",
     appearance: "外観",
     appearanceDesc: "テーマを選択してください",
     dark: "ダーク",
@@ -4036,7 +4036,7 @@ const translations = {
 
     // Help (Centre d'aide)
     helpCenter: "Centre d'aide",
-    helpSubtitle: "Trouvez des réponses, des guides et tout le nécessaire pour profiter de Stream-In.",
+    helpSubtitle: "Trouvez des réponses, des guides et tout le nécessaire pour profiter de stream-in.",
     searchHelp: "Chercher dans l'aide...",
     helpCategories: "Catégories",
     faq: "FAQ",
@@ -4196,7 +4196,7 @@ const translations = {
 
     // Settings (Paramètres)
     settingsTitle: "Paramètres",
-    settingsSubtitle: "Personnalisez votre expérience Stream-In",
+    settingsSubtitle: "Personnalisez votre expérience stream-in",
     appearance: "Apparence",
     appearanceDesc: "Choisissez le thème visuel",
     dark: "Sombre",
@@ -4887,7 +4887,7 @@ const translations = {
 
     // Help (مركز المساعدة)
     helpCenter: "مركز المساعدة",
-    helpSubtitle: "ابحث عن الإجابات، الأدلة، وكل ما تحتاجه لتحقيق أقصى استفادة من Stream-In.",
+    helpSubtitle: "ابحث عن الإجابات، الأدلة، وكل ما تحتاجه لتحقيق أقصى استفادة من stream-in.",
     searchHelp: "ابحث في المساعدة...",
     helpCategories: "فئات المساعدة",
     faq: "الأسئلة الشائعة",
@@ -5040,7 +5040,7 @@ const translations = {
 
     // Settings (الإعدادات)
     settingsTitle: "الإعدادات",
-    settingsSubtitle: "خصص تجربتك في Stream-In",
+    settingsSubtitle: "خصص تجربتك في stream-in",
     appearance: "المظهر",
     appearanceDesc: "اختر سمة الواجهة",
     dark: "داكن",

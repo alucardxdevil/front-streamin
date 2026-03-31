@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { formatTimeago } from "../utils/timeago";
 import { useLanguage } from "../utils/LanguageContext";
+import defaultProfile from '../img/profileUser.png'
 
 /* ================= STYLED COMPONENTS ================= */
 
@@ -348,8 +349,8 @@ const Comment = ({ comment, onDelete, onEdit }) => {
     <Container>
       <Link to={`/profileUser/${channel.slug || channel._id}`}>
         <Avatar
-          src={channel.img || "https://via.placeholder.com/50"}
-          alt={`Profile picture of ${channel.name}`}
+          src={channel.img || defaultProfile}
+          alt="Profile picture"
         />
       </Link>
 

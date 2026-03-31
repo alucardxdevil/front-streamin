@@ -1,4 +1,4 @@
-# 🔍 Estrategia SEO Completa — Stream-in
+# 🔍 Estrategia SEO Completa — stream-in
 
 ## Índice
 
@@ -52,7 +52,7 @@ front/src/
 
 Al compartir `https://stream-in.com/video/abc123` en redes sociales:
 
-- **og:title** → `"Mi Video Genial | Stream-in"`
+- **og:title** → `"Mi Video Genial | stream-in"`
 - **og:description** → Primeros 150 caracteres de la descripción
 - **og:image** → Miniatura del video (`imgUrl`)
 - **og:type** → `video.other`
@@ -99,7 +99,7 @@ Cada página de video inyecta automáticamente un `<script type="application/ld+
   },
   "publisher": {
     "@type": "Organization",
-    "name": "Stream-in",
+    "name": "stream-in",
     "logo": {
       "@type": "ImageObject",
       "url": "https://stream-in.com/logo-pest.jpg"

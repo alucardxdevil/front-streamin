@@ -158,7 +158,7 @@ const InfoDuration = styled.span`
   border-radius: 6px;
   font-size: 12px;
   font-weight: 600;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(233, 69, 96, 0.7);
   color: #fff;
   backdrop-filter: blur(3px);
 `;

@@ -1,5 +1,5 @@
 /**
- * Configuración centralizada de SEO para Stream-in.
+ * Configuración centralizada de SEO para stream-in.
  *
  * Todas las URLs base, nombres de sitio y valores por defecto
  * se definen aquí para evitar duplicación en los componentes SEO.

@@ -1,4 +1,4 @@
-# Stream-in — robots.txt
+# stream-in — robots.txt
 User-agent: *
 Allow: /
 Disallow: /signin
