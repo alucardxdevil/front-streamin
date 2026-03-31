@@ -30,8 +30,16 @@ const detectBrowserLanguage = () => {
 
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => {
-    // Recuperar idioma del localStorage, o detectar del navegador, o usar "en" como defecto
-    return localStorage.getItem("language") || detectBrowserLanguage();
+    // Solo usar localStorage si el usuario eligió el idioma manualmente
+    const manuallySet = localStorage.getItem("languageManuallySet");
+    if (manuallySet === "true") {
+      const saved = localStorage.getItem("language");
+      if (saved && supportedLanguages.includes(saved)) {
+        return saved;
+      }
+    }
+    // Detectar idioma del navegador
+    return detectBrowserLanguage();
   });
 
   // Guardar idioma en localStorage cuando cambia
@@ -39,12 +47,18 @@ export const LanguageProvider = ({ children }) => {
     localStorage.setItem("language", language);
   }, [language]);
 
+  // Wrapper para setLanguage que marca la selección como manual
+  const changeLanguage = (lang) => {
+    localStorage.setItem("languageManuallySet", "true");
+    setLanguage(lang);
+  };
+
   const t = (key) => {
     return translations[language]?.[key] || translations["en"]?.[key] || key;
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage: changeLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );
