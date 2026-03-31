@@ -24,7 +24,7 @@ const SuccessMessage = styled.div`
   font-size: 14px;
 `;
 
-const Container = styled.div``;
+const Container = styled.section``;
 
 const NewComment = styled.div`
   display: flex;

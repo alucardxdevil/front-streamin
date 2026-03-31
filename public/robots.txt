@@ -1,0 +1,12 @@
+# Stream-in — robots.txt
+User-agent: *
+Allow: /
+Disallow: /signin
+Disallow: /register
+Disallow: /settings
+Disallow: /profile
+Disallow: /myvideos
+Disallow: /history/
+
+# Sitemap dinámico generado por el servidor
+Sitemap: https://stream-in.com/sitemap.xml

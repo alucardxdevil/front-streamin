@@ -19,6 +19,7 @@ import ClassificationInfo from "../components/ClasificationInfo";
 import defaultProfile from "../img/profileUser.png";
 import LoginRequired from "../components/ModalLogin";
 import { RiPlayList2Fill } from "react-icons/ri";
+import SEOVideoWrapper from "../components/seo/SEOVideoWrapper";
 
 
 /* ================= ANIMATIONS ================= */
@@ -31,7 +32,7 @@ const pulse = keyframes`
 
 /* ================= LAYOUT ================= */
 
-const ContainerO = styled.div`
+const ContainerO = styled.main`
   display: grid;
   grid-template-columns: 260px 1fr 260px;
   gap: 16px;
@@ -89,7 +90,7 @@ const Side = styled.div`
   }
 `;
 
-const Content = styled.div`
+const Content = styled.article`
   width: 100%;
   /* Espacio superior para el contenido central (video + info) */
   padding-top: 12px;
@@ -116,7 +117,7 @@ const VideoWrapper = styled.div`
 
 /* ================= GRID ================= */
 
-const InfoGrid = styled.div`
+const InfoGrid = styled.section`
   display: grid;
   grid-template-columns: 1fr 330px;
   gap: 3px;
@@ -527,8 +528,6 @@ const Video = () => {
         setChannel(channelRes.data);
         dispatch(fetchSuccess(videoRes.data));
         setCurrentPlayingVideoId(videoRes.data._id);
-        // Update document title with video title
-        document.title = `${videoRes.data.title} | stream-in`;
       } catch (err) {
         console.error("Error cargando video:", err);
       } finally {
@@ -537,17 +536,6 @@ const Video = () => {
     };
     fetchData();
   }, [path, dispatch]);
-
-  // Update document title when currentVideo changes
-  useEffect(() => {
-    if (currentVideo?.title) {
-      document.title = `${currentVideo.title} | stream-in`;
-    }
-    return () => {
-      // Reset title when leaving the page
-      document.title = "stream-in";
-    };
-  }, [currentVideo]);
 
   const handleLike = async () => {
     if (!currentUser) return openLoginModal();
@@ -699,6 +687,9 @@ const Video = () => {
 
   return (
     <ContainerO>
+      {/* SEO: metadatos dinámicos, Open Graph, Twitter Cards y JSON-LD */}
+      <SEOVideoWrapper video={currentVideo} channel={channel} />
+
       <Side>
         <RecommendationRandom currentPlayingVideoId={currentPlayingVideoId} />
       </Side>

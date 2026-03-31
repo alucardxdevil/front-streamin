@@ -318,7 +318,7 @@ const Comment = ({ comment, onDelete, onEdit }) => {
       // Notificar al padre para que elimine el comentario de la lista
       if (onDelete) onDelete(comment._id);
     } catch (err) {
-      console.error("Error eliminando comentario:", err);
+      console.error("Error deleting comment:", err);
     }
   };
 
@@ -349,7 +349,7 @@ const Comment = ({ comment, onDelete, onEdit }) => {
       <Link to={`/profileUser/${channel.slug || channel._id}`}>
         <Avatar
           src={channel.img || "https://via.placeholder.com/50"}
-          alt={`Foto de perfil de ${channel.name}`}
+          alt={`Profile picture of ${channel.name}`}
         />
       </Link>
 
@@ -359,7 +359,7 @@ const Comment = ({ comment, onDelete, onEdit }) => {
           <Date>{formatTimeago(comment.createdAt, language)}</Date>
           {wasEdited && (
             <EditedBadge>
-              {t ? t("edited") : "(editado)"}
+              {t ? t("edited") : "(edited)"}
             </EditedBadge>
           )}
         </Name>
@@ -380,7 +380,7 @@ const Comment = ({ comment, onDelete, onEdit }) => {
             {editError && <ErrorMsg>{editError}</ErrorMsg>}
             <EditActions>
               <CancelBtn onClick={handleCancelEdit} disabled={saving}>
-                {t ? t("cancel") : "Cancelar"}
+                {t ? t("cancel") : "Cancel"}
               </CancelBtn>
               <SaveBtn
                 onClick={handleSaveEdit}
@@ -389,10 +389,10 @@ const Comment = ({ comment, onDelete, onEdit }) => {
                 {saving
                   ? t
                     ? t("saving")
-                    : "Guardando..."
+                    : "Saving..."
                   : t
                   ? t("save")
-                  : "Guardar"}
+                  : "Save"}
               </SaveBtn>
             </EditActions>
           </EditContainer>
@@ -404,8 +404,8 @@ const Comment = ({ comment, onDelete, onEdit }) => {
             {(isTruncated || isTextExpanded) && (
               <ExpandBtn onClick={() => setIsTextExpanded((p) => !p)}>
                 {isTextExpanded
-                  ? (t ? t("showLessText") : "Ver menos")
-                  : (t ? t("showMoreText") : "Ver más")}
+                  ? (t ? t("showLessText") : "Show less")
+                  : (t ? t("showMoreText") : "Show more")}
               </ExpandBtn>
             )}
           </TextWrapper>
@@ -416,10 +416,10 @@ const Comment = ({ comment, onDelete, onEdit }) => {
       {isOwner && !isEditing && (
         <ActionsMenu className="comment-actions">
           <ActionBtn onClick={() => setIsEditing(true)}>
-            {t ? t("edit") : "Editar"}
+            {t ? t("edit") : "Edit"}
           </ActionBtn>
           <ActionBtn $danger onClick={handleDelete}>
-            {t ? t("delete") : "Eliminar"}
+            {t ? t("delete") : "Delete"}
           </ActionBtn>
         </ActionsMenu>
       )}

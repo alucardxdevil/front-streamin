@@ -27,6 +27,7 @@ import { LanguageProvider } from "./utils/LanguageContext";
 import { HistoryPage } from "./pages/History";
 import { PlaylistDetailPage } from "./pages/PlaylistDetail";
 import { PlaylistPlayerPage } from "./pages/PlaylistPlayer";
+import SEOHead from "./components/seo/SEOHead";
 
 
 const GlobalStyle = createGlobalStyle`
@@ -87,6 +88,8 @@ function App() {
           <Main>
             <Navbar themeMode={themeMode} setThemeMode={setThemeMode} />
             <BackButton />
+            {/* SEO: metadatos por defecto (cada página puede sobreescribirlos) */}
+            <SEOHead />
       <Wrapper>
                 <Routes>
                   <Route path="/">

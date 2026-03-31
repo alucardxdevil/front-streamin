@@ -6,7 +6,6 @@ import { BiPlayCircle, BiHeart, BiArrowBack } from "react-icons/bi";
 import { FaPlay, FaClock, FaVideo, FaHeart } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { formats } from "./Video";
-import ShareModalPlaylist from "../components/ModalSharePlaylist";
 import { useLanguage } from "../utils/LanguageContext";
 
 // Animaciones
@@ -431,7 +430,7 @@ const HomeOne = ({ type }) => {
       
       // Buscar la playlist de favoritos en la respuesta
       const playlists = playlistRes.data.playlists || [];
-      const favPlaylist = playlists.find(p => p.name === 'Mis videos favoritos');
+      const favPlaylist = playlists.find(p => p.name === 'My Favorites videos');
       
       if (favPlaylist && favPlaylist._id) {
         navigate(`/playlist-player/${currentUser._id}/${favPlaylist._id}`);
@@ -439,7 +438,7 @@ const HomeOne = ({ type }) => {
         // Si no existe, crear una playlist temporal
         const response = await axios.post('/users/playlists', {
           userId: currentUser._id,
-          name: 'Mis videos favoritos',
+          name: 'My Favorites videos',
           videoIds: videos.map(v => v._id)
         }, {
           headers: { Authorization: `Bearer ${currentUser.accessToken}` }
@@ -450,7 +449,7 @@ const HomeOne = ({ type }) => {
         }
       }
     } catch (err) {
-      console.error('Error al reproducir playlist:', err);
+      console.error('Error playing playlist:', err);
       // Si falla, reproducir el primer video
       const firstVideoId = videos[0]._id;
       navigate(`/video/${firstVideoId}`);

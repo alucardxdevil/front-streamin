@@ -9,13 +9,14 @@ import defaultProfile from '../img/profileUser.png'
 import NotFound from './PageNotFOund';
 import { FaTwitter, FaInstagram, FaFacebook, FaGlobe } from 'react-icons/fa';
 import { useLanguage } from '../utils/LanguageContext';
+import SEOProfileWrapper from '../components/seo/SEOProfileWrapper';
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 `;
 
-const Container = styled.div`
+const Container = styled.main`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -419,6 +420,9 @@ export const ProfileUser = () => {
 
   return (
     <>
+      {/* SEO: metadatos dinámicos para perfil de usuario */}
+      <SEOProfileWrapper user={channel} videoCount={videoCount} />
+
       <Container>
         <LeftImageContainer>
           <LeftImage
