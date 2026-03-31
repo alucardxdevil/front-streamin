@@ -62,6 +62,10 @@ const translations = {
     playlistEmptyDescription: "Agrega videos desde tu historial de reproducción",
     goToHistory: "Ir al Historial",
     added: "Agregado",
+    previous: "Anterior",
+    next: "Siguiente",
+    videoOf: "Video",
+    of: "de",
 
     // Following page
     loadingProfiles: "Cargando perfiles...",
@@ -686,6 +690,10 @@ const translations = {
     playlistEmptyDescription: "Add videos from your playback history",
     goToHistory: "Go to History",
     added: "Added",
+    previous: "Previous",
+    next: "Next",
+    videoOf: "Video",
+    of: "of",
 
     // Following page
     loadingProfiles: "Loading profiles...",
@@ -3296,7 +3304,7 @@ const translations = {
     noVideosInCategory: "该类别下未找到视频",
   },
 
-  ja: {
+  jp: {
     // Navbar (ナビゲーションバー)
     search: "検索",
     login: "ログイン",

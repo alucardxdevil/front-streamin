@@ -237,7 +237,7 @@ const EmptyState = styled.div`
 `;
 
 export const PlaylistPlayerPage = () => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userId, playlistId } = useParams();
@@ -320,7 +320,7 @@ export const PlaylistPlayerPage = () => {
       <PageContainer>
         <LoadingContainer>
           <div className="spinner" />
-          <p>Cargando playlist...</p>
+          <p>{t("loadingPlaylist")}</p>
         </LoadingContainer>
       </PageContainer>
     );
@@ -331,8 +331,8 @@ export const PlaylistPlayerPage = () => {
       <PageContainer>
         <EmptyState>
           <MdPlaylistAdd />
-          <h3>Esta playlist está vacía</h3>
-          <p>Agrega videos desde tu historial de reproducción</p>
+          <h3>{t("playlistEmpty")}</h3>
+          <p>{t("playlistEmptyDescription")}</p>
         </EmptyState>
       </PageContainer>
     );
@@ -348,7 +348,7 @@ export const PlaylistPlayerPage = () => {
             <VideoTitle>{currentVideo?.videoTitle}</VideoTitle>
             <VideoMeta>
               <span>{formatDate(currentVideo?.addedAt || playlist.updatedAt)}</span>
-              <span>Video {currentIndex + 1} de {playlist.videos.length}</span>
+              <span>{t("videoOf")} {currentIndex + 1} {t("of")} {playlist.videos.length}</span>
             </VideoMeta>
           </VideoInfo>
           
@@ -358,14 +358,14 @@ export const PlaylistPlayerPage = () => {
               disabled={currentIndex === 0}
             >
               <BiSkipPrevious />
-              Anterior
+              {t("previous")}
             </NavButton>
             
             <NavButton 
               onClick={handleNext}
               disabled={currentIndex === playlist.videos.length - 1}
             >
-              Siguiente
+              {t("next")}
               <BiSkipNext />
             </NavButton>
           </NavigationControls>
@@ -374,7 +374,7 @@ export const PlaylistPlayerPage = () => {
         <PlaylistPanel>
           <PlaylistHeader>
             <PlaylistTitle>{playlist.name}</PlaylistTitle>
-            <PlaylistCount>{playlist.videos.length} videos</PlaylistCount>
+            <PlaylistCount>{playlist.videos.length} {t("videos")}</PlaylistCount>
           </PlaylistHeader>
           
           <PlaylistItems>
