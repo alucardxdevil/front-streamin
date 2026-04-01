@@ -4,6 +4,27 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/logo-pest.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="google" content="notranslate" />
+
+    <!-- Detectar idioma del navegador y aplicar al atributo lang del HTML -->
+    <script>
+      (function() {
+        var supported = ['es','en','pt','de','ru','zh','fr','hi','ar'];
+        var langs = navigator.languages || [navigator.language || 'en'];
+        var detected = 'en';
+        for (var i = 0; i < langs.length; i++) {
+          var base = langs[i].split('-')[0].toLowerCase();
+          if (supported.indexOf(base) !== -1) { detected = base; break; }
+        }
+        // Respetar elección manual del usuario
+        var manual = localStorage.getItem('languageManuallySet');
+        if (manual === 'true') {
+          var saved = localStorage.getItem('language');
+          if (saved && supported.indexOf(saved) !== -1) detected = saved;
+        }
+        document.documentElement.lang = detected;
+      })();
+    </script>
 
     <!-- SEO: Meta tags base (react-helmet-async los sobreescribe dinámicamente) -->
     <title>stream-in — Share and discover videos</title>

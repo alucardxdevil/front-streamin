@@ -42,9 +42,10 @@ export const LanguageProvider = ({ children }) => {
     return detectBrowserLanguage();
   });
 
-  // Guardar idioma en localStorage cuando cambia
+  // Guardar idioma en localStorage y actualizar atributo lang del HTML cuando cambia
   useEffect(() => {
     localStorage.setItem("language", language);
+    document.documentElement.lang = language;
   }, [language]);
 
   // Wrapper para setLanguage que marca la selección como manual
