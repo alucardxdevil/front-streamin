@@ -30,6 +30,7 @@ const BackButtonCircle = styled.button`
   height: 36px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.15);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1.5px solid rgba(255, 255, 255, 0.3);
   color: white;

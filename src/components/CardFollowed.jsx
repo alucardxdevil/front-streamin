@@ -66,6 +66,7 @@ const DurationBadge = styled.span`
   font-weight: 600;
   background-color: rgba(0, 0, 0, 0.75);
   color: #fff;
+  -webkit-backdrop-filter: blur(3px);
   backdrop-filter: blur(3px);
 `;
 

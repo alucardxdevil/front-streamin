@@ -322,6 +322,11 @@ const UserCarousel = styled.div`
   padding-bottom: 16px;
   margin-bottom: 16px;
 
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #0b67dc transparent;
+
+  /* Chrome/Edge/Safari scrollbar */
   &::-webkit-scrollbar {
     height: 8px;
   }

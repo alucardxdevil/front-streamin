@@ -128,8 +128,10 @@ const HLSPlayer = ({
     setError(null)
 
     // Verificar soporte nativo (Safari/iOS)
-    if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Safari soporta HLS nativamente
+    // Preferir hls.js cuando está disponible (mejor control de calidad y compatibilidad).
+    // Solo usar HLS nativo en Safari/iOS donde hls.js no funciona (no soporta MSE).
+    if (!Hls.isSupported() && video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Safari soporta HLS nativamente (sin MSE, hls.js no funciona)
       // PROTECCIÓN: Adjuntar token de sesión como query param para Safari
       // (Safari no soporta xhrSetup de hls.js)
       const safeUrl = sessionToken
@@ -455,7 +457,8 @@ const HLSPlayer = ({
           controls
           style={isStickyActive ? styles.videoSticky : styles.video}
           playsInline
-          preload="auto"
+          crossOrigin="anonymous"
+          preload="metadata"
         />
 
         {/* Overlay de carga */}

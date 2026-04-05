@@ -354,6 +354,7 @@ const CreatePlaylistModal = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 `;
 
@@ -374,6 +375,11 @@ const ModalContent = styled.div`
     width: 95%;
   }
   
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => theme.soft} transparent;
+
+  /* Chrome/Edge/Safari scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -498,11 +504,16 @@ const PlaylistSelectList = styled.div`
   overflow-y: auto;
   margin-bottom: 20px;
   
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => theme.soft} transparent;
+
   @media (max-width: 768px) {
     max-height: 150px;
     margin-bottom: 14px;
   }
   
+  /* Chrome/Edge/Safari scrollbar */
   &::-webkit-scrollbar {
     width: 4px;
   }

@@ -57,7 +57,9 @@ const ContainerO = styled.main`
     padding: 12px;
     margin-top: 60px;
     /* Usar clip en lugar de hidden para no crear un scroll container
-       que rompería el position: sticky del reproductor */
+       que rompería el position: sticky del reproductor.
+       overflow-x: hidden como fallback para Firefox < 81 */
+    overflow-x: hidden;
     overflow-x: clip;
   }
 `;
@@ -270,6 +272,7 @@ const PlaylistModalOverlay = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 `;
 
@@ -385,6 +388,11 @@ const PlaylistList = styled.div`
   margin-bottom: 16px;
   padding-right: 4px;
   
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => theme.soft} transparent;
+
+  /* Chrome/Edge/Safari scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
   }

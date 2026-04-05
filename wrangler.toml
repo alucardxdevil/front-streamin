@@ -1,3 +1,8 @@
 name = "stream-in-frontend"
-compatibility_date = "2024-01-01"
+compatibility_date = "2024-09-23"
 pages_build_output_dir = "./build"
+
+# Cloudflare Pages Functions se detectan automáticamente
+# desde el directorio functions/ en la raíz del proyecto.
+# La función functions/[[path]].js actúa como middleware
+# para todas las rutas (crawler detection + sitemap proxy).

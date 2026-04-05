@@ -20,6 +20,11 @@ const ScrollableCards = styled.div`
   padding-right: 8px;
   min-height: 0; /* necesario para que flex + overflow funcione correctamente */
 
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => theme.text} ${({ theme }) => theme.soft};
+
+  /* Chrome/Edge/Safari scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
   }

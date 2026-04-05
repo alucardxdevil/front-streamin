@@ -68,6 +68,7 @@ const ContentContainer = styled.div`
   position: relative;
   padding: 24px;
   background: ${({ theme }) => theme.bgLighter || "rgba(30,30,30,0.85)"};
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-radius: 20px;
   margin: auto;
@@ -95,6 +96,7 @@ const CardButton = styled.button`
     following
       ? theme.soft
       : "linear-gradient(135deg, #0b67dc 0%, #ff3e6c 100%)"};
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-radius: 12px;
   padding: 10px 18px;
@@ -182,6 +184,7 @@ const StatsContainer = styled.div`
 
 const StatCard = styled.div`
   background: rgba(255, 255, 255, 0.05);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-radius: 16px;
   padding: 3px 20px;

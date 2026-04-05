@@ -79,6 +79,7 @@ const DurationBadge = styled.span`
   border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 `;
 
@@ -243,6 +244,7 @@ const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   z-index: 1999;
 `;

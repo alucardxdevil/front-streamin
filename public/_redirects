@@ -1,1 +1,8 @@
+# Cloudflare Pages — Redirects
+# Los archivos estáticos en public/ (robots.txt, logo-pest.jpg, etc.)
+# se sirven automáticamente ANTES de estas reglas.
+
+# SPA catch-all: Todas las rutas no-estáticas sirven index.html
+# Nota: El Cloudflare Pages Function (functions/[[path]].js) se ejecuta
+# ANTES de estas reglas y maneja crawlers + 404 dinámicos.
 /*    /index.html   200

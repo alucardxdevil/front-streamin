@@ -113,6 +113,11 @@ const NavMenuItems = styled.ul`
   overflow-y: auto;
   overflow-x: hidden;
 
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => theme.border || "#333"} transparent;
+
+  /* Chrome/Edge/Safari scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
   }

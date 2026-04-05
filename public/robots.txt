@@ -1,12 +1,36 @@
 # stream-in — robots.txt
+# Última actualización: 2026-04-05
+
 User-agent: *
+
+# Permitir todo por defecto
 Allow: /
+
+# ── Rutas públicas (permitir explícitamente) ────────────────────────────────
+# Estas reglas más específicas tienen PRIORIDAD sobre las Disallow más cortas
+Allow: /profileUser/
+Allow: /video/
+Allow: /videosProfile/
+Allow: /trends
+Allow: /us
+Allow: /help
+Allow: /terms
+Allow: /contact
+Allow: /support
+
+# ── Rutas privadas / autenticación (no indexar) ─────────────────────────────
 Disallow: /signin
 Disallow: /register
 Disallow: /settings
-Disallow: /profile
 Disallow: /myvideos
 Disallow: /history/
+Disallow: /likes
+Disallow: /following
+Disallow: /search
+# /profile$ bloquea SOLO /profile exacto, no /profileUser/*
+# El $ es soportado por Googlebot como "fin de URL"
+Disallow: /profile$
 
-# Sitemap dinámico generado por el servidor
+# ── Sitemap ─────────────────────────────────────────────────────────────────
+# Proxy dinámico desde api.stream-in.com vía Cloudflare Pages Function
 Sitemap: https://stream-in.com/sitemap.xml

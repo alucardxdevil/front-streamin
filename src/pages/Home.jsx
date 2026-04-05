@@ -463,6 +463,7 @@ const AdCardBadge = styled.span`
   background: rgba(11, 103, 220, 0.15);
   color: #0b67dc;
   border: 1px solid rgba(11, 103, 220, 0.3);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 `;
 

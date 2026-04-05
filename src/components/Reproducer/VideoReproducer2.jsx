@@ -237,6 +237,7 @@ const CenterButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   filter: drop-shadow(0 0 8px rgba(11, 103, 220, 0.4));
 
@@ -497,6 +498,7 @@ const MenuOverlay = styled.div`
   bottom: 56px;
   right: 0;
   background: rgba(20, 20, 20, 0.96);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -508,6 +510,11 @@ const MenuOverlay = styled.div`
   animation: ${fadeInScale} 0.2s ease;
   transform-origin: bottom right;
 
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+
+  /* Chrome/Edge/Safari scrollbar */
   &::-webkit-scrollbar {
     width: 4px;
   }
@@ -1629,8 +1636,9 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             file: {
               attributes: {
                 crossOrigin: "anonymous", // No necesitamos cookies; el token va en la URL (_st) y en headers (X-Session-Token)
-                // Precargar metadatos para reducir tiempo de carga inicial
-                preload: "auto",
+                // Precargar metadatos; "metadata" es más compatible con Firefox y evita
+                // conflictos con el buffer management de hls.js (Firefox ignora "auto" en muchos casos)
+                preload: "metadata",
                 // Reproducción inline en móviles (evita pantalla completa forzada en iOS)
                 playsInline: true,
               },
@@ -1666,8 +1674,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 levelLoadingTimeOut: 15000,
                 // No usar modo de baja latencia (es VOD, no live)
                 lowLatencyMode: false,
-                // Permitir recuperación automática de errores de audio
-                enableSoftwareAES: true,
+                // Usar Web Crypto API nativa del navegador para AES (mejor rendimiento en Firefox)
+                enableSoftwareAES: false,
                 // PROTECCIÓN: Inyectar token de sesión en cada solicitud XHR de hls.js
                 // Esto incluye el manifest, playlists de calidad y cada fragmento .ts
                 xhrSetup: sessionToken

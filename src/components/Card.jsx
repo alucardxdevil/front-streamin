@@ -160,6 +160,7 @@ const InfoDuration = styled.span`
   font-weight: 600;
   background: rgba(233, 69, 96, 0.7);
   color: #fff;
+  -webkit-backdrop-filter: blur(3px);
   backdrop-filter: blur(3px);
 `;
 
