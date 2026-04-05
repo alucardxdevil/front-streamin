@@ -1572,6 +1572,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                       console.error('[HLS] Error no recuperable');
                       break;
                   }
+                } else if (data.details === 'bufferStalledError') {
+                  // Firefox: el buffer se vacía con más frecuencia que en Chrome.
+                  // Forzar recarga de fragmentos para recuperar la reproducción.
+                  console.log('[HLS] Buffer stalled (no fatal) — forzando recarga');
+                  hls.startLoad();
                 }
               };
               // Usar los eventos de hls.js directamente
@@ -1617,10 +1622,51 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             if (videoEnded) setVideoEnded(false);
           }}
           onError={(e, data) => {
-            // Los errores hlsError no fatales son normales durante ABR switching
-            // Solo loguear si es relevante
-            if (data?.type === 'hlsError' && !data?.fatal) {
-              console.log("[HLS] Error no fatal (recuperable):", data?.details);
+            // Manejar errores HLS específicos
+            if (data?.type === 'hlsError') {
+              // Errores no fatales son normales durante ABR switching
+              if (!data?.fatal) {
+                // bufferStalledError: el buffer se vació temporalmente.
+                // En Firefox esto es más frecuente. hls.js lo recupera solo
+                // pero podemos forzar la carga si se detecta.
+                if (data?.details === 'bufferStalledError') {
+                  console.log("[HLS] Buffer stalled — Firefox puede necesitar recarga de fragmentos");
+                  const hls = getHlsInstance();
+                  if (hls) {
+                    // Forzar que hls.js recargue fragmentos pendientes
+                    hls.startLoad();
+                  }
+                  return;
+                }
+                console.log("[HLS] Error no fatal (recuperable):", data?.details);
+                return;
+              }
+              // Error fatal de HLS: intentar recuperación
+              console.error("[HLS] Error fatal:", data?.details);
+              const hls = getHlsInstance();
+              if (hls) {
+                if (data?.details?.includes('buffer') || data?.type === 'mediaError') {
+                  console.log("[HLS] Intentando recoverMediaError...");
+                  hls.recoverMediaError();
+                  return;
+                }
+                if (data?.details?.includes('network') || data?.details?.includes('frag')) {
+                  console.log("[HLS] Intentando startLoad tras error de red...");
+                  hls.startLoad();
+                  return;
+                }
+              }
+            }
+            // DOMException de Firefox: "The fetching process was aborted"
+            // Esto ocurre cuando el <video> element y hls.js compiten por cargar.
+            // Si hls.js está activo, podemos ignorar este error del elemento nativo.
+            if (e instanceof DOMException && e.name === 'AbortError') {
+              console.log("[Player] Fetch abortado (esperado en Firefox con hls.js)");
+              return;
+            }
+            // Otro tipo de error de aborto del user agent
+            if (typeof e === 'object' && e?.message?.includes('aborted')) {
+              console.log("[Player] Carga abortada por el navegador (no fatal)");
               return;
             }
             console.warn("ReactPlayer error:", e, data);
@@ -1636,9 +1682,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             file: {
               attributes: {
                 crossOrigin: "anonymous", // No necesitamos cookies; el token va en la URL (_st) y en headers (X-Session-Token)
-                // Precargar metadatos; "metadata" es más compatible con Firefox y evita
-                // conflictos con el buffer management de hls.js (Firefox ignora "auto" en muchos casos)
-                preload: "metadata",
+                // CRÍTICO para Firefox: cuando hls.js gestiona la carga de segmentos,
+                // el <video> element NO debe intentar cargar la URL por su cuenta.
+                // "none" evita que Firefox haga un fetch nativo que colisiona con hls.js,
+                // causando "DOMException: The fetching process was aborted".
+                // Para video directo (sin HLS), usamos "metadata" para que el navegador
+                // descargue solo los metadatos iniciales.
+                preload: hasHLS ? "none" : "metadata",
                 // Reproducción inline en móviles (evita pantalla completa forzada en iOS)
                 playsInline: true,
               },
@@ -1676,10 +1726,18 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 lowLatencyMode: false,
                 // Usar Web Crypto API nativa del navegador para AES (mejor rendimiento en Firefox)
                 enableSoftwareAES: false,
-                // PROTECCIÓN: Inyectar token de sesión en cada solicitud XHR de hls.js
-                // Esto incluye el manifest, playlists de calidad y cada fragmento .ts
+                // PROTECCIÓN: El token de sesión ya se incluye como _st en las URLs
+                // del m3u8 reescrito por el backend. Esto evita la necesidad de enviar
+                // el header X-Session-Token via xhrSetup, que causa preflight CORS
+                // en Firefox y puede abortar la carga de segmentos.
+                // Se mantiene el header como respaldo por si el m3u8 no tiene _st.
                 xhrSetup: sessionToken
-                  ? (xhr) => { xhr.setRequestHeader("X-Session-Token", sessionToken); }
+                  ? (xhr, url) => {
+                      // Solo inyectar header si la URL no tiene ya el _st como query param
+                      if (!url || !url.includes('_st=')) {
+                        xhr.setRequestHeader("X-Session-Token", sessionToken);
+                      }
+                    }
                   : undefined,
               },
             },

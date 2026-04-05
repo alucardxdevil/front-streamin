@@ -450,7 +450,9 @@ const HLSPlayer = ({
           </button>
         )}
 
-        {/* Video */}
+        {/* CRÍTICO para Firefox: preload="none" cuando hls.js gestiona la carga.
+            Evita que el <video> element haga fetch nativo que colisiona con hls.js,
+            causando "DOMException: The fetching process was aborted" en Firefox. */}
         <video
           ref={videoRef}
           poster={poster}
@@ -458,7 +460,7 @@ const HLSPlayer = ({
           style={isStickyActive ? styles.videoSticky : styles.video}
           playsInline
           crossOrigin="anonymous"
-          preload="metadata"
+          preload="none"
         />
 
         {/* Overlay de carga */}
