@@ -1545,6 +1545,23 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             }
             setLoading(false);
 
+            // Firefox fix: Forzar play() cuando el video está listo.
+            // En Firefox, ReactPlayer puede fallar al hacer play() inicial porque
+            // hls.js aún no tiene buffer. onReady se dispara cuando el video element
+            // tiene metadata lista, así que intentamos play() explícitamente aquí.
+            if (playing && playerRef.current) {
+              const internalPlayer = playerRef.current.getInternalPlayer();
+              if (internalPlayer && internalPlayer.paused) {
+                const playPromise = internalPlayer.play();
+                if (playPromise && typeof playPromise.catch === 'function') {
+                  playPromise.catch(() => {
+                    // Si play() falla (Firefox puede rechazarlo si no hay buffer aún),
+                    // esperar a que hls.js tenga datos y reintentar
+                  });
+                }
+              }
+            }
+
             // Capturar instancia de hls.js para control de calidad
             const hls = getHlsInstance();
             if (hls) {
@@ -1578,9 +1595,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   // Errores no fatales: recuperación proactiva
                   switch (data.details) {
                     case 'bufferStalledError':
-                      // Firefox: el buffer se vacía con más frecuencia que en Chrome.
-                      // Forzar recarga de fragmentos para recuperar la reproducción.
-                      console.log('[HLS] Buffer stalled (no fatal) — forzando recarga');
+                      // Buffer vacío — normal al iniciar/cambiar video o en Firefox.
+                      // Forzar recarga silenciosamente.
                       hls.startLoad();
                       break;
                     case 'levelLoadTimeOut':
@@ -1595,10 +1611,26 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   }
                 }
               };
+              // Firefox fix: cuando hls.js llena el buffer por primera vez,
+              // reintentar play() si el video debería estar reproduciéndose pero está pausado.
+              // Esto resuelve la race condition donde play() falla porque aún no hay buffer.
+              const onBufferAppended = () => {
+                if (playingRef.current && playerRef.current) {
+                  const internalPlayer = playerRef.current.getInternalPlayer();
+                  if (internalPlayer && internalPlayer.paused && !videoEnded) {
+                    const p = internalPlayer.play();
+                    if (p && typeof p.catch === 'function') {
+                      p.catch(() => { /* Se reintentará en el siguiente BUFFER_APPENDED */ });
+                    }
+                  }
+                }
+              };
+
               // Usar los eventos de hls.js directamente
               if (hls.constructor?.Events) {
                 hls.on(hls.constructor.Events.MANIFEST_PARSED, onManifestParsed);
                 hls.on(hls.constructor.Events.ERROR, onHlsError);
+                hls.on(hls.constructor.Events.BUFFER_APPENDED, onBufferAppended);
               }
               // Si los niveles ya están cargados (manifest ya parseado)
               if (hls.levels && hls.levels.length > 0) {
@@ -1626,6 +1658,18 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               loadingTimerRef.current = null;
             }
             setLoading(false);
+
+            // Firefox fix: reintentar play() cuando el buffer se llena.
+            // Si play() falló antes porque no había buffer, ahora sí hay datos.
+            if (playing && playerRef.current) {
+              const internalPlayer = playerRef.current.getInternalPlayer();
+              if (internalPlayer && internalPlayer.paused && !videoEnded) {
+                const p = internalPlayer.play();
+                if (p && typeof p.catch === 'function') {
+                  p.catch(() => { /* ignorar — se reintentará */ });
+                }
+              }
+            }
           }}
           onPlay={() => {
             // Al iniciar reproducción, ocultar spinner y limpiar estado
@@ -1646,14 +1690,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               // Errores no fatales: hls.js se recupera solo, pero ayudamos
               if (!isFatal) {
                 if (details === 'bufferStalledError') {
-                  // Buffer vacío — más frecuente en Firefox por latencia de preflight CORS
+                  // Buffer vacío — normal al inicio o cambio de video. Silencioso.
                   const hls = getHlsInstance();
                   if (hls) hls.startLoad();
                   return;
                 }
                 if (details === 'levelLoadTimeOut' || details === 'fragLoadTimeOut' || details === 'manifestLoadTimeOut') {
-                  // Timeout: reintentar carga (el proxy puede ser lento)
-                  console.log(`[HLS] Timeout no fatal: ${details} — reintentando`);
+                  // Timeout: reintentar carga silenciosamente
                   const hls = getHlsInstance();
                   if (hls) hls.startLoad();
                   return;
@@ -1683,8 +1726,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
             // ── Errores del elemento <video> nativo ──
             // DOMException de Firefox: "The fetching process was aborted"
+            // Esto pasa cuando play() se llama antes de que hls.js tenga buffer.
+            // Programar un reintento — hls.js llenará el buffer y onBufferEnd/BUFFER_APPENDED
+            // también reintentarán play().
             if (e instanceof DOMException) {
-              console.log("[Player] DOMException ignorada:", e.message);
               return;
             }
             // Error genérico de <video> (Event type='error'): puede pasar cuando
@@ -1706,13 +1751,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             file: {
               attributes: {
                 crossOrigin: "anonymous", // No necesitamos cookies; el token va en la URL (_st) y en headers (X-Session-Token)
-                // CRÍTICO para Firefox: cuando hls.js gestiona la carga de segmentos,
-                // el <video> element NO debe intentar cargar la URL por su cuenta.
-                // "none" evita que Firefox haga un fetch nativo que colisiona con hls.js,
-                // causando "DOMException: The fetching process was aborted".
-                // Para video directo (sin HLS), usamos "metadata" para que el navegador
-                // descargue solo los metadatos iniciales.
-                preload: hasHLS ? "none" : "metadata",
+                // "metadata" permite que el <video> element prepare su pipeline de media
+                // sin descargar el contenido completo. Esto es necesario para que Firefox
+                // acepte video.play() cuando hls.js empuje los primeros fragmentos al buffer.
+                // NOTA: "none" causaba que Firefox rechazara play() con DOMException
+                // porque el element no tenía datos listos para decodificar.
+                preload: "metadata",
                 // Reproducción inline en móviles (evita pantalla completa forzada en iOS)
                 playsInline: true,
               },
