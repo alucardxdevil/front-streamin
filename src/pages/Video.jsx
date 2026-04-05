@@ -186,7 +186,10 @@ const CreatorInfo = styled.div`
 `;
 
 const FollowBtn = styled.button`
-  background: ${({ following }) => (following ? "#1f1f1f" : "#0b67dc")};
+  background: ${({ following, theme }) =>
+    following
+      ? theme.soft
+      : "linear-gradient(135deg, #0b67dc 0%, #ff3e6c 100%)"};
   color: white;
   border-radius: 10px;
   padding: 8px 16px;
@@ -198,6 +201,11 @@ const FollowBtn = styled.button`
     css`
       animation: ${pulse} 1.2s infinite;
     `}
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(11, 103, 220, 0.4);
+  }
 `;
 
 /* ================= DESCRIPTION ================= */

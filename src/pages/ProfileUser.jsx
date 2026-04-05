@@ -91,7 +91,10 @@ const ButtonContainer = styled.div`
 `;
 
 const CardButton = styled.button`
-  background: rgba(255, 255, 255, 0.05);
+  background: ${({ following, theme }) =>
+    following
+      ? theme.soft
+      : "linear-gradient(135deg, #0b67dc 0%, #ff3e6c 100%)"};
   backdrop-filter: blur(8px);
   border-radius: 12px;
   padding: 10px 18px;
@@ -100,8 +103,11 @@ const CardButton = styled.button`
   color: ${({ theme }) => theme.text || "#fff"};
   border: none;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-  display: flex;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+  display: list-item;
   align-items: center;
   gap: 6px;
 
@@ -111,22 +117,9 @@ const CardButton = styled.button`
   }
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(11, 103, 220, 0.4);
   }
-
-  ${(props) =>
-    props.following &&
-    `
-    background: rgba(0, 200, 0, 0.15);
-    color: #00ff00;
-
-    &:hover {
-      background: rgba(0, 200, 0, 0.25);
-      color: #00ff00;
-    }
-  `}
 `;
 
 const ProfileImage = styled.img`
@@ -427,7 +420,7 @@ export const ProfileUser = () => {
           <LeftImage
             src={
               leftImageUrl ||
-              "https://firebasestorage.googleapis.com/v0/b/prueba1-43744.appspot.com/o/bannerDefault.png?alt=media&token=cafc5799-c176-4b8a-a7a6-9222e7bc5614"
+              "https://f005.backblazeb2.com/file/streamin-videos/uploads/6958ed67bb26d62f7607e915/1775388233418-50c092e0-068d-40bd-bfcf-f3b3df9c960b.webp"
             }
             alt="Left Image"
           />

@@ -385,7 +385,6 @@ const BigAvatar = styled.img`
   margin-top: 8px;
   transform: translateY(-30px);
   border: 4px solid;
-  border-image: linear-gradient(135deg, #0b67dc, #ff3e6c) 1;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 
   @media (max-width: 768px) {
@@ -697,7 +696,7 @@ export const Search = () => {
               value={videoSort}
               onChange={(e) => setVideoSort(e.target.value)}
             >
-              <option value="relevance">{t("searchRelevance")}</option>
+              {/* <option value="relevance">{t("searchRelevance")}</option> */}
               <option value="views">{t("searchMostViewed")}</option>
               <option value="recent">{t("searchMostRecent")}</option>
             </Select>
@@ -812,7 +811,7 @@ export const Search = () => {
                     value={userSort}
                     onChange={(e) => setUserSort(e.target.value)}
                   >
-                    <option value="relevance">{t("searchRelevance")}</option>
+                    {/* <option value="relevance">{t("searchRelevance")}</option> */}
                     <option value="followers">{t("searchMostFollowed")}</option>
                   </Select>
                 </FiltersRow>
@@ -872,9 +871,9 @@ export const Search = () => {
                     value={videoSort}
                     onChange={(e) => setVideoSort(e.target.value)}
                   >
-                    <option value="relevance">Relevancia</option>
+                    {/* <option value="relevance">Relevancia</option>
                     <option value="views">Más vistos</option>
-                    <option value="recent">Más recientes</option>
+                    <option value="recent">Más recientes</option> */}
                   </Select>
                 </FiltersRow>
               </SectionHeader>

@@ -552,7 +552,7 @@ export const Profile = () => {
           <LeftImage
             src={
               leftImageUrl ||
-              "https://firebasestorage.googleapis.com/v0/b/prueba1-43744.appspot.com/o/bannerDefault.png?alt=media&token=cafc5799-c176-4b8a-a7a6-9222e7bc5614"
+              "https://f005.backblazeb2.com/file/streamin-videos/uploads/6958ed67bb26d62f7607e915/1775388233418-50c092e0-068d-40bd-bfcf-f3b3df9c960b.webp"
             }
             alt="Left Image"
           />
