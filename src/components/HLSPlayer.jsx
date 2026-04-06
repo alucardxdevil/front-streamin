@@ -126,6 +126,8 @@ const HLSPlayer = ({
 
     setIsLoading(true)
     setError(null)
+    // Resetear flag de corrección de inicio
+    video._startFixed = false
 
     // Verificar soporte nativo (Safari/iOS)
     // Preferir hls.js cuando está disponible (mejor control de calidad y compatibilidad).
@@ -189,15 +191,28 @@ const HLSPlayer = ({
       maxMaxBufferLength: 120,               // Máximo buffer total
       startLevel: -1,                        // Empezar en Auto (ABR)
       abrEwmaDefaultEstimate: 1000000,       // Estimación inicial de ancho de banda (1Mbps)
+      // Buffer y timing ajustados para Firefox:
+      // - maxBufferHole: tolera huecos de hasta 1s sin saltar (Firefox es más
+      //   estricto con huecos en el buffer que Chrome/Safari).
+      // - nudgeMaxRetry: más reintentos antes de saltar un hueco.
+      // - startFragPrefetch: precarga el primer fragmento mientras se parsea
+      //   el playlist, reduciendo el delay de inicio que causaba que Firefox
+      //   no iniciara la reproducción desde el segundo 0.
+      maxBufferHole: 1,
+      nudgeMaxRetry: 10,
+      startFragPrefetch: true,
       // Reintentos en caso de error de red
       fragLoadingMaxRetry: 4,
       manifestLoadingMaxRetry: 3,
       levelLoadingMaxRetry: 3,
       fragLoadingRetryDelay: 1000,
-      // PROTECCIÓN: Inyectar token de sesión en cada solicitud XHR de hls.js
-      // Esto incluye el manifest, los playlists de calidad y cada fragmento .ts
+      // PROTECCIÓN: Inyectar token de sesión SOLO si la URL no lo tiene ya.
+      // El servidor ahora incluye _st como query param en TODAS las URLs
+      // reescritas del .m3u8 (tanto playlists como segmentos .ts).
+      // Esto evita que Firefox necesite preflight CORS en cada petición,
+      // que era la causa principal del retraso en la carga de segmentos iniciales.
       xhrSetup: (xhr, url) => {
-        if (currentSessionToken) {
+        if (currentSessionToken && url && !url.includes('_st=')) {
           xhr.setRequestHeader('X-Session-Token', currentSessionToken)
         }
       },
@@ -210,6 +225,13 @@ const HLSPlayer = ({
       setIsLoading(false)
       setAvailableLevels(data.levels)
       console.log(`[HLSPlayer] ${data.levels.length} calidades disponibles`)
+
+      // Asegurar que la reproducción inicie desde el segundo 0.
+      // En Firefox, hls.js a veces resuelve el seek inicial con un offset
+      // si los primeros segmentos tardaron en cargarse por preflights CORS.
+      if (video.currentTime > 0.5) {
+        video.currentTime = 0
+      }
 
       if (autoPlay) {
         video.play().catch((err) => {
@@ -233,7 +255,20 @@ const HLSPlayer = ({
     // Escuchar eventos nativos del elemento video para buffering
     const handleWaiting = () => setIsLoading(true)
     const handleCanPlay = () => setIsLoading(false)
-    const handlePlaying = () => setIsLoading(false)
+    const handlePlaying = () => {
+      setIsLoading(false)
+      // Corrección de inicio para Firefox: si es la primera vez que el video
+      // entra en estado "playing" y currentTime saltó adelante, corregir a 0.
+      // Esto ocurre cuando Firefox no tenía los primeros segmentos en buffer
+      // al momento del play() inicial.
+      if (!video._startFixed && video.currentTime > 2) {
+        const buffered = video.buffered
+        if (buffered.length > 0 && buffered.start(0) <= 0.5) {
+          video.currentTime = 0
+        }
+      }
+      video._startFixed = true
+    }
     video.addEventListener('waiting', handleWaiting)
     video.addEventListener('canplay', handleCanPlay)
     video.addEventListener('playing', handlePlaying)

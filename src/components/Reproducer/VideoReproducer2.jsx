@@ -1201,18 +1201,41 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   // falla en Firefox porque el buffer de video MSE aún está vacío,
   // generando un AbortError/NotSupportedError silencioso que deja el
   // video pausado permanentemente. Este poll seguro recupera el playback.
+  //
+  // Además, Firefox a veces inicia la reproducción con currentTime > 0
+  // porque los primeros segmentos no estaban en el buffer cuando MSE
+  // resolvió el seek inicial. Si el video lleva poco tiempo reproduciéndose
+  // y currentTime está adelantado, lo corregimos a 0.
   useEffect(() => {
     if (!playing || !hasHLS || !playerRef.current) return;
     
+    let hasFixedStart = false;
     const interval = setInterval(() => {
-      const video = playerRef.current.getInternalPlayer();
-      if (video && video.paused && video.readyState >= 3) {
+      const video = playerRef.current?.getInternalPlayer();
+      if (!video) return;
+      
+      // Corrección de inicio: si el video está en los primeros 2 segundos
+      // de reproducción real pero currentTime saltó adelante, resetear a 0.
+      if (!hasFixedStart && video.readyState >= 3) {
+        const buffered = video.buffered;
+        if (buffered.length > 0 && buffered.start(0) <= 0.5 && video.currentTime > 2) {
+          video.currentTime = 0;
+          hasFixedStart = true;
+        } else if (video.currentTime <= 2) {
+          // El video ya inició correctamente desde el principio
+          hasFixedStart = true;
+        }
+      }
+      
+      // Recovery de autoplay: si el estado dice "playing" pero el video
+      // está pausado y tiene suficiente buffer, forzar play().
+      if (video.paused && video.readyState >= 3) {
         const p = video.play();
         if (p && typeof p.catch === 'function') {
           p.catch(() => {});
         }
       }
-    }, 1000);
+    }, 500);
     
     return () => clearInterval(interval);
   }, [playing, hasHLS]);
@@ -1568,6 +1591,15 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             }
             setLoading(false);
 
+            // Corrección de inicio para Firefox: asegurar que el video
+            // empiece desde el segundo 0. En Firefox, cuando hls.js resuelve
+            // el manifest y los primeros segmentos tardan por preflights CORS,
+            // el player puede quedar con currentTime > 0.
+            const videoEl = playerRef.current?.getInternalPlayer();
+            if (videoEl && videoEl.currentTime > 1) {
+              videoEl.currentTime = 0;
+            }
+
             // Capturar instancia de hls.js para control de calidad
             const hls = getHlsInstance();
             if (hls) {
@@ -1639,9 +1671,25 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               hlsOptions: {
                 enableWorker: true,
                 lowLatencyMode: false,
-                // Configuraciones estrictamente necesarias
+                // startLevel: -1 usa ABR automático. El proxy ya incluye _st
+                // en todas las URLs reescritas (playlists y segmentos), así que
+                // hls.js no necesita enviar X-Session-Token via xhrSetup,
+                // evitando preflights CORS que en Firefox retrasaban la carga
+                // de los primeros segmentos y causaban que el video no iniciara
+                // desde el segundo 0.
                 startLevel: -1,
-                // Proveer el token si la URL no lo tiene
+                // Buffer y timing ajustados para evitar saltos al inicio:
+                // - maxBufferHole: tolera huecos de hasta 1s en el buffer sin
+                //   saltar (Firefox es más estricto con huecos que Chrome).
+                // - nudgeMaxRetry: reintenta más veces antes de saltar un hueco.
+                // - startFragPrefetch: precarga el primer fragmento mientras se
+                //   parsea el playlist, reduciendo el delay de inicio.
+                maxBufferHole: 1,
+                nudgeMaxRetry: 10,
+                startFragPrefetch: true,
+                // Proveer el token SOLO si la URL no lo tiene ya como query param.
+                // El servidor ahora incluye _st en todas las URLs reescritas
+                // del .m3u8, así que este xhrSetup es solo un fallback de seguridad.
                 xhrSetup: sessionToken
                   ? (xhr, url) => {
                       if (url && !url.includes('_st=')) {
