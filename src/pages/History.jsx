@@ -808,13 +808,42 @@ export const HistoryPage = () => {
               <EmptyState>{t("noVideosWatchedYet")}</EmptyState>
             ) : (
               <HistoryList>
-                {history.map((item) => (
+                {history.map((item) => {
+                  // Skip items where the video has been deleted (videoId is null after populate)
+                  if (!item.videoId) {
+                    return (
+                      <HistoryItem key={item._id} style={{ opacity: 0.5 }}>
+                        <HistoryThumbnail
+                          src="/placeholder.jpg"
+                          alt={item.videoTitle}
+                        />
+                        <HistoryInfo>
+                          <HistoryTitle style={{ textDecoration: "line-through" }}>{item.videoTitle}</HistoryTitle>
+                          <HistoryMeta>
+                            <div style={{ color: "#ff3e6c" }}>{t("videoDeletedBadge")}</div>
+                          </HistoryMeta>
+                        </HistoryInfo>
+                        <HistoryActions>
+                          <ActionButtonOne
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteHistory(item._id);
+                            }}
+                          >
+                            <BiTrash />
+                            <span>{t("delete")}</span>
+                          </ActionButtonOne>
+                        </HistoryActions>
+                      </HistoryItem>
+                    );
+                  }
+                  return (
                   <HistoryItem
                     key={item._id}
                     onClick={() => navigate(`/video/${item.videoId._id}`)}
                   >
                     <HistoryThumbnail 
-                      src={item.videoId.thumbnailUrl || item.videoId.imgUrl} 
+                      src={item.videoId.imgUrl || "/placeholder.jpg"} 
                       alt={item.videoTitle}
                     />
                     <HistoryInfo>
@@ -849,7 +878,8 @@ export const HistoryPage = () => {
                       </ActionButtonOne>
                     </HistoryActions>
                   </HistoryItem>
-                ))}
+                  );
+                })}
               </HistoryList>
             )}
 

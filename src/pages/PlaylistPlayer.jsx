@@ -603,9 +603,12 @@ export const PlaylistPlayerPage = () => {
   // Ref for preserving playback across polls
   const currentIndexRef = useRef(0);
   const pollTimerRef = useRef(null);
+  const playlistLoadedRef = useRef(false); // tracks if initial load succeeded
 
   // Derived state
   const isOwner = currentUser && playlist && currentUser._id === playlist.userId;
+  const isFavoritesPlaylist = playlist?.name === "Favorites" || playlist?.name === "Mis videos favoritos";
+  const canEdit = isOwner && !isFavoritesPlaylist; // Favorites playlist is auto-managed via likes
   const currentVideoItem = playlist?.videos?.[currentIndex];
   const isCurrentDeleted = currentVideoItem ? isVideoDeleted(currentVideoItem) : false;
 
@@ -621,10 +624,10 @@ export const PlaylistPlayerPage = () => {
       try {
         const response = await axios.get(`/users/playlists/${userId}/${playlistId}`);
         const newPlaylist = response.data;
+        playlistLoadedRef.current = true;
 
         setPlaylist((prevPlaylist) => {
           if (preserveIndex && prevPlaylist) {
-            // Preserve current playback position by matching video _id
             const prevVideo = prevPlaylist.videos?.[currentIndexRef.current];
             if (prevVideo) {
               const newIdx = newPlaylist.videos?.findIndex(
@@ -634,7 +637,6 @@ export const PlaylistPlayerPage = () => {
                 setCurrentIndex(newIdx);
                 currentIndexRef.current = newIdx;
               } else {
-                // Current video was removed; find next available
                 const nextIdx = findNextAvailableIndex(
                   newPlaylist.videos,
                   Math.min(currentIndexRef.current, newPlaylist.videos.length - 1)
@@ -652,24 +654,26 @@ export const PlaylistPlayerPage = () => {
         setError(null);
       } catch (err) {
         console.error("Error loading playlist:", err);
-        if (!playlist) {
+        if (!playlistLoadedRef.current) {
           setError(err.response?.status === 404 ? "notFound" : "generic");
         }
+        // Silently ignore polling errors if playlist was already loaded
       } finally {
         setLoading(false);
       }
     },
-    [userId, playlistId, playlist]
+    [userId, playlistId] // removed `playlist` to avoid infinite re-creation
   );
 
   // Initial fetch
   useEffect(() => {
     setLoading(true);
     setError(null);
+    playlistLoadedRef.current = false;
     fetchPlaylist();
   }, [playlistId, userId]);
 
-  // Polling for real-time consistency
+  // Polling for real-time consistency — stable interval, no dependency on fetchPlaylist
   useEffect(() => {
     pollTimerRef.current = setInterval(() => {
       fetchPlaylist(true);
@@ -678,10 +682,10 @@ export const PlaylistPlayerPage = () => {
     return () => {
       if (pollTimerRef.current) clearInterval(pollTimerRef.current);
     };
-  }, [fetchPlaylist]);
+  }, [userId, playlistId]); // stable deps instead of fetchPlaylist
 
   // =========================================================================
-  // VIDEO DISPATCH
+  // VIDEO DISPATCH — Fetch full video data for the player
   // =========================================================================
 
   useEffect(() => {
@@ -690,7 +694,22 @@ export const PlaylistPlayerPage = () => {
     if (playlist && playlist.videos?.length > 0) {
       const videoItem = playlist.videos[currentIndex];
       if (videoItem && videoItem.videoId && !isVideoDeleted(videoItem)) {
-        dispatch(fetchSuccess(videoItem.videoId));
+        // The populated videoId only has partial fields (title, imgUrl, etc.)
+        // VideoReproducer2 needs the full video document (_id, hlsMasterUrl,
+        // status, qualities, likes, dislikes, views, etc.)
+        const videoId = videoItem.videoId._id || videoItem.videoId;
+        if (videoId) {
+          axios
+            .get(`/videos/find/${videoId}`)
+            .then((res) => {
+              dispatch(fetchSuccess(res.data));
+            })
+            .catch((err) => {
+              console.error("Error fetching video for player:", err);
+              // Fallback: dispatch partial data so at least title shows
+              dispatch(fetchSuccess(videoItem.videoId));
+            });
+        }
       }
     }
   }, [playlist, currentIndex, dispatch]);
@@ -750,7 +769,7 @@ export const PlaylistPlayerPage = () => {
 
   const handleRemoveVideo = useCallback(
     async (videoItem) => {
-      if (!isOwner) return;
+      if (!isOwner || isFavoritesPlaylist) return;
       const videoId = videoItem.videoId?._id || videoItem.videoId;
       if (!videoId) {
         // For deleted videos where videoId is null, we need to refetch
@@ -787,7 +806,7 @@ export const PlaylistPlayerPage = () => {
         setRemoving(null);
       }
     },
-    [isOwner, userId, playlistId, fetchPlaylist]
+    [isOwner, isFavoritesPlaylist, userId, playlistId, fetchPlaylist]
   );
 
   // =========================================================================
@@ -917,7 +936,7 @@ export const PlaylistPlayerPage = () => {
         </BackButton>
 
         <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-          {!isOwner && (
+          {(!isOwner || isFavoritesPlaylist) && (
             <ReadOnlyBadge aria-label={t("playlistReadOnly")}>
               {t("playlistReadOnly")}
             </ReadOnlyBadge>
@@ -1095,8 +1114,8 @@ export const PlaylistPlayerPage = () => {
                     )}
                   </ItemInfo>
 
-                  {/* Owner-only: Remove button for deleted videos */}
-                  {isOwner && deleted && (
+                  {/* Owner-only: Remove button for deleted videos (not on favorites) */}
+                  {canEdit && deleted && (
                     <ItemActions>
                       <RemoveButton
                         onClick={(e) => {
@@ -1115,8 +1134,8 @@ export const PlaylistPlayerPage = () => {
                     </ItemActions>
                   )}
 
-                  {/* Owner-only: Remove button for any video */}
-                  {isOwner && !deleted && (
+                  {/* Owner-only: Remove button for any video (not on favorites) */}
+                  {canEdit && !deleted && (
                     <ItemActions>
                       <RemoveButton
                         onClick={(e) => {

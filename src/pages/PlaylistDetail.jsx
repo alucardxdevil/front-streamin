@@ -455,6 +455,8 @@ export const PlaylistDetailPage = () => {
 
   // Derived: is the current user the owner of this playlist?
   const isOwner = currentUser && playlist && currentUser._id === playlist.userId;
+  const isFavoritesPlaylist = playlist?.name === "Favorites" || playlist?.name === "Mis videos favoritos";
+  const canEdit = isOwner && !isFavoritesPlaylist;
 
   useEffect(() => {
     fetchPlaylist();
@@ -476,7 +478,7 @@ export const PlaylistDetailPage = () => {
   };
 
   const handleRemoveVideo = async (videoItem) => {
-    if (!isOwner) return;
+    if (!canEdit) return;
     try {
       // For deleted videos, get the raw videoId from the playlist entry
       const rawResponse = await axios.get(`/users/playlists/${userId}/${playlistId}`);
@@ -565,7 +567,7 @@ export const PlaylistDetailPage = () => {
             <FaClock aria-hidden="true" />
             {t("created")}: {formatDate(playlist.createdAt)}
           </MetaItem>
-          {!isOwner && (
+          {!canEdit && (
             <ReadOnlyBadge aria-label={t("playlistReadOnly")}>
               {t("playlistReadOnly")}
             </ReadOnlyBadge>
@@ -604,7 +606,7 @@ export const PlaylistDetailPage = () => {
           <FaVideo aria-hidden="true" />
           <h3>{t("playlistEmpty")}</h3>
           <p>{t("playlistEmptyDescription")}</p>
-          {isOwner && (
+          {canEdit && (
             <Button
               primary
               onClick={() => navigate(`/history/${userId}`)}
@@ -650,7 +652,7 @@ export const PlaylistDetailPage = () => {
                         {t("videoDeletedDescription")}
                       </span>
                     </VideoMeta>
-                    {isOwner && (
+                    {canEdit && (
                       <VideoActions>
                         <ActionButton
                           danger
@@ -717,7 +719,7 @@ export const PlaylistDetailPage = () => {
                       <BiPlayCircle aria-hidden="true" />
                       {t("play")}
                     </ActionButton>
-                    {isOwner && (
+                    {canEdit && (
                       <ActionButton
                         danger
                         onClick={(e) => {
