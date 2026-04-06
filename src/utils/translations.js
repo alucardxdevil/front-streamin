@@ -622,6 +622,22 @@ const translations = {
     videosAvailable: "videos disponibles",
     noVideosAvailable: "No hay videos",
     noVideosInCategory: "No se encontraron videos en esta categoría",
+
+    // Playlist Player & Detail — access control, deleted videos, sharing
+    videoDeletedTitle: "Video eliminado",
+    videoDeletedDescription: "Este video ya no esta disponible",
+    videoDeletedBadge: "Video eliminado",
+    videosUnavailable: "no disponibles",
+    removeFromPlaylist: "Quitar de la lista",
+    remove: "Quitar",
+    playNextVideo: "Reproducir siguiente",
+    playlistReadOnly: "Solo lectura",
+    playlistLoadError: "Error al cargar la playlist",
+    playlistLoadErrorDescription: "No se pudo cargar la playlist. Intenta de nuevo mas tarde.",
+    videoPlayer: "Reproductor de video",
+    playlistNavigation: "Navegacion de la playlist",
+    playlistVideos: "Videos de la playlist",
+    nowPlaying: "Reproduciendo ahora",
   },
 
   en: {
@@ -1188,6 +1204,22 @@ const translations = {
     noVideosAvailable: "No videos",
     noVideosInCategory: "No videos found in this category",
 
+    // Playlist Player & Detail — access control, deleted videos, sharing
+    videoDeletedTitle: "Video deleted",
+    videoDeletedDescription: "This video is no longer available",
+    videoDeletedBadge: "Video deleted",
+    videosUnavailable: "unavailable",
+    removeFromPlaylist: "Remove from playlist",
+    remove: "Remove",
+    playNextVideo: "Play next",
+    playlistReadOnly: "Read only",
+    playlistLoadError: "Error loading playlist",
+    playlistLoadErrorDescription: "Could not load the playlist. Please try again later.",
+    videoPlayer: "Video player",
+    playlistNavigation: "Playlist navigation",
+    playlistVideos: "Playlist videos",
+    nowPlaying: "Now playing",
+
     //Share Modal
     shareTitle: "Share video",
     copyLink: "Copy link",
@@ -1673,6 +1705,22 @@ const translations = {
     terms: "Termos",
     help: "Ajuda",
     us: "Sobre nós",
+
+    // Playlist Player & Detail — access control, deleted videos, sharing
+    videoDeletedTitle: "Video excluido",
+    videoDeletedDescription: "Este video nao esta mais disponivel",
+    videoDeletedBadge: "Video excluido",
+    videosUnavailable: "indisponiveis",
+    removeFromPlaylist: "Remover da playlist",
+    remove: "Remover",
+    playNextVideo: "Reproduzir proximo",
+    playlistReadOnly: "Somente leitura",
+    playlistLoadError: "Erro ao carregar a playlist",
+    playlistLoadErrorDescription: "Nao foi possivel carregar a playlist. Tente novamente mais tarde.",
+    videoPlayer: "Reprodutor de video",
+    playlistNavigation: "Navegacao da playlist",
+    playlistVideos: "Videos da playlist",
+    nowPlaying: "Reproduzindo agora",
   },
 
   de: {
@@ -2114,6 +2162,22 @@ const translations = {
     randomVideos: "Zufällige Videos",
     noMoreRandomVideos: "Keine weiteren zufälligen Videos",
     loadingMoreVideos: "Weitere Videos werden geladen...",
+
+    // Playlist Player & Detail — access control, deleted videos, sharing
+    videoDeletedTitle: "Video geloescht",
+    videoDeletedDescription: "Dieses Video ist nicht mehr verfuegbar",
+    videoDeletedBadge: "Video geloescht",
+    videosUnavailable: "nicht verfuegbar",
+    removeFromPlaylist: "Aus Playlist entfernen",
+    remove: "Entfernen",
+    playNextVideo: "Naechstes abspielen",
+    playlistReadOnly: "Nur Lesen",
+    playlistLoadError: "Fehler beim Laden der Playlist",
+    playlistLoadErrorDescription: "Die Playlist konnte nicht geladen werden. Bitte versuche es spaeter erneut.",
+    videoPlayer: "Videoplayer",
+    playlistNavigation: "Playlist-Navigation",
+    playlistVideos: "Playlist-Videos",
+    nowPlaying: "Wird gerade abgespielt",
   },
 
   ru: {
@@ -2701,6 +2765,22 @@ const translations = {
     videosAvailable: "видео доступно",
     noVideosAvailable: "Нет видео",
     noVideosInCategory: "В этой категории видео не найдены",
+
+    // Playlist Player & Detail — access control, deleted videos, sharing
+    videoDeletedTitle: "Видео удалено",
+    videoDeletedDescription: "Это видео больше недоступно",
+    videoDeletedBadge: "Видео удалено",
+    videosUnavailable: "недоступны",
+    removeFromPlaylist: "Удалить из плейлиста",
+    remove: "Удалить",
+    playNextVideo: "Воспроизвести следующее",
+    playlistReadOnly: "Только для чтения",
+    playlistLoadError: "Ошибка загрузки плейлиста",
+    playlistLoadErrorDescription: "Не удалось загрузить плейлист. Попробуйте позже.",
+    videoPlayer: "Видеоплеер",
+    playlistNavigation: "Навигация по плейлисту",
+    playlistVideos: "Видео плейлиста",
+    nowPlaying: "Сейчас воспроизводится",
   },
 
   zh: {
@@ -3284,6 +3364,22 @@ const translations = {
     videosAvailable: "个可用视频",
     noVideosAvailable: "暂无视频",
     noVideosInCategory: "该类别下未找到视频",
+
+    // Playlist Player & Detail
+    videoDeletedTitle: "视频已删除",
+    videoDeletedDescription: "此视频已不可用",
+    videoDeletedBadge: "视频已删除",
+    videosUnavailable: "不可用",
+    removeFromPlaylist: "从播放列表移除",
+    remove: "移除",
+    playNextVideo: "播放下一个",
+    playlistReadOnly: "只读",
+    playlistLoadError: "加载播放列表出错",
+    playlistLoadErrorDescription: "无法加载播放列表，请稍后再试。",
+    videoPlayer: "视频播放器",
+    playlistNavigation: "播放列表导航",
+    playlistVideos: "播放列表视频",
+    nowPlaying: "正在播放",
   },
 
   jp: {
@@ -3857,6 +3953,22 @@ const translations = {
     videosAvailable: "本の動画",
     noVideosAvailable: "動画なし",
     noVideosInCategory: "このカテゴリに動画は見つかりませんでした",
+
+    // Playlist Player & Detail
+    videoDeletedTitle: "動画が削除されました",
+    videoDeletedDescription: "この動画はもう利用できません",
+    videoDeletedBadge: "動画削除済み",
+    videosUnavailable: "利用不可",
+    removeFromPlaylist: "プレイリストから削除",
+    remove: "削除",
+    playNextVideo: "次を再生",
+    playlistReadOnly: "読み取り専用",
+    playlistLoadError: "プレイリストの読み込みエラー",
+    playlistLoadErrorDescription: "プレイリストを読み込めませんでした。後でもう一度お試しください。",
+    videoPlayer: "ビデオプレーヤー",
+    playlistNavigation: "プレイリストナビゲーション",
+    playlistVideos: "プレイリスト動画",
+    nowPlaying: "再生中",
   },
 
   fr: {
@@ -4283,6 +4395,22 @@ const translations = {
     videosAvailable: "vidéos disponibles",
     noVideosAvailable: "Aucune vidéo disponible",
     noVideosInCategory: "Aucune vidéo dans cette catégorie",
+
+    // Playlist Player & Detail
+    videoDeletedTitle: "Video supprimee",
+    videoDeletedDescription: "Cette video n'est plus disponible",
+    videoDeletedBadge: "Video supprimee",
+    videosUnavailable: "indisponibles",
+    removeFromPlaylist: "Retirer de la playlist",
+    remove: "Retirer",
+    playNextVideo: "Lire la suivante",
+    playlistReadOnly: "Lecture seule",
+    playlistLoadError: "Erreur de chargement de la playlist",
+    playlistLoadErrorDescription: "Impossible de charger la playlist. Veuillez reessayer plus tard.",
+    videoPlayer: "Lecteur video",
+    playlistNavigation: "Navigation de la playlist",
+    playlistVideos: "Videos de la playlist",
+    nowPlaying: "En cours de lecture",
   },
 
   hi: {
@@ -4702,6 +4830,22 @@ const translations = {
     videosAvailable: "वीडियो उपलब्ध",
     noVideosAvailable: "कोई वीडियो उपलब्ध नहीं",
     noVideosInCategory: "इस श्रेणी में कोई वीडियो नहीं मिला",
+
+    // Playlist Player & Detail
+    videoDeletedTitle: "वीडियो हटा दिया गया",
+    videoDeletedDescription: "यह वीडियो अब उपलब्ध नहीं है",
+    videoDeletedBadge: "वीडियो हटाया गया",
+    videosUnavailable: "अनुपलब्ध",
+    removeFromPlaylist: "प्लेलिस्ट से हटाएं",
+    remove: "हटाएं",
+    playNextVideo: "अगला चलाएं",
+    playlistReadOnly: "केवल पढ़ने के लिए",
+    playlistLoadError: "प्लेलिस्ट लोड करने में त्रुटि",
+    playlistLoadErrorDescription: "प्लेलिस्ट लोड नहीं हो सकी। कृपया बाद में पुनः प्रयास करें।",
+    videoPlayer: "वीडियो प्लेयर",
+    playlistNavigation: "प्लेलिस्ट नेविगेशन",
+    playlistVideos: "प्लेलिस्ट वीडियो",
+    nowPlaying: "अभी चल रहा है",
   },
 
   ar: {
@@ -5124,6 +5268,22 @@ const translations = {
     videosAvailable: "فيديو متاح",
     noVideosAvailable: "لا توجد فيديوهات متاحة",
     noVideosInCategory: "لم يتم العثور على فيديوهات في هذه الفئة",
+
+    // Playlist Player & Detail
+    videoDeletedTitle: "تم حذف الفيديو",
+    videoDeletedDescription: "هذا الفيديو لم يعد متاحا",
+    videoDeletedBadge: "فيديو محذوف",
+    videosUnavailable: "غير متاح",
+    removeFromPlaylist: "إزالة من قائمة التشغيل",
+    remove: "إزالة",
+    playNextVideo: "تشغيل التالي",
+    playlistReadOnly: "للقراءة فقط",
+    playlistLoadError: "خطأ في تحميل قائمة التشغيل",
+    playlistLoadErrorDescription: "تعذر تحميل قائمة التشغيل. يرجى المحاولة مرة أخرى لاحقا.",
+    videoPlayer: "مشغل الفيديو",
+    playlistNavigation: "التنقل في قائمة التشغيل",
+    playlistVideos: "فيديوهات قائمة التشغيل",
+    nowPlaying: "يتم التشغيل الآن",
   },
 
   it: {
@@ -5546,6 +5706,22 @@ const translations = {
     videosAvailable: "video disponibili",
     noVideosAvailable: "Nessun video disponibile",
     noVideosInCategory: "Nessun video in questa categoria",
+
+    // Playlist Player & Detail
+    videoDeletedTitle: "Video eliminato",
+    videoDeletedDescription: "Questo video non e piu disponibile",
+    videoDeletedBadge: "Video eliminato",
+    videosUnavailable: "non disponibili",
+    removeFromPlaylist: "Rimuovi dalla playlist",
+    remove: "Rimuovi",
+    playNextVideo: "Riproduci successivo",
+    playlistReadOnly: "Solo lettura",
+    playlistLoadError: "Errore nel caricamento della playlist",
+    playlistLoadErrorDescription: "Impossibile caricare la playlist. Riprova piu tardi.",
+    videoPlayer: "Lettore video",
+    playlistNavigation: "Navigazione playlist",
+    playlistVideos: "Video della playlist",
+    nowPlaying: "In riproduzione",
   },
 
   ko: {
@@ -5968,6 +6144,22 @@ const translations = {
     videosAvailable: "개의 영상 사용 가능",
     noVideosAvailable: "사용 가능한 영상 없음",
     noVideosInCategory: "이 카테고리에 영상이 없습니다",
+
+    // Playlist Player & Detail
+    videoDeletedTitle: "영상이 삭제되었습니다",
+    videoDeletedDescription: "이 영상은 더 이상 사용할 수 없습니다",
+    videoDeletedBadge: "영상 삭제됨",
+    videosUnavailable: "사용 불가",
+    removeFromPlaylist: "재생목록에서 제거",
+    remove: "제거",
+    playNextVideo: "다음 재생",
+    playlistReadOnly: "읽기 전용",
+    playlistLoadError: "재생목록 로드 오류",
+    playlistLoadErrorDescription: "재생목록을 로드할 수 없습니다. 나중에 다시 시도해 주세요.",
+    videoPlayer: "비디오 플레이어",
+    playlistNavigation: "재생목록 탐색",
+    playlistVideos: "재생목록 영상",
+    nowPlaying: "현재 재생 중",
   },
 };
 

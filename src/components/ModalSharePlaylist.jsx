@@ -157,10 +157,12 @@ const PlaylistStats = styled.p`
   margin: 0;
 `;
 
-export default function ShareModalPlaylist({ playlistId, playlistName, videoCount }) {
+export default function ShareModalPlaylist({ playlistId, playlistName, videoCount, userId }) {
   const [open, setOpen] = useState(false);
   const [toast, setToast] = useState(false);
-  const link = `${window.location.origin}/playlist/${playlistId}`;
+  const link = userId
+    ? `${window.location.origin}/playlist/${userId}/${playlistId}`
+    : `${window.location.origin}/shared-playlist/${playlistId}`;
   const { t } = useLanguage();
 
   const copyToClipboard = () => {

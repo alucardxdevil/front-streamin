@@ -27,6 +27,7 @@ import { LanguageProvider } from "./utils/LanguageContext";
 import { HistoryPage } from "./pages/History";
 import { PlaylistDetailPage } from "./pages/PlaylistDetail";
 import { PlaylistPlayerPage } from "./pages/PlaylistPlayer";
+import { SharedPlaylistRedirect } from "./pages/SharedPlaylistRedirect";
 import SEOHead from "./components/seo/SEOHead";
 
 
@@ -120,6 +121,7 @@ function App() {
                     <Route path="history/:userId" element={<HistoryPage />} />
                     <Route path="playlist/:userId/:playlistId" element={<PlaylistDetailPage />} />
                     <Route path="playlist-player/:userId/:playlistId" element={<PlaylistPlayerPage />} />
+                    <Route path="shared-playlist/:playlistId" element={<SharedPlaylistRedirect />} />
                     <Route path="*" element={<NotFound/>} />
                   </Route>
                 </Routes>

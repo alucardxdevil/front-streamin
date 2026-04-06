@@ -3,8 +3,9 @@ import styled, { keyframes } from "styled-components";
 import { useLanguage } from "../utils/LanguageContext";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { BiPlayCircle, BiTrash, BiEdit, BiArrowBack } from "react-icons/bi";
-import { MdPlaylistAdd } from "react-icons/md";
+import { MdPlaylistAdd, MdDeleteForever, MdErrorOutline } from "react-icons/md";
 import { FaPlay, FaClock, FaVideo } from "react-icons/fa";
 import { formats } from "./Video";
 import ShareModalPlaylist from "../components/ModalSharePlaylist";
@@ -359,6 +360,52 @@ const EmptyState = styled.div`
   }
 `;
 
+const ReadOnlyBadge = styled.span`
+  background: ${({ theme }) => theme.soft};
+  color: ${({ theme }) => theme.textSoft};
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  z-index: 1;
+`;
+
+const DeletedVideoCard = styled(VideoCard)`
+  opacity: 0.6;
+  cursor: default;
+
+  &:hover {
+    transform: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+const DeletedThumbnailOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  color: #ff3e6c;
+
+  svg {
+    font-size: 40px;
+  }
+
+  span {
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+  }
+`;
+
 const LoadingContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -389,13 +436,25 @@ const LoadingContainer = styled.div`
   }
 `;
 
+/**
+ * Checks if a playlist video item's referenced video has been deleted.
+ * After Mongoose populate, a deleted video reference will be null.
+ */
+const isVideoDeleted = (videoItem) => {
+  return !videoItem.videoId || videoItem.videoId === null;
+};
+
 export const PlaylistDetailPage = () => {
   const { language, t } = useLanguage();
   const navigate = useNavigate();
   const { userId, playlistId } = useParams();
+  const { currentUser } = useSelector((state) => state.user);
   
   const [playlist, setPlaylist] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Derived: is the current user the owner of this playlist?
+  const isOwner = currentUser && playlist && currentUser._id === playlist.userId;
 
   useEffect(() => {
     fetchPlaylist();
@@ -406,22 +465,31 @@ export const PlaylistDetailPage = () => {
       const response = await axios.get(`/users/playlists/${userId}/${playlistId}`);
       setPlaylist(response.data);
     } catch (error) {
-      console.error("¡Error cargando playlist!", error);
+      console.error("Error loading playlist:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handlePlayVideo = (videoId) => {
-    navigate(`/video/${videoId}`);
+    if (videoId) navigate(`/video/${videoId}`);
   };
 
-  const handleRemoveVideo = async (videoId) => {
+  const handleRemoveVideo = async (videoItem) => {
+    if (!isOwner) return;
     try {
-      await axios.delete(`/users/playlists/${userId}/${playlistId}/${videoId}`);
+      // For deleted videos, get the raw videoId from the playlist entry
+      const rawResponse = await axios.get(`/users/playlists/${userId}/${playlistId}`);
+      const rawPlaylist = rawResponse.data;
+      const rawItem = rawPlaylist.videos?.find((v) => v._id === videoItem._id);
+      const rawVideoId = rawItem?.videoId?._id || rawItem?.videoId;
+
+      if (rawVideoId) {
+        await axios.delete(`/users/playlists/${userId}/${playlistId}/${rawVideoId}`);
+      }
       fetchPlaylist();
     } catch (error) {
-      console.error("¡Error eliminando video de la playlist!", error);
+      console.error("Error removing video from playlist:", error);
     }
   };
 
@@ -436,17 +504,18 @@ export const PlaylistDetailPage = () => {
 
   const formatDuration = (duration) => {
     if (!duration) return '';
-    // Si es un número (segundos), usar la función formats
     if (typeof duration === 'number' || !isNaN(duration)) {
       return formats(Number(duration));
     }
-    // Si es string en formato HH:MM:SS o MM:SS
     const parts = duration.split(':');
     if (parts.length === 3) {
       return `${parts[1]}:${parts[2]}`;
     }
     return duration;
   };
+
+  // Count available (non-deleted) videos
+  const availableCount = playlist?.videos?.filter((v) => !isVideoDeleted(v)).length || 0;
 
   if (loading) {
     return (
@@ -479,7 +548,7 @@ export const PlaylistDetailPage = () => {
     <PageContainer>
       <HeaderSection>
         <Title>
-          <MdPlaylistAdd />
+          <MdPlaylistAdd aria-hidden="true" />
           {playlist.name}
         </Title>
 
@@ -489,115 +558,183 @@ export const PlaylistDetailPage = () => {
 
         <MetaInfo>
           <MetaItem>
-            <FaVideo />
-            {playlist.videos?.length || 0} {t("videos")}
+            <FaVideo aria-hidden="true" />
+            {availableCount} / {playlist.videos?.length || 0} {t("videos")}
           </MetaItem>
           <MetaItem>
-            <FaClock />
+            <FaClock aria-hidden="true" />
             {t("created")}: {formatDate(playlist.createdAt)}
           </MetaItem>
+          {!isOwner && (
+            <ReadOnlyBadge aria-label={t("playlistReadOnly")}>
+              {t("playlistReadOnly")}
+            </ReadOnlyBadge>
+          )}
         </MetaInfo>
 
         <ActionButtons>
-          <Button onClick={() => navigate(-1)}>
-            <BiArrowBack />
+          <Button onClick={() => navigate(-1)} aria-label={t("back")}>
+            <BiArrowBack aria-hidden="true" />
             {t("back")}
           </Button>
           <Button 
             primary 
             onClick={() => {
-              if (playlist.videos?.length > 0) {
+              if (availableCount > 0) {
                 navigate(`/playlist-player/${userId}/${playlistId}`);
               }
             }}
-            disabled={playlist.videos?.length === 0}
+            disabled={availableCount === 0}
+            aria-label={t("playAll")}
           >
-            <FaPlay />
+            <FaPlay aria-hidden="true" />
             {t("playAll")}
           </Button>
           <ShareModalPlaylist 
             playlistId={playlistId}
             playlistName={playlist.name}
-            videoCount={playlist.videos?.length || 0}
+            videoCount={availableCount}
+            userId={userId}
           />
         </ActionButtons>
       </HeaderSection>
 
       {playlist.videos?.length === 0 ? (
-        <EmptyState>
-          <FaVideo />
+        <EmptyState role="status">
+          <FaVideo aria-hidden="true" />
           <h3>{t("playlistEmpty")}</h3>
           <p>{t("playlistEmptyDescription")}</p>
-          <Button
-            primary
-            onClick={() => navigate(`/history/${userId}`)}
-            style={{ marginTop: "20px" }}
-          >
-            <MdPlaylistAdd />
-            {t("goToHistory")}
-          </Button>
+          {isOwner && (
+            <Button
+              primary
+              onClick={() => navigate(`/history/${userId}`)}
+              style={{ marginTop: "20px" }}
+            >
+              <MdPlaylistAdd aria-hidden="true" />
+              {t("goToHistory")}
+            </Button>
+          )}
         </EmptyState>
       ) : (
-        <VideoGrid>
-          {playlist.videos?.map((videoItem, index) => (
-            <VideoCard
-              key={videoItem._id || index}
-              index={index}
-              onClick={() =>
-                handlePlayVideo(videoItem.videoId?._id || videoItem.videoId)
-              }
-            >
-              <ThumbnailContainer>
-                <Thumbnail
-                  src={videoItem.videoId?.imgUrl || "/placeholder.jpg"}
-                  alt={videoItem.videoTitle}
-                />
-                <PlayOverlay>
-                  <FaPlay />
-                </PlayOverlay>
-                {videoItem.videoDuration && (
-                  <DurationBadge>
-                    {formatDuration(videoItem.videoDuration)}
-                  </DurationBadge>
-                )}
-              </ThumbnailContainer>
+        <VideoGrid role="list" aria-label={t("playlistVideos")}>
+          {playlist.videos?.map((videoItem, index) => {
+            const deleted = isVideoDeleted(videoItem);
 
-              <VideoInfo>
-                <VideoTitle>{videoItem.videoTitle}</VideoTitle>
-                <VideoMeta>
-                  <span>
-                    {t("added")}:{" "}
-                    {formatDate(videoItem.addedAt || playlist.updatedAt)}
-                  </span>
-                </VideoMeta>
-                <VideoActions>
-                  <ActionButton
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePlayVideo(
-                        videoItem.videoId?._id || videoItem.videoId,
-                      );
-                    }}
-                  >
-                    <BiPlayCircle />
-                    {t("play")}
-                  </ActionButton>
-                  <ActionButton
-                    danger
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveVideo(
-                        videoItem.videoId?._id || videoItem.videoId,
-                      );
-                    }}
-                  >
-                    <BiTrash />
-                    {t("delete")}
-                  </ActionButton>
-                </VideoActions>
-              </VideoInfo>
-            </VideoCard>
-          ))}
+            if (deleted) {
+              return (
+                <DeletedVideoCard
+                  key={videoItem._id || index}
+                  index={index}
+                  role="listitem"
+                  aria-label={`${videoItem.videoTitle} - ${t("videoDeletedTitle")}`}
+                >
+                  <ThumbnailContainer>
+                    <Thumbnail
+                      src="/placeholder.jpg"
+                      alt=""
+                      aria-hidden="true"
+                    />
+                    <DeletedThumbnailOverlay>
+                      <MdDeleteForever aria-hidden="true" />
+                      <span>{t("videoDeletedBadge")}</span>
+                    </DeletedThumbnailOverlay>
+                  </ThumbnailContainer>
+
+                  <VideoInfo>
+                    <VideoTitle style={{ textDecoration: "line-through", opacity: 0.7 }}>
+                      {videoItem.videoTitle}
+                    </VideoTitle>
+                    <VideoMeta>
+                      <span style={{ color: "#ff3e6c", display: "flex", alignItems: "center", gap: 4 }}>
+                        <MdErrorOutline />
+                        {t("videoDeletedDescription")}
+                      </span>
+                    </VideoMeta>
+                    {isOwner && (
+                      <VideoActions>
+                        <ActionButton
+                          danger
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveVideo(videoItem);
+                          }}
+                          aria-label={`${t("removeFromPlaylist")}: ${videoItem.videoTitle}`}
+                        >
+                          <BiTrash />
+                          {t("removeFromPlaylist")}
+                        </ActionButton>
+                      </VideoActions>
+                    )}
+                  </VideoInfo>
+                </DeletedVideoCard>
+              );
+            }
+
+            return (
+              <VideoCard
+                key={videoItem._id || index}
+                index={index}
+                onClick={() =>
+                  handlePlayVideo(videoItem.videoId?._id || videoItem.videoId)
+                }
+                role="listitem"
+                aria-label={videoItem.videoTitle}
+              >
+                <ThumbnailContainer>
+                  <Thumbnail
+                    src={videoItem.videoId?.imgUrl || "/placeholder.jpg"}
+                    alt={videoItem.videoTitle}
+                    loading="lazy"
+                  />
+                  <PlayOverlay>
+                    <FaPlay aria-hidden="true" />
+                  </PlayOverlay>
+                  {videoItem.videoDuration && (
+                    <DurationBadge>
+                      {formatDuration(videoItem.videoDuration)}
+                    </DurationBadge>
+                  )}
+                </ThumbnailContainer>
+
+                <VideoInfo>
+                  <VideoTitle>{videoItem.videoTitle}</VideoTitle>
+                  <VideoMeta>
+                    <span>
+                      {t("added")}:{" "}
+                      {formatDate(videoItem.addedAt || playlist.updatedAt)}
+                    </span>
+                  </VideoMeta>
+                  <VideoActions>
+                    <ActionButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePlayVideo(
+                          videoItem.videoId?._id || videoItem.videoId,
+                        );
+                      }}
+                      aria-label={`${t("play")}: ${videoItem.videoTitle}`}
+                    >
+                      <BiPlayCircle aria-hidden="true" />
+                      {t("play")}
+                    </ActionButton>
+                    {isOwner && (
+                      <ActionButton
+                        danger
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveVideo(videoItem);
+                        }}
+                        aria-label={`${t("delete")}: ${videoItem.videoTitle}`}
+                      >
+                        <BiTrash aria-hidden="true" />
+                        {t("delete")}
+                      </ActionButton>
+                    )}
+                  </VideoActions>
+                </VideoInfo>
+              </VideoCard>
+            );
+          })}
         </VideoGrid>
       )}
     </PageContainer>
