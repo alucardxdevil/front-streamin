@@ -1545,20 +1545,24 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             }
             setLoading(false);
 
-            // Firefox fix: Forzar play() cuando el video está listo.
-            // En Firefox, ReactPlayer puede fallar al hacer play() inicial porque
-            // hls.js aún no tiene buffer. onReady se dispara cuando el video element
-            // tiene metadata lista, así que intentamos play() explícitamente aquí.
+            // Firefox fix: escuchar el evento "canplay" del <video> element
+            // para reintentar play() UNA SOLA VEZ cuando Firefox tiene datos
+            // decodificables listos. Esto resuelve la race condition sin causar
+            // saltos/loops de seek como lo haría un reintento en cada BUFFER_APPENDED.
             if (playing && playerRef.current) {
               const internalPlayer = playerRef.current.getInternalPlayer();
               if (internalPlayer && internalPlayer.paused) {
-                const playPromise = internalPlayer.play();
-                if (playPromise && typeof playPromise.catch === 'function') {
-                  playPromise.catch(() => {
-                    // Si play() falla (Firefox puede rechazarlo si no hay buffer aún),
-                    // esperar a que hls.js tenga datos y reintentar
-                  });
-                }
+                const tryPlay = () => {
+                  if (internalPlayer.paused && playingRef.current) {
+                    const p = internalPlayer.play();
+                    if (p && typeof p.catch === 'function') {
+                      p.catch(() => {});
+                    }
+                  }
+                };
+                // "canplay" se dispara cuando el navegador puede empezar a reproducir
+                // sin necesidad de más buffering. Es el momento seguro para play().
+                internalPlayer.addEventListener("canplay", tryPlay, { once: true });
               }
             }
 
@@ -1611,26 +1615,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   }
                 }
               };
-              // Firefox fix: cuando hls.js llena el buffer por primera vez,
-              // reintentar play() si el video debería estar reproduciéndose pero está pausado.
-              // Esto resuelve la race condition donde play() falla porque aún no hay buffer.
-              const onBufferAppended = () => {
-                if (playingRef.current && playerRef.current) {
-                  const internalPlayer = playerRef.current.getInternalPlayer();
-                  if (internalPlayer && internalPlayer.paused && !videoEnded) {
-                    const p = internalPlayer.play();
-                    if (p && typeof p.catch === 'function') {
-                      p.catch(() => { /* Se reintentará en el siguiente BUFFER_APPENDED */ });
-                    }
-                  }
-                }
-              };
-
               // Usar los eventos de hls.js directamente
               if (hls.constructor?.Events) {
                 hls.on(hls.constructor.Events.MANIFEST_PARSED, onManifestParsed);
                 hls.on(hls.constructor.Events.ERROR, onHlsError);
-                hls.on(hls.constructor.Events.BUFFER_APPENDED, onBufferAppended);
               }
               // Si los niveles ya están cargados (manifest ya parseado)
               if (hls.levels && hls.levels.length > 0) {
@@ -1658,18 +1646,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               loadingTimerRef.current = null;
             }
             setLoading(false);
-
-            // Firefox fix: reintentar play() cuando el buffer se llena.
-            // Si play() falló antes porque no había buffer, ahora sí hay datos.
-            if (playing && playerRef.current) {
-              const internalPlayer = playerRef.current.getInternalPlayer();
-              if (internalPlayer && internalPlayer.paused && !videoEnded) {
-                const p = internalPlayer.play();
-                if (p && typeof p.catch === 'function') {
-                  p.catch(() => { /* ignorar — se reintentará */ });
-                }
-              }
-            }
           }}
           onPlay={() => {
             // Al iniciar reproducción, ocultar spinner y limpiar estado
