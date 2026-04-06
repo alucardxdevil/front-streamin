@@ -1674,40 +1674,32 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               forceHLS: hasHLS,
               // Configuración de hls.js para streaming adaptativo
               hlsOptions: {
-                // Usar Web Worker para parsing (mejor rendimiento)
                 enableWorker: true,
-                // Buffer adelante: 30s es suficiente para VOD
-                maxBufferLength: 30,
-                // Buffer máximo total
-                maxMaxBufferLength: 60,
-                // Mantener 30s de buffer trasero para seek rápido
-                backBufferLength: 30,
-                // CRÍTICO: Empezar siempre desde el segundo 0.
-                // Sin esto, hls.js puede empezar desde un offset arbitrario.
-                startPosition: 0,
-                // Empezar en calidad automática (ABR) — -1 = auto
+                // Buffer conservador: Firefox con MSE no puede evictar el inicio
+                // del buffer si maxBufferLength es muy grande al arrancar.
+                maxBufferLength: 10,
+                maxMaxBufferLength: 30,
+                // CRÍTICO: backBufferLength: 0 evita que Firefox marque los primeros
+                // segundos del SourceBuffer como evictables antes de reproducir.
+                // Con backBufferLength > 0, Firefox puede descartar seg000/seg001
+                // y el video no puede reproducir desde el segundo 0.
+                backBufferLength: 0,
+                startPosition: -1,
                 startLevel: -1,
-                // Estimación inicial de ancho de banda (1Mbps)
                 abrEwmaDefaultEstimate: 1000000,
-                // Reintentos para manejar la latencia del proxy
                 fragLoadingMaxRetry: 6,
                 manifestLoadingMaxRetry: 4,
                 levelLoadingMaxRetry: 4,
-                // Tiempo de espera antes de reintentar (ms)
                 fragLoadingRetryDelay: 1000,
                 manifestLoadingRetryDelay: 1000,
                 levelLoadingRetryDelay: 1000,
-                // Timeouts de carga (ms)
                 fragLoadingTimeOut: 20000,
                 manifestLoadingTimeOut: 15000,
                 levelLoadingTimeOut: 15000,
-                // No usar modo de baja latencia (es VOD, no live)
                 lowLatencyMode: false,
-                // Usar Web Crypto API nativa del navegador para AES
                 enableSoftwareAES: false,
-                // PROTECCIÓN: Inyectar token de sesión en cada solicitud XHR de hls.js.
                 xhrSetup: sessionToken
-                  ? (xhr, url) => {
+                  ? (xhr) => {
                       xhr.setRequestHeader("X-Session-Token", sessionToken);
                     }
                   : undefined,
