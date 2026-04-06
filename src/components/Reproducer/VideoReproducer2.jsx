@@ -1675,18 +1675,17 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               // Configuración de hls.js para streaming adaptativo
               hlsOptions: {
                 enableWorker: true,
-                // Buffer conservador: Firefox con MSE no puede evictar el inicio
-                // del buffer si maxBufferLength es muy grande al arrancar.
                 maxBufferLength: 10,
                 maxMaxBufferLength: 30,
-                // CRÍTICO: backBufferLength: 0 evita que Firefox marque los primeros
-                // segundos del SourceBuffer como evictables antes de reproducir.
-                // Con backBufferLength > 0, Firefox puede descartar seg000/seg001
-                // y el video no puede reproducir desde el segundo 0.
                 backBufferLength: 0,
                 startPosition: -1,
                 startLevel: -1,
                 abrEwmaDefaultEstimate: 1000000,
+                // Deshabilitar nudge: hls.js por defecto avanza currentTime
+                // automáticamente cuando detecta buffer stall. En Firefox esto
+                // hace que el video empiece en segundo ~5 en lugar del 0.
+                nudgeOffset: 0,
+                nudgeMaxRetry: 0,
                 fragLoadingMaxRetry: 6,
                 manifestLoadingMaxRetry: 4,
                 levelLoadingMaxRetry: 4,
@@ -1698,14 +1697,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 levelLoadingTimeOut: 15000,
                 lowLatencyMode: false,
                 enableSoftwareAES: false,
-                // Los segmentos .ts llevan _st en la URL (añadido por el backend
-                // al reescribir el m3u8). Esto evita preflight CORS por header custom.
-                // Solo los playlists .m3u8 necesitan el header; son pocos requests
-                // y su preflight se cachea bien con maxAge:3600.
+                // Segmentos .ts llevan _st en URL (backend los reescribe en m3u8).
+                // Solo playlists .m3u8 necesitan el header X-Session-Token.
                 xhrSetup: sessionToken
                   ? (xhr, url) => {
-                      // Solo para playlists .m3u8, no para segmentos .ts
-                      if (url && !url.includes('.ts') && !url.includes('_st=')) {
+                      if (url && !url.includes('_st=')) {
                         xhr.setRequestHeader("X-Session-Token", sessionToken);
                       }
                     }
