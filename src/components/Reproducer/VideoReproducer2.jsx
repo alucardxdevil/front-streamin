@@ -1586,23 +1586,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               }
             }
 
-            // ── Firefox autoplay fix ──
-            // ReactPlayer dispara onReady en MANIFEST_PARSED, luego llama play().
-            // En Firefox, play() falla si MSE buffer está vacío (DOMException).
-            // ReactPlayer no reintenta. Escuchamos "canplaythrough" del video
-            // element que se dispara cuando el navegador estima que puede
-            // reproducir sin interrupciones. En ese momento play() es seguro.
-            if (playingRef.current && hasHLS && playerRef.current) {
-              const video = playerRef.current.getInternalPlayer();
-              if (video) {
-                const onCanPlay = () => {
-                  if (video.paused && playingRef.current) {
-                    video.play().catch(() => {});
-                  }
-                };
-                video.addEventListener("canplaythrough", onCanPlay, { once: true });
-              }
-            }
+
           }}
           onBuffer={() => {
             // Mostrar spinner con un pequeño debounce (300ms) para evitar
@@ -1636,27 +1620,39 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             if (videoEnded) setVideoEnded(false);
           }}
           onError={(e, data) => {
-            // Errores HLS no fatales: ignorar silenciosamente.
-            // hls.js tiene sus propios mecanismos de retry internos.
-            // Intervenir con startLoad()/recoverMediaError() en errores
-            // no fatales causaba reinicios de buffer y saltos de posición.
+            // Errores HLS no fatales: ignorar — hls.js los maneja internamente.
             if (data?.fatal === false) return;
 
-            // Errores HLS fatales: intentar recuperación
+            // Errores HLS fatales: recuperación mínima
             if (data?.fatal) {
               const hls = getHlsInstance();
               if (hls) {
-                if (data.type === 'mediaError') {
-                  hls.recoverMediaError();
-                } else if (data.type === 'networkError') {
-                  hls.startLoad();
-                }
+                if (data.type === 'mediaError') hls.recoverMediaError();
+                else if (data.type === 'networkError') hls.startLoad();
               }
               return;
             }
 
-            // DOMException / AbortError de Firefox: ignorar
-            if (e instanceof DOMException) return;
+            // ── Firefox autoplay fix ──
+            // FilePlayer.js (react-player) hace video.play() en onReady.
+            // Firefox rechaza play() con DOMException si el buffer MSE está vacío.
+            // FilePlayer.js envía esa DOMException a este onError.
+            // Respondemos registrando un listener 'canplay' en el video element:
+            // cuando Firefox tenga datos suficientes para reproducir, 'canplay'
+            // se dispara y hacemos play() en ese momento seguro.
+            if (e instanceof DOMException && playingRef.current && playerRef.current) {
+              const video = playerRef.current.getInternalPlayer();
+              if (video && video.paused) {
+                video.addEventListener('canplay', function retry() {
+                  video.removeEventListener('canplay', retry);
+                  if (video.paused && playingRef.current) {
+                    video.play().catch(() => {});
+                  }
+                });
+              }
+              return;
+            }
+
             if (e instanceof Event && e.type === 'error') return;
             if (typeof e === 'object' && e?.message?.includes('aborted')) return;
           }}
