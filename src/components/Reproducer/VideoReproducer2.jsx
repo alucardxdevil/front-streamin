@@ -1698,9 +1698,16 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 levelLoadingTimeOut: 15000,
                 lowLatencyMode: false,
                 enableSoftwareAES: false,
+                // Los segmentos .ts llevan _st en la URL (añadido por el backend
+                // al reescribir el m3u8). Esto evita preflight CORS por header custom.
+                // Solo los playlists .m3u8 necesitan el header; son pocos requests
+                // y su preflight se cachea bien con maxAge:3600.
                 xhrSetup: sessionToken
-                  ? (xhr) => {
-                      xhr.setRequestHeader("X-Session-Token", sessionToken);
+                  ? (xhr, url) => {
+                      // Solo para playlists .m3u8, no para segmentos .ts
+                      if (url && !url.includes('.ts') && !url.includes('_st=')) {
+                        xhr.setRequestHeader("X-Session-Token", sessionToken);
+                      }
                     }
                   : undefined,
               },
