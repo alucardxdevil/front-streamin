@@ -1369,7 +1369,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     setMenuView("main");
     setQuality("Auto");           // Reset calidad a Auto
     setHlsLevels([]);             // Limpiar niveles HLS
-    hlsRef.current = null;        // Limpiar referencia hls.js
+    // Destruir instancia de hls.js anterior antes de crear una nueva
+    if (hlsRef.current) {
+      hlsRef.current.destroy();
+      hlsRef.current = null;
+    }
     // Mostrar spinner solo brevemente al cambiar de video, se ocultará en onReady
     setLoading(true);
     videoReadyRef.current = false; // Reset video ready state
@@ -1599,6 +1603,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 // Inicializar hls.js directamente cuando el elemento video esté disponible
                 const videoEl = el;
                 
+                // Si ya hay una instancia de hls para esta URL, no recreate
+                if (hlsRef.current && hlsRef.current._url === proxyVideoUrl) {
+                  return;
+                }
+
                 // Si ya hay una instancia de hls, destruirla primero
                 if (hlsRef.current) {
                   hlsRef.current.destroy();
@@ -1623,6 +1632,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   };
 
                   const hls = new Hls(hlsOptions);
+                  hls._url = proxyVideoUrl;
                   hlsRef.current = hls;
 
                   // Event: MANIFEST_PARSED
