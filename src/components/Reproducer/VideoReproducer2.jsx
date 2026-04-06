@@ -1555,26 +1555,23 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 setHlsLevels(levels);
               };
               // Escuchar errores HLS para recuperación automática
+              // SOLO actuar en errores fatales. Los errores no fatales
+              // (bufferStalledError, timeouts) son manejados internamente
+              // por hls.js con sus propios mecanismos de retry.
+              // Llamar hls.startLoad() en bufferStalledError causaba que
+              // hls.js reiniciara la carga y perdiera la posición actual.
               const onHlsError = (event, data) => {
-                if (data.fatal) {
-                  switch (data.type) {
-                    case 'networkError':
-                      hls.startLoad();
-                      break;
-                    case 'mediaError':
-                      hls.recoverMediaError();
-                      break;
-                    default:
-                      hls.destroy();
-                      break;
-                  }
-                } else {
-                  // Errores no fatales: recuperación proactiva
-                  if (data.details === 'bufferStalledError' ||
-                      data.details === 'levelLoadTimeOut' ||
-                      data.details === 'fragLoadTimeOut') {
+                if (!data.fatal) return;
+                switch (data.type) {
+                  case 'networkError':
                     hls.startLoad();
-                  }
+                    break;
+                  case 'mediaError':
+                    hls.recoverMediaError();
+                    break;
+                  default:
+                    hls.destroy();
+                    break;
                 }
               };
 
@@ -1590,43 +1587,21 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             }
 
             // ── Firefox autoplay fix ──
-            // ReactPlayer dispara onReady en MANIFEST_PARSED (manifest parseado),
-            // luego llama video.play(). En Firefox el buffer MSE está vacío → play()
-            // rechazado con DOMException → ReactPlayer no reintenta.
-            //
-            // Solución: pollear el buffered del <video> element. Cuando Firefox
-            // tenga datos decodificables (buffered.length > 0), llamar play()
-            // directamente en el video element. Máximo 10 intentos, 300ms entre cada uno.
-            if (playingRef.current && hasHLS) {
-              let attempts = 0;
-              const maxAttempts = 10;
-              const checkAndPlay = () => {
-                attempts++;
-                if (!playingRef.current || !playerRef.current) return;
-                const video = playerRef.current.getInternalPlayer();
-                if (!video) return;
-                // Si ya está reproduciendo, no hacer nada
-                if (!video.paused) return;
-                // Verificar si el buffer tiene datos
-                if (video.buffered && video.buffered.length > 0) {
-                  // Hay datos en el buffer — ahora es seguro hacer play()
-                  const p = video.play();
-                  if (p && typeof p.catch === 'function') {
-                    p.catch(() => {
-                      // Si aún falla, reintentar si quedan intentos
-                      if (attempts < maxAttempts) {
-                        setTimeout(checkAndPlay, 500);
-                      }
-                    });
+            // ReactPlayer dispara onReady en MANIFEST_PARSED, luego llama play().
+            // En Firefox, play() falla si MSE buffer está vacío (DOMException).
+            // ReactPlayer no reintenta. Escuchamos "canplaythrough" del video
+            // element que se dispara cuando el navegador estima que puede
+            // reproducir sin interrupciones. En ese momento play() es seguro.
+            if (playingRef.current && hasHLS && playerRef.current) {
+              const video = playerRef.current.getInternalPlayer();
+              if (video) {
+                const onCanPlay = () => {
+                  if (video.paused && playingRef.current) {
+                    video.play().catch(() => {});
                   }
-                } else if (attempts < maxAttempts) {
-                  // Aún no hay buffer — reintentar
-                  setTimeout(checkAndPlay, 300);
-                }
-              };
-              // Primer intento después de 500ms (tiempo para que hls.js
-              // descargue y bufferice el primer fragmento)
-              setTimeout(checkAndPlay, 500);
+                };
+                video.addEventListener("canplaythrough", onCanPlay, { once: true });
+              }
             }
           }}
           onBuffer={() => {
@@ -1661,82 +1636,40 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             if (videoEnded) setVideoEnded(false);
           }}
           onError={(e, data) => {
-            // ── Errores HLS (vienen de hls.js via ReactPlayer) ──
-            if (data?.type === 'hlsError' || data?.type === 'networkError' || data?.type === 'mediaError') {
-              const details = data?.details || '';
-              const isFatal = !!data?.fatal;
+            // Errores HLS no fatales: ignorar silenciosamente.
+            // hls.js tiene sus propios mecanismos de retry internos.
+            // Intervenir con startLoad()/recoverMediaError() en errores
+            // no fatales causaba reinicios de buffer y saltos de posición.
+            if (data?.fatal === false) return;
 
-              // Errores no fatales: hls.js se recupera solo, pero ayudamos
-              if (!isFatal) {
-                if (details === 'bufferStalledError') {
-                  // Buffer vacío — normal al inicio o cambio de video. Silencioso.
-                  const hls = getHlsInstance();
-                  if (hls) hls.startLoad();
-                  return;
-                }
-                if (details === 'levelLoadTimeOut' || details === 'fragLoadTimeOut' || details === 'manifestLoadTimeOut') {
-                  // Timeout: reintentar carga silenciosamente
-                  const hls = getHlsInstance();
-                  if (hls) hls.startLoad();
-                  return;
-                }
-                // Otros errores no fatales: silenciar (ABR switching, etc)
-                return;
-              }
-
-              // ── Errores fatales: intentar recuperación ──
-              console.error(`[HLS] Error fatal: ${data?.type} - ${details}`);
+            // Errores HLS fatales: intentar recuperación
+            if (data?.fatal) {
               const hls = getHlsInstance();
               if (hls) {
-                if (data?.type === 'mediaError' || details.includes('buffer')) {
-                  console.log("[HLS] Recuperando con recoverMediaError...");
+                if (data.type === 'mediaError') {
                   hls.recoverMediaError();
-                  return;
-                }
-                if (data?.type === 'networkError' || details.includes('Load') || details.includes('frag')) {
-                  console.log("[HLS] Recuperando con startLoad...");
+                } else if (data.type === 'networkError') {
                   hls.startLoad();
-                  return;
                 }
               }
-              // Si no se pudo recuperar, no hacer nada más (dejar que ReactPlayer maneje)
               return;
             }
 
-            // ── Errores del elemento <video> nativo ──
-            // DOMException de Firefox: "The fetching process was aborted"
-            // Esto pasa cuando play() se llama antes de que hls.js tenga buffer.
-            // Programar un reintento — hls.js llenará el buffer y onBufferEnd/BUFFER_APPENDED
-            // también reintentarán play().
-            if (e instanceof DOMException) {
-              return;
-            }
-            // Error genérico de <video> (Event type='error'): puede pasar cuando
-            // el elemento <video> intenta cargar la URL antes de que hls.js tome control.
-            // Con preload="none" esto no debería ocurrir, pero si pasa, es ignorable.
-            if (e instanceof Event && e.type === 'error') {
-              console.log("[Player] Error event del <video> element (ignorado, hls.js maneja la carga)");
-              return;
-            }
-            // Error de aborto del user agent
-            if (typeof e === 'object' && e?.message?.includes('aborted')) {
-              return;
-            }
-            // Solo errores realmente inesperados llegan aquí
-            console.warn("ReactPlayer error no manejado:", e, data);
+            // DOMException / AbortError de Firefox: ignorar
+            if (e instanceof DOMException) return;
+            if (e instanceof Event && e.type === 'error') return;
+            if (typeof e === 'object' && e?.message?.includes('aborted')) return;
           }}
           progressInterval={500}
           config={{
             file: {
               attributes: {
-                crossOrigin: "anonymous", // No necesitamos cookies; el token va en la URL (_st) y en headers (X-Session-Token)
-                // "metadata" permite que el <video> element prepare su pipeline de media
-                // sin descargar el contenido completo. Esto es necesario para que Firefox
-                // acepte video.play() cuando hls.js empuje los primeros fragmentos al buffer.
-                // NOTA: "none" causaba que Firefox rechazara play() con DOMException
-                // porque el element no tenía datos listos para decodificar.
-                preload: "metadata",
-                // Reproducción inline en móviles (evita pantalla completa forzada en iOS)
+                crossOrigin: "anonymous",
+                // "auto" permite que el <video> element prepare completamente
+                // su pipeline de media. Cuando hls.js usa MSE, el preload no
+                // afecta la carga de segmentos (hls.js controla todo), pero
+                // SÍ afecta cómo Firefox inicializa el MediaSource.
+                preload: "auto",
                 playsInline: true,
               },
               // Forzar uso de hls.js para URLs del proxy que no terminan en .m3u8
@@ -1753,37 +1686,30 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 maxMaxBufferLength: 60,
                 // Mantener 30s de buffer trasero para seek rápido
                 backBufferLength: 30,
+                // CRÍTICO: Empezar siempre desde el segundo 0.
+                // Sin esto, hls.js puede empezar desde un offset arbitrario.
+                startPosition: 0,
                 // Empezar en calidad automática (ABR) — -1 = auto
                 startLevel: -1,
-                // Estimación inicial de ancho de banda (500kbps conservador)
-                // Un valor más bajo hace que hls.js empiece en calidad baja
-                // y suba rápidamente, evitando stalls iniciales en Firefox
-                abrEwmaDefaultEstimate: 500000,
-                // Reintentos generosos para manejar la latencia del proxy
-                fragLoadingMaxRetry: 8,
-                manifestLoadingMaxRetry: 6,
-                levelLoadingMaxRetry: 6,
+                // Estimación inicial de ancho de banda (1Mbps)
+                abrEwmaDefaultEstimate: 1000000,
+                // Reintentos para manejar la latencia del proxy
+                fragLoadingMaxRetry: 6,
+                manifestLoadingMaxRetry: 4,
+                levelLoadingMaxRetry: 4,
                 // Tiempo de espera antes de reintentar (ms)
                 fragLoadingRetryDelay: 1000,
-                manifestLoadingRetryDelay: 500,
-                levelLoadingRetryDelay: 500,
-                // Timeouts de carga más generosos (ms)
-                // El proxy a B2 puede tardar en responder, especialmente
-                // con preflight CORS en Firefox
-                fragLoadingTimeOut: 30000,
-                manifestLoadingTimeOut: 25000,
-                levelLoadingTimeOut: 25000,
+                manifestLoadingRetryDelay: 1000,
+                levelLoadingRetryDelay: 1000,
+                // Timeouts de carga (ms)
+                fragLoadingTimeOut: 20000,
+                manifestLoadingTimeOut: 15000,
+                levelLoadingTimeOut: 15000,
                 // No usar modo de baja latencia (es VOD, no live)
                 lowLatencyMode: false,
-                // Usar Web Crypto API nativa del navegador para AES (mejor rendimiento en Firefox)
+                // Usar Web Crypto API nativa del navegador para AES
                 enableSoftwareAES: false,
-                // Detección de buffer vacío más agresiva:
-                // nudgeOffset y nudgeMaxRetry controlan cómo hls.js intenta
-                // recuperarse cuando el buffer se vacía (bufferStalledError)
-                nudgeOffset: 0.2,
-                nudgeMaxRetry: 5,
                 // PROTECCIÓN: Inyectar token de sesión en cada solicitud XHR de hls.js.
-                // Esto incluye el manifest, playlists de calidad y cada fragmento .ts.
                 xhrSetup: sessionToken
                   ? (xhr, url) => {
                       xhr.setRequestHeader("X-Session-Token", sessionToken);
