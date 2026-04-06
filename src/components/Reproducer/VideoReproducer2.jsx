@@ -1553,62 +1553,27 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               const onManifestParsed = (event, data) => {
                 const levels = hls.levels || [];
                 setHlsLevels(levels);
-                console.log(`[HLS] Manifest parseado: ${levels.length} niveles`, levels.map(l => `${l.height}p`));
               };
               // Escuchar errores HLS para recuperación automática
               const onHlsError = (event, data) => {
                 if (data.fatal) {
-                  console.error(`[HLS] Error fatal: ${data.type} - ${data.details}`);
                   switch (data.type) {
                     case 'networkError':
-                      console.log('[HLS] Intentando recuperar de error de red...');
                       hls.startLoad();
                       break;
                     case 'mediaError':
-                      console.log('[HLS] Intentando recuperar de error de media...');
                       hls.recoverMediaError();
                       break;
                     default:
-                      console.error('[HLS] Error no recuperable, destruyendo y recreando...');
-                      // Último recurso: destruir hls.js y dejar que ReactPlayer lo reinicie
                       hls.destroy();
                       break;
                   }
                 } else {
                   // Errores no fatales: recuperación proactiva
-                  switch (data.details) {
-                    case 'bufferStalledError':
-                      // Buffer vacío — normal al iniciar/cambiar video o en Firefox.
-                      // Forzar recarga silenciosamente.
-                      hls.startLoad();
-                      break;
-                    case 'levelLoadTimeOut':
-                    case 'fragLoadTimeOut':
-                      // Timeout al cargar playlist/fragmento: reintentar la carga
-                      console.log(`[HLS] Timeout (${data.details}) — reintentando carga`);
-                      hls.startLoad();
-                      break;
-                    default:
-                      // Otros errores no fatales: solo log
-                      break;
-                  }
-                }
-              };
-              // Firefox fix: ReactPlayer llama play() cuando MANIFEST_PARSED dispara onReady,
-              // pero en Firefox el buffer MSE aún está vacío → play() es rechazado con DOMException
-              // y ReactPlayer no lo reintenta. Escuchamos FRAG_BUFFERED (= primer fragmento
-              // decodificable en el buffer) para hacer play() una sola vez, de forma segura.
-              let hasAutoPlayed = false;
-              const onFragBuffered = () => {
-                if (hasAutoPlayed) return;
-                hasAutoPlayed = true;
-                if (playingRef.current && playerRef.current) {
-                  const video = playerRef.current.getInternalPlayer();
-                  if (video && video.paused) {
-                    const p = video.play();
-                    if (p && typeof p.catch === 'function') {
-                      p.catch(() => {});
-                    }
+                  if (data.details === 'bufferStalledError' ||
+                      data.details === 'levelLoadTimeOut' ||
+                      data.details === 'fragLoadTimeOut') {
+                    hls.startLoad();
                   }
                 }
               };
@@ -1617,12 +1582,51 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               if (hls.constructor?.Events) {
                 hls.on(hls.constructor.Events.MANIFEST_PARSED, onManifestParsed);
                 hls.on(hls.constructor.Events.ERROR, onHlsError);
-                hls.on(hls.constructor.Events.FRAG_BUFFERED, onFragBuffered);
               }
               // Si los niveles ya están cargados (manifest ya parseado)
               if (hls.levels && hls.levels.length > 0) {
                 setHlsLevels(hls.levels);
               }
+            }
+
+            // ── Firefox autoplay fix ──
+            // ReactPlayer dispara onReady en MANIFEST_PARSED (manifest parseado),
+            // luego llama video.play(). En Firefox el buffer MSE está vacío → play()
+            // rechazado con DOMException → ReactPlayer no reintenta.
+            //
+            // Solución: pollear el buffered del <video> element. Cuando Firefox
+            // tenga datos decodificables (buffered.length > 0), llamar play()
+            // directamente en el video element. Máximo 10 intentos, 300ms entre cada uno.
+            if (playingRef.current && hasHLS) {
+              let attempts = 0;
+              const maxAttempts = 10;
+              const checkAndPlay = () => {
+                attempts++;
+                if (!playingRef.current || !playerRef.current) return;
+                const video = playerRef.current.getInternalPlayer();
+                if (!video) return;
+                // Si ya está reproduciendo, no hacer nada
+                if (!video.paused) return;
+                // Verificar si el buffer tiene datos
+                if (video.buffered && video.buffered.length > 0) {
+                  // Hay datos en el buffer — ahora es seguro hacer play()
+                  const p = video.play();
+                  if (p && typeof p.catch === 'function') {
+                    p.catch(() => {
+                      // Si aún falla, reintentar si quedan intentos
+                      if (attempts < maxAttempts) {
+                        setTimeout(checkAndPlay, 500);
+                      }
+                    });
+                  }
+                } else if (attempts < maxAttempts) {
+                  // Aún no hay buffer — reintentar
+                  setTimeout(checkAndPlay, 300);
+                }
+              };
+              // Primer intento después de 500ms (tiempo para que hls.js
+              // descargue y bufferice el primer fragmento)
+              setTimeout(checkAndPlay, 500);
             }
           }}
           onBuffer={() => {
