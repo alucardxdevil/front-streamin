@@ -1194,6 +1194,29 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   }, [menuOpen]);
 
   /* ========== Keyboard shortcuts ========== */
+  // ==============================================================
+  // Firefox Autoplay Recovery Mechanism
+  // ==============================================================
+  // Cuando ReactPlayer hace load con HLS, el primer play() a menudo
+  // falla en Firefox porque el buffer de video MSE aún está vacío,
+  // generando un AbortError/NotSupportedError silencioso que deja el
+  // video pausado permanentemente. Este poll seguro recupera el playback.
+  useEffect(() => {
+    if (!playing || !hasHLS || !playerRef.current) return;
+    
+    const interval = setInterval(() => {
+      const video = playerRef.current.getInternalPlayer();
+      if (video && video.paused && video.readyState >= 3) {
+        const p = video.play();
+        if (p && typeof p.catch === 'function') {
+          p.catch(() => {});
+        }
+      }
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [playing, hasHLS]);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Don't capture if user is typing in an input
@@ -1554,39 +1577,14 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 const levels = hls.levels || [];
                 setHlsLevels(levels);
               };
-              // Escuchar errores HLS para recuperación automática
-              // SOLO actuar en errores fatales. Los errores no fatales
-              // (bufferStalledError, timeouts) son manejados internamente
-              // por hls.js con sus propios mecanismos de retry.
-              // Llamar hls.startLoad() en bufferStalledError causaba que
-              // hls.js reiniciara la carga y perdiera la posición actual.
-              const onHlsError = (event, data) => {
-                if (!data.fatal) return;
-                switch (data.type) {
-                  case 'networkError':
-                    hls.startLoad();
-                    break;
-                  case 'mediaError':
-                    hls.recoverMediaError();
-                    break;
-                  default:
-                    hls.destroy();
-                    break;
-                }
-              };
-
-              // Usar los eventos de hls.js directamente
+              
               if (hls.constructor?.Events) {
                 hls.on(hls.constructor.Events.MANIFEST_PARSED, onManifestParsed);
-                hls.on(hls.constructor.Events.ERROR, onHlsError);
               }
-              // Si los niveles ya están cargados (manifest ya parseado)
               if (hls.levels && hls.levels.length > 0) {
                 setHlsLevels(hls.levels);
               }
             }
-
-
           }}
           onBuffer={() => {
             // Mostrar spinner con un pequeño debounce (300ms) para evitar
@@ -1620,85 +1618,30 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             if (videoEnded) setVideoEnded(false);
           }}
           onError={(e, data) => {
-            // Errores HLS no fatales: ignorar — hls.js los maneja internamente.
-            if (data?.fatal === false) return;
-
-            // Errores HLS fatales: recuperación mínima
             if (data?.fatal) {
               const hls = getHlsInstance();
               if (hls) {
                 if (data.type === 'mediaError') hls.recoverMediaError();
                 else if (data.type === 'networkError') hls.startLoad();
+                else hls.destroy();
               }
-              return;
             }
-
-            // ── Firefox autoplay fix ──
-            // FilePlayer.js (react-player) hace video.play() en onReady.
-            // Firefox rechaza play() con DOMException si el buffer MSE está vacío.
-            // FilePlayer.js envía esa DOMException a este onError.
-            // Respondemos registrando un listener 'canplay' en el video element:
-            // cuando Firefox tenga datos suficientes para reproducir, 'canplay'
-            // se dispara y hacemos play() en ese momento seguro.
-            if (e instanceof DOMException && playingRef.current && playerRef.current) {
-              const video = playerRef.current.getInternalPlayer();
-              if (video && video.paused) {
-                video.addEventListener('canplay', function retry() {
-                  video.removeEventListener('canplay', retry);
-                  if (video.paused && playingRef.current) {
-                    video.play().catch(() => {});
-                  }
-                });
-              }
-              return;
-            }
-
-            if (e instanceof Event && e.type === 'error') return;
-            if (typeof e === 'object' && e?.message?.includes('aborted')) return;
           }}
           progressInterval={500}
           config={{
             file: {
               attributes: {
                 crossOrigin: "anonymous",
-                // "auto" permite que el <video> element prepare completamente
-                // su pipeline de media. Cuando hls.js usa MSE, el preload no
-                // afecta la carga de segmentos (hls.js controla todo), pero
-                // SÍ afecta cómo Firefox inicializa el MediaSource.
                 preload: "auto",
                 playsInline: true,
               },
-              // Forzar uso de hls.js para URLs del proxy que no terminan en .m3u8
-              // El proxy devuelve Content-Type: application/vnd.apple.mpegurl
-              // pero ReactPlayer necesita saber que es HLS para usar hls.js
               forceHLS: hasHLS,
-              // Configuración de hls.js para streaming adaptativo
               hlsOptions: {
                 enableWorker: true,
-                maxBufferLength: 10,
-                maxMaxBufferLength: 30,
-                backBufferLength: 0,
-                startPosition: -1,
-                startLevel: -1,
-                abrEwmaDefaultEstimate: 1000000,
-                // Deshabilitar nudge: hls.js por defecto avanza currentTime
-                // automáticamente cuando detecta buffer stall. En Firefox esto
-                // hace que el video empiece en segundo ~5 en lugar del 0.
-                nudgeOffset: 0,
-                nudgeMaxRetry: 0,
-                fragLoadingMaxRetry: 6,
-                manifestLoadingMaxRetry: 4,
-                levelLoadingMaxRetry: 4,
-                fragLoadingRetryDelay: 1000,
-                manifestLoadingRetryDelay: 1000,
-                levelLoadingRetryDelay: 1000,
-                fragLoadingTimeOut: 20000,
-                manifestLoadingTimeOut: 15000,
-                levelLoadingTimeOut: 15000,
                 lowLatencyMode: false,
-                enableSoftwareAES: false,
-                // Segmentos .ts llevan _st en URL (backend los reescribe en m3u8).
-                // Solo playlists .m3u8 necesitan el header X-Session-Token.
+                // Configuraciones estrictamente necesarias
+                startLevel: -1,
+                // Proveer el token si la URL no lo tiene
                 xhrSetup: sessionToken
                   ? (xhr, url) => {
                       if (url && !url.includes('_st=')) {
