@@ -226,17 +226,25 @@ const HLSPlayer = ({
       setAvailableLevels(data.levels)
       console.log(`[HLSPlayer] ${data.levels.length} calidades disponibles`)
 
-      // Asegurar que la reproducción inicie desde el segundo 0.
-      // En Firefox, hls.js a veces resuelve el seek inicial con un offset
-      // si los primeros segmentos tardaron en cargarse por preflights CORS.
-      if (video.currentTime > 0.5) {
-        video.currentTime = 0
-      }
+      // Forzar seek a 0 para evitar PTS offset de segmentos .ts
+      video.currentTime = 0
 
       if (autoPlay) {
-        video.play().catch((err) => {
-          console.warn('[HLSPlayer] Autoplay bloqueado:', err.message)
-        })
+        // En Firefox, intentar play() mutado primero para evitar bloqueo de autoplay.
+        // Si play() con audio falla (NotAllowedError), mutear e intentar de nuevo.
+        const attemptPlay = () => {
+          const p = video.play()
+          if (p && typeof p.catch === 'function') {
+            p.catch((err) => {
+              if (err.name === 'NotAllowedError' && !video.muted) {
+                console.warn('[HLSPlayer] Autoplay bloqueado, reintentando mutado')
+                video.muted = true
+                video.play().catch(() => {})
+              }
+            })
+          }
+        }
+        attemptPlay()
       }
     })
 
@@ -257,17 +265,14 @@ const HLSPlayer = ({
     const handleCanPlay = () => setIsLoading(false)
     const handlePlaying = () => {
       setIsLoading(false)
-      // Corrección de inicio para Firefox: si es la primera vez que el video
-      // entra en estado "playing" y currentTime saltó adelante, corregir a 0.
-      // Esto ocurre cuando Firefox no tenía los primeros segmentos en buffer
-      // al momento del play() inicial.
-      if (!video._startFixed && video.currentTime > 2) {
-        const buffered = video.buffered
-        if (buffered.length > 0 && buffered.start(0) <= 0.5) {
+      // Corrección de inicio: si es la primera vez que el video entra en
+      // estado "playing" y currentTime saltó adelante, corregir a 0.
+      if (!video._startFixed) {
+        video._startFixed = true
+        if (video.currentTime > 1.5) {
           video.currentTime = 0
         }
       }
-      video._startFixed = true
     }
     video.addEventListener('waiting', handleWaiting)
     video.addEventListener('canplay', handleCanPlay)

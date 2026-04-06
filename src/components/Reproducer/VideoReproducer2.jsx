@@ -1193,52 +1193,57 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     return () => document.removeEventListener("mousedown", handleClick);
   }, [menuOpen]);
 
-  /* ========== Keyboard shortcuts ========== */
-  // ==============================================================
-  // Firefox Autoplay Recovery Mechanism
-  // ==============================================================
-  // Cuando ReactPlayer hace load con HLS, el primer play() a menudo
-  // falla en Firefox porque el buffer de video MSE aún está vacío,
-  // generando un AbortError/NotSupportedError silencioso que deja el
-  // video pausado permanentemente. Este poll seguro recupera el playback.
+  /* ========== Firefox HLS playback recovery ========== */
+  // En Firefox, cuando ReactPlayer pasa playing={true} con HLS, el primer
+  // play() puede fallar con AbortError porque hls.js aún no tiene datos
+  // en el MediaSource buffer. Chrome reintenta internamente, Firefox no.
   //
-  // Además, Firefox a veces inicia la reproducción con currentTime > 0
-  // porque los primeros segmentos no estaban en el buffer cuando MSE
-  // resolvió el seek inicial. Si el video lleva poco tiempo reproduciéndose
-  // y currentTime está adelantado, lo corregimos a 0.
+  // Solución: detectar cuando el video tiene suficiente buffer (readyState >= 3)
+  // pero está pausado, e intentar play(). Diferente al poll anterior: este
+  // solo actúa UNA VEZ al inicio y se detiene.
+  const playAttemptedRef = useRef(false);
+
   useEffect(() => {
     if (!playing || !hasHLS || !playerRef.current) return;
-    
-    let hasFixedStart = false;
-    const interval = setInterval(() => {
+    playAttemptedRef.current = false;
+
+    const tryPlay = () => {
+      if (playAttemptedRef.current) return;
       const video = playerRef.current?.getInternalPlayer();
       if (!video) return;
-      
-      // Corrección de inicio: si el video está en los primeros 2 segundos
-      // de reproducción real pero currentTime saltó adelante, resetear a 0.
-      if (!hasFixedStart && video.readyState >= 3) {
-        const buffered = video.buffered;
-        if (buffered.length > 0 && buffered.start(0) <= 0.5 && video.currentTime > 2) {
-          video.currentTime = 0;
-          hasFixedStart = true;
-        } else if (video.currentTime <= 2) {
-          // El video ya inició correctamente desde el principio
-          hasFixedStart = true;
-        }
-      }
-      
-      // Recovery de autoplay: si el estado dice "playing" pero el video
-      // está pausado y tiene suficiente buffer, forzar play().
+
       if (video.paused && video.readyState >= 3) {
+        playAttemptedRef.current = true;
+        // Forzar seek a 0 antes de play para evitar offset de PTS
+        if (video.currentTime > 1) {
+          video.currentTime = 0;
+        }
         const p = video.play();
         if (p && typeof p.catch === 'function') {
-          p.catch(() => {});
+          p.catch(() => {
+            // Si play() falla incluso con datos, es por autoplay policy.
+            // Mutear e intentar de nuevo.
+            video.muted = true;
+            setMuted(true);
+            video.play().catch(() => {});
+          });
         }
       }
-    }, 500);
-    
+    };
+
+    // Intentar cada 300ms hasta que funcione (max 15 intentos = 4.5s)
+    let attempts = 0;
+    const interval = setInterval(() => {
+      attempts++;
+      if (playAttemptedRef.current || attempts > 15) {
+        clearInterval(interval);
+        return;
+      }
+      tryPlay();
+    }, 300);
+
     return () => clearInterval(interval);
-  }, [playing, hasHLS]);
+  }, [playing, hasHLS, proxyVideoUrl]); // proxyVideoUrl cambia al cambiar de video
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -1591,14 +1596,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             }
             setLoading(false);
 
-            // Corrección de inicio para Firefox: asegurar que el video
-            // empiece desde el segundo 0. En Firefox, cuando hls.js resuelve
-            // el manifest y los primeros segmentos tardan por preflights CORS,
-            // el player puede quedar con currentTime > 0.
-            const videoEl = playerRef.current?.getInternalPlayer();
-            if (videoEl && videoEl.currentTime > 1) {
-              videoEl.currentTime = 0;
-            }
+            // Forzar seek a 0 al inicio. Esto es crítico para Firefox:
+            // hls.js puede haber cargado los primeros segmentos con un PTS
+            // offset heredado del MP4 fuente, causando que currentTime no
+            // sea 0 cuando el video está listo. seekTo(0) fuerza a hls.js
+            // a posicionar el playhead al inicio real del contenido.
+            playerRef.current?.seekTo(0, 'seconds');
 
             // Capturar instancia de hls.js para control de calidad
             const hls = getHlsInstance();
