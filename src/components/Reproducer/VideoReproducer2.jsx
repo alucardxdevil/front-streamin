@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import styled, { keyframes } from "styled-components";
-import ReactPlayer from "react-player";
+import Hls from "hls.js";
 import { CircularProgress } from "@mui/material";
 import useStreamSession from "../../hooks/useStreamSession";
 import { getStreamUrl } from "../../utils/streamUrl";
@@ -863,7 +863,24 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   // Refs
   const hideTimeout = useRef(null);
-  const playerRef = useRef(null);
+  const playerRef = useRef({
+    seekTo: (seconds) => {
+      const video = videoElRef?.current;
+      if (video) video.currentTime = seconds;
+    },
+    getCurrentTime: () => videoElRef?.current?.currentTime || 0,
+    getInternalPlayer: () => videoElRef?.current,
+    play: async () => {
+      const video = videoElRef?.current;
+      if (video) return video.play();
+      return Promise.reject();
+    },
+    pause: () => {
+      const video = videoElRef?.current;
+      if (video) video.pause();
+    },
+  });
+  const videoElRef = useRef(null); // Referencia directa al elemento video
   const playerContainerRef = useRef(null);
   const playerWrapperRef = useRef(null); // Ref para el wrapper del player (sticky)
   const countdownTimerRef = useRef(null);
@@ -895,16 +912,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   /* ========== HLS Quality Control ========== */
   /**
-   * Obtiene la instancia de hls.js desde ReactPlayer.
-   * ReactPlayer expone el player interno via getInternalPlayer('hls').
+   * Obtiene la instancia de hls.js directamente.
    */
   const getHlsInstance = useCallback(() => {
-    try {
-      const internal = playerRef.current?.getInternalPlayer('hls');
-      return internal || null;
-    } catch {
-      return null;
-    }
+    return hlsRef.current;
   }, []);
 
   /**
@@ -1243,7 +1254,33 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     }, 300);
 
     return () => clearInterval(interval);
-  }, [playing, hasHLS, proxyVideoUrl]); // proxyVideoUrl cambia al cambiar de video
+  }, [playing, hasHLS, proxyVideoUrl]);
+
+  /* ========== Sincronizar estado del video con el elemento video ========== */
+  useEffect(() => {
+    const video = videoElRef.current;
+    if (!video) return;
+
+    // Sincronizar muted
+    video.muted = muted;
+
+    // Sincronizar volume
+    video.volume = volume;
+
+    // Sincronizar playbackRate
+    video.playbackRate = playbackRate;
+
+    // Sincronizar play/pause
+    if (playing) {
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
+    } else {
+      if (!video.paused) {
+        video.pause();
+      }
+    }
+  }, [playing, muted, volume, playbackRate]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -1551,160 +1588,142 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             title="Cerrar mini reproductor"
           >
             ✕
-          </StickyCloseBtn>
-        {/* Solo renderizar ReactPlayer cuando la sesión esté lista y tengamos URL.
-            Esto evita que se haga la primera petición sin token de sesión. */}
-        {proxyVideoUrl && <ReactPlayer
-          ref={playerRef}
-          url={proxyVideoUrl}
-          width="100%"
-          height="100%"
-          playing={playing}
-          muted={muted}
-          controls={false}
-          volume={volume}
-          playbackRate={playbackRate}
-          onProgress={handleProgress}
-          onDuration={handleDuration}
-          onEnded={() => {
-            setVideoEnded(true);
-            setPlaying(false);
-            setShowControls(true);
+</StickyCloseBtn>
 
-            if (onVideoEnd) {
-              setCountdownTime(countdown);
-              countdownTimerRef.current = setInterval(() => {
-                setCountdownTime((prev) => {
-                  if (prev <= 1) {
-                    clearInterval(countdownTimerRef.current);
-                    countdownTimerRef.current = null;
-                    onVideoEnd();
-                    return 0;
-                  }
-                  return prev - 1;
-                });
-              }, 1000);
-            }
-          }}
-          onReady={() => {
-            // El video está listo para reproducirse: ocultar spinner inmediatamente
-            videoReadyRef.current = true;
-            bufferingRef.current = false;
-            if (loadingTimerRef.current) {
-              clearTimeout(loadingTimerRef.current);
-              loadingTimerRef.current = null;
-            }
-            setLoading(false);
+        {/* Video elemento controlado por hls.js directamente (reemplaza ReactPlayer) */}
+        {proxyVideoUrl && (
+          <video
+            ref={(el) => {
+              videoElRef.current = el;
+              if (el && proxyVideoUrl && hasHLS) {
+                // Inicializar hls.js directamente cuando el elemento video esté disponible
+                const videoEl = el;
+                
+                // Si ya hay una instancia de hls, destruirla primero
+                if (hlsRef.current) {
+                  hlsRef.current.destroy();
+                  hlsRef.current = null;
+                }
 
-            // Forzar seek a 0 al inicio. Esto es crítico para Firefox:
-            // hls.js puede haber cargado los primeros segmentos con un PTS
-            // offset heredado del MP4 fuente, causando que currentTime no
-            // sea 0 cuando el video está listo. seekTo(0) fuerza a hls.js
-            // a posicionar el playhead al inicio real del contenido.
-            playerRef.current?.seekTo(0, 'seconds');
+                if (Hls.isSupported()) {
+                  const hlsOptions = {
+                    enableWorker: true,
+                    lowLatencyMode: false,
+                    startLevel: -1,
+                    maxBufferHole: 1,
+                    nudgeMaxRetry: 10,
+                    startFragPrefetch: true,
+                    xhrSetup: sessionToken
+                      ? (xhr, url) => {
+                          if (url && !url.includes('_st=')) {
+                            xhr.setRequestHeader("X-Session-Token", sessionToken);
+                          }
+                        }
+                      : undefined,
+                  };
 
-            // Capturar instancia de hls.js para control de calidad
-            const hls = getHlsInstance();
-            if (hls) {
-              hlsRef.current = hls;
-              // Escuchar cuando se cargan los niveles del manifest
-              const onManifestParsed = (event, data) => {
-                const levels = hls.levels || [];
-                setHlsLevels(levels);
-              };
-              
-              if (hls.constructor?.Events) {
-                hls.on(hls.constructor.Events.MANIFEST_PARSED, onManifestParsed);
-              }
-              if (hls.levels && hls.levels.length > 0) {
-                setHlsLevels(hls.levels);
-              }
-            }
-          }}
-          onBuffer={() => {
-            // Mostrar spinner con un pequeño debounce (300ms) para evitar
-            // flashes de spinner en micro-interrupciones de red
-            bufferingRef.current = true;
-            if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
-            loadingTimerRef.current = setTimeout(() => {
-              // Solo mostrar si aún estamos en buffering
-              if (bufferingRef.current) {
-                setLoading(true);
-              }
-            }, 300);
-          }}
-          onBufferEnd={() => {
-            // El buffer se completó: ocultar spinner siempre
-            bufferingRef.current = false;
-            if (loadingTimerRef.current) {
-              clearTimeout(loadingTimerRef.current);
-              loadingTimerRef.current = null;
-            }
-            setLoading(false);
-          }}
-          onPlay={() => {
-            // Al iniciar reproducción, ocultar spinner y limpiar estado
-            bufferingRef.current = false;
-            if (loadingTimerRef.current) {
-              clearTimeout(loadingTimerRef.current);
-              loadingTimerRef.current = null;
-            }
-            setLoading(false);
-            if (videoEnded) setVideoEnded(false);
-          }}
-          onError={(e, data) => {
-            if (data?.fatal) {
-              const hls = getHlsInstance();
-              if (hls) {
-                if (data.type === 'mediaError') hls.recoverMediaError();
-                else if (data.type === 'networkError') hls.startLoad();
-                else hls.destroy();
-              }
-            }
-          }}
-          progressInterval={500}
-          config={{
-            file: {
-              attributes: {
-                crossOrigin: "anonymous",
-                preload: "auto",
-                playsInline: true,
-              },
-              forceHLS: hasHLS,
-              hlsOptions: {
-                enableWorker: true,
-                lowLatencyMode: false,
-                // startLevel: -1 usa ABR automático. El proxy ya incluye _st
-                // en todas las URLs reescritas (playlists y segmentos), así que
-                // hls.js no necesita enviar X-Session-Token via xhrSetup,
-                // evitando preflights CORS que en Firefox retrasaban la carga
-                // de los primeros segmentos y causaban que el video no iniciara
-                // desde el segundo 0.
-                startLevel: -1,
-                // Buffer y timing ajustados para evitar saltos al inicio:
-                // - maxBufferHole: tolera huecos de hasta 1s en el buffer sin
-                //   saltar (Firefox es más estricto con huecos que Chrome).
-                // - nudgeMaxRetry: reintenta más veces antes de saltar un hueco.
-                // - startFragPrefetch: precarga el primer fragmento mientras se
-                //   parsea el playlist, reduciendo el delay de inicio.
-                maxBufferHole: 1,
-                nudgeMaxRetry: 10,
-                startFragPrefetch: true,
-                // Proveer el token SOLO si la URL no lo tiene ya como query param.
-                // El servidor ahora incluye _st en todas las URLs reescritas
-                // del .m3u8, así que este xhrSetup es solo un fallback de seguridad.
-                xhrSetup: sessionToken
-                  ? (xhr, url) => {
-                      if (url && !url.includes('_st=')) {
-                        xhr.setRequestHeader("X-Session-Token", sessionToken);
-                      }
+                  const hls = new Hls(hlsOptions);
+                  hlsRef.current = hls;
+
+                  // Event: MANIFEST_PARSED
+                  hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    // Forzar seek a 0
+                    videoEl.currentTime = 0;
+                    setHlsLevels(hls.levels || []);
+                  });
+
+                  // Event: ERROR
+                  hls.on(Hls.Events.ERROR, (evt, data) => {
+                    console.error("[HLS] Error:", data.type, data.details);
+                    if (data.fatal) {
+                      if (data.type === 'mediaError') hls.recoverMediaError();
+                      else if (data.type === 'networkError') hls.startLoad();
+                      else hls.destroy();
                     }
-                  : undefined,
-              },
-            },
-          }}
-          style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
-        />}
+                  });
+
+                  hls.loadSource(proxyVideoUrl);
+                  hls.attachMedia(videoEl);
+                } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+                  // Safari: HLS nativo
+                  videoEl.src = proxyVideoUrl;
+                }
+              }
+            }}
+            style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+            playsInline
+            crossOrigin="anonymous"
+            muted={muted}
+            onPlay={() => {
+              bufferingRef.current = false;
+              if (loadingTimerRef.current) {
+                clearTimeout(loadingTimerRef.current);
+                loadingTimerRef.current = null;
+              }
+              setLoading(false);
+              if (videoEnded) setVideoEnded(false);
+            }}
+            onPause={() => {
+              // Manejar pausa
+            }}
+            onEnded={() => {
+              setVideoEnded(true);
+              setPlaying(false);
+              setShowControls(true);
+              if (onVideoEnd) {
+                setCountdownTime(countdown);
+                countdownTimerRef.current = setInterval(() => {
+                  setCountdownTime((prev) => {
+                    if (prev <= 1) {
+                      clearInterval(countdownTimerRef.current);
+                      countdownTimerRef.current = null;
+                      onVideoEnd();
+                      return 0;
+                    }
+                    return prev - 1;
+                  });
+                }, 1000);
+              }
+            }}
+            onLoadedMetadata={() => {
+              videoReadyRef.current = true;
+              bufferingRef.current = false;
+              setLoading(false);
+              if (hlsRef.current) {
+                setHlsLevels(hlsRef.current.levels || []);
+              }
+            }}
+            onTimeUpdate={() => {
+              if (duration > 0) {
+                setPlayed(currentTime / duration);
+              }
+              if (videoElRef.current) {
+                const buffered = videoElRef.current.buffered;
+                if (buffered.length > 0) {
+                  setLoaded(buffered.end(buffered.length - 1) / duration);
+                }
+              }
+            }}
+            onWaiting={() => {
+              bufferingRef.current = true;
+              if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
+              loadingTimerRef.current = setTimeout(() => {
+                if (bufferingRef.current) setLoading(true);
+              }, 300);
+            }}
+            onCanPlay={() => {
+              bufferingRef.current = false;
+              if (loadingTimerRef.current) {
+                clearTimeout(loadingTimerRef.current);
+                loadingTimerRef.current = null;
+              }
+              setLoading(false);
+            }}
+            onError={(e) => {
+              console.error("[Video] Error:", e);
+            }}
+          />
+        )}
 
         {/* Mensaje cuando el video está procesándose */}
         {!isVideoReady && currentVideo?._id && (
