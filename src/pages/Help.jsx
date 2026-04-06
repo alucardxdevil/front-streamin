@@ -388,7 +388,7 @@ const Help = () => {
         </QuickLinkCard>
         <QuickLinkCard to="/terms">
           <QuickLinkIcon>
-            <MenuBookOutlined style={{ fontSize: 32 }} />
+            <MenuBookOutlined style={{ fontSize: 30 }} />
           </QuickLinkIcon>
           <QuickLinkText>
             <QuickLinkTitle>{t("termsConditions")}</QuickLinkTitle>
