@@ -1545,27 +1545,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             }
             setLoading(false);
 
-            // Firefox fix: escuchar el evento "canplay" del <video> element
-            // para reintentar play() UNA SOLA VEZ cuando Firefox tiene datos
-            // decodificables listos. Esto resuelve la race condition sin causar
-            // saltos/loops de seek como lo haría un reintento en cada BUFFER_APPENDED.
-            if (playing && playerRef.current) {
-              const internalPlayer = playerRef.current.getInternalPlayer();
-              if (internalPlayer && internalPlayer.paused) {
-                const tryPlay = () => {
-                  if (internalPlayer.paused && playingRef.current) {
-                    const p = internalPlayer.play();
-                    if (p && typeof p.catch === 'function') {
-                      p.catch(() => {});
-                    }
-                  }
-                };
-                // "canplay" se dispara cuando el navegador puede empezar a reproducir
-                // sin necesidad de más buffering. Es el momento seguro para play().
-                internalPlayer.addEventListener("canplay", tryPlay, { once: true });
-              }
-            }
-
             // Capturar instancia de hls.js para control de calidad
             const hls = getHlsInstance();
             if (hls) {
@@ -1615,10 +1594,30 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   }
                 }
               };
+              // Firefox fix: ReactPlayer llama play() cuando MANIFEST_PARSED dispara onReady,
+              // pero en Firefox el buffer MSE aún está vacío → play() es rechazado con DOMException
+              // y ReactPlayer no lo reintenta. Escuchamos FRAG_BUFFERED (= primer fragmento
+              // decodificable en el buffer) para hacer play() una sola vez, de forma segura.
+              let hasAutoPlayed = false;
+              const onFragBuffered = () => {
+                if (hasAutoPlayed) return;
+                hasAutoPlayed = true;
+                if (playingRef.current && playerRef.current) {
+                  const video = playerRef.current.getInternalPlayer();
+                  if (video && video.paused) {
+                    const p = video.play();
+                    if (p && typeof p.catch === 'function') {
+                      p.catch(() => {});
+                    }
+                  }
+                }
+              };
+
               // Usar los eventos de hls.js directamente
               if (hls.constructor?.Events) {
                 hls.on(hls.constructor.Events.MANIFEST_PARSED, onManifestParsed);
                 hls.on(hls.constructor.Events.ERROR, onHlsError);
+                hls.on(hls.constructor.Events.FRAG_BUFFERED, onFragBuffered);
               }
               // Si los niveles ya están cargados (manifest ya parseado)
               if (hls.levels && hls.levels.length > 0) {
