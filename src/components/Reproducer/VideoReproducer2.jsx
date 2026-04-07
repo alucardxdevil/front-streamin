@@ -838,6 +838,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [quality, setQuality] = useState("Auto");
+  const [currentPlayingQuality, setCurrentPlayingQuality] = useState("");
 
   // UI state
   const [showControls, setShowControls] = useState(true);
@@ -945,6 +946,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
     if (q === "Auto") {
       hls.currentLevel = -1;
+      setCurrentPlayingQuality("");
       console.log("[HLS] Calidad: Auto (ABR)");
       return;
     }
@@ -1496,7 +1498,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         : <VolumeUpIcon />;
 
   const speedLabel = playbackRate === 1 ? t("normalSpeed") : `${playbackRate}x`;
-  const qualityLabel = quality;
+  const qualityLabel = currentPlayingQuality ? quality + "(" + currentPlayingQuality + ")" : quality;
 
   /* ========== Render Menu Content ========== */
   const renderMenuContent = () => {
@@ -1629,7 +1631,14 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   const hlsOptions = {
                     enableWorker: true,
                     lowLatencyMode: false,
+                    // startLevel: -1 = ABR automático
+                    // Por defecto usa ABR (startLevel: -1) que ajusta dinámicamente
+                    // based en ancho de banda detectado
                     startLevel: -1,
+                    // Estimación inicial de ancho de banda: 1.5Mbps
+                    // Permite iniciar en ~480p en conexiones buenas
+                    // Si la conexión es lenta, ABR bajará automáticamente a 360p/240p
+                    abrEwmaDefaultEstimate: 1500000,
                     // Disable gap detection
                     maxBufferHole: 86400,
                     maxBufferLength: 30,
@@ -1642,6 +1651,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                     levelLoadingMaxRetry: 5,
                     fragLoadingRetryDelay: 1000,
                     manifestLoadingRetryDelay: 1000,
+                    // Forzar calidades más bajas disponibles
+                    // minAutoLevel: 3 = permite bajar hasta 360p
+                    // maxAutoLevel: 0 = permite hasta 1080p
+                    minAutoLevel: 3,
+                    maxAutoLevel: 0,
                     xhrSetup: sessionToken
                       ? (xhr, url) => {
                           if (url && !url.includes('_st=')) {
@@ -1705,6 +1719,23 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
                   hls.loadSource(proxyVideoUrl);
                   hls.attachMedia(videoEl);
+                  
+                  // Track current quality being played
+                  hls.on(Hls.Events.LEVEL_SWITCHED, function(evt, data) {
+                    var level = hls.levels[data.level];
+                    if (level) {
+                      var height = level.height;
+                      var q = height + "p";
+                      setCurrentPlayingQuality(q);
+                    }
+                  });
+                  
+                  // Track when quality is manually selected (show "Auto" in label)
+                  hls.on(Hls.Events.LEVEL_SWITCH, function(evt, data) {
+                    if (data.level === -1) {
+                      setCurrentPlayingQuality("");
+                    }
+                  });
                   
                   // Auto-play when media is attached (if should be playing)
                   if (playing) {

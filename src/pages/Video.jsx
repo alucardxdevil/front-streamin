@@ -86,9 +86,10 @@ const Side = styled.div`
 
   @media (max-width: 768px) {
     order: 3;
-    position: static;
+    position: relative;
     max-height: none;
     overflow: visible;
+    z-index: 9999;
   }
 `;
 
