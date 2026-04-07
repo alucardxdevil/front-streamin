@@ -1634,6 +1634,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                     maxMaxBufferLength: 120,
                     nudgeMaxRetry: 15,
                     startFragPrefetch: true,
+                    // Timeouts increase para redes lentas
+                    fragLoadingMaxRetry: 5,
+                    manifestLoadingMaxRetry: 3,
+                    levelLoadingMaxRetry: 3,
+                    fragLoadingRetryDelay: 500,
                     xhrSetup: sessionToken
                       ? (xhr, url) => {
                           if (url && !url.includes('_st=')) {
@@ -1669,6 +1674,20 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                       return;
                     }
                     
+                    // Timeout de segmento - reintentar inmediatamente
+                    if (data.details === 'fragLoadTimeOut') {
+                      console.log("[HLS] Timeout cargando segmento, reintentando...");
+                      hls.startLoad();
+                      return;
+                    }
+                    
+                    // Other network errors - retry
+                    if (data.type === 'networkError') {
+                      console.log("[HLS] Error de red, reintentando...");
+                      setTimeout(() => hls.startLoad(), 2000);
+                      return;
+                    }
+                    
                     if (data.fatal) {
                       if (data.type === 'mediaError') hls.recoverMediaError();
                       else if (data.type === 'networkError') hls.startLoad();
@@ -1678,6 +1697,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
                   hls.loadSource(proxyVideoUrl);
                   hls.attachMedia(videoEl);
+                  
+                  // Auto-play when media is attached (if should be playing)
+                  if (playing) {
+                    videoEl.play().catch(function() {});
+                  }
                 } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
                   // Safari: HLS nativo
                   videoEl.src = proxyVideoUrl;
@@ -1687,6 +1711,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
             playsInline
             crossOrigin="anonymous"
+            autoPlay
             muted={muted}
             onPlay={() => {
               bufferingRef.current = false;
