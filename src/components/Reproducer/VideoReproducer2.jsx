@@ -1630,17 +1630,18 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                     enableWorker: true,
                     lowLatencyMode: false,
                     startLevel: -1,
-                    // Disable gap detection para evitar errores bufferSeekOverHole
-                    maxBufferHole: Infinity,
+                    // Disable gap detection
+                    maxBufferHole: 86400,
                     maxBufferLength: 30,
-                    maxMaxBufferLength: 120,
-                    nudgeMaxRetry: 15,
+                    maxMaxBufferLength: 180,
+                    nudgeMaxRetry: 20,
                     startFragPrefetch: true,
-                    // Timeouts increase para redes lentas
-                    fragLoadingMaxRetry: 5,
-                    manifestLoadingMaxRetry: 3,
-                    levelLoadingMaxRetry: 3,
-                    fragLoadingRetryDelay: 500,
+                    // Timeouts much larger para redes lentas
+                    fragLoadingMaxRetry: 10,
+                    manifestLoadingMaxRetry: 5,
+                    levelLoadingMaxRetry: 5,
+                    fragLoadingRetryDelay: 1000,
+                    manifestLoadingRetryDelay: 1000,
                     xhrSetup: sessionToken
                       ? (xhr, url) => {
                           if (url && !url.includes('_st=')) {
@@ -1661,32 +1662,37 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                     setHlsLevels(hls.levels || []);
                   });
 
-                  // Event: ERROR
+                  // Event: ERROR - solo loguear errores fatales, ignorar warnings de buffer
                   hls.on(Hls.Events.ERROR, (evt, data) => {
-                    console.error("[HLS] Error:", data.type, data.details);
+                    // Ignorar errores no fatales (bufferSeekOverHole, bufferStalledError son warnings)
+                    if (!data.fatal) {
+                      // Auto-recover de stalls
+                      if (data.details === 'bufferStalledError') {
+                        var vid = videoEl;
+                        if (vid) vid.play().catch(function() {});
+                      }
+                      return;
+                    }
                     
-                    // Manejar rate limit (429) - esperar y reintentar
+                    console.error("[HLS] Error fatal:", data.type, data.details);
+                    
+                    // Manejar rate limit (429)
                     if (data.details === 'manifestLoadError' || data.code === 429) {
-                      console.log("[HLS] Rate limit detectado, reintentando en 10s...");
-                      setTimeout(() => {
-                        if (hlsRef.current === hls) {
-                          hls.startLoad();
-                        }
+                      setTimeout(function() {
+                        if (hlsRef.current === hls) hls.startLoad();
                       }, 10000);
                       return;
                     }
                     
-                    // Timeout de segmento - reintentar inmediatamente
+                    // Timeout de segmento
                     if (data.details === 'fragLoadTimeOut') {
-                      console.log("[HLS] Timeout cargando segmento, reintentando...");
                       hls.startLoad();
                       return;
                     }
                     
-                    // Other network errors - retry
+                    // Network errors
                     if (data.type === 'networkError') {
-                      console.log("[HLS] Error de red, reintentando...");
-                      setTimeout(() => hls.startLoad(), 2000);
+                      setTimeout(function() { hls.startLoad(); }, 2000);
                       return;
                     }
                     
