@@ -864,19 +864,28 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   // Refs
   const hideTimeout = useRef(null);
   const playerRef = useRef({
-    seekTo: (seconds) => {
-      const video = videoElRef?.current;
-      if (video) video.currentTime = seconds;
+    seekTo: function(seconds) {
+      var video = videoElRef.current;
+      if (video && seconds && !isNaN(seconds)) {
+        var maxTime = video.duration;
+        if (maxTime && !isNaN(maxTime)) {
+          video.currentTime = Math.max(0, Math.min(seconds, maxTime));
+        }
+      }
     },
-    getCurrentTime: () => videoElRef?.current?.currentTime || 0,
-    getInternalPlayer: () => videoElRef?.current,
-    play: async () => {
-      const video = videoElRef?.current;
+    getCurrentTime: function() {
+      var video = videoElRef.current;
+      if (video) return video.currentTime || 0;
+      return 0;
+    },
+    getInternalPlayer: function() { return videoElRef.current; },
+    play: async function() {
+      var video = videoElRef.current;
       if (video) return video.play();
       return Promise.reject();
     },
-    pause: () => {
-      const video = videoElRef?.current;
+    pause: function() {
+      var video = videoElRef.current;
       if (video) video.pause();
     },
   });
@@ -1619,8 +1628,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                     enableWorker: true,
                     lowLatencyMode: false,
                     startLevel: -1,
-                    maxBufferHole: 1,
-                    nudgeMaxRetry: 10,
+                    // Mayor tolerance para holes en buffer (Firefox)
+                    maxBufferHole: 2,
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 120,
+                    nudgeMaxRetry: 15,
                     startFragPrefetch: true,
                     xhrSetup: sessionToken
                       ? (xhr, url) => {
@@ -1645,6 +1657,18 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   // Event: ERROR
                   hls.on(Hls.Events.ERROR, (evt, data) => {
                     console.error("[HLS] Error:", data.type, data.details);
+                    
+                    // Manejar rate limit (429) - esperar y reintentar
+                    if (data.details === 'manifestLoadError' || data.code === 429) {
+                      console.log("[HLS] Rate limit detectado, reintentando en 10s...");
+                      setTimeout(() => {
+                        if (hlsRef.current === hls) {
+                          hls.startLoad();
+                        }
+                      }, 10000);
+                      return;
+                    }
+                    
                     if (data.fatal) {
                       if (data.type === 'mediaError') hls.recoverMediaError();
                       else if (data.type === 'networkError') hls.startLoad();
@@ -1699,18 +1723,38 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               videoReadyRef.current = true;
               bufferingRef.current = false;
               setLoading(false);
+              
+              // Set duration from video element
+              const video = videoElRef.current;
+              if (video && isFinite(video.duration)) {
+                setDuration(video.duration);
+              }
+              
               if (hlsRef.current) {
                 setHlsLevels(hlsRef.current.levels || []);
               }
             }}
             onTimeUpdate={() => {
-              if (duration > 0) {
-                setPlayed(currentTime / duration);
-              }
-              if (videoElRef.current) {
-                const buffered = videoElRef.current.buffered;
+              const video = videoElRef.current;
+              if (!video) return;
+              
+              const currentTime = video.currentTime;
+              const videoDuration = video.duration;
+              
+              // Solo actualizar si duration es válida
+              if (isFinite(videoDuration)) {
+                setDuration(videoDuration);
+                
+                // Update played progress
+                if (videoDuration > 0 && isFinite(currentTime)) {
+                  setPlayed(currentTime / videoDuration);
+                }
+                
+                // Update loaded progress
+                const buffered = video.buffered;
                 if (buffered.length > 0) {
-                  setLoaded(buffered.end(buffered.length - 1) / duration);
+                  const loadedEnd = buffered.end(buffered.length - 1);
+                  setLoaded(loadedEnd / videoDuration);
                 }
               }
             }}
