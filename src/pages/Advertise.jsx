@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../utils/LanguageContext";
-import VideoCameraOutlinedIcon from "@mui/icons-material/VideoCameraOutlined";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import CampaignOutlinedIcon from "@mui/icons-material/CampaignOutlined";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -537,7 +537,7 @@ const Advertise = () => {
 
         <FeatureCard>
           <FeatureIcon>
-            <VideoCameraOutlinedIcon />
+            <PlayCircleOutlineIcon />
           </FeatureIcon>
           <FeatureTitle>Medible</FeatureTitle>
           <FeatureDesc>

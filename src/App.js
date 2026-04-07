@@ -28,6 +28,7 @@ import { HistoryPage } from "./pages/History";
 import { PlaylistDetailPage } from "./pages/PlaylistDetail";
 import { PlaylistPlayerPage } from "./pages/PlaylistPlayer";
 import { SharedPlaylistRedirect } from "./pages/SharedPlaylistRedirect";
+import Advertise from "./pages/Advertise";
 import SEOHead from "./components/seo/SEOHead";
 
 
