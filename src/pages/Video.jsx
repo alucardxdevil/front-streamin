@@ -56,11 +56,9 @@ const ContainerO = styled.main`
     grid-template-columns: 1fr;
     padding: 12px;
     margin-top: 60px;
-    /* Usar clip en lugar de hidden para no crear un scroll container
-       que rompería el position: sticky del reproductor.
-       overflow-x: hidden como fallback para Firefox < 81 */
     overflow-x: hidden;
     overflow-x: clip;
+    display: block;
   }
 `;
 
@@ -85,7 +83,6 @@ const Side = styled.div`
   }
 
   @media (max-width: 768px) {
-    order: 3;
     position: relative;
     max-height: none;
     overflow: visible;

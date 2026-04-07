@@ -292,6 +292,10 @@ const translations = {
     termsFooter: "© 2025 stream-in. Todos los derechos reservados. Si tienes dudas sobre estos términos, no dudes en",
     contactUsLink: "contactarnos",
 
+    // Advertise
+    advertise: "Anúnciate con nosotros",
+    advertiseTitle: "Publicidad en stream-in",
+
     // Terms Page Sections
     acceptanceOfTerms: "Aceptación de los Términos",
     siteUsage: "Uso del Sitio",

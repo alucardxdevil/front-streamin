@@ -73,7 +73,7 @@ const VideoWrapper = styled.div`
     top: 60px; /* Altura del navbar */
     left: 0;
     right: 0;
-    z-index: 100;
+    z-index: 50;
   }
 `;
 

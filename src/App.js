@@ -111,6 +111,7 @@ function App() {
                     <Route path="us" element={<Us />} />
                     <Route path="terms" element={<Terms />} />
                     <Route path="help" element={<Help />} />
+                    <Route path="advertise" element={<Advertise />} />
                     <Route path="settings" element={<Settings themeMode={themeMode} setThemeMode={setThemeMode} />} />
                     <Route path="profileUser" >
                       <Route path=":slug" element={<ProfileUser />} />

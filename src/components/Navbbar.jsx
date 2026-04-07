@@ -201,6 +201,7 @@ function Navbbar() {
         </NavMenuItems>
 
         <BottomLinks>
+          <BottomLink onClick={() => { closeSidebar(); navigate("/advertise"); }}>{t("advertise")}</BottomLink>
           <BottomLink onClick={() => { closeSidebar(); navigate("/terms"); }}>{t("terms")}</BottomLink>
           <BottomLink onClick={() => { closeSidebar(); navigate("/help"); }}>{t("help")}</BottomLink>
           <BottomLink onClick={() => { closeSidebar(); navigate("/us"); }}>{t("us")}</BottomLink>
