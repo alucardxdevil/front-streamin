@@ -1080,11 +1080,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   }, []);
 
   const handleTimelineMouseDown = useCallback((e) => {
+    if (!duration || duration <= 0) return;
+    
     setSeeking(true);
     const time = getTimeFromEvent(e);
     const fraction = time / duration;
     setPlayed(fraction);
-    playerRef.current?.seekTo(fraction);
+    playerRef.current?.seekTo(fraction * duration);
 
     if (videoEnded && fraction < 0.999) {
       setVideoEnded(false);
@@ -1101,7 +1103,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
       const t = getTimeFromEvent(ev);
       const f = t / duration;
       setPlayed(f);
-      playerRef.current?.seekTo(f);
+      playerRef.current?.seekTo(f * duration);
       setSeeking(false);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", onUp);
@@ -1305,13 +1307,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         case "arrowleft":
           e.preventDefault();
           playerRef.current?.seekTo(
-            Math.max(0, (playerRef.current?.getCurrentTime() || 0) - 10) / duration
+            Math.max(0, (playerRef.current?.getCurrentTime() || 0) - 10)
           );
           break;
         case "arrowright":
           e.preventDefault();
           playerRef.current?.seekTo(
-            Math.min(duration, (playerRef.current?.getCurrentTime() || 0) + 10) / duration
+            Math.min(duration || 0, (playerRef.current?.getCurrentTime() || 0) + 10)
           );
           break;
         case "arrowup":
@@ -1347,13 +1349,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         case "j":
           e.preventDefault();
           playerRef.current?.seekTo(
-            Math.max(0, (playerRef.current?.getCurrentTime() || 0) - 10) / duration
+            Math.max(0, (playerRef.current?.getCurrentTime() || 0) - 10)
           );
           break;
         case "l":
           e.preventDefault();
           playerRef.current?.seekTo(
-            Math.min(duration, (playerRef.current?.getCurrentTime() || 0) + 10) / duration
+            Math.min(duration || 0, (playerRef.current?.getCurrentTime() || 0) + 10)
           );
           break;
         default:
@@ -1628,8 +1630,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                     enableWorker: true,
                     lowLatencyMode: false,
                     startLevel: -1,
-                    // Mayor tolerance para holes en buffer (Firefox)
-                    maxBufferHole: 2,
+                    // Disable gap detection para evitar errores bufferSeekOverHole
+                    maxBufferHole: Infinity,
                     maxBufferLength: 30,
                     maxMaxBufferLength: 120,
                     nudgeMaxRetry: 15,
@@ -1931,7 +1933,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               onClick={(e) => {
                 e.stopPropagation();
                 const ct = playerRef.current?.getCurrentTime() || 0;
-                playerRef.current?.seekTo(Math.min(duration, ct + 10));
+                playerRef.current?.seekTo(Math.min(duration || 0, ct + 10));
               }}
             >
               <Forward10Icon />
@@ -1999,7 +2001,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 <ControlBtn
                   onClick={() => {
                     const ct = playerRef.current?.getCurrentTime() || 0;
-                    playerRef.current?.seekTo(Math.min(duration, ct + 10));
+                    playerRef.current?.seekTo(Math.min(duration || 0, ct + 10));
                   }}
                   title={`${t("forward10")} (L)`}
                   style={{
