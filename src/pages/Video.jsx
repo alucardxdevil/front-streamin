@@ -55,12 +55,9 @@ const ContainerO = styled.main`
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     padding: 12px;
-    margin-top: 0;
+    margin-top: 60px;
     overflow-x: hidden;
     overflow-x: clip;
-    display: block;
-    /* Add padding-top equal to fixed video height (56.25vw = 16:9 aspect ratio) to push content down */
-    padding-top: calc(56.25vw + 60px);
   }
 `;
 
@@ -85,10 +82,10 @@ const Side = styled.div`
   }
 
   @media (max-width: 768px) {
-    position: relative;
+    order: 3;
+    position: static;
     max-height: none;
     overflow: visible;
-    z-index: 10;
   }
 `;
 
@@ -111,14 +108,9 @@ const VideoWrapper = styled.div`
      para que el contenido no quede debajo del reproductor fijo.
      La altura es 56.25vw (relación 16:9 del ancho completo). ── */
   @media (max-width: 768px) {
-    position: fixed;
-    top: 60px;
-    left: 0;
-    width: 100%;
     height: 56.25vw;
     border-radius: 0;
     margin-bottom: 0;
-    z-index: 50;
   }
 `;
 
