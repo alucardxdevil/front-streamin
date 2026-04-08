@@ -17,7 +17,7 @@ const Overlay = styled.div`
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1;
+  z-index: 1100;
 `;
 
 const ImgLogo = styled.img`
@@ -78,7 +78,7 @@ const NavMenu = styled.nav`
   top: 0;
   left: ${({ sidebar }) => (sidebar ? "0" : "-100%")};
   transition: 0.4s ease-in-out;
-  z-index: 100;
+  z-index: 1200;
   background-color: ${({ theme }) => theme.navBg || "#111"};
   box-shadow: 4px 0 10px rgba(0, 0, 0, 0.4);
   display: flex;
