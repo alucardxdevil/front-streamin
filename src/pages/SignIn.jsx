@@ -464,9 +464,16 @@ const SignIn = () => {
       setForgotSent(true);
       setForgotEmail(normalizedEmail);
     } catch (err) {
-      const message =
-        err?.response?.data?.message || "Could not send recovery email.";
-      setForgotError(message);
+      const data = err?.response?.data;
+      const message = data?.message || "Could not send recovery email.";
+      const details =
+        typeof data?.details === "string"
+          ? data.details
+          : data?.details
+          ? JSON.stringify(data.details)
+          : "";
+      const status = data?.status ? ` (status ${data.status})` : "";
+      setForgotError(`${message}${status}${details ? ` — ${details}` : ""}`);
     } finally {
       setForgotLoading(false);
     }
