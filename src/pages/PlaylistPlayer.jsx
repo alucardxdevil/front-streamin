@@ -1117,7 +1117,7 @@ export const PlaylistPlayerPage = () => {
                   {/* Owner-only: Remove button for deleted videos (not on favorites) */}
                   {canEdit && deleted && (
                     <ItemActions>
-                      <RemoveButton
+                      {/* <RemoveButton
                         onClick={(e) => {
                           e.stopPropagation();
                           handleRemoveVideo(videoItem);
@@ -1130,7 +1130,7 @@ export const PlaylistPlayerPage = () => {
                         {removing === videoItem._id
                           ? "..."
                           : t("remove")}
-                      </RemoveButton>
+                      </RemoveButton> */ }
                     </ItemActions>
                   )}
 

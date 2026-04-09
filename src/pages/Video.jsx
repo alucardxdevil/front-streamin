@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, lazy, Suspense } from "react";
 import styled, { css, keyframes } from "styled-components";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 import { BiLike, BiDislike } from "react-icons/bi";
-import Comments from "../components/Comments";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { dislike, fetchSuccess, like } from "../redux/videoSlice";
@@ -10,16 +9,18 @@ import { follows } from "../redux/userSlice";
 import { formatTimeago } from "../utils/timeago";
 import { useLanguage } from "../utils/LanguageContext";
 import axios from "axios";
-import { Recommendation } from "../components/Recommendation";
-import { RecommendationRandom } from "../components/RecommendationRandom";
-import { DescriptionMore } from "../components/DescriptionMore";
 import VideoReproducer2 from "../components/Reproducer/VideoReproducer2";
-import ShareModal from "../components/ModalShare";
-import ClassificationInfo from "../components/ClasificationInfo";
 import defaultProfile from "../img/profileUser.png";
 import LoginRequired from "../components/ModalLogin";
 import { RiPlayList2Fill } from "react-icons/ri";
-import SEOVideoWrapper from "../components/seo/SEOVideoWrapper";
+ 
+const Comments = lazy(() => import("../components/Comments"));
+const Recommendation = lazy(() => import("../components/Recommendation").then((m) => ({ default: m.Recommendation })));
+const RecommendationRandom = lazy(() => import("../components/RecommendationRandom").then((m) => ({ default: m.RecommendationRandom })));
+const DescriptionMore = lazy(() => import("../components/DescriptionMore").then((m) => ({ default: m.DescriptionMore })));
+const ShareModal = lazy(() => import("../components/ModalShare"));
+const ClassificationInfo = lazy(() => import("../components/ClasificationInfo"));
+const SEOVideoWrapper = lazy(() => import("../components/seo/SEOVideoWrapper"));
 
 
 /* ================= ANIMATIONS ================= */
@@ -518,7 +519,8 @@ const Video = () => {
   const [channel, setChannel] = useState({});
   const [currentPlayingVideoId, setCurrentPlayingVideoId] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loadingVideo, setLoadingVideo] = useState(true);
+  const [nonCriticalReady, setNonCriticalReady] = useState(false);
   const [nextVideoId, setNextVideoId] = useState(null);
   
   // Playlist modal state
@@ -536,17 +538,31 @@ const Video = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      setLoadingVideo(true);
+      setNonCriticalReady(false);
       try {
         const videoRes = await axios.get(`/videos/find/${path}`);
-        const channelRes = await axios.get(`/users/find/${videoRes.data.userId}`);
-        setChannel(channelRes.data);
         dispatch(fetchSuccess(videoRes.data));
         setCurrentPlayingVideoId(videoRes.data._id);
+
+        // Cargar el canal en segundo plano (no debe bloquear el arranque del player)
+        axios
+          .get(`/users/find/${videoRes.data.userId}`)
+          .then((channelRes) => setChannel(channelRes.data))
+          .catch((err) => console.error("Error cargando canal:", err));
+
+        // Defer del contenido no-crítico para priorizar el reproductor.
+        // requestIdleCallback no existe en todos los navegadores, por eso el fallback.
+        const ric = window.requestIdleCallback;
+        if (typeof ric === "function") {
+          ric(() => setNonCriticalReady(true), { timeout: 1200 });
+        } else {
+          setTimeout(() => setNonCriticalReady(true), 250);
+        }
       } catch (err) {
         console.error("Error cargando video:", err);
       } finally {
-        setLoading(false);
+        setLoadingVideo(false);
       }
     };
     fetchData();
@@ -702,28 +718,38 @@ const Video = () => {
 
   return (
     <ContainerO>
-      {/* SEO: metadatos dinámicos, Open Graph, Twitter Cards y JSON-LD */}
-      <SEOVideoWrapper video={currentVideo} channel={channel} />
+      {/* SEO: diferido para no bloquear el primer render del reproductor */}
+      {nonCriticalReady && (
+        <Suspense fallback={null}>
+          <SEOVideoWrapper video={currentVideo} channel={channel} />
+        </Suspense>
+      )}
 
       <Side>
-        <RecommendationRandom currentPlayingVideoId={currentPlayingVideoId} />
+        {nonCriticalReady && (
+          <Suspense fallback={null}>
+            <RecommendationRandom currentPlayingVideoId={currentPlayingVideoId} />
+          </Suspense>
+        )}
       </Side>
 
-      {loading ? (
-        <LoadingWrapper>
-          <Spinner />
-        </LoadingWrapper>
-      ) : (
-        currentVideo && (
-          <Content>
-            <VideoWrapper>
-              <VideoReproducer2
-                onVideoEnd={handleVideoEnd}
-                countdown={10}
-                onViewCounted={handleViewCounted}
-              />
-            </VideoWrapper>
+      <Content>
+        <VideoWrapper>
+          {loadingVideo && !currentVideo?._id ? (
+            <LoadingWrapper>
+              <Spinner />
+            </LoadingWrapper>
+          ) : (
+            <VideoReproducer2
+              onVideoEnd={handleVideoEnd}
+              countdown={10}
+              onViewCounted={handleViewCounted}
+            />
+          )}
+        </VideoWrapper>
 
+        {currentVideo && (
+          <>
             <DescriptionCard>
               <VideoTitle>{currentVideo.title}</VideoTitle>
               <Meta>
@@ -732,91 +758,108 @@ const Video = () => {
                 {currentVideo.views.toLocaleString()} {t("views")}
               </Meta>
             </DescriptionCard>
-            <InfoGrid>
-              {/* VIDEO INFO */}
-              <Card>
-                <Actions>
-                  <Action onClick={handleLike}>
-                    <BiLike
-                      size={26}
-                      color={
-                        currentVideo.likes.includes(currentUser?._id)
-                          ? "#0b67dc"
-                          : "white"
-                      }
+
+            {nonCriticalReady && (
+              <>
+                <InfoGrid>
+                  {/* VIDEO INFO */}
+                  <Card>
+                    <Actions>
+                      <Action onClick={handleLike}>
+                        <BiLike
+                          size={26}
+                          color={
+                            currentVideo.likes.includes(currentUser?._id)
+                              ? "#0b67dc"
+                              : "white"
+                          }
+                        />
+                        {currentVideo.likes.length}
+                      </Action>
+
+                      <Action onClick={handleDislike}>
+                        <BiDislike
+                          size={26}
+                          color={
+                            currentVideo.dislikes.includes(currentUser?._id)
+                              ? "#e94560"
+                              : "white"
+                          }
+                        />
+                        {currentVideo.dislikes.length}
+                      </Action>
+
+                      <Suspense fallback={null}>
+                        <ClassificationInfo />
+                      </Suspense>
+                      <Suspense fallback={null}>
+                        <ShareModal videoId={currentVideo._id} />
+                      </Suspense>
+
+                      <Action onClick={openPlaylistModal}>
+                        <RiPlayList2Fill /> {t("save")}
+                      </Action>
+                    </Actions>
+                  </Card>
+
+                  {/* CREATOR */}
+                  <Card>
+                    <CreatorRow>
+                      <Link to={`/profileUser/${channel.slug || channel._id}`}>
+                        <Avatar
+                          src={channel.img || defaultProfile}
+                          alt={`Foto de perfil de ${channel.name}`}
+                        />
+                      </Link>
+
+                      <CreatorInfo>
+                        <strong>{channel.name}</strong>
+                        <div style={{ fontSize: 12, color: "#aaa" }}>
+                          {channel.follows} {t("followers")}
+                        </div>
+                      </CreatorInfo>
+
+                      <FollowBtn
+                        following={currentUser?.followsProfile.includes(
+                          channel._id,
+                        )}
+                        onClick={handleSub}
+                      >
+                        {currentUser?.followsProfile.includes(channel._id)
+                          ? t("following")
+                          : t("follow")}
+                      </FollowBtn>
+                    </CreatorRow>
+                  </Card>
+                </InfoGrid>
+
+                <DescriptionCard>
+                  <Suspense fallback={null}>
+                    <DescriptionMore
+                      initialContent={currentVideo.description}
+                      fullContent={currentVideo.description}
                     />
-                    {currentVideo.likes.length}
-                  </Action>
+                  </Suspense>
+                </DescriptionCard>
 
-                  <Action onClick={handleDislike}>
-                    <BiDislike
-                      size={26}
-                      color={
-                        currentVideo.dislikes.includes(currentUser?._id)
-                          ? "#e94560"
-                          : "white"
-                      }
-                    />
-                    {currentVideo.dislikes.length}
-                  </Action>
-
-                  <ClassificationInfo />
-                  <ShareModal videoId={currentVideo._id} />
-
-                  <Action onClick={openPlaylistModal}>
-                    <RiPlayList2Fill /> {t("save")}
-                  </Action>
-                </Actions>
-              </Card>
-
-              {/* CREATOR */}
-              <Card>
-                <CreatorRow>
-                  <Link to={`/profileUser/${channel.slug || channel._id}`}>
-                    <Avatar
-                      src={channel.img || defaultProfile}
-                      alt={`Foto de perfil de ${channel.name}`}
-                    />
-                  </Link>
-
-                  <CreatorInfo>
-                    <strong>{channel.name}</strong>
-                    <div style={{ fontSize: 12, color: "#aaa" }}>
-                      {channel.follows} {t("followers")}
-                    </div>
-                  </CreatorInfo>
-
-                  <FollowBtn
-                    following={currentUser?.followsProfile.includes(
-                      channel._id,
-                    )}
-                    onClick={handleSub}
-                  >
-                    {currentUser?.followsProfile.includes(channel._id)
-                      ? t("following")
-                      : t("follow")}
-                  </FollowBtn>
-                </CreatorRow>
-              </Card>
-            </InfoGrid>
-
-            <DescriptionCard>
-              <DescriptionMore
-                initialContent={currentVideo.description}
-                fullContent={currentVideo.description}
-              />
-            </DescriptionCard>
-
-            <Comments videoId={currentVideo._id} />
-          </Content>
-        )
-      )}
+                <Suspense fallback={null}>
+                  <Comments videoId={currentVideo._id} />
+                </Suspense>
+              </>
+            )}
+          </>
+        )}
+      </Content>
 
       <Side>
-        <Recommendation
-          tags={currentVideo?.tags}
-          currentPlayingVideoId={currentPlayingVideoId}
-        />
+        {nonCriticalReady && (
+          <Suspense fallback={null}>
+            <Recommendation
+              tags={currentVideo?.tags}
+              currentPlayingVideoId={currentPlayingVideoId}
+            />
+          </Suspense>
+        )}
       </Side>
 
       <LoginRequired open={showLoginModal} onClose={closeLoginModal} />
