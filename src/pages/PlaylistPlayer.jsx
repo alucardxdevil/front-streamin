@@ -1116,7 +1116,7 @@ export const PlaylistPlayerPage = () => {
 
                   {/* Owner-only: Remove button for deleted videos (not on favorites) */}
                   {canEdit && deleted && (
-                    <ItemActions>
+                    <ItemActions> {/* TODO: Remove this button */}
                       {/* <RemoveButton
                         onClick={(e) => {
                           e.stopPropagation();
