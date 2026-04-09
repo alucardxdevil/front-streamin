@@ -95,6 +95,8 @@ const Navbar = styled.div`
   display: flex;
   align-items: center;
   padding: 0 16px;
+  position: relative;
+  z-index: 1050;
 `;
 
 const NavbarToggle = styled.div`

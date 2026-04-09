@@ -81,6 +81,7 @@ const VALID_ROUTE_PATTERNS = [
   /^\/us$/,                                  // Nosotros
   /^\/terms$/,                               // Términos
   /^\/help$/,                                // Ayuda
+  /^\/advertise$/,                           // Anunciate
   /^\/settings$/,                            // Configuración
   /^\/profileUser\/[^/]+$/,                  // Perfil de usuario
   /^\/video\/[a-f0-9]{24}$/i,               // Video (MongoDB ObjectId)
