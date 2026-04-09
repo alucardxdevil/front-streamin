@@ -24,6 +24,14 @@ const SESSION_ENDPOINT = getSessionUrl()
 // Tiempo de anticipación para renovar el token (5 minutos antes de expirar)
 const RENEW_BEFORE_SECONDS = 300
 
+// ── Cache global en memoria ────────────────────────────────────────────────
+// Evita pedir un token nuevo en cada mount del reproductor (p. ej. al navegar
+// entre videos). Esto reduce el TTFB percibido porque el stream URL depende
+// de `sessionToken`.
+let cachedToken = null
+let cachedRenewTimer = null
+let cachedSessionReady = false
+
 /**
  * Hook para gestionar el token de sesión anónimo.
  *
@@ -37,8 +45,8 @@ const RENEW_BEFORE_SECONDS = 300
  */
 const useStreamSession = () => {
   // Token almacenado en memoria (no en localStorage)
-  const [sessionToken, setSessionToken] = useState(null)
-  const [sessionReady, setSessionReady] = useState(false)
+  const [sessionToken, setSessionToken] = useState(cachedToken)
+  const [sessionReady, setSessionReady] = useState(cachedSessionReady && !!cachedToken)
   const [sessionError, setSessionError] = useState(null)
 
   // Ref para el timer de renovación automática
@@ -51,6 +59,13 @@ const useStreamSession = () => {
    */
   const fetchSessionToken = useCallback(async () => {
     if (isFetchingRef.current) return
+    // Si ya tenemos token cacheado, úsalo sin hacer request.
+    if (cachedToken) {
+      setSessionToken(cachedToken)
+      setSessionReady(true)
+      setSessionError(null)
+      return
+    }
     isFetchingRef.current = true
 
     try {
@@ -66,32 +81,43 @@ const useStreamSession = () => {
         setSessionReady(true)
         setSessionError(null)
 
+        // Cache global
+        cachedToken = token
+        cachedSessionReady = true
+
         // Programar renovación automática
         const renewInSeconds = renewBefore || (expiresIn - RENEW_BEFORE_SECONDS)
         const renewInMs = Math.max(renewInSeconds * 1000, 60000) // Mínimo 1 minuto
 
-        if (renewTimerRef.current) {
-          clearTimeout(renewTimerRef.current)
-        }
+        // Limpiar timers previos (local y global)
+        if (renewTimerRef.current) clearTimeout(renewTimerRef.current)
+        if (cachedRenewTimer) clearTimeout(cachedRenewTimer)
 
-        renewTimerRef.current = setTimeout(() => {
+        const renewFn = () => {
+          // Permitir que se refresque cuando toque
+          cachedToken = null
+          cachedSessionReady = false
           isFetchingRef.current = false
           fetchSessionToken()
-        }, renewInMs)
+        }
+
+        renewTimerRef.current = setTimeout(renewFn, renewInMs)
+        cachedRenewTimer = renewTimerRef.current
       }
     } catch (err) {
       console.error('[useStreamSession] Error al obtener token de sesión:', err.message)
       setSessionError('No se pudo iniciar la sesión de reproducción')
       setSessionReady(false)
+      cachedSessionReady = false
 
       // Reintentar después de 30 segundos en caso de error
-      if (renewTimerRef.current) {
-        clearTimeout(renewTimerRef.current)
-      }
+      if (renewTimerRef.current) clearTimeout(renewTimerRef.current)
+      if (cachedRenewTimer) clearTimeout(cachedRenewTimer)
       renewTimerRef.current = setTimeout(() => {
         isFetchingRef.current = false
         fetchSessionToken()
       }, 30000)
+      cachedRenewTimer = renewTimerRef.current
     } finally {
       isFetchingRef.current = false
     }

@@ -571,6 +571,9 @@ const translations = {
     add: "Agregar",
     noSocialNetworks: "No hay redes sociales agregadas",
     closeSession: "Cerrar sesión",
+    deleteAccount: "Eliminar cuenta",
+    deleteAccountDesc: "Esta acción eliminará tu cuenta permanentemente y no se puede deshacer.",
+    deletingAccount: "Eliminando cuenta...",
     following: "Siguiendo",
 
     // Player Controls
@@ -1233,6 +1236,9 @@ const translations = {
     videos: "Videos",
     editProfile: "Edit Profile",
     noVideos: "No videos yet.",
+    deleteAccount: "Delete account",
+    deleteAccountDesc: "This will permanently delete your account and cannot be undone.",
+    deletingAccount: "Deleting account...",
 
     // Search
     searchResults: "Search results",

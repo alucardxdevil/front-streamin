@@ -1631,14 +1631,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   const hlsOptions = {
                     enableWorker: true,
                     lowLatencyMode: false,
-                    // startLevel: -1 = ABR automático
-                    // Por defecto usa ABR (startLevel: -1) que ajusta dinámicamente
-                    // based en ancho de banda detectado
+                    // ABR automático, pero arrancaremos en 360/480 al parsear el manifest.
                     startLevel: -1,
-                    // Estimación inicial de ancho de banda: 1.5Mbps
-                    // Permite iniciar en ~480p en conexiones buenas
-                    // Si la conexión es lenta, ABR bajará automáticamente a 360p/240p
-                    abrEwmaDefaultEstimate: 1500000,
+                    // Estimación inicial más conservadora para evitar 720p/1080p al inicio.
+                    // ABR igual podrá subir después si la conexión lo permite.
+                    abrEwmaDefaultEstimate: 800000,
                     // Disable gap detection
                     maxBufferHole: 86400,
                     maxBufferLength: 30,
@@ -1651,11 +1648,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                     levelLoadingMaxRetry: 5,
                     fragLoadingRetryDelay: 1000,
                     manifestLoadingRetryDelay: 1000,
-                    // Forzar calidades más bajas disponibles
-                    // minAutoLevel: 3 = permite bajar hasta 360p
-                    // maxAutoLevel: 0 = permite hasta 1080p
-                    minAutoLevel: 3,
-                    maxAutoLevel: 0,
                     xhrSetup: sessionToken
                       ? (xhr, url) => {
                           if (url && !url.includes('_st=')) {
@@ -1674,6 +1666,39 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                     // Forzar seek a 0
                     videoEl.currentTime = 0;
                     setHlsLevels(hls.levels || []);
+
+                    // ── Prioridad de calidad al inicio ──────────────────────────
+                    // Por default: intentar 480p, si no existe 360p, si no 240p,
+                    // si no, la más baja disponible. Además, capear ABR a 480p
+                    // al inicio para evitar 720/1080 en usuarios promedio.
+                    const levels = hls.levels || [];
+                    if (levels.length > 0) {
+                      const byHeightAsc = levels
+                        .map((lvl, idx) => ({ ...lvl, idx }))
+                        .filter((x) => x && x.height)
+                        .sort((a, b) => (a.height || 0) - (b.height || 0));
+
+                      const pick = (target) => {
+                        // Elegir el nivel cuya height sea <= target y lo más cercana a target
+                        const candidates = byHeightAsc.filter((l) => (l.height || 0) <= target);
+                        if (candidates.length === 0) return null;
+                        return candidates[candidates.length - 1];
+                      };
+
+                      const chosen =
+                        pick(480) ||
+                        pick(360) ||
+                        pick(240) ||
+                        (byHeightAsc.length > 0 ? byHeightAsc[0] : null);
+
+                      if (chosen && typeof chosen.idx === "number") {
+                        // Cap máximo a 480 (o a lo elegido si no hay 480).
+                        // ABR puede bajar a 240 si hay buffer/throughput bajo.
+                        hls.autoLevelCapping = chosen.height >= 480 ? chosen.idx : chosen.idx;
+                        hls.currentLevel = chosen.idx;
+                        setCurrentPlayingQuality(`${chosen.height || ""}p`);
+                      }
+                    }
                   });
 
                   // Event: ERROR - solo loguear errores fatales, ignorar warnings de buffer

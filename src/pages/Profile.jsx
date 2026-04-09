@@ -439,6 +439,130 @@ const LogoutButton = styled.button`
   }
 `;
 
+const DangerZone = styled.div`
+  width: 85%;
+  margin: 18px auto 0;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(231, 76, 60, 0.08);
+  border: 1px solid rgba(231, 76, 60, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  @media (max-width: 480px) {
+    width: 100%;
+  }
+`;
+
+const DangerTitle = styled.h3`
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.text || "#fff"};
+`;
+
+const DangerText = styled.p`
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: ${({ theme }) => theme.textSoft || "#bbb"};
+`;
+
+const DeleteAccountButton = styled.button`
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #e74c3c;
+  background: transparent;
+  color: #e74c3c;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+
+  &:hover {
+    background: rgba(231, 76, 60, 0.12);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+`;
+
+const Backdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+`;
+
+const ModalBox = styled.div`
+  background: ${({ theme }) => theme.bgLighter || "#111"};
+  color: ${({ theme }) => theme.text || "#fff"};
+  padding: 24px;
+  border-radius: 12px;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  text-align: center;
+  box-shadow: 0px 12px 28px rgba(0, 0, 0, 0.5);
+`;
+
+const ModalTitle = styled.h3`
+  margin: 0 0 10px 0;
+`;
+
+const ModalText = styled.p`
+  margin: 0 0 18px 0;
+  font-size: 14px;
+  color: ${({ theme }) => theme.textSoft || "#ccc"};
+  line-height: 1.45;
+`;
+
+const ModalButtons = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+`;
+
+const ModalButton = styled.button`
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: transparent;
+  color: ${({ theme }) => theme.text || "#fff"};
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+`;
+
+const ModalDangerButton = styled(ModalButton)`
+  border-color: rgba(231, 76, 60, 0.65);
+  color: #e74c3c;
+
+  &:hover {
+    background: rgba(231, 76, 60, 0.12);
+  }
+`;
+
 const EmptySocialText = styled.p`
   color: ${({ theme }) => theme.textSoft || "#aaa"};
   font-size: 14px;
@@ -452,6 +576,9 @@ export const Profile = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [deleteAccountError, setDeleteAccountError] = useState("");
   const [totalViews, setTotalViews] = useState(0);
   const [videoCount, setVideoCount] = useState(0);
   const [editingSocial, setEditingSocial] = useState(false);
@@ -502,11 +629,34 @@ export const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await axios.post("/auth/logout");
-      dispatch(logout(res.data));
+      await axios.post("/auth/logout");
+      dispatch(logout());
       navigate("/");
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!currentUser?._id) return;
+    setDeleteAccountError("");
+    setIsDeletingAccount(true);
+
+    try {
+      await axios.delete(`/users/${currentUser._id}`);
+      try {
+        await axios.post("/auth/logout");
+      } catch (e) {
+        // ignore logout failure after account deletion
+      }
+      dispatch(logout());
+      setShowDeleteModal(false);
+      navigate("/");
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      setDeleteAccountError(error?.response?.data?.message || "Error");
+    } finally {
+      setIsDeletingAccount(false);
     }
   };
 
@@ -680,11 +830,46 @@ export const Profile = () => {
             )}
           </SocialLinksContainer>
 
+          <DangerZone>
+            <DangerTitle>{t("deleteAccount")}</DangerTitle>
+            <DangerText>{t("deleteAccountDesc")}</DangerText>
+            <DeleteAccountButton onClick={() => setShowDeleteModal(true)} disabled={isDeletingAccount}>
+              {t("deleteAccount")}
+            </DeleteAccountButton>
+          </DangerZone>
+
           <LogoutButton onClick={handleLogout}>{t("closeSession")}</LogoutButton>
         </ContentContainer>
       </Container>
 
       {open && <UploadProfile setOpen={setOpen} />}
+
+      {showDeleteModal && (
+        <Backdrop onClick={() => (isDeletingAccount ? null : setShowDeleteModal(false))}>
+          <ModalBox onClick={(e) => e.stopPropagation()}>
+            <ModalTitle>{t("deleteConfirm")}</ModalTitle>
+            <ModalText>
+              {t("deleteConfirmDesc")}
+              <br />
+              <br />
+              {t("deleteAccountDesc")}
+            </ModalText>
+
+            {deleteAccountError ? (
+              <ModalText style={{ color: "#e74c3c", marginTop: "-6px" }}>{deleteAccountError}</ModalText>
+            ) : null}
+
+            <ModalButtons>
+              <ModalButton onClick={() => setShowDeleteModal(false)} disabled={isDeletingAccount}>
+                {t("cancel")}
+              </ModalButton>
+              <ModalDangerButton onClick={handleDeleteAccount} disabled={isDeletingAccount}>
+                {isDeletingAccount ? t("deletingAccount") : t("delete")}
+              </ModalDangerButton>
+            </ModalButtons>
+          </ModalBox>
+        </Backdrop>
+      )}
     </>
   );
 };

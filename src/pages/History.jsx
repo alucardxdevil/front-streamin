@@ -696,9 +696,13 @@ export const HistoryPage = () => {
   const fetchPlaylists = async () => {
     try {
       const response = await axios.get(`/users/playlists/${userId}`);
-      // Filtrar playlist de favoritos (solo se actualiza al dar like a un video)
+      // Filtrar playlist de favoritos (hay una página dedicada y se evita duplicación)
+      const normalizeName = (name) => (name || "").trim().toLowerCase();
+      const favoritesNames = new Set(
+        ["Favorites", "Mis videos favoritos", "My favorites videos"].map(normalizeName)
+      );
       const filteredPlaylists = response.data.playlists.filter(
-        playlist => playlist.name !== "Favorites" && playlist.name !== "Mis videos favoritos"
+        (playlist) => !favoritesNames.has(normalizeName(playlist?.name))
       );
       setPlaylists(filteredPlaylists);
     } catch (error) {
@@ -741,6 +745,17 @@ export const HistoryPage = () => {
       setModalData({ name: '', description: '', videoId: null });
     } catch (error) {
       console.error("¡Error creando playlist!", error);
+    }
+  };
+
+  const handleDeletePlaylist = async (playlistId) => {
+    const ok = window.confirm("¿Eliminar esta playlist?");
+    if (!ok) return;
+    try {
+      await axios.delete(`/users/playlists/${userId}/${playlistId}`);
+      fetchPlaylists();
+    } catch (error) {
+      console.error("¡Error eliminando playlist!", error);
     }
   };
 
@@ -926,6 +941,12 @@ export const HistoryPage = () => {
                         <BiPlayCircle />
                         {t("view")}
                       </Button>
+                      <ButtonOne
+                        onClick={() => handleDeletePlaylist(playlist._id)}
+                      >
+                        <BiTrash />
+                        {t("delete")}
+                      </ButtonOne>
                     </PlaylistActions>
                   </PlaylistItem>
                 ))

@@ -953,7 +953,7 @@ export const PlaylistPlayerPage = () => {
       <PlayerContainer>
         {/* ====== Main Video Area ====== */}
         <MainPlayer role="region" aria-label={t("videoPlayer")}>
-          {isCurrentDeleted ? (
+          {/* TODO: Remove this video player  {isCurrentDeleted ? (
             <DeletedVideoPlayer role="alert">
               <MdDeleteForever aria-hidden="true" />
               <h3>{t("videoDeletedTitle")}</h3>
@@ -964,10 +964,10 @@ export const PlaylistPlayerPage = () => {
                   <BiSkipNext />
                 </NavButton>
               )}
-            </DeletedVideoPlayer>
-          ) : (
+            </DeletedVideoPlayer> */}
+          {/* ) : (
             <VideoReproducer onVideoEnd={handleVideoEnd} />
-          )}
+          )} */}
 
           <VideoInfoSection>
             <VideoTitle>

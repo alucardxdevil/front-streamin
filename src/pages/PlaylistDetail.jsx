@@ -480,14 +480,25 @@ export const PlaylistDetailPage = () => {
   const handleRemoveVideo = async (videoItem) => {
     if (!canEdit) return;
     try {
-      // For deleted videos, get the raw videoId from the playlist entry
-      const rawResponse = await axios.get(`/users/playlists/${userId}/${playlistId}`);
-      const rawPlaylist = rawResponse.data;
-      const rawItem = rawPlaylist.videos?.find((v) => v._id === videoItem._id);
-      const rawVideoId = rawItem?.videoId?._id || rawItem?.videoId;
+      // If the referenced video was deleted, populate returns null and we can't rely on videoId.
+      // In that case, force-remove the playlist entry by its subdocument _id.
+      if (isVideoDeleted(videoItem)) {
+        await axios.delete(
+          `/users/playlists/${userId}/${playlistId}/item/${videoItem._id}`
+        );
+        fetchPlaylist();
+        return;
+      }
 
+      // Normal case: remove by videoId
+      const rawVideoId = videoItem?.videoId?._id || videoItem?.videoId;
       if (rawVideoId) {
         await axios.delete(`/users/playlists/${userId}/${playlistId}/${rawVideoId}`);
+      } else {
+        // Fallback: force-remove by playlist item id
+        await axios.delete(
+          `/users/playlists/${userId}/${playlistId}/item/${videoItem._id}`
+        );
       }
       fetchPlaylist();
     } catch (error) {
