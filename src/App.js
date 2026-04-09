@@ -15,6 +15,7 @@ import { ProfileUser } from "./pages/ProfileUser";
 import HomeOne from "./pages/HomeOne";
 import Following from "./pages/Following";
 import Register from "./pages/Register";
+import ResetPassword from "./pages/ResetPassword";
 import Us from "./pages/Us";
 import Terms from "./pages/Terms";
 import Help from "./pages/Help";
@@ -103,6 +104,7 @@ function App() {
                     <Route path="trend" element={<Trends />} />
                     <Route path="signin" element={<SignIn />} />
                     <Route path="register" element={<Register />} />
+                    <Route path="reset-password" element={<ResetPassword />} />
                     <Route path="profile" element={<Profile /> } />
                     <Route path="myvideos" element={<FilmLibrary type="filmlibrary" />} />
                     <Route path="videosProfile/:slug" element={<FilmLibrarySec type="second"/>}>

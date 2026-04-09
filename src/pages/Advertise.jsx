@@ -206,6 +206,20 @@ const PricingGrid = styled.div`
   }
 `;
 
+const PopularBadge = styled.span`
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #0b67dc 0%, #0b67dc 100%);
+  color: white;
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+`;
+
 const PricingCard = styled.div`
   background: ${({ theme }) => theme.bg};
   border-radius: 16px;
@@ -219,23 +233,11 @@ const PricingCard = styled.div`
     transform: translateY(-4px);
   }
 
-  ${({ popular }) => popular && `
+  ${({ popular }) =>
+    popular &&
+    `
     border-color: #0b67dc;
     background: linear-gradient(135deg, rgba(11, 103, 220, 0.1) 0%, transparent 100%);
-
-    &::before {
-      content: 'Más Popular';
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(135deg, #0b67dc 0%, #0b67dc 100%);
-      color: white;
-      padding: 4px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
   `}
 `;
 
@@ -448,153 +450,176 @@ const Advertise = () => {
       {/* Hero Section */}
       <HeroSection>
         <CampaignOutlinedIcon style={{ fontSize: 64, color: '#0b67dc', marginBottom: 16 }} />
-        <HeroTitle>Anuncia tu Negocio en Stream-In</HeroTitle>
-        <HeroSubtitle>
-          Llega a miles de espectadores potenciales con publicidad en video. 
-          Promociona tus productos, servicios o marca de manera efectiva y measurable.
-        </HeroSubtitle>
+        <HeroTitle>{t("advertisePageHeroTitle")}</HeroTitle>
+        <HeroSubtitle>{t("advertisePageHeroSubtitle")}</HeroSubtitle>
       </HeroSection>
 
       {/* Stats */}
       <StatsGrid>
         <StatCard>
           <StatNumber>50K+</StatNumber>
-          <StatLabel>Usuarios únicos</StatLabel>
+          <StatLabel>{t("advertiseStatUniqueUsers")}</StatLabel>
         </StatCard>
         <StatCard>
           <StatNumber>200K+</StatNumber>
-          <StatLabel>Vistas mensuales</StatLabel>
+          <StatLabel>{t("advertiseStatMonthlyViews")}</StatLabel>
         </StatCard>
         <StatCard>
           <StatNumber>85%</StatNumber>
-          <StatLabel>Tasa de retención</StatLabel>
+          <StatLabel>{t("advertiseStatRetentionRate")}</StatLabel>
         </StatCard>
         <StatCard>
           <StatNumber>24/7</StatNumber>
-          <StatLabel>Disponibilidad</StatLabel>
+          <StatLabel>{t("advertiseStatAvailability")}</StatLabel>
         </StatCard>
       </StatsGrid>
 
       {/* Beneficios */}
       <SectionTitle>
-        <TrendingUpIcon /> ¿Por qué publicidad en Stream-In?
+        <TrendingUpIcon /> {t("advertiseWhySectionTitle")}
       </SectionTitle>
       <SectionGrid>
         <FeatureCard>
           <FeatureIcon>
             <VisibilityIcon />
           </FeatureIcon>
-          <FeatureTitle>Gran Exposición</FeatureTitle>
-          <FeatureDesc>
-            Tu anuncio llega a una audiencia activa y comprometida. 
-            Todos los usuarios vienen a buscar contenido de entretenimiento.
-          </FeatureDesc>
+          <FeatureTitle>{t("advertiseFeatExposureTitle")}</FeatureTitle>
+          <FeatureDesc>{t("advertiseFeatExposureDesc")}</FeatureDesc>
         </FeatureCard>
 
         <FeatureCard>
           <FeatureIcon>
             <PeopleIcon />
           </FeatureIcon>
-          <FeatureTitle>Público Diverso</FeatureTitle>
-          <FeatureDesc>
-            Alcance demográfico amplio. Desde jóvenes hasta adultos, 
-            todos disfrutando de contenido en español.
-          </FeatureDesc>
+          <FeatureTitle>{t("advertiseFeatAudienceTitle")}</FeatureTitle>
+          <FeatureDesc>{t("advertiseFeatAudienceDesc")}</FeatureDesc>
         </FeatureCard>
 
         <FeatureCard>
           <FeatureIcon>
             <PlayArrowIcon />
           </FeatureIcon>
-          <FeatureTitle>Anuncios en Video</FeatureTitle>
-          <FeatureDesc>
-            Formatos publicitarios que no interrumpen la experiencia. 
-            Anuncios integrados naturalmente en el contenido.
-          </FeatureDesc>
+          <FeatureTitle>{t("advertiseFeatVideoTitle")}</FeatureTitle>
+          <FeatureDesc>{t("advertiseFeatVideoDesc")}</FeatureDesc>
         </FeatureCard>
 
         <FeatureCard>
           <FeatureIcon>
             <MonetizationOnOutlinedIcon />
           </FeatureIcon>
-          <FeatureTitle>Precios Accesibles</FeatureTitle>
-          <FeatureDesc>
-            Planes diseñados para todos los presupuestos. 
-            Desde的小企业 hasta grandes marcas.
-          </FeatureDesc>
+          <FeatureTitle>{t("advertiseFeatPricingTitle")}</FeatureTitle>
+          <FeatureDesc>{t("advertiseFeatPricingDesc")}</FeatureDesc>
         </FeatureCard>
 
         <FeatureCard>
           <FeatureIcon>
             <StarOutlineIcon />
           </FeatureIcon>
-          <FeatureTitle>Alta Calidad</FeatureTitle>
-          <FeatureDesc>
-            Reproducción sin interrupciones. Tus anuncios se ven profesionales 
-            y atractivos en cualquier dispositivo.
-          </FeatureDesc>
+          <FeatureTitle>{t("advertiseFeatQualityTitle")}</FeatureTitle>
+          <FeatureDesc>{t("advertiseFeatQualityDesc")}</FeatureDesc>
         </FeatureCard>
 
         <FeatureCard>
           <FeatureIcon>
             <PlayCircleOutlineIcon />
           </FeatureIcon>
-          <FeatureTitle>Medible</FeatureTitle>
-          <FeatureDesc>
-            Dashboard completo con estadísticas detalladas. 
-            Ve el rendimiento de tus campañas en tiempo real.
-          </FeatureDesc>
+          <FeatureTitle>{t("advertiseFeatMeasurableTitle")}</FeatureTitle>
+          <FeatureDesc>{t("advertiseFeatMeasurableDesc")}</FeatureDesc>
         </FeatureCard>
       </SectionGrid>
 
       {/* Planes */}
       <PricingSection>
         <SectionTitle style={{ textAlign: 'center', justifyContent: 'center' }}>
-          <MonetizationOnOutlinedIcon /> Planes de Publicidad
+          <MonetizationOnOutlinedIcon /> {t("advertisePlansSectionTitle")}
         </SectionTitle>
         <PricingGrid>
           <PricingCard>
-            <PriceName>Básico</PriceName>
-            <PriceAmount>$19<span>/semana</span></PriceAmount>
+            <PriceName>{t("advertisePlanBasicName")}</PriceName>
+            <PriceAmount>
+              $19<span>{t("advertisePerWeek")}</span>
+            </PriceAmount>
             <PriceFeatures>
-              <PriceFeature><CheckCircleOutlinedIcon /> 1000 impresiones</PriceFeature>
-              <PriceFeature><CheckCircleOutlinedIcon /> Anuncio de 15 segundos</PriceFeature>
-              <PriceFeature><CheckCircleOutlinedIcon /> Posición: pre-roll</PriceFeature>
-              <PriceFeature><CheckCircleOutlinedIcon /> Soporte por email</PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanBasicF1")}
+              </PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanBasicF2")}
+              </PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanBasicF3")}
+              </PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanBasicF4")}
+              </PriceFeature>
             </PriceFeatures>
-            <CTAButton onClick={() => currentUser ? navigate('/contact') : navigate('/login')}>
-              {currentUser ? 'Contratar' : 'Iniciar sesión'}
+            <CTAButton
+              onClick={() => (currentUser ? navigate("/contact") : navigate("/login"))}
+            >
+              {currentUser ? t("advertiseCtaSubscribe") : t("signInButton")}
             </CTAButton>
           </PricingCard>
 
           <PricingCard popular>
-            <PriceName>Profesional</PriceName>
-            <PriceAmount>$49<span>/semana</span></PriceAmount>
+            <PopularBadge>{t("advertisePopularBadge")}</PopularBadge>
+            <PriceName>{t("advertisePlanProName")}</PriceName>
+            <PriceAmount>
+              $49<span>{t("advertisePerWeek")}</span>
+            </PriceAmount>
             <PriceFeatures>
-              <PriceFeature><CheckCircleOutlinedIcon /> 5000 impresiones</PriceFeature>
-              <PriceFeature><CheckCircleOutlinedIcon /> Anuncio de 30 segundos</PriceFeature>
-              <PriceFeature><CheckCircleOutlinedIcon /> Posición: medio del video</PriceFeature>
-              <PriceFeature><CheckCircleOutlinedIcon /> Reporte semanal</PriceFeature>
-              <PriceFeature><CheckCircleOutlinedIcon /> Soporte prioritario</PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanProF1")}
+              </PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanProF2")}
+              </PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanProF3")}
+              </PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanProF4")}
+              </PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanProF5")}
+              </PriceFeature>
             </PriceFeatures>
-            <CTAButton primary onClick={() => currentUser ? navigate('/contact') : navigate('/login')}>
-              {currentUser ? 'Contratar' : 'Iniciar sesión'}
+            <CTAButton
+              primary
+              onClick={() => (currentUser ? navigate("/contact") : navigate("/login"))}
+            >
+              {currentUser ? t("advertiseCtaSubscribe") : t("signInButton")}
             </CTAButton>
           </PricingCard>
 
           <PricingCard>
-            <PriceName>Empresarial</PriceName>
-            <PriceAmount>$99<span>/semana</span></PriceAmount>
+            <PriceName>{t("advertisePlanEnterpriseName")}</PriceName>
+            <PriceAmount>
+              $99<span>{t("advertisePerWeek")}</span>
+            </PriceAmount>
             <PriceFeatures>
-              <PriceFeature><CheckCircleOutlinedIcon /> 15000 impresiones</PriceFeature>
-              <PriceFeature><CheckCircleOutlinedIcon /> Anuncio de 60 segundos</PriceFeature>
-              <PriceFeature><CheckCircleOutlinedIcon /> Posición: mejor lugar</PriceFeature>
-              <PriceFeature><CheckCircleOutlinedIcon /> Dashboard dedicado</PriceFeature>
-              <PriceFeature><CheckCircleOutlinedIcon /> Soporte 24/7</PriceFeature>
-              <PriceFeature><CheckCircleOutlinedIcon /> Creatives incluidos</PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanEntF1")}
+              </PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanEntF2")}
+              </PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanEntF3")}
+              </PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanEntF4")}
+              </PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanEntF5")}
+              </PriceFeature>
+              <PriceFeature>
+                <CheckCircleOutlinedIcon /> {t("advertisePlanEntF6")}
+              </PriceFeature>
             </PriceFeatures>
-            <CTAButton onClick={() => currentUser ? navigate('/contact') : navigate('/login')}>
-              {currentUser ? 'Contratar' : 'Iniciar sesión'}
+            <CTAButton
+              onClick={() => (currentUser ? navigate("/contact") : navigate("/login"))}
+            >
+              {currentUser ? t("advertiseCtaSubscribe") : t("signInButton")}
             </CTAButton>
           </PricingCard>
         </PricingGrid>
@@ -602,72 +627,57 @@ const Advertise = () => {
 
       {/* FAQ */}
       <FAQSection>
-        <SectionTitle>Preguntas Frecuentes</SectionTitle>
-        
+        <SectionTitle>{t("advertiseFaqTitle")}</SectionTitle>
+
         <FAQItem>
-          <summary>¿Cómo funciona la publicidad en Stream-In?</summary>
-          <p>
-            Subimos tu video publicitario y lo mostramos a nuestros usuarios antes, durante o después del contenido.
-            Solo pagas por las impresiones reales.
-          </p>
+          <summary>{t("advertiseFaq1Q")}</summary>
+          <p>{t("advertiseFaq1A")}</p>
         </FAQItem>
 
         <FAQItem>
-          <summary>¿Qué formatos de anuncio aceptan?</summary>
-          <p>
-            Aceptamos videos en MP4, MOV o AVI. Recomendamos resolución mínima de 720p para mejor calidad.
-            También puedes enviarnos tu素材 y nosotros lo producimos.
-          </p>
+          <summary>{t("advertiseFaq2Q")}</summary>
+          <p>{t("advertiseFaq2A")}</p>
         </FAQItem>
 
         <FAQItem>
-          <summary>¿Puedo targeted mi audiencia?</summary>
-          <p>
-            Sí, puedes seleccionar categorías de contenido, ubicaciones geográficas y demographics.
-            También tenemos opciones de retargeting para llegado usuarios que já visitaron tu sitio.
-          </p>
+          <summary>{t("advertiseFaq3Q")}</summary>
+          <p>{t("advertiseFaq3A")}</p>
         </FAQItem>
 
         <FAQItem>
-          <summary>¿Cuánto tiempo dura configurar una campaña?</summary>
-          <p>
-            Una vez aprobado tu contenido, la campaña está lista en 24-48 horas.
-            Recibirás un reporte semanal con el rendimiento.
-          </p>
+          <summary>{t("advertiseFaq4Q")}</summary>
+          <p>{t("advertiseFaq4A")}</p>
         </FAQItem>
 
         <FAQItem>
-          <summary>¿Puedo cancelar en cualquier momento?</summary>
-          <p>
-            Sí, sin compromisos a largo plazo. Puedes pausar o cancelar tu campaña cuando quieras desde tu dashboard.
-          </p>
+          <summary>{t("advertiseFaq5Q")}</summary>
+          <p>{t("advertiseFaq5A")}</p>
         </FAQItem>
       </FAQSection>
 
       {/* Contact */}
       <ContactSection>
-        <SectionTitle>¿Necesitas ayuda?</SectionTitle>
-        <HeroSubtitle>
-          Nuestro equipo está listo para ayudarte a crear la campaña perfecta para tu negocio.
-        </HeroSubtitle>
+        <SectionTitle>{t("advertiseContactTitle")}</SectionTitle>
+        <HeroSubtitle>{t("advertiseContactSubtitle")}</HeroSubtitle>
         <ContactOptions>
           <ContactButton href="https://wa.me/529961234567" target="_blank" whatsapp>
-            <WhatsAppIcon /> WhatsApp
+            <WhatsAppIcon /> {t("advertiseContactWhatsApp")}
           </ContactButton>
           <ContactButton href="mailto:publicidad@stream-in.com" email>
-            <EmailOutlinedIcon /> Email
+            <EmailOutlinedIcon /> {t("advertiseContactEmail")}
           </ContactButton>
         </ContactOptions>
       </ContactSection>
 
       {!currentUser && (
         <LoginPrompt>
-          <SectionTitle>¿Listo para comenzar?</SectionTitle>
-          <HeroSubtitle style={{ margin: '16px 0' }}>
-            Crea una cuenta gratis y empieza a publicitar hoy mismo.
+          <SectionTitle>{t("advertiseReadyTitle")}</SectionTitle>
+          <HeroSubtitle style={{ margin: "16px 0" }}>
+            {t("advertiseReadySubtitle")}
           </HeroSubtitle>
-          <CTAButton primary onClick={() => navigate('/register')}>
-            Crear cuenta gratis <ArrowForwardIcon style={{ marginLeft: 8 }} />
+          <CTAButton primary onClick={() => navigate("/register")}>
+            {t("advertiseCreateFreeAccount")}{" "}
+            <ArrowForwardIcon style={{ marginLeft: 8 }} />
           </CTAButton>
         </LoginPrompt>
       )}

@@ -400,6 +400,8 @@ const SignIn = () => {
   const [showForgot, setShowForgot] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [forgotSent, setForgotSent] = useState(false);
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotError, setForgotError] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -448,9 +450,26 @@ const SignIn = () => {
     if (e.key === "Enter") handleLogin(e);
   };
 
-  const handleForgotPassword = () => {
-    // Placeholder: In a real app, this would send a reset email
-    setForgotSent(true);
+  const handleForgotPassword = async () => {
+    setForgotError("");
+    const normalizedEmail = forgotEmail.trim();
+    if (!normalizedEmail) {
+      setForgotError("Please enter your email.");
+      return;
+    }
+
+    setForgotLoading(true);
+    try {
+      await axios.post("/auth/forgot-password", { email: normalizedEmail });
+      setForgotSent(true);
+      setForgotEmail(normalizedEmail);
+    } catch (err) {
+      const message =
+        err?.response?.data?.message || "Could not send recovery email.";
+      setForgotError(message);
+    } finally {
+      setForgotLoading(false);
+    }
   };
 
   return (
@@ -549,7 +568,7 @@ const SignIn = () => {
 
       {/* Forgot Password Modal */}
       {showForgot && (
-        <ForgotModal onClick={() => { setShowForgot(false); setForgotSent(false); setForgotEmail(""); }}>
+        <ForgotModal onClick={() => { setShowForgot(false); setForgotSent(false); setForgotEmail(""); setForgotError(""); }}>
           <ForgotBox onClick={(e) => e.stopPropagation()}>
             {!forgotSent ? (
               <>
@@ -557,6 +576,7 @@ const SignIn = () => {
                 <ForgotText>
                   {t("resetPasswordSubtitle")}
                 </ForgotText>
+                {forgotError && <ErrorMessage>{forgotError}</ErrorMessage>}
                 <InputGroup>
                   <InputIcon>
                     <EmailOutlinedIcon />
@@ -566,6 +586,7 @@ const SignIn = () => {
                     placeholder={t("emailSignin")}
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
+                    disabled={forgotLoading}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") handleForgotPassword();
                     }}
@@ -576,12 +597,13 @@ const SignIn = () => {
                     onClick={() => {
                       setShowForgot(false);
                       setForgotEmail("");
+                      setForgotError("");
                     }}
                   >
                     {t("cancelButton")}
                   </SecondaryButton>
-                  <PrimaryButtonSmall onClick={handleForgotPassword}>
-                    {t("sendResetLink")}
+                  <PrimaryButtonSmall onClick={handleForgotPassword} disabled={forgotLoading}>
+                    {forgotLoading ? "Sending..." : t("sendResetLink")}
                   </PrimaryButtonSmall>
                 </ButtonRow>
               </>
@@ -596,6 +618,7 @@ const SignIn = () => {
                     setShowForgot(false);
                     setForgotSent(false);
                     setForgotEmail("");
+                    setForgotError("");
                   }}
                 >
                   {t("gotIt")}

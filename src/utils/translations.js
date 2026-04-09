@@ -114,6 +114,16 @@ const translations = {
     forgotTextOne: "Si existe una cuenta para ",
     forgotTextTwo: " en breve recibirá un enlace para restablecer su contraseña.",
     gotIt: "Entendido",
+    resetPasswordPageTitle: "Nueva contraseña",
+    resetPasswordPageSubtitle: "Elige una contraseña segura para tu cuenta.",
+    resetPasswordSubmit: "Guardar contraseña",
+    resetPasswordSaving: "Guardando...",
+    resetPasswordSuccess: "Tu contraseña se actualizó. Ya puedes iniciar sesión.",
+    resetPasswordInvalidLink: "Este enlace no es válido o ha caducado. Solicita uno nuevo desde Iniciar sesión.",
+    resetPasswordTokenMissing: "Enlace no válido: falta el token de recuperación.",
+    resetPasswordPasswordMismatch: "Las contraseñas no coinciden.",
+    resetPasswordMinLength: "La contraseña debe tener al menos 6 caracteres.",
+    backToSignIn: "Volver al inicio de sesión",
 
     //Register
     registerTitle: "Crear Cuenta",
@@ -292,9 +302,81 @@ const translations = {
     termsFooter: "© 2025 stream-in. Todos los derechos reservados. Si tienes dudas sobre estos términos, no dudes en",
     contactUsLink: "contactarnos",
 
-    // Advertise
+    // Advertise page
     advertise: "Anúnciate con nosotros",
     advertiseTitle: "Publicidad en stream-in",
+    advertisePageHeroTitle: "Anuncia tu negocio en Stream-In",
+    advertisePageHeroSubtitle:
+      "Llega a miles de espectadores potenciales con publicidad en video. Promociona tus productos, servicios o marca de manera efectiva y medible.",
+    advertiseStatUniqueUsers: "Usuarios únicos",
+    advertiseStatMonthlyViews: "Vistas mensuales",
+    advertiseStatRetentionRate: "Tasa de retención",
+    advertiseStatAvailability: "Disponibilidad",
+    advertiseWhySectionTitle: "¿Por qué publicidad en Stream-In?",
+    advertiseFeatExposureTitle: "Gran exposición",
+    advertiseFeatExposureDesc:
+      "Tu anuncio llega a una audiencia activa y comprometida. Los usuarios vienen a buscar entretenimiento.",
+    advertiseFeatAudienceTitle: "Público diverso",
+    advertiseFeatAudienceDesc:
+      "Alcance demográfico amplio: desde jóvenes hasta adultos, disfrutando de contenido en español.",
+    advertiseFeatVideoTitle: "Anuncios en video",
+    advertiseFeatVideoDesc:
+      "Formatos que no interrumpen la experiencia, integrados de forma natural en el contenido.",
+    advertiseFeatPricingTitle: "Precios accesibles",
+    advertiseFeatPricingDesc:
+      "Planes para todos los presupuestos, desde pequeñas empresas hasta grandes marcas.",
+    advertiseFeatQualityTitle: "Alta calidad",
+    advertiseFeatQualityDesc:
+      "Reproducción fluida: tus anuncios se ven profesionales en cualquier dispositivo.",
+    advertiseFeatMeasurableTitle: "Medible",
+    advertiseFeatMeasurableDesc:
+      "Panel con estadísticas detalladas y rendimiento de campañas en tiempo real.",
+    advertisePlansSectionTitle: "Planes de publicidad",
+    advertisePopularBadge: "Más popular",
+    advertisePlanBasicName: "Básico",
+    advertisePlanProName: "Profesional",
+    advertisePlanEnterpriseName: "Empresarial",
+    advertisePerWeek: "/semana",
+    advertisePlanBasicF1: "1000 impresiones",
+    advertisePlanBasicF2: "Anuncio de 15 segundos",
+    advertisePlanBasicF3: "Posición: pre-roll",
+    advertisePlanBasicF4: "Soporte por email",
+    advertisePlanProF1: "5000 impresiones",
+    advertisePlanProF2: "Anuncio de 30 segundos",
+    advertisePlanProF3: "Posición: medio del video",
+    advertisePlanProF4: "Reporte semanal",
+    advertisePlanProF5: "Soporte prioritario",
+    advertisePlanEntF1: "15000 impresiones",
+    advertisePlanEntF2: "Anuncio de 60 segundos",
+    advertisePlanEntF3: "Posición: mejor ubicación",
+    advertisePlanEntF4: "Panel dedicado",
+    advertisePlanEntF5: "Soporte 24/7",
+    advertisePlanEntF6: "Creativos incluidos",
+    advertiseCtaSubscribe: "Contratar",
+    advertiseFaqTitle: "Preguntas frecuentes",
+    advertiseFaq1Q: "¿Cómo funciona la publicidad en Stream-In?",
+    advertiseFaq1A:
+      "Subimos tu video publicitario y lo mostramos a los usuarios antes, durante o después del contenido. Solo pagas por las impresiones reales.",
+    advertiseFaq2Q: "¿Qué formatos de anuncio aceptan?",
+    advertiseFaq2A:
+      "Aceptamos videos en MP4, MOV o AVI. Recomendamos resolución mínima de 720p. También puedes enviarnos tu material y nosotros lo producimos.",
+    advertiseFaq3Q: "¿Puedo segmentar mi audiencia?",
+    advertiseFaq3A:
+      "Sí: categorías de contenido, ubicación geográfica y demografía. También hay opciones de retargeting para usuarios que ya visitaron tu sitio.",
+    advertiseFaq4Q: "¿Cuánto tarda en configurarse una campaña?",
+    advertiseFaq4A:
+      "Una vez aprobado el contenido, la campaña suele estar lista en 24–48 horas. Recibirás un reporte semanal con el rendimiento.",
+    advertiseFaq5Q: "¿Puedo cancelar en cualquier momento?",
+    advertiseFaq5A:
+      "Sí, sin compromisos a largo plazo. Puedes pausar o cancelar cuando quieras desde tu panel.",
+    advertiseContactTitle: "¿Necesitas ayuda?",
+    advertiseContactSubtitle:
+      "Nuestro equipo está listo para ayudarte a crear la campaña perfecta para tu negocio.",
+    advertiseContactWhatsApp: "WhatsApp",
+    advertiseContactEmail: "Correo",
+    advertiseReadyTitle: "¿Listo para comenzar?",
+    advertiseReadySubtitle: "Crea una cuenta gratis y empieza a publicitar hoy mismo.",
+    advertiseCreateFreeAccount: "Crear cuenta gratis",
 
     // Terms Page Sections
     acceptanceOfTerms: "Aceptación de los Términos",
@@ -784,6 +866,16 @@ const translations = {
     forgotTextOne: "If an account exists for ",
     forgotTextTwo: ", you will receive a password reset link shortly.",
     gotIt: "Got it",
+    resetPasswordPageTitle: "New password",
+    resetPasswordPageSubtitle: "Choose a secure password for your account.",
+    resetPasswordSubmit: "Update password",
+    resetPasswordSaving: "Saving...",
+    resetPasswordSuccess: "Your password was updated. You can sign in now.",
+    resetPasswordInvalidLink: "This link is invalid or has expired. Request a new one from Sign in.",
+    resetPasswordTokenMissing: "Invalid link: the recovery token is missing.",
+    resetPasswordPasswordMismatch: "Passwords do not match.",
+    resetPasswordMinLength: "Password must be at least 6 characters.",
+    backToSignIn: "Back to sign in",
 
     // Register
     registerTitle: "Create Account",
@@ -961,6 +1053,82 @@ const translations = {
     contactDisputesHighlight: "⚖️ Any dispute will first be resolved through good faith negotiation. If no agreement is reached, it will be submitted to binding arbitration under the applicable laws of the corresponding jurisdiction.",
     termsFooter: "© 2025 stream-in. All rights reserved. If you have questions about these terms, feel free to",
     contactUsLink: "contact us",
+
+    // Advertise page
+    advertise: "Advertise with us",
+    advertiseTitle: "Advertising on stream-in",
+    advertisePageHeroTitle: "Advertise your business on Stream-In",
+    advertisePageHeroSubtitle:
+      "Reach thousands of potential viewers with video ads. Promote your products, services, or brand effectively and measurably.",
+    advertiseStatUniqueUsers: "Unique users",
+    advertiseStatMonthlyViews: "Monthly views",
+    advertiseStatRetentionRate: "Retention rate",
+    advertiseStatAvailability: "Availability",
+    advertiseWhySectionTitle: "Why advertise on Stream-In?",
+    advertiseFeatExposureTitle: "Broad reach",
+    advertiseFeatExposureDesc:
+      "Your ad reaches an active, engaged audience—users come here for entertainment.",
+    advertiseFeatAudienceTitle: "Diverse audience",
+    advertiseFeatAudienceDesc:
+      "Wide demographic reach, from young adults to older viewers enjoying Spanish-language content.",
+    advertiseFeatVideoTitle: "Video ads",
+    advertiseFeatVideoDesc:
+      "Formats that fit the experience and feel natural within the content.",
+    advertiseFeatPricingTitle: "Accessible pricing",
+    advertiseFeatPricingDesc:
+      "Plans for every budget, from small businesses to large brands.",
+    advertiseFeatQualityTitle: "High quality",
+    advertiseFeatQualityDesc:
+      "Smooth playback so your ads look professional on any device.",
+    advertiseFeatMeasurableTitle: "Measurable",
+    advertiseFeatMeasurableDesc:
+      "Dashboard with detailed stats and real-time campaign performance.",
+    advertisePlansSectionTitle: "Advertising plans",
+    advertisePopularBadge: "Most popular",
+    advertisePlanBasicName: "Basic",
+    advertisePlanProName: "Professional",
+    advertisePlanEnterpriseName: "Enterprise",
+    advertisePerWeek: "/week",
+    advertisePlanBasicF1: "1,000 impressions",
+    advertisePlanBasicF2: "15-second ad",
+    advertisePlanBasicF3: "Placement: pre-roll",
+    advertisePlanBasicF4: "Email support",
+    advertisePlanProF1: "5,000 impressions",
+    advertisePlanProF2: "30-second ad",
+    advertisePlanProF3: "Placement: mid-roll",
+    advertisePlanProF4: "Weekly report",
+    advertisePlanProF5: "Priority support",
+    advertisePlanEntF1: "15,000 impressions",
+    advertisePlanEntF2: "60-second ad",
+    advertisePlanEntF3: "Placement: premium",
+    advertisePlanEntF4: "Dedicated dashboard",
+    advertisePlanEntF5: "24/7 support",
+    advertisePlanEntF6: "Creatives included",
+    advertiseCtaSubscribe: "Subscribe",
+    advertiseFaqTitle: "Frequently asked questions",
+    advertiseFaq1Q: "How does advertising on Stream-In work?",
+    advertiseFaq1A:
+      "We run your video ad before, during, or after content. You pay only for real impressions.",
+    advertiseFaq2Q: "What ad formats do you accept?",
+    advertiseFaq2A:
+      "We accept MP4, MOV, or AVI. We recommend at least 720p. You can also send us assets and we can help produce the spot.",
+    advertiseFaq3Q: "Can I target my audience?",
+    advertiseFaq3A:
+      "Yes—content categories, geography, and demographics. Retargeting options are available for users who have visited your site.",
+    advertiseFaq4Q: "How long does it take to launch a campaign?",
+    advertiseFaq4A:
+      "Once your creative is approved, campaigns typically go live within 24–48 hours. You will receive a weekly performance report.",
+    advertiseFaq5Q: "Can I cancel anytime?",
+    advertiseFaq5A:
+      "Yes, with no long-term commitment. Pause or cancel anytime from your dashboard.",
+    advertiseContactTitle: "Need help?",
+    advertiseContactSubtitle:
+      "Our team is ready to help you build the right campaign for your business.",
+    advertiseContactWhatsApp: "WhatsApp",
+    advertiseContactEmail: "Email",
+    advertiseReadyTitle: "Ready to get started?",
+    advertiseReadySubtitle: "Create a free account and start advertising today.",
+    advertiseCreateFreeAccount: "Create free account",
 
     // Terms Page Sections
     acceptanceOfTerms: "Acceptance of Terms",
