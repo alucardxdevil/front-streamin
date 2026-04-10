@@ -1,18 +1,19 @@
 const STORAGE_KEY = "streamin_watch_tag_weights_v1";
 
 /**
- * Incrementa el peso de cada etiqueta cuando el usuario ha visto de verdad un video
- * (p. ej. al contabilizar la vista al ~50 %).
+ * Suma peso a cada etiqueta (p. ej. al abrir un video o al contabilizar la vista).
+ * `weight` permite dar más importancia a una señal (p. ej. vista ≥50 %) que al simple acceso.
  */
-export function recordWatchTags(tags) {
+export function recordWatchTags(tags, weight = 1) {
   if (!Array.isArray(tags) || tags.length === 0) return;
+  const w = typeof weight === "number" && weight > 0 ? weight : 1;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     const weights = raw ? JSON.parse(raw) : {};
     for (const tag of tags) {
       const t = typeof tag === "string" ? tag.trim() : "";
       if (!t) continue;
-      weights[t] = (weights[t] || 0) + 1;
+      weights[t] = (weights[t] || 0) + w;
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(weights));
   } catch (e) {

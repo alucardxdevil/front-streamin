@@ -41,10 +41,10 @@ const translations = {
     homeTabForYou: "Para ti",
     homeFeedTabsLabel: "Tipo de feed en inicio",
     discoverForYouSubtitle:
-      "Videos según las etiquetas de lo que sueles ver (se aprende al ver cada video)",
-    forYouEmpty: "Aún no sabemos qué temas te interesan.",
+      "Videos de quien sigues y según las etiquetas de lo que abres (desde la primera reproducción).",
+    forYouEmpty: "Aún no hay nada que mostrar aquí.",
     forYouEmptyHint:
-      "Mira videos hasta que se cuente la vista; guardamos sus etiquetas para personalizar esta sección.",
+      "Abre algunos videos (guardamos etiquetas al cargar la página) y sigue perfiles con contenido publicado.",
     forYouNoMatchingVideos: "No hay videos con esas etiquetas por ahora.",
     forYouTryRandomHint:
       "Prueba la pestaña Aleatorio o sigue viendo contenido con etiquetas.",
@@ -782,10 +782,10 @@ const translations = {
     homeTabForYou: "For you",
     homeFeedTabsLabel: "Home feed type",
     discoverForYouSubtitle:
-      "Videos based on tags from what you watch (learned when each view is counted)",
-    forYouEmpty: "We don't know your interests yet.",
+      "Videos from creators you follow and tags from videos you open (from the first play).",
+    forYouEmpty: "Nothing to show here yet.",
     forYouEmptyHint:
-      "Watch videos until a view is counted; we save their tags to personalize this feed.",
+      "Open some videos (we save tags when the page loads) and follow channels that publish content.",
     forYouNoMatchingVideos: "No videos match those tags right now.",
     forYouTryRandomHint:
       "Try the Random tab or keep watching tagged content.",

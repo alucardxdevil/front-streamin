@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import Card from "../components/Card";
 import { useLanguage } from "../utils/LanguageContext";
@@ -620,6 +621,121 @@ function shuffleArray(items) {
   return arr;
 }
 
+async function bootstrapRandomFeed({
+  cancelledRef,
+  loadedIds,
+  setVideos,
+  setHasMore,
+  setLoading,
+  setError,
+  t,
+}) {
+  const aborted = () => cancelledRef.current;
+  setLoading(true);
+  setError(null);
+  try {
+    const res = await axios.get("/videos/random");
+    if (aborted()) return;
+    const newVideos = (res.data || []).filter(
+      (v) => v && v._id && !loadedIds.current.has(v._id)
+    );
+    if (newVideos.length === 0) {
+      setHasMore(false);
+      setVideos([]);
+    } else {
+      newVideos.forEach((v) => loadedIds.current.add(v._id));
+      setVideos(newVideos);
+      setHasMore(true);
+    }
+  } catch (e) {
+    if (!aborted()) {
+      console.error(e);
+      setError(t("errorLoadingVideos"));
+      setHasMore(false);
+    }
+  } finally {
+    if (!aborted()) setLoading(false);
+  }
+}
+
+async function loadForYouFeedState({
+  cancelledRef,
+  currentUser,
+  t,
+  setLoading,
+  setError,
+  setForYouPlaceholder,
+  setVideos,
+  setHasMore,
+  forYouPoolRef,
+}) {
+  const aborted = () => cancelledRef.current;
+  setLoading(true);
+  setError(null);
+  setForYouPlaceholder(null);
+
+  const tags = getTopTagsForYou(8);
+  let tagVideos = [];
+
+  if (tags.length) {
+    try {
+      const res = await axios.get("/videos/tags", {
+        params: { tags: tags.join(","), limit: 80 },
+      });
+      if (aborted()) return;
+      tagVideos = res.data || [];
+    } catch (e) {
+      if (!aborted()) {
+        console.error(e);
+        setError(t("errorLoadingVideos"));
+        setLoading(false);
+      }
+      return;
+    }
+  }
+
+  let followVideos = [];
+  if (currentUser) {
+    try {
+      const fRes = await axios.get("/videos/foll");
+      if (aborted()) return;
+      followVideos = Array.isArray(fRes.data) ? fRes.data : [];
+    } catch (e) {
+      const st = e.response?.status;
+      if (st !== 401 && st !== 403) console.error("Para ti /videos/foll:", e);
+    }
+  }
+
+  if (aborted()) return;
+
+  const byId = new Map();
+  for (const v of followVideos) {
+    if (v?._id) byId.set(String(v._id), v);
+  }
+  for (const v of tagVideos) {
+    if (v?._id) byId.set(String(v._id), v);
+  }
+  const list = shuffleArray([...byId.values()]);
+
+  if (list.length === 0) {
+    forYouPoolRef.current = [];
+    setVideos([]);
+    setHasMore(false);
+    setForYouPlaceholder(
+      tags.length === 0 && followVideos.length === 0 ? "noWeights" : "noResults"
+    );
+    setLoading(false);
+    return;
+  }
+
+  forYouPoolRef.current = list;
+  const first = list.slice(0, FOR_YOU_CHUNK);
+  setVideos(first);
+  setHasMore(list.length > first.length);
+  setForYouPlaceholder(null);
+  setLoading(false);
+}
+
 // ─── Componente Principal ─────────────────────────────────────────────────────
 
 const Home = ({ type }) => {
@@ -630,21 +746,51 @@ const Home = ({ type }) => {
   const [error, setError] = useState(null);
   /** null | "noWeights" (sin datos locales) | "noResults" (sin videos en el servidor) */
   const [forYouPlaceholder, setForYouPlaceholder] = useState(null);
-  const initialized = useRef(false);
   const loadedIds = useRef(new Set());
   const forYouPoolRef = useRef([]);
   const { t } = useLanguage();
+  const currentUser = useSelector((s) => s.user.currentUser);
+  const followsKey = currentUser?.followsProfile?.join?.(",") ?? "";
 
-  // Reset al cambiar de tipo o de pestaña
+  /* Carga inicial al cambiar pestaña / login / seguidos: sin depender de hasMore del render anterior */
   useEffect(() => {
+    const cancelledRef = { current: false };
+
     setVideos([]);
     loadedIds.current.clear();
     forYouPoolRef.current = [];
-    initialized.current = false;
-    setHasMore(true);
     setError(null);
     setForYouPlaceholder(null);
-  }, [type, feedMode]);
+    setHasMore(true);
+
+    if (feedMode === "random") {
+      bootstrapRandomFeed({
+        cancelledRef,
+        loadedIds,
+        setVideos,
+        setHasMore,
+        setLoading,
+        setError,
+        t,
+      });
+    } else {
+      loadForYouFeedState({
+        cancelledRef,
+        currentUser,
+        t,
+        setLoading,
+        setError,
+        setForYouPlaceholder,
+        setVideos,
+        setHasMore,
+        forYouPoolRef,
+      });
+    }
+
+    return () => {
+      cancelledRef.current = true;
+    };
+  }, [type, feedMode, currentUser, followsKey, t]);
 
   const fetchMoreVideos = async () => {
     if (loading || !hasMore) return;
@@ -694,61 +840,7 @@ const Home = ({ type }) => {
     });
   };
 
-  const initForYou = async () => {
-    setLoading(true);
-    setError(null);
-    const tags = getTopTagsForYou(8);
-    if (!tags.length) {
-      forYouPoolRef.current = [];
-      setVideos([]);
-      setHasMore(false);
-      setForYouPlaceholder("noWeights");
-      setLoading(false);
-      return;
-    }
-    setForYouPlaceholder(null);
-    try {
-      const res = await axios.get("/videos/tags", {
-        params: { tags: tags.join(","), limit: 80 },
-      });
-      const byId = new Map();
-      for (const v of res.data) {
-        if (v?._id && !byId.has(v._id)) byId.set(v._id, v);
-      }
-      const list = shuffleArray([...byId.values()]);
-      if (list.length === 0) {
-        forYouPoolRef.current = [];
-        setVideos([]);
-        setHasMore(false);
-        setForYouPlaceholder("noResults");
-        setLoading(false);
-        return;
-      }
-      forYouPoolRef.current = list;
-      const first = list.slice(0, FOR_YOU_CHUNK);
-      setVideos(first);
-      setHasMore(list.length > first.length);
-    } catch (err) {
-      console.error("Error cargando videos para ti:", err);
-      setError(t("errorLoadingVideos"));
-      forYouPoolRef.current = [];
-      setVideos([]);
-      setHasMore(false);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (!initialized.current) {
-      initialized.current = true;
-      if (feedMode === "random") {
-        fetchMoreVideos();
-      } else {
-        initForYou();
-      }
-    }
-
     const handleScroll = () => {
       if (
         window.innerHeight + window.scrollY <
@@ -769,9 +861,33 @@ const Home = ({ type }) => {
   }, [hasMore, loading, feedMode, forYouPlaceholder]);
 
   const retryAfterError = () => {
+    const cancelledRef = { current: false };
     setError(null);
-    if (feedMode === "forYou") initForYou();
-    else fetchMoreVideos();
+    if (feedMode === "forYou") {
+      loadForYouFeedState({
+        cancelledRef,
+        currentUser,
+        t,
+        setLoading,
+        setError,
+        setForYouPlaceholder,
+        setVideos,
+        setHasMore,
+        forYouPoolRef,
+      });
+    } else {
+      loadedIds.current.clear();
+      setHasMore(true);
+      bootstrapRandomFeed({
+        cancelledRef,
+        loadedIds,
+        setVideos,
+        setHasMore,
+        setLoading,
+        setError,
+        t,
+      });
+    }
   };
 
   const loadMoreClick = () => {

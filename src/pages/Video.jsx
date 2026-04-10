@@ -569,6 +569,12 @@ const Video = () => {
     fetchData();
   }, [path, dispatch]);
 
+  /* Preferencias "Para ti": registrar etiquetas en cuanto el usuario abre el video */
+  useEffect(() => {
+    if (!currentVideo?._id || !currentVideo.tags?.length) return;
+    recordWatchTags(currentVideo.tags, 1);
+  }, [currentVideo?._id]);
+
   const handleLike = async () => {
     if (!currentUser) return openLoginModal();
     const res = currentVideo.likes.includes(currentUser._id)
@@ -666,7 +672,7 @@ const Video = () => {
     });
 
     if (currentVideo?.tags?.length) {
-      recordWatchTags(currentVideo.tags);
+      recordWatchTags(currentVideo.tags, 2);
     }
 
     // Agregar al historial solo si el usuario está autenticado

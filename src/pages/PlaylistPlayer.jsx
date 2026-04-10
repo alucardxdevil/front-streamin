@@ -558,6 +558,9 @@ export const PlaylistPlayerPage = () => {
   const pollTimerRef = useRef(null);
   const playlistLoadedRef = useRef(false); // tracks if initial load succeeded
   const playlistSnapshotRef = useRef(null); // last committed playlist (for poll merge)
+  /** Skip redundant `/videos/find` + `fetchSuccess` when playlist poll only replaces object references (same clip). */
+  const lastDispatchedVideoIdRef = useRef(null);
+  const pendingVideoIdRef = useRef(null);
 
   // Derived state
   const isOwner = currentUser && playlist && currentUser._id === playlist.userId;
@@ -647,6 +650,8 @@ export const PlaylistPlayerPage = () => {
     setLoading(true);
     setError(null);
     playlistLoadedRef.current = false;
+    lastDispatchedVideoIdRef.current = null;
+    pendingVideoIdRef.current = null;
     fetchPlaylist();
   }, [playlistId, userId, fetchPlaylist]);
 
@@ -671,24 +676,51 @@ export const PlaylistPlayerPage = () => {
     if (!playlist?.videos?.length) return undefined;
 
     const videoItem = playlist.videos[currentIndex];
-    if (!videoItem?.videoId || isVideoDeleted(videoItem)) return undefined;
+    if (!videoItem?.videoId || isVideoDeleted(videoItem)) {
+      lastDispatchedVideoIdRef.current = null;
+      pendingVideoIdRef.current = null;
+      return undefined;
+    }
 
-    const videoId = videoItem.videoId._id || videoItem.videoId;
+    const videoIdRaw = videoItem.videoId._id || videoItem.videoId;
+    const videoId = videoIdRaw != null ? String(videoIdRaw) : "";
     if (!videoId) return undefined;
 
+    if (
+      lastDispatchedVideoIdRef.current === videoId ||
+      pendingVideoIdRef.current === videoId
+    ) {
+      return undefined;
+    }
+
+    pendingVideoIdRef.current = videoId;
     let cancelled = false;
     axios
       .get(`/videos/find/${videoId}`)
       .then((res) => {
-        if (!cancelled) dispatch(fetchSuccess(res.data));
+        if (!cancelled) {
+          lastDispatchedVideoIdRef.current = videoId;
+          dispatch(fetchSuccess(res.data));
+        }
       })
       .catch((err) => {
         console.error("Error fetching video for player:", err);
-        if (!cancelled) dispatch(fetchSuccess(videoItem.videoId));
+        if (!cancelled) {
+          lastDispatchedVideoIdRef.current = videoId;
+          dispatch(fetchSuccess(videoItem.videoId));
+        }
+      })
+      .finally(() => {
+        if (pendingVideoIdRef.current === videoId) {
+          pendingVideoIdRef.current = null;
+        }
       });
 
     return () => {
       cancelled = true;
+      if (pendingVideoIdRef.current === videoId) {
+        pendingVideoIdRef.current = null;
+      }
     };
   }, [playlist, currentIndex, dispatch]);
 
