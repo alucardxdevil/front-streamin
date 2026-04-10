@@ -487,7 +487,6 @@ export const ProfileUser = () => {
           const videosRes = await axios.get(`/videos/second/${path}`);
           setVideoCount(videosRes.data?.length || 0);
         } catch (err) {
-          console.log("No videos found for user");
           setVideoCount(0);
         }
       } catch (error) {

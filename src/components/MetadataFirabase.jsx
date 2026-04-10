@@ -22,7 +22,6 @@ const VideoDuration = () => {
                 setError(error.message);
             });
     }, []);
-    console.log(currentVideo.videoUrl)
 
     return (
         <div>

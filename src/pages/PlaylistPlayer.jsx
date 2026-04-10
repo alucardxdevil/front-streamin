@@ -212,6 +212,12 @@ const NavigationControls = styled.div`
   gap: 20px;
   padding: 15px;
   background: ${({ theme }) => theme.soft};
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    gap: 10px;
+    padding: 12px;
+  }
 `;
 
 const NavButton = styled.button`
@@ -226,6 +232,7 @@ const NavButton = styled.button`
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 500;
+  min-width: 150px;
 
   &:hover:not(:disabled) {
     background: #ff3e6c;
@@ -243,6 +250,14 @@ const NavButton = styled.button`
   }
 
   svg { font-size: 20px; }
+
+  @media (max-width: 768px) {
+    flex: 1 1 calc(50% - 10px);
+    min-width: 0;
+    justify-content: center;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
 `;
 
 // --- Playlist Panel ---
@@ -257,7 +272,7 @@ const PlaylistPanel = styled.aside`
   flex-direction: column;
 
   @media (max-width: 1024px) {
-    max-height: 400px;
+    max-height: none;
   }
 `;
 
@@ -299,6 +314,53 @@ const PlaylistItems = styled.div`
   &::-webkit-scrollbar-thumb {
     background: ${({ theme }) => theme.soft};
     border-radius: 3px;
+  }
+
+  @media (max-width: 1024px) {
+    max-height: 45vh;
+  }
+`;
+
+const AdBanner = styled.section`
+  margin: 0 0 16px 0;
+  border-radius: 14px;
+  padding: 14px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(110deg, rgba(11, 103, 220, 0.18), rgba(255, 62, 108, 0.2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  strong {
+    color: ${({ theme }) => theme.text};
+    font-size: 14px;
+  }
+
+  p {
+    margin: 4px 0 0 0;
+    color: ${({ theme }) => theme.textSoft};
+    font-size: 12px;
+  }
+
+  button {
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 14px;
+    background: #ff3e6c;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    button {
+      width: 100%;
+      text-align: center;
+    }
   }
 `;
 
@@ -953,6 +1015,14 @@ export const PlaylistPlayerPage = () => {
           />
         </div>
       </TopBar>
+
+      <AdBanner aria-label="Publicidad">
+        <div>
+          <strong>Publicidad</strong>
+          <p>Promociona tu canal o tu producto aqui.</p>
+        </div>
+        <button type="button">Ver oferta</button>
+      </AdBanner>
 
       <PlayerContainer>
         {/* ====== Main Video Area ====== */}

@@ -1023,7 +1023,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     if (q === "Auto") {
       hls.currentLevel = -1;
       setCurrentPlayingQuality("");
-      console.log("[HLS] Calidad: Auto (ABR)");
       return;
     }
 
@@ -1065,9 +1064,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     if (levelIndex >= 0) {
       hls.currentLevel = levelIndex;
       const level = hls.levels[levelIndex];
-      console.log(`[HLS] Calidad fijada: ${q} (nivel ${levelIndex}, ${level.width}x${level.height})`);
     } else {
-      console.warn(`[HLS] No se encontró nivel para ${q}. Niveles disponibles:`, hls.levels.map((l, i) => `${i}: ${l.width}x${l.height}`));
+      // console.warn(`[HLS] No se encontró nivel para ${q}. Niveles disponibles:`, hls.levels.map((l, i) => `${i}: ${l.width}x${l.height}`));
     }
   }, [getHlsInstance, currentVideo?.qualities]);
 
@@ -1084,7 +1082,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
       await axios.put(`/videos/${currentVideo._id}`, { duration: d });
       setDurationDBSaved(true);
     } catch (err) {
-      console.log("Error guardando duración:", err.message);
     }
   };
 

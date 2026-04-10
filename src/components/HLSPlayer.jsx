@@ -224,7 +224,6 @@ const HLSPlayer = ({
     hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
       setIsLoading(false)
       setAvailableLevels(data.levels)
-      console.log(`[HLSPlayer] ${data.levels.length} calidades disponibles`)
 
       // Forzar seek a 0 para evitar PTS offset de segmentos .ts
       video.currentTime = 0
@@ -285,11 +284,9 @@ const HLSPlayer = ({
 
         switch (data.type) {
           case Hls.ErrorTypes.NETWORK_ERROR:
-            console.log('[HLSPlayer] Reintentando por error de red...')
             hls.startLoad()
             break
           case Hls.ErrorTypes.MEDIA_ERROR:
-            console.log('[HLSPlayer] Recuperando error de media...')
             hls.recoverMediaError()
             break
           default:

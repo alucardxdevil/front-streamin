@@ -142,7 +142,6 @@ const useVideoUpload = () => {
         }
         // Si sigue 'pending' o 'processing', continuar polling
       } catch (err) {
-        console.error('[useVideoUpload] Error en polling:', err.message)
       }
     }
 
@@ -174,21 +173,17 @@ const useVideoUpload = () => {
     try {
       // ── 1. Subir miniatura ───────────────────────────────────────────────
       setState('uploading')
-      console.log('[Upload] Subiendo miniatura...')
       const { imgUrl, imgKey } = await uploadThumbnail(imageFile)
 
       // ── 2. Obtener presigned URL para el video ───────────────────────────
-      console.log('[Upload] Obteniendo presigned URL...')
       const { uploadUrl, rawKey } = await getVideoPresignedUrl(videoFile)
 
       // ── 3. Subir MP4 directamente a B2 ──────────────────────────────────
-      console.log('[Upload] Subiendo video a B2...')
       await uploadVideoToB2(uploadUrl, videoFile)
       setUploadProgress(100)
 
       // ── 4. Encolar transcodificación ─────────────────────────────────────
       setState('enqueuing')
-      console.log('[Upload] Encolando transcodificación...')
       const { videoId: newVideoId } = await enqueueTranscode({
         rawKey,
         title,
@@ -204,20 +199,17 @@ const useVideoUpload = () => {
 
       // ── 5. Iniciar polling ───────────────────────────────────────────────
       setState('processing')
-      console.log(`[Upload] Video ${newVideoId} encolado. Iniciando polling...`)
       startPolling(newVideoId)
 
       return { videoId: newVideoId }
 
     } catch (err) {
       if (axios.isCancel(err)) {
-        console.log('[Upload] Upload cancelado por el usuario')
         setState('idle')
         return
       }
 
       const message = err.response?.data?.message || err.message || 'Error desconocido'
-      console.error('[Upload] Error:', message)
       setError(message)
       setState('error')
       throw err

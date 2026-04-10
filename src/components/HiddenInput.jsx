@@ -26,17 +26,6 @@ const FileInputButton = () => {
   const { t } = useLanguage();
   const fileInputRef = React.createRef();
 
-  // const handleButtonClick = () => {
-  //   fileInputRef.current.click();
-  // };
-
-  // const handleFileChange = (event) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     console.log(file.name);
-  //   }
-  // };
-
   return (
     <div>
       <HiddenInput

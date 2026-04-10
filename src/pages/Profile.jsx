@@ -686,7 +686,6 @@ export const Profile = () => {
           const videosRes = await axios.get(`/videos/second/${currentUser.slug}`);
           setVideoCount(videosRes.data?.length || 0);
         } catch (err) {
-          console.log("No videos found for user");
           setVideoCount(0);
         }
 
@@ -713,7 +712,6 @@ export const Profile = () => {
       dispatch(logout());
       navigate("/");
     } catch (error) {
-      console.log(error);
     }
   };
 

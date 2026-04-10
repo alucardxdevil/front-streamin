@@ -28,6 +28,39 @@ const Container = styled.div`
   }
 `;
 
+const MainLayout = styled.div`
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  flex-direction: column;
+  
+  @media (min-width: 769px) {
+    flex-direction: row;
+  }
+`;
+
+const PlaylistsColumn = styled.div`
+  width: 100%;
+  min-width: 0;
+  order: 1;
+  
+  @media (min-width: 769px) {
+    width: 50%;
+    order: 2;
+  }
+`;
+
+const HistoryColumn = styled.div`
+  width: 100%;
+  min-width: 0;
+  order: 2;
+  
+  @media (min-width: 769px) {
+    width: 50%;
+    order: 1;
+  }
+`;
+
 const Section = styled.div`
   background: ${({ theme }) => theme.bgLighter};
   border-radius: 16px;
@@ -762,9 +795,8 @@ export const HistoryPage = () => {
   const handleAddVideoToPlaylist = async (playlistId, videoId) => {
     try {
       await axios.put(`/users/playlists/${userId}/${playlistId}/${videoId}`);
-      console.log("¡Video agregado a playlist!");
     } catch (error) {
-      console.error("¡Error agregando video a playlist!", error);
+      // console.error("¡Error agregando video a playlist!", error);
     }
   };
 
@@ -806,11 +838,9 @@ export const HistoryPage = () => {
 
   return (
     <Container>
-      {/* Main layout with two columns: Left = Playlists, Right = History */}
-      <div style={{ display: "flex", gap: "30px", flexWrap: "nowrap", width: "100%" }}>
-        
-        {/* LEFT COLUMN - History */}
-        <div style={{ flex: 1, minWidth: "400px", width: "50%" }}>
+      {/* Main layout: Mobile = stacked (Playlists first), Desktop = side by side */}
+      <MainLayout>
+        <HistoryColumn>
           <Title>
             <BiHistory />
             {t("videoHistory")}
@@ -824,7 +854,6 @@ export const HistoryPage = () => {
             ) : (
               <HistoryList>
                 {history.map((item) => {
-                  // Skip items where the video has been deleted (videoId is null after populate)
                   if (!item.videoId) {
                     return (
                       <HistoryItem key={item._id} style={{ opacity: 0.5 }}>
@@ -907,10 +936,9 @@ export const HistoryPage = () => {
               </div>
             )}
           </Section>
-        </div>
+        </HistoryColumn>
 
-        {/* RIGHT COLUMN - Playlists */}
-        <div style={{ flex: 1, minWidth: "400px", width: "50%" }}>
+        <PlaylistsColumn>
           <Title>
             <RiPlayList2Fill />
             {t("playlists")}
@@ -965,9 +993,8 @@ export const HistoryPage = () => {
               </div>
             </PlaylistList>
           </PlaylistSection>
-        </div>
-
-      </div>
+        </PlaylistsColumn>
+      </MainLayout>
 
       {showModal && (
         <CreatePlaylistModal onClick={() => setShowModal(false)}>

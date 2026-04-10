@@ -91,7 +91,7 @@ function App() {
         <BrowserRouter>
           <Main>
             <Navbar themeMode={themeMode} setThemeMode={setThemeMode} />
-            <BetaNoticeBar donationUrl="https://example.com/donate" />
+            <BetaNoticeBar donationUrl="https://ko-fi.com/streamincom" />
             <BackButton />
             {/* SEO: metadatos por defecto (cada página puede sobreescribirlos) */}
             <SEOHead />
