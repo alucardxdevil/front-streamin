@@ -440,9 +440,9 @@ const translations = {
 
     usSecExperienceTitle: "Poca publicidad intrusiva, poco ruido comercial",
     usSecExperienceP1:
-      "No queremos una plataforma atascada de anuncios ni un feed que parezca un tablero de intereses ajenos al usuario. Sí puede haber publicidad cuando tenga sentido para sostener el servicio, pero el objetivo es que no ahogue la experiencia ni sustituya lo que viniste a ver.",
+      "No queremos una plataforma atascada de anuncios ni un feed que parezca un tablero de intereses ajenos a lo que viniste a ver. Sí queremos un negocio sostenible y que los creadores ganen por su contenido, así que la publicidad puede existir cuando ayuda a sostener la plataforma. El punto es el equilibrio: anuncios relevantes y respetuosos, sin ahogar tu experiencia.",
     usSecExperienceP2:
-      "stream-in.com está pensada para priorizar la experiencia de quienes consumen contenido y de quienes lo crean, no para empujar agendas comerciales por encima de todo.",
+      "stream-in.com está diseñada para crecer junto con los anunciantes (no en contra): una experiencia segura para marcas y centrada en el usuario, donde la promoción apoya el ecosistema sin convertirse en el producto principal.",
 
     usSecMoneyTitle: "Monetización para creadores, cuando el proyecto lo permita",
     usSecMoneyP1:

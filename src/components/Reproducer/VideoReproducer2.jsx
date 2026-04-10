@@ -1194,6 +1194,14 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   }, [duration, getTimeFromEvent, videoEnded]);
 
   /* ========== Progress ========== */
+  const maybeCountView = useCallback((playedFraction) => {
+    if (onViewCounted && !viewCountedRef.current && playedFraction >= 0.5) {
+      // Marcar como contada ANTES de llamar al callback para evitar race conditions
+      viewCountedRef.current = true;
+      onViewCounted();
+    }
+  }, [onViewCounted]);
+
   const handleProgress = useCallback((state) => {
     // Actualizar la barra de progreso solo si no se está haciendo seek manual
     if (!seeking) {
@@ -1222,12 +1230,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
      *    sin cambiar de ruta, el flag permanece en `true` (comportamiento intencional:
      *    una vista por sesión de reproducción del mismo video).
      */
-    if (onViewCounted && !viewCountedRef.current && state.played >= 0.5) {
-      // Marcar como contada ANTES de llamar al callback para evitar race conditions
-      viewCountedRef.current = true;
-      onViewCounted();
-    }
-  }, [seeking, onViewCounted]);
+    maybeCountView(state.played);
+  }, [seeking, maybeCountView]);
 
   /* ========== Fullscreen ========== */
   const toggleFullScreen = useCallback(() => {
@@ -1925,7 +1929,9 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 
                 // Update played progress
                 if (videoDuration > 0 && isFinite(currentTime)) {
-                  setPlayed(currentTime / videoDuration);
+                  const playedFraction = currentTime / videoDuration;
+                  setPlayed(playedFraction);
+                  maybeCountView(playedFraction);
                 }
                 
                 // Update loaded progress
@@ -1935,6 +1941,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   setLoaded(loadedEnd / videoDuration);
                 }
               }
+            }}
+            onSeeked={() => {
+              const video = videoElRef.current;
+              if (!video || !isFinite(video.duration) || video.duration <= 0) return;
+              maybeCountView(video.currentTime / video.duration);
             }}
             onWaiting={() => {
               bufferingRef.current = true;

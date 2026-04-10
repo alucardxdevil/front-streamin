@@ -230,13 +230,9 @@ const Terms = () => {
       title: t("acceptanceOfTerms"),
       content: (
         <>
-          <Paragraph>
-            Bienvenido a stream-in, una plataforma de streaming para compartir y disfrutar de contenido multimedia. Al acceder o usar nuestro sitio, aceptas estar bound por estos Términos y Condiciones de Uso (los "Términos"). Si no estás de acuerdo con alguna parte de estos Términos, te pedimos que no utilices nuestro servicio.
-          </Paragraph>
+          <Paragraph>{t("acceptTermsContent")}</Paragraph>
           <HighlightBox>
-            <HighlightText>
-              📌 Al continuar usando stream-in después de cualquier modificación a estos Términos, aceptas los cambios.
-            </HighlightText>
+            <HighlightText>{t("acceptTermsHighlight")}</HighlightText>
           </HighlightBox>
         </>
       ),
@@ -246,15 +242,14 @@ const Terms = () => {
       title: t("siteUsage"),
       content: (
         <>
-          <Paragraph>
-            stream-in proporciona una plataforma para que los usuarios suban, compartan y vean videos. Al usar el sitio, te comprometes a:
-          </Paragraph>
+          <Paragraph>{t("serviceDescContent")}</Paragraph>
           <BulletList>
-            <BulletItem>Usar el servicio solo para fines legales</BulletItem>
-            <BulletItem>No interferir con el funcionamiento normal del sitio</BulletItem>
-            <BulletItem>No intentar acceder a áreas restringidas sin autorización</BulletItem>
-            <BulletItem>Ser responsable de cualquier contenido que publiques</BulletItem>
+            <BulletItem>{t("serviceDescItem1")}</BulletItem>
+            <BulletItem>{t("serviceDescItem2")}</BulletItem>
+            <BulletItem>{t("serviceDescItem3")}</BulletItem>
+            <BulletItem>{t("serviceDescItem4")}</BulletItem>
           </BulletList>
+          <Paragraph>{t("serviceDescFooter")}</Paragraph>
         </>
       ),
     },
@@ -263,19 +258,18 @@ const Terms = () => {
       title: t("userContent"),
       content: (
         <>
-          <Paragraph>
-            Los usuarios son responsables de asegurar que el contenido que suben a stream-in cumpla con todas las leyes aplicables y estos Términos y Condiciones. Estamos comprometidos con mantener un entorno seguro y respetuoso para todos.
-          </Paragraph>
+          <Paragraph>{t("prohibitedConductContent")}</Paragraph>
           <BulletList>
-            <BulletItem>No publiques contenido que viole los derechos de autor o propiedad intelectual de terceros</BulletItem>
-            <BulletItem>No publiques contenido obsceno, pornográfico, difamatorio o que incite a la violencia</BulletItem>
-            <BulletItem>No publiques información personal de otros sin su consentimiento</BulletItem>
-            <BulletItem>No publiques contenido que promueva discriminación, acoso o hostigamiento</BulletItem>
+            <BulletItem>{t("prohibitedItem1")}</BulletItem>
+            <BulletItem>{t("prohibitedItem2")}</BulletItem>
+            <BulletItem>{t("prohibitedItem3")}</BulletItem>
+            <BulletItem>{t("prohibitedItem4")}</BulletItem>
+            <BulletItem>{t("prohibitedItem5")}</BulletItem>
+            <BulletItem>{t("prohibitedItem6")}</BulletItem>
+            <BulletItem>{t("prohibitedItem7")}</BulletItem>
           </BulletList>
           <HighlightBox>
-            <HighlightText>
-              ⚠️ stream-in se reserva el derecho de eliminar cualquier contenido que considere inapropiado o que viole estos términos.
-            </HighlightText>
+            <HighlightText>{t("prohibitedFooter")}</HighlightText>
           </HighlightBox>
         </>
       ),
@@ -285,12 +279,16 @@ const Terms = () => {
       title: t("intellectualProperty"),
       content: (
         <>
-          <Paragraph>
-            Al subir contenido a stream-in, los usuarios otorgan automáticamente una licencia no exclusiva, transferible, sublicenciable, gratuita y mundial para que stream-in utilice, modifique, reproduzca, distribuya y muestre dicho contenido exclusivamente para el funcionamiento y promoción del sitio.
-          </Paragraph>
-          <Paragraph>
-            stream-in respeta los derechos de propiedad intelectual de terceros y espera que los usuarios hagan lo mismo. Si crees que tu contenido ha sido usado de manera infractora, por favor contáctanos.
-          </Paragraph>
+          <Paragraph>{t("contentIPContent")}</Paragraph>
+          <Paragraph>{t("contentIPCommit")}</Paragraph>
+          <BulletList>
+            <BulletItem>{t("contentIPItem1")}</BulletItem>
+            <BulletItem>{t("contentIPItem2")}</BulletItem>
+            <BulletItem>{t("contentIPItem3")}</BulletItem>
+          </BulletList>
+          <HighlightBox>
+            <HighlightText>{t("contentIPHighlight")}</HighlightText>
+          </HighlightBox>
         </>
       ),
     },
@@ -299,15 +297,14 @@ const Terms = () => {
       title: t("siteSecurity"),
       content: (
         <>
-          <Paragraph>
-            Nos esforzamos por mantener stream-in seguro para todos los usuarios, pero debes tomar precauciones al usar el servicio.
-          </Paragraph>
+          <Paragraph>{t("privacyContent")}</Paragraph>
           <BulletList>
-            <BulletItem>No intentes eludir las medidas de seguridad del sitio</BulletItem>
-            <BulletItem>No uses el sitio de manera que pueda dañar, desactivar, sobrecargar o afectar su funcionamiento</BulletItem>
-            <BulletItem>No intentes acceder a cuentas de otros usuarios</BulletItem>
-            <BulletItem>Mantén segura tu información de inicio de sesión</BulletItem>
+            <BulletItem>{t("privacyItem1")}</BulletItem>
+            <BulletItem>{t("privacyItem2")}</BulletItem>
+            <BulletItem>{t("privacyItem3")}</BulletItem>
+            <BulletItem>{t("privacyItem4")}</BulletItem>
           </BulletList>
+          <Paragraph>{t("privacyFooter")}</Paragraph>
         </>
       ),
     },
@@ -316,12 +313,16 @@ const Terms = () => {
       title: t("accountSuspension"),
       content: (
         <>
-          <Paragraph>
-            stream-in se reserva el derecho de suspender o terminar la cuenta de cualquier usuario que viole estos Términos y Condiciones o cualquier política relacionada. También podemos eliminar cualquier contenido que consideremos inapropiado o que viole estos términos.
-          </Paragraph>
-          <Paragraph>
-            Las suspensiones o terminaciones pueden ser temporales o permanentes, según la gravedad de la violación.
-          </Paragraph>
+          <Paragraph>{t("userAccountsContent")}</Paragraph>
+          <BulletList>
+            <BulletItem>{t("userAccountsItem1")}</BulletItem>
+            <BulletItem>{t("userAccountsItem2")}</BulletItem>
+            <BulletItem>{t("userAccountsItem3")}</BulletItem>
+            <BulletItem>{t("userAccountsItem4")}</BulletItem>
+          </BulletList>
+          <HighlightBox>
+            <HighlightText>{t("userAccountsHighlight")}</HighlightText>
+          </HighlightBox>
         </>
       ),
     },
@@ -330,15 +331,15 @@ const Terms = () => {
       title: t("liabilityLimitation"),
       content: (
         <>
-          <Paragraph>
-            stream-in no será responsable por daños directos, indirectos, incidentales, especiales, consecuentes o punitivos que surjan del uso o la inability de usar el sitio.
-          </Paragraph>
+          <Paragraph>{t("liabilityContent")}</Paragraph>
           <BulletList>
-            <BulletItem>No garantizamos la disponibilidad continua, ininterrumpida o segura del sitio</BulletItem>
-            <BulletItem>No garantizamos la exactitud, fiabilidad o completitud del contenido proporcionado por los usuarios</BulletItem>
-            <BulletItem>Los videos y contenido son responsabilidad de sus autores</BulletItem>
-            <BulletItem>stream-in actúa como plataforma de alojamiento y no revisa todos los contenidos</BulletItem>
+            <BulletItem>{t("liabilityItem1")}</BulletItem>
+            <BulletItem>{t("liabilityItem2")}</BulletItem>
+            <BulletItem>{t("liabilityItem3")}</BulletItem>
           </BulletList>
+          <HighlightBox>
+            <HighlightText>{t("liabilityHighlight")}</HighlightText>
+          </HighlightBox>
         </>
       ),
     },
@@ -347,13 +348,14 @@ const Terms = () => {
       title: t("termsModifications"),
       content: (
         <>
-          <Paragraph>
-            stream-in se reserva el derecho de modificar estos Términos y Condiciones en cualquier momento. Los usuarios serán notificados de estos cambios mediante una publicación en el sitio o por otros medios razonables. El uso continuado del sitio después de dichas modificaciones constituirá la aceptación de los nuevos términos y condiciones.
-          </Paragraph>
+          <Paragraph>{t("termsModContent")}</Paragraph>
+          <BulletList>
+            <BulletItem>{t("termsModItem1")}</BulletItem>
+            <BulletItem>{t("termsModItem2")}</BulletItem>
+            <BulletItem>{t("termsModItem3")}</BulletItem>
+          </BulletList>
           <HighlightBox>
-            <HighlightText>
-              🔄 Recomendamos revisar estos Términos periódicamente para estar al tanto de cualquier cambio.
-            </HighlightText>
+            <HighlightText>{t("termsModFooter")}</HighlightText>
           </HighlightBox>
         </>
       ),
@@ -363,9 +365,7 @@ const Terms = () => {
       title: t("applicableLaw"),
       content: (
         <>
-          <Paragraph>
-            Estos Términos y Condiciones se regirán e interpretarán de acuerdo con las leyes de México sin tener en cuenta sus disposiciones sobre conflictos de leyes.
-          </Paragraph>
+          <Paragraph>{t("contactDisputesHighlight")}</Paragraph>
         </>
       ),
     },
@@ -374,17 +374,24 @@ const Terms = () => {
       title: t("contactSection"),
       content: (
         <>
-          <Paragraph>
-            Si tienes alguna pregunta sobre estos Términos y Condiciones, por favor contáctanos a través de:
-          </Paragraph>
+          <Paragraph>{t("contactDisputesContent")}</Paragraph>
           <BulletList>
-            <BulletItem>📧 Correo electrónico: support@stream-in.com</BulletItem>
-            <BulletItem>📞 Número de teléfono: +52 55 1234 5678</BulletItem>
-            <BulletItem>📍 Dirección: Av. Reforma 123, Ciudad de México, CP 06600</BulletItem>
+            <BulletItem>
+              📧 Soporte:{" "}
+              <ContactLink href="mailto:support@stream-in.com">
+                support@stream-in.com
+              </ContactLink>
+            </BulletItem>
+            <BulletItem>
+              ⚖️ Legal:{" "}
+              <ContactLink href="mailto:legal@stream-in.com">
+                legal@stream-in.com
+              </ContactLink>
+            </BulletItem>
           </BulletList>
-          <Paragraph>
-            Estamos comprometidos a responder a tus consultas en un plazo máximo de 72 horas hábiles.
-          </Paragraph>
+          <HighlightBox>
+            <HighlightText>{t("contactDisputesHighlight")}</HighlightText>
+          </HighlightBox>
         </>
       ),
     },
