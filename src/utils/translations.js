@@ -1264,9 +1264,9 @@ const translations = {
 
     usSecExperienceTitle: "Light on intrusive ads and commercial noise",
     usSecExperienceP1:
-      "We do not want a site clogged with ads or a feed that feels like a billboard for interests unrelated to why you came. There may be advertising when it helps sustain the service, but the goal is that it never drowns out what you came to watch.",
+      "We do not want a site clogged with ads or a feed that feels like a billboard for interests unrelated to why you came. We do want a sustainable business—and we want creators to earn from what they publish—so advertising can exist when it supports the platform. The point is balance: ads should be relevant, respectful, and never drown out what you came to watch.",
     usSecExperienceP2:
-      "stream-in.com is meant to prioritize the experience of viewers and creators—not to push commercial agendas above everything else.",
+      "stream-in.com is built to grow with advertisers (not against them): a brand-safe, user-first experience where promotion supports the ecosystem instead of becoming the main product.",
 
     usSecMoneyTitle: "Creator monetization when the project can support it",
     usSecMoneyP1:
