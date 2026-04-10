@@ -109,11 +109,13 @@ const VideoWrapper = styled.div`
      para que el contenido no quede debajo del reproductor fijo.
      La altura es 56.25vw (relación 16:9 del ancho completo). ── */
   @media (max-width: 768px) {
-    height: 56.25vw;
+    /* Evita que el contenido de abajo se asome bajo el player fijo al hacer scroll */
+    height: calc(56.25vw + 8px);
     border-radius: 0;
     margin-bottom: 0;
     position: relative;
     z-index: 1;
+    background: #000;
   }
 `;
 
