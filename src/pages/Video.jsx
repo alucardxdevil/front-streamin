@@ -545,6 +545,8 @@ const Video = () => {
   const dislikes = Array.isArray(currentVideo?.dislikes) ? currentVideo.dislikes : [];
   const hasLiked = currentUser?._id ? likes.includes(currentUser._id) : false;
   const hasDisliked = currentUser?._id ? dislikes.includes(currentUser._id) : false;
+  const isOwnChannel = Boolean(currentUser?._id && channel?._id && currentUser._id === channel._id);
+  const channelProfilePath = isOwnChannel ? "/profile" : `/profileUser/${channel.slug || channel._id}`;
 
   const openLoginModal = () => setShowLoginModal(true);
   const closeLoginModal = () => setShowLoginModal(false);
@@ -607,6 +609,7 @@ const Video = () => {
 
   const handleSub = async () => {
     if (!currentUser) return openLoginModal();
+    if (isOwnChannel) return navigate("/profile");
     currentUser.followsProfile.includes(channel._id)
       ? await axios.put(`/users/unfol/${channel._id}`)
       : await axios.put(`/users/fol/${channel._id}`);
@@ -836,7 +839,7 @@ const Video = () => {
                   {/* CREATOR */}
                   <Card>
                     <CreatorRow>
-                      <Link to={`/profileUser/${channel.slug || channel._id}`}>
+                      <Link to={channelProfilePath}>
                         <Avatar
                           src={channel.img || defaultProfile}
                           alt={`Foto de perfil de ${channel.name}`}
@@ -850,16 +853,22 @@ const Video = () => {
                         </div>
                       </CreatorInfo>
 
-                      <FollowBtn
-                        following={currentUser?.followsProfile.includes(
-                          channel._id,
-                        )}
-                        onClick={handleSub}
-                      >
-                        {currentUser?.followsProfile.includes(channel._id)
-                          ? t("following")
-                          : t("follow")}
-                      </FollowBtn>
+                      {isOwnChannel ? (
+                        <FollowBtn following={false} onClick={() => navigate("/profile")}>
+                          {t("myProfile")}
+                        </FollowBtn>
+                      ) : (
+                        <FollowBtn
+                          following={currentUser?.followsProfile.includes(
+                            channel._id,
+                          )}
+                          onClick={handleSub}
+                        >
+                          {currentUser?.followsProfile.includes(channel._id)
+                            ? t("following")
+                            : t("follow")}
+                        </FollowBtn>
+                      )}
                     </CreatorRow>
                   </Card>
                 </InfoGrid>

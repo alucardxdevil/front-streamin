@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/userSlice";
 import styled, { keyframes } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { FaPencilAlt, FaTwitter, FaInstagram, FaFacebook, FaGlobe, FaTimes, FaCheck } from "react-icons/fa";
+import { FaPencilAlt, FaTwitter, FaInstagram, FaFacebook, FaGlobe, FaTimes, FaCheck, FaSearchPlus } from "react-icons/fa";
 import { UploadProfile } from "../components/UploadProfile";
 import axios from "axios";
 import defaultProfile from "../img/profileUser.png";
@@ -113,6 +113,7 @@ const ProfileImage = styled.img`
     0 0 0 5px rgba(11, 103, 220, 0.2),
     0 10px 24px rgba(11, 103, 220, 0.25);
   transition: transform 0.3s ease;
+  cursor: zoom-in;
 
   @media (max-width: 768px) {
     width: 100px;
@@ -122,6 +123,43 @@ const ProfileImage = styled.img`
 
   &:hover {
     transform: scale(1.04);
+  }
+`;
+
+const ProfileImageWrapper = styled.button`
+  position: relative;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 50%;
+  cursor: zoom-in;
+
+  &:hover > span {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+`;
+
+const ProfileImageZoomHint = styled.span`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 16px;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -261,39 +299,39 @@ const StatLabel = styled.span`
 `;
 
 const DescriptionContainer = styled.div`
-  max-height: 110px;
+  max-height: 170px;
   overflow-y: auto;
   width: 100%;
   margin: 0 auto;
-  padding: 14px;
+  padding: 16px;
   background: ${({ theme }) => theme.bg || "rgba(255,255,255,0.04)"};
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.07);
-  font-size: 15px;
-  line-height: 1.6;
-  color: ${({ theme }) => theme.textSoft || "#bbb"};
+  font-size: 17px;
+  line-height: 1.75;
+  color: ${({ theme }) => theme.text || "#e6e6e6"};
   box-shadow: inset 0px 2px 6px rgba(0, 0, 0, 0.25);
 
   @media (max-width: 480px) {
     width: 100%;
-    font-size: 14px;
+    font-size: 15px;
   }
 `;
 
 const SocialLinksContainer = styled.div`
   width: 100%;
-  margin: 6px auto 0;
-  padding: 16px;
+  margin: 2px auto 0;
+  padding: 12px;
   background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.07);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 
   @media (max-width: 480px) {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
   }
 `;
 
@@ -593,6 +631,15 @@ const EmptySocialText = styled.p`
   margin: 0;
 `;
 
+const PreviewProfileImage = styled.img`
+  width: min(70vw, 460px);
+  max-height: 78vh;
+  border-radius: 20px;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+`;
+
 export const Profile = () => {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -605,6 +652,7 @@ export const Profile = () => {
   const [totalViews, setTotalViews] = useState(0);
   const [videoCount, setVideoCount] = useState(0);
   const [editingSocial, setEditingSocial] = useState(false);
+  const [showProfilePreview, setShowProfilePreview] = useState(false);
   const [socialLinks, setSocialLinks] = useState({
     twitter: "",
     instagram: "",
@@ -735,10 +783,15 @@ export const Profile = () => {
         </LeftImageContainer>
 
         <ContentContainer>
-          <ProfileImage
-            src={currentUser?.img || defaultProfile}
-            alt="Profile"
-          />
+          <ProfileImageWrapper onClick={() => setShowProfilePreview(true)} aria-label="Preview profile image">
+            <ProfileImage
+              src={currentUser?.img || defaultProfile}
+              alt="Profile"
+            />
+            <ProfileImageZoomHint>
+              <FaSearchPlus />
+            </ProfileImageZoomHint>
+          </ProfileImageWrapper>
           <ButtonContainer>
             <CardButton onClick={() => setOpen(true)}>
               {t("change")} <FaPencilAlt size={14} />
@@ -866,6 +919,16 @@ export const Profile = () => {
       </Container>
 
       {open && <UploadProfile setOpen={setOpen} />}
+
+      {showProfilePreview && (
+        <Backdrop onClick={() => setShowProfilePreview(false)}>
+          <PreviewProfileImage
+            src={currentUser?.img || defaultProfile}
+            alt="Profile Preview"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </Backdrop>
+      )}
 
       {showDeleteModal && (
         <Backdrop onClick={() => (isDeletingAccount ? null : setShowDeleteModal(false))}>

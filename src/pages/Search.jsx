@@ -648,6 +648,10 @@ export const Search = () => {
 
   const handleSub = async (userId) => {
       try {
+        if (currentUser?._id === userId) {
+          navigate("/profile");
+          return;
+        }
         if (currentUser.followsProfile.includes(userId)) {
           await axios.put(`/users/unfol/${userId}`);
         } else {
@@ -831,9 +835,13 @@ export const Search = () => {
               ) : (
                 <UserCarousel>
                   {users.map((u, index) => (
+                    (() => {
+                      const isOwnProfile = Boolean(currentUser?._id && currentUser._id === u._id);
+                      const userProfilePath = isOwnProfile ? "/profile" : `/profileUser/${u.slug || u._id}`;
+                      return (
                     <UserCardCarousel 
                       key={u._id} 
-                      to={`/profileUser/${u.slug || u._id}`}
+                      to={userProfilePath}
                       index={index}
                     >
                       <BigAvatar src={u.img || defaultProfile} />
@@ -846,14 +854,22 @@ export const Search = () => {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
+                          if (isOwnProfile) {
+                            navigate("/profile");
+                            return;
+                          }
                           handleSub(u._id);
                         }}
                       >
-                        {currentUser?.followsProfile.includes(u._id)
+                        {isOwnProfile
+                          ? t("myProfile")
+                          : currentUser?.followsProfile.includes(u._id)
                           ? t("following")
                           : t("follow")}
                       </CardButton>
                     </UserCardCarousel>
+                      );
+                    })()
                   ))}
                 </UserCarousel>
               )}
