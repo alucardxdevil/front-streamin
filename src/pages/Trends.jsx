@@ -10,8 +10,10 @@ import {
   FaUsers,
   FaClock,
   FaEye,
-  FaArrowRight
+  FaArrowRight,
+  FaBullhorn
 } from "react-icons/fa";
+import { MdCampaign } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
 import { useLanguage } from "../utils/LanguageContext";
@@ -44,6 +46,15 @@ const pulse = keyframes`
   }
   50% {
     transform: scale(1.05);
+  }
+`;
+
+const adShimmer = keyframes`
+  0% {
+    background-position: -400% 0;
+  }
+  100% {
+    background-position: 400% 0;
   }
 `;
 
@@ -135,6 +146,107 @@ const Subtitle = styled.p`
   
   @media (max-width: 768px) {
     font-size: 14px;
+  }
+`;
+
+const HeaderWrapper = styled.div`
+  margin-bottom: 40px;
+
+  @media (max-width: 768px) {
+    margin-bottom: 24px;
+  }
+`;
+
+const SecondaryAdBanner = styled.div`
+  width: 100%;
+  height: 100px;
+  margin-top: 0;
+  margin-bottom: 40px;
+  border-radius: 0 0 24px 24px;
+  background: linear-gradient(
+    90deg,
+    ${({ theme }) => theme.soft} 0%,
+    ${({ theme }) => theme.bgLighter} 25%,
+    rgba(11, 103, 220, 0.08) 50%,
+    ${({ theme }) => theme.bgLighter} 75%,
+    ${({ theme }) => theme.soft} 100%
+  );
+  background-size: 400% 100%;
+  animation: ${adShimmer} 6s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 1px dashed ${({ theme }) => theme.textSoft};
+  border-top: none;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba(11, 103, 220, 0.5);
+    background: linear-gradient(
+      90deg,
+      rgba(11, 103, 220, 0.05) 0%,
+      rgba(11, 103, 220, 0.12) 50%,
+      rgba(11, 103, 220, 0.05) 100%
+    );
+  }
+
+  @media (max-width: 768px) {
+    height: 72px;
+    margin-bottom: 24px;
+    border-radius: 0 0 16px 16px;
+    gap: 8px;
+  }
+`;
+
+const AdBannerLabel = styled.span`
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.textSoft};
+  opacity: 0.6;
+  position: absolute;
+  top: 6px;
+  right: 12px;
+
+  @media (max-width: 768px) {
+    font-size: 9px;
+    top: 4px;
+    right: 8px;
+  }
+`;
+
+const AdBannerContent = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: ${({ theme }) => theme.textSoft};
+  opacity: 0.7;
+
+  svg {
+    font-size: 22px;
+    color: #0b67dc;
+    opacity: 0.8;
+  }
+
+  span {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 768px) {
+    gap: 8px;
+    svg {
+      font-size: 18px;
+    }
+    span {
+      font-size: 12px;
+    }
   }
 `;
 
@@ -636,12 +748,24 @@ function Trends({ }) {
 
   return (
     <PageContainer>
-      <HeaderSection>
-        <Title>
-          <FaFireAlt /> {t("trendingNow")}
-        </Title>
-        <Subtitle>{t("discoverPopular")}</Subtitle>
-      </HeaderSection>
+      <HeaderWrapper>
+        <HeaderSection>
+          <Title>
+            <FaFireAlt /> {t("trendingNow")}
+          </Title>
+          <Subtitle>{t("discoverPopular")}</Subtitle>
+        </HeaderSection>
+        <SecondaryAdBanner>
+          <AdBannerLabel>{t("adLabel")}</AdBannerLabel>
+          <AdBannerContent>
+            <FaBullhorn />
+            <span>
+              <MdCampaign style={{ marginRight: "4px" }} />
+              {t("adBannerText")}
+            </span>
+          </AdBannerContent>
+        </SecondaryAdBanner>
+      </HeaderWrapper>
 
       {/* Mensaje de error */}
       {error && (

@@ -18,6 +18,7 @@ const ScrollableCards = styled.div`
   flex: 1;
   overflow-y: auto;
   padding-right: 8px;
+  padding-bottom: 10px;
   min-height: 0; /* necesario para que flex + overflow funcione correctamente */
 
   /* Firefox scrollbar */
@@ -37,6 +38,21 @@ const ScrollableCards = styled.div`
   &::-webkit-scrollbar-thumb {
     background: ${({ theme }) => theme.text};
     border-radius: 3px;
+  }
+
+  @media (max-width: 768px) {
+    padding-right: 0;
+  }
+`;
+
+const CardsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+
+  @media (max-width: 768px) {
+    gap: 16px;
   }
 `;
 
@@ -198,21 +214,23 @@ export const Recommendation = ({tags, currentPlayingVideoId}) => {
                     {t("relatedVideos")}
                 </h3>
                 <Hr />
-                {videos.map((video, index) => {
-                    if (videos.length === index + 1) {
-                        return (
-                            <div ref={lastCardElement} key={video._id}>
-                                <Card type={"sm"} video={video} />
-                            </div>
-                        );
-                    } else {
-                        return (
-                            <div key={video._id}>
-                                <Card type={"sm"} video={video} />
-                            </div>
-                        );
-                    }
-                })}
+                <CardsList>
+                  {videos.map((video, index) => {
+                      if (videos.length === index + 1) {
+                          return (
+                              <div ref={lastCardElement} key={video._id}>
+                                  <Card type={"sm"} video={video} />
+                              </div>
+                          );
+                      } else {
+                          return (
+                              <div key={video._id}>
+                                  <Card type={"sm"} video={video} />
+                              </div>
+                          );
+                      }
+                  })}
+                </CardsList>
                 {loading && <Loading>{t("loadingMoreVideos")}</Loading>}
                 {!hasMore && !loading && <Loading>{t("noMoreRelatedVideos")}</Loading>}
             </ScrollableCards>

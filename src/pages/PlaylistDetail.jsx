@@ -461,7 +461,12 @@ export const PlaylistDetailPage = () => {
     currentUser &&
     playlist &&
     String(currentUser._id) === String(playlist.userId);
-  const isFavoritesPlaylist = playlist?.name === "Favorites" || playlist?.name === "Mis videos favoritos";
+  const normalizedPlaylistName = (playlist?.name || "").trim().toLowerCase();
+  const isFavoritesPlaylist = new Set([
+    "favorites",
+    "mis videos favoritos",
+    "my favorites videos",
+  ]).has(normalizedPlaylistName);
   const canEdit = isOwner && !isFavoritesPlaylist;
 
   /** Quitar ítem: playlists normales (owner); entradas con video ya borrado también en Favoritos (limpieza). */

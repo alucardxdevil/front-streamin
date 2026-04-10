@@ -564,7 +564,12 @@ export const PlaylistPlayerPage = () => {
 
   // Derived state
   const isOwner = currentUser && playlist && currentUser._id === playlist.userId;
-  const isFavoritesPlaylist = playlist?.name === "Favorites" || playlist?.name === "Mis videos favoritos";
+  const normalizedPlaylistName = (playlist?.name || "").trim().toLowerCase();
+  const isFavoritesPlaylist = new Set([
+    "favorites",
+    "mis videos favoritos",
+    "my favorites videos",
+  ]).has(normalizedPlaylistName);
   const currentVideoItem = playlist?.videos?.[currentIndex];
 
   // Available (non-deleted) video count

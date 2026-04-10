@@ -104,10 +104,10 @@ const useVideoUpload = () => {
   }
 
   // ── Paso 4: Encolar transcodificación ──────────────────────────────────────
-  const enqueueTranscode = async ({ rawKey, title, description, tags, imgUrl, imgKey, fileSize }) => {
+  const enqueueTranscode = async ({ rawKey, title, description, classification, tags, imgUrl, imgKey, fileSize }) => {
     const res = await axios.post(
       `/transcode/enqueue`,
-      { rawKey, title, description, tags, imgUrl, imgKey, fileSize },
+      { rawKey, title, description, classification, tags, imgUrl, imgKey, fileSize },
       { headers: getAuthHeaders() }
     )
 
@@ -156,6 +156,7 @@ const useVideoUpload = () => {
     imageFile,
     title,
     description,
+    classification = 'A',
     tags = [],
   }) => {
     if (!videoFile) throw new Error('videoFile es requerido')
@@ -192,6 +193,7 @@ const useVideoUpload = () => {
         rawKey,
         title,
         description,
+        classification,
         tags,
         imgUrl,
         imgKey,

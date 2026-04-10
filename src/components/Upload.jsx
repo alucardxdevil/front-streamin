@@ -81,6 +81,15 @@ const Input = styled.input`
   font-size: 15px;
 `;
 
+const Select = styled.select`
+  background: ${({ theme }) => theme.bg || "#202020"};
+  border: 1px solid ${({ theme }) => theme.soft || "#333"};
+  border-radius: 12px;
+  padding: 12px;
+  color: ${({ theme }) => theme.text || "#fff"};
+  font-size: 15px;
+`;
+
 const Textarea = styled.textarea`
   background: ${({ theme }) => theme.bg || "#202020"};
   border: 1px solid ${({ theme }) => theme.soft || "#333"};
@@ -211,7 +220,7 @@ export const Upload = ({ setOpen }) => {
   const [previewVideo, setPreviewVideo] = useState(null);
 
   // Metadata del video
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState({ classification: "A" });
   const [tags, setTags] = useState([]);
   const [localError, setLocalError] = useState(null);
 
@@ -303,6 +312,7 @@ export const Upload = ({ setOpen }) => {
         imageFile: imgFile,
         title: inputs.title,
         description: inputs.description,
+        classification: inputs.classification,
         tags,
       });
 
@@ -451,6 +461,21 @@ export const Upload = ({ setOpen }) => {
             onChange={handleChange}
             disabled={isUploading || isProcessing}
           />
+        </Section>
+
+        <Section>
+          <Label>{t("classification")}</Label>
+          <Select
+            name="classification"
+            value={inputs.classification}
+            onChange={handleChange}
+            disabled={isUploading || isProcessing}
+          >
+            <option value="A">A - {t("classA")}</option>
+            <option value="B">B - {t("classB")}</option>
+            <option value="C">C - {t("classC")}</option>
+            <option value="D">D - {t("classD")}</option>
+          </Select>
         </Section>
 
         <Section>

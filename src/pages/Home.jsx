@@ -205,7 +205,7 @@ const ForYouEmptyBox = styled.div`
 
 const SecondaryAdBanner = styled.div`
   width: 100%;
-  height: 90px;
+  height: 100px;
   margin-top: 0;
   margin-bottom: 40px;
   border-radius: 0 0 24px 24px;
@@ -241,7 +241,7 @@ const SecondaryAdBanner = styled.div`
   }
 
   @media (max-width: 768px) {
-    height: 64px;
+    height: 72px;
     margin-bottom: 24px;
     border-radius: 0 0 16px 16px;
     gap: 8px;
@@ -596,14 +596,14 @@ const AdCard = ({ t }) => (
   </AdCardContainer>
 );
 
-// ─── Función para intercalar AdCards cada 10 elementos ───────────────────────
+// ─── Función para intercalar AdCards cada 5 elementos ────────────────────────
 
 const buildGridItems = (videos, t) => {
   const items = [];
   videos.forEach((video, index) => {
     items.push(<Card key={video._id} video={video} />);
-    // Insertar AdCard después de cada 10 tarjetas de video (índice 9, 19, 29…)
-    if ((index + 1) % 10 === 0) {
+    // Insertar AdCard después de cada 5 tarjetas de video (índice 4, 9, 14…)
+    if ((index + 1) % 5 === 0) {
       items.push(<AdCard key={`ad-${index}`} t={t} />);
     }
   });

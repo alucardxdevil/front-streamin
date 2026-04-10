@@ -20,7 +20,6 @@ const Recommendation = lazy(() => import("../components/Recommendation").then((m
 const RecommendationRandom = lazy(() => import("../components/RecommendationRandom").then((m) => ({ default: m.RecommendationRandom })));
 const DescriptionMore = lazy(() => import("../components/DescriptionMore").then((m) => ({ default: m.DescriptionMore })));
 const ShareModal = lazy(() => import("../components/ModalShare"));
-const ClassificationInfo = lazy(() => import("../components/ClasificationInfo"));
 const SEOVideoWrapper = lazy(() => import("../components/seo/SEOVideoWrapper"));
 
 
@@ -167,6 +166,13 @@ const Action = styled.div`
   gap: 6px;
   align-items: center;
   cursor: pointer;
+`;
+
+const ClassificationText = styled.div`
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  cursor: default;
 `;
 
 /* ================= CREATOR ================= */
@@ -617,9 +623,15 @@ const Video = () => {
     try {
       const response = await axios.get(`/users/playlists/${currentUser._id}`);
       // Filtrar playlist de favoritos (solo se actualiza al dar like a un video)
-      const filteredPlaylists = response.data.playlists.filter(
-        playlist => playlist.name !== "Favorites" && playlist.name !== "Mis videos favoritos"
-      );
+      const favoritePlaylistNames = new Set([
+        "favorites",
+        "mis videos favoritos",
+        "my favorites videos",
+      ]);
+      const filteredPlaylists = response.data.playlists.filter((playlist) => {
+        const normalizedName = playlist?.name?.trim().toLowerCase();
+        return !favoritePlaylistNames.has(normalizedName);
+      });
       setPlaylists(filteredPlaylists);
     } catch (error) {
       console.error("Error cargando playlists:", error);
@@ -800,9 +812,9 @@ const Video = () => {
                         {currentVideo.dislikes.length}
                       </Action>
 
-                      <Suspense fallback={null}>
-                        <ClassificationInfo />
-                      </Suspense>
+                      <ClassificationText>
+                        {t("classification")} {currentVideo.classification || "A"}
+                      </ClassificationText>
                       <Suspense fallback={null}>
                         <ShareModal videoId={currentVideo._id} />
                       </Suspense>

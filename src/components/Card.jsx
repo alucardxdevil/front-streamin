@@ -20,24 +20,6 @@ const fadeIn = keyframes`
   }
 `;
 
-const shimmer = keyframes`
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-`;
-
-const pulse = keyframes`
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-`;
-
 // Contenedor principal - Tarjeta mejorada
 const Container = styled(Link)`
   width: ${(props) => (props.type !== "sm" ? "100%" : "100%")};
@@ -47,20 +29,34 @@ const Container = styled(Link)`
   flex-direction: ${(props) => (props.type === "sm" ? "row" : "column")};
   gap: 0;
   border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   background: linear-gradient(145deg, 
     ${({ theme }) => theme.bgLighter} 0%, 
     ${({ theme }) => theme.soft} 100%
   );
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   text-decoration: none;
   position: relative;
   overflow: hidden;
   animation: ${fadeIn} 0.6s ease-out;
 
   &:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(255, 62, 108, 0.2);
+    transform: translateY(-3px) scale(1.008);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.25);
+    border-color: rgba(255, 62, 108, 0.35);
+  }
+  
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(255, 62, 108, 0.9) 0%, rgba(255, 126, 95, 0.85) 100%);
+    opacity: 0.82;
+    z-index: 1;
+    pointer-events: none;
   }
   
   &::after {
@@ -85,9 +81,11 @@ const Container = styled(Link)`
     max-width: 100%;
     margin: 0;
     border-radius: 12px;
+
+    flex-direction: ${(props) => (props.type === "sm" ? "column" : "column")};
     
     &:hover {
-      transform: translateY(-4px) scale(1.01);
+      transform: translateY(-2px) scale(1.004);
     }
   }
 `;
@@ -95,9 +93,15 @@ const Container = styled(Link)`
 // Wrapper de imagen con efectos
 const ImageWrapper = styled.div`
   position: relative;
-  width: ${(props) => (props.type === "sm" ? "40%" : "100%")};
-  height: ${(props) => (props.type === "sm" ? "100px" : "160px")};
+  width: ${(props) => (props.type === "sm" ? "46%" : "100%")};
+  height: ${(props) => (props.type === "sm" ? "120px" : "190px")};
   overflow: hidden;
+  background: #111;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: ${(props) => (props.type === "sm" ? "210px" : "190px")};
+  }
 `;
 
 // Imagen con efecto de zoom
@@ -106,10 +110,10 @@ const Image = styled.img`
   height: 100%;
   object-fit: cover;
   background-color: #999;
-  transition: transform 0.5s ease;
+  transition: transform 0.35s ease;
   
   ${Container}:hover & {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
 `;
 
@@ -120,7 +124,11 @@ const PlayOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.12) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,10 +136,10 @@ const PlayOverlay = styled.div`
   transition: opacity 0.3s ease;
   
   svg {
-    font-size: 48px;
+    font-size: 42px;
     color: white;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-    transition: transform 0.3s ease;
+    transition: transform 0.25s ease;
   }
   
   ${Container}:hover & {
@@ -154,11 +162,13 @@ const InfoDuration = styled.span`
   position: absolute;
   bottom: 8px;
   right: 8px;
-  padding: 4px 8px;
+  padding: 4px 9px;
   border-radius: 6px;
   font-size: 12px;
-  font-weight: 600;
-  background: rgba(233, 69, 96, 0.7);
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  background: rgba(18, 18, 18, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
   -webkit-backdrop-filter: blur(3px);
   backdrop-filter: blur(3px);
@@ -170,6 +180,16 @@ const Details = styled.div`
   gap: 14px;
   flex: 1;
   padding: ${(props) => (props.type === "sm" ? "10px" : "16px")};
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+
+  @media (max-width: 768px) {
+    padding: ${(props) => (props.type === "sm" ? "14px" : "16px")};
+    gap: 10px;
+  }
 `;
 
 // Avatar del canal
@@ -205,9 +225,9 @@ const Title = styled.h1`
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.4;
-  min-height: 42px;
-  font-weight: 600;
-  font-size: 15px;
+  min-height: 44px;
+  font-weight: 700;
+  font-size: 15.5px;
   color: ${({ theme }) => theme.text || "#fff"};
   transition: color 0.3s ease;
   
@@ -220,7 +240,7 @@ const Title = styled.h1`
 const ChannelName = styled.h2`
   font-size: 13px;
   color: ${({ theme }) => theme.textSoft};
-  margin: 2px 0;
+  margin: 4px 0 2px;
   transition: color 0.3s ease;
   
   &:hover {
