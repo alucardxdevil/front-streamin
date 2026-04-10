@@ -8,6 +8,7 @@ import { dislike, fetchSuccess, like } from "../redux/videoSlice";
 import { follows } from "../redux/userSlice";
 import { formatTimeago } from "../utils/timeago";
 import { useLanguage } from "../utils/LanguageContext";
+import { recordWatchTags } from "../utils/watchTagPreferences";
 import axios from "axios";
 import VideoReproducer2 from "../components/Reproducer/VideoReproducer2";
 import defaultProfile from "../img/profileUser.png";
@@ -664,6 +665,10 @@ const Video = () => {
       console.error("Error registrando vista:", err);
     });
 
+    if (currentVideo?.tags?.length) {
+      recordWatchTags(currentVideo.tags);
+    }
+
     // Agregar al historial solo si el usuario está autenticado
     if (currentUser) {
       axios.post(`/users/history`, {
@@ -675,7 +680,7 @@ const Video = () => {
         console.error("Error al agregar al historial:", error);
       });
     }
-  }, [currentVideo?._id, currentVideo?.title, currentVideo?.duration, currentUser]);
+  }, [currentVideo?._id, currentVideo?.title, currentVideo?.duration, currentVideo?.tags, currentUser]);
 
   // Obtener un video recomendado aleatorio
   useEffect(() => {

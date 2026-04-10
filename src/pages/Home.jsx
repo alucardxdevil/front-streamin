@@ -3,7 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import Card from "../components/Card";
 import { useLanguage } from "../utils/LanguageContext";
-import { FaPlay, FaRandom, FaRedo, FaBullhorn } from "react-icons/fa";
+import { FaPlay, FaRandom, FaRedo, FaBullhorn, FaHeart } from "react-icons/fa";
+import { getTopTagsForYou } from "../utils/watchTagPreferences";
 import { MdCampaign } from "react-icons/md";
 
 // Animaciones
@@ -131,6 +132,71 @@ const Subtitle = styled.p`
   
   @media (max-width: 768px) {
     font-size: 14px;
+  }
+`;
+
+const TabRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+`;
+
+const TabButton = styled.button`
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 2px solid
+    ${({ theme, $active }) =>
+      $active ? "transparent" : theme.textSoft};
+  background: ${({ $active }) =>
+    $active
+      ? "linear-gradient(135deg, #0b67dc 0%, #ff3e6c 100%)"
+      : "transparent"};
+  color: ${({ theme, $active }) => ($active ? "#fff" : theme.textSoft)};
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  svg {
+    font-size: 15px;
+    opacity: 0.95;
+  }
+
+  &:hover {
+    border-color: rgba(11, 103, 220, 0.45);
+    color: ${({ theme, $active }) => ($active ? "#fff" : theme.text)};
+  }
+`;
+
+const ForYouEmptyBox = styled.div`
+  text-align: center;
+  padding: 48px 24px;
+  color: ${({ theme }) => theme.textSoft};
+  background: ${({ theme }) => theme.bgLighter};
+  border-radius: 16px;
+  border: 1px dashed ${({ theme }) => theme.textSoft};
+  margin-bottom: 24px;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+
+  h3 {
+    font-size: 18px;
+    color: ${({ theme }) => theme.text};
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
   }
 `;
 
@@ -543,25 +609,42 @@ const buildGridItems = (videos, t) => {
   return items;
 };
 
+const FOR_YOU_CHUNK = 15;
+
+function shuffleArray(items) {
+  const arr = [...items];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 // ─── Componente Principal ─────────────────────────────────────────────────────
 
 const Home = ({ type }) => {
+  const [feedMode, setFeedMode] = useState("random");
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
+  /** null | "noWeights" (sin datos locales) | "noResults" (sin videos en el servidor) */
+  const [forYouPlaceholder, setForYouPlaceholder] = useState(null);
   const initialized = useRef(false);
   const loadedIds = useRef(new Set());
+  const forYouPoolRef = useRef([]);
   const { t } = useLanguage();
 
-  // Reset al cambiar de tipo
+  // Reset al cambiar de tipo o de pestaña
   useEffect(() => {
     setVideos([]);
     loadedIds.current.clear();
+    forYouPoolRef.current = [];
     initialized.current = false;
     setHasMore(true);
     setError(null);
-  }, [type]);
+    setForYouPlaceholder(null);
+  }, [type, feedMode]);
 
   const fetchMoreVideos = async () => {
     if (loading || !hasMore) return;
@@ -592,36 +675,150 @@ const Home = ({ type }) => {
     }
   };
 
-  const handleScroll = () => {
-    if (
-      window.innerHeight + window.scrollY >= document.body.scrollHeight - 100 &&
-      hasMore &&
-      !loading
-    ) {
-      fetchMoreVideos();
+  const fetchMoreForYou = () => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+    setVideos((prev) => {
+      const pool = forYouPoolRef.current;
+      const start = prev.length;
+      const chunk = pool.slice(start, start + FOR_YOU_CHUNK);
+      if (chunk.length === 0) {
+        setHasMore(false);
+        setLoading(false);
+        return prev;
+      }
+      const atEnd = start + chunk.length >= pool.length;
+      setHasMore(!atEnd);
+      setLoading(false);
+      return [...prev, ...chunk];
+    });
+  };
+
+  const initForYou = async () => {
+    setLoading(true);
+    setError(null);
+    const tags = getTopTagsForYou(8);
+    if (!tags.length) {
+      forYouPoolRef.current = [];
+      setVideos([]);
+      setHasMore(false);
+      setForYouPlaceholder("noWeights");
+      setLoading(false);
+      return;
+    }
+    setForYouPlaceholder(null);
+    try {
+      const res = await axios.get("/videos/tags", {
+        params: { tags: tags.join(","), limit: 80 },
+      });
+      const byId = new Map();
+      for (const v of res.data) {
+        if (v?._id && !byId.has(v._id)) byId.set(v._id, v);
+      }
+      const list = shuffleArray([...byId.values()]);
+      if (list.length === 0) {
+        forYouPoolRef.current = [];
+        setVideos([]);
+        setHasMore(false);
+        setForYouPlaceholder("noResults");
+        setLoading(false);
+        return;
+      }
+      forYouPoolRef.current = list;
+      const first = list.slice(0, FOR_YOU_CHUNK);
+      setVideos(first);
+      setHasMore(list.length > first.length);
+    } catch (err) {
+      console.error("Error cargando videos para ti:", err);
+      setError(t("errorLoadingVideos"));
+      forYouPoolRef.current = [];
+      setVideos([]);
+      setHasMore(false);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (!initialized.current) {
-      fetchMoreVideos();
       initialized.current = true;
+      if (feedMode === "random") {
+        fetchMoreVideos();
+      } else {
+        initForYou();
+      }
     }
+
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY <
+        document.body.scrollHeight - 100
+      ) {
+        return;
+      }
+      if (!hasMore || loading) return;
+      if (feedMode === "random") {
+        fetchMoreVideos();
+      } else if (!forYouPlaceholder) {
+        fetchMoreForYou();
+      }
+    };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [hasMore, loading]);
+  }, [hasMore, loading, feedMode, forYouPlaceholder]);
+
+  const retryAfterError = () => {
+    setError(null);
+    if (feedMode === "forYou") initForYou();
+    else fetchMoreVideos();
+  };
+
+  const loadMoreClick = () => {
+    if (feedMode === "random") fetchMoreVideos();
+    else fetchMoreForYou();
+  };
 
   return (
     <PageContainer>
       {/* ── Banner principal + Banner secundario ── */}
       <HeaderWrapper>
         <HeaderSection>
+          <TabRow role="tablist" aria-label={t("homeFeedTabsLabel")}>
+            <TabButton
+              type="button"
+              role="tab"
+              aria-selected={feedMode === "random"}
+              $active={feedMode === "random"}
+              onClick={() => setFeedMode("random")}
+            >
+              <FaRandom /> {t("homeTabRandom")}
+            </TabButton>
+            <TabButton
+              type="button"
+              role="tab"
+              aria-selected={feedMode === "forYou"}
+              $active={feedMode === "forYou"}
+              onClick={() => setFeedMode("forYou")}
+            >
+              <FaHeart /> {t("homeTabForYou")}
+            </TabButton>
+          </TabRow>
           <Title>
-            <FaRandom /> {t("discover")}
+            {feedMode === "random" ? (
+              <>
+                <FaRandom /> {t("discover")}
+              </>
+            ) : (
+              <>
+                <FaHeart /> {t("homeTabForYou")}
+              </>
+            )}
           </Title>
           <Subtitle>
-            {t("discoverSubtitle")}
+            {feedMode === "random"
+              ? t("discoverSubtitle")
+              : t("discoverForYouSubtitle")}
           </Subtitle>
         </HeaderSection>
 
@@ -636,17 +833,32 @@ const Home = ({ type }) => {
       </HeaderWrapper>
 
       {error && (
-        <ErrorMessage onClick={fetchMoreVideos}>
+        <ErrorMessage onClick={retryAfterError}>
           <h3><FaRedo /> {t("errorLoadingData")}</h3>
           <p>{error}</p>
         </ErrorMessage>
       )}
 
-      <VideoGrid>
-        {/* Tarjetas de video con AdCards intercaladas cada 10 elementos */}
-        {buildGridItems(videos, t)}
+      {feedMode === "forYou" && forYouPlaceholder && (
+        <ForYouEmptyBox>
+          <h3>
+            {forYouPlaceholder === "noWeights"
+              ? t("forYouEmpty")
+              : t("forYouNoMatchingVideos")}
+          </h3>
+          <p>
+            {forYouPlaceholder === "noWeights"
+              ? t("forYouEmptyHint")
+              : t("forYouTryRandomHint")}
+          </p>
+        </ForYouEmptyBox>
+      )}
 
-        {loading && (
+      <VideoGrid>
+        {!(feedMode === "forYou" && forYouPlaceholder) &&
+          buildGridItems(videos, t)}
+
+        {loading && !(feedMode === "forYou" && forYouPlaceholder) && (
           <>
             {Array(4).fill(0).map((_, i) => (
               <SkeletonCard key={`skeleton-${i}`} />
@@ -665,8 +877,11 @@ const Home = ({ type }) => {
           </NoMoreMessage>
         )}
         
-        {!loading && hasMore && videos.length > 0 && (
-          <LoadMoreButton onClick={fetchMoreVideos} disabled={loading}>
+        {!loading &&
+          hasMore &&
+          videos.length > 0 &&
+          !(feedMode === "forYou" && forYouPlaceholder) && (
+          <LoadMoreButton onClick={loadMoreClick} disabled={loading}>
             <FaRedo /> {t("loadMore")}
           </LoadMoreButton>
         )}

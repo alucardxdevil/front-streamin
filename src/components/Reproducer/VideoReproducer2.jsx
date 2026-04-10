@@ -779,6 +779,78 @@ const formatTime = (sec) => {
 
 const SPEED_OPTIONS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
+/**
+ * Convierte la altura reportada por hls.js a una etiqueta coherente con las
+ * calidades del video (backend). Evita mostrar valores raros tipo "758p" que
+ * no existen en el menú ni como resolución estándar.
+ */
+const parseQualityHeight = (label) => {
+  if (!label || label === "Auto") return NaN;
+  const n = parseInt(String(label).replace(/\D/g, ""), 10);
+  return Number.isFinite(n) && n > 0 ? n : NaN;
+};
+
+const extractHeightFromLevelUrl = (level) => {
+  const url = level?.url?.[0] || level?.uri || "";
+  if (!url) return NaN;
+  const m = String(url).match(/(\d{3,4})p(?:\/|$|[?#])/i);
+  if (m) return parseInt(m[1], 10);
+  return NaN;
+};
+
+const heightToDisplayLabel = (height, allowedQualityStrings) => {
+  const h = Number(height);
+  if (!Number.isFinite(h) || h <= 0) return "";
+
+  const fromVideo = (allowedQualityStrings || [])
+    .filter((s) => s && s !== "Auto")
+    .map((raw) => {
+      const n = parseQualityHeight(raw);
+      return Number.isFinite(n) ? { raw, n } : null;
+    })
+    .filter(Boolean);
+
+  if (fromVideo.length > 0) {
+    let best = fromVideo[0];
+    let bestDist = Math.abs(h - best.n);
+    for (let i = 1; i < fromVideo.length; i++) {
+      const x = fromVideo[i];
+      const d = Math.abs(h - x.n);
+      if (d < bestDist) {
+        best = x;
+        bestDist = d;
+      }
+    }
+    return /p$/i.test(best.raw) ? best.raw : `${best.n}p`;
+  }
+
+  const ladder = [2160, 1440, 1080, 720, 480, 360, 240];
+  let pick = ladder[0];
+  let pickDist = Math.abs(h - pick);
+  for (const step of ladder) {
+    const d = Math.abs(h - step);
+    if (d < pickDist) {
+      pick = step;
+      pickDist = d;
+    }
+  }
+  return `${pick}p`;
+};
+
+const resolveLevelDisplayHeight = (level, allowedQualityStrings) => {
+  if (!level) return NaN;
+  const fromUrl = extractHeightFromLevelUrl(level);
+  if (Number.isFinite(fromUrl) && fromUrl > 0) return fromUrl;
+  const hh = level.height;
+  if (Number.isFinite(hh) && hh > 0) return hh;
+  const ww = level.width;
+  if (Number.isFinite(ww) && ww > 0) {
+    const approx = Math.round((ww * 9) / 16);
+    if (approx > 0) return approx;
+  }
+  return NaN;
+};
+
 /* =========== MAIN COMPONENT =========== */
 export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCounted }) {
   const { currentVideo } = useSelector((s) => s.video);
@@ -904,6 +976,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const playingRef = useRef(playing);  // Ref para acceder al estado playing en callbacks
   const hlsRef = useRef(null);         // Referencia a la instancia de hls.js
   const [hlsLevels, setHlsLevels] = useState([]); // Niveles HLS detectados por hls.js
+  const qualitiesRef = useRef(currentVideo?.qualities);
+  useEffect(() => {
+    qualitiesRef.current = currentVideo?.qualities;
+  }, [currentVideo?.qualities]);
 
   /**
    * Flag de sesión para el conteo de vistas.
@@ -950,6 +1026,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
       console.log("[HLS] Calidad: Auto (ABR)");
       return;
     }
+
+    setCurrentPlayingQuality("");
 
     const targetValue = parseInt(q); // "480p" → 480
     const profileName = q.toLowerCase(); // "480p"
@@ -1498,7 +1576,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         : <VolumeUpIcon />;
 
   const speedLabel = playbackRate === 1 ? t("normalSpeed") : `${playbackRate}x`;
-  const qualityLabel = currentPlayingQuality ? quality + "(" + currentPlayingQuality + ")" : quality;
+  const qualityLabel =
+    quality === "Auto"
+      ? currentPlayingQuality
+        ? `Auto (${currentPlayingQuality})`
+        : "Auto"
+      : quality;
 
   /* ========== Render Menu Content ========== */
   const renderMenuContent = () => {
@@ -1696,7 +1779,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                         // ABR puede bajar a 240 si hay buffer/throughput bajo.
                         hls.autoLevelCapping = chosen.height >= 480 ? chosen.idx : chosen.idx;
                         hls.currentLevel = chosen.idx;
-                        setCurrentPlayingQuality(`${chosen.height || ""}p`);
+                        const qh = resolveLevelDisplayHeight(chosen, qualitiesRef.current);
+                        setCurrentPlayingQuality(
+                          heightToDisplayLabel(qh, qualitiesRef.current)
+                        );
                       }
                     }
                   });
@@ -1749,9 +1835,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   hls.on(Hls.Events.LEVEL_SWITCHED, function(evt, data) {
                     var level = hls.levels[data.level];
                     if (level) {
-                      var height = level.height;
-                      var q = height + "p";
-                      setCurrentPlayingQuality(q);
+                      var qh = resolveLevelDisplayHeight(level, qualitiesRef.current);
+                      if (Number.isFinite(qh) && qh > 0) {
+                        setCurrentPlayingQuality(
+                          heightToDisplayLabel(qh, qualitiesRef.current)
+                        );
+                      }
                     }
                   });
                   

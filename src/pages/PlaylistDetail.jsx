@@ -441,7 +441,10 @@ const LoadingContainer = styled.div`
  * After Mongoose populate, a deleted video reference will be null.
  */
 const isVideoDeleted = (videoItem) => {
-  return !videoItem.videoId || videoItem.videoId === null;
+  const v = videoItem?.videoId;
+  if (v == null) return true;
+  if (typeof v === "object" && !v._id) return true;
+  return false;
 };
 
 export const PlaylistDetailPage = () => {
@@ -454,9 +457,19 @@ export const PlaylistDetailPage = () => {
   const [loading, setLoading] = useState(true);
 
   // Derived: is the current user the owner of this playlist?
-  const isOwner = currentUser && playlist && currentUser._id === playlist.userId;
+  const isOwner =
+    currentUser &&
+    playlist &&
+    String(currentUser._id) === String(playlist.userId);
   const isFavoritesPlaylist = playlist?.name === "Favorites" || playlist?.name === "Mis videos favoritos";
   const canEdit = isOwner && !isFavoritesPlaylist;
+
+  /** Quitar ítem: playlists normales (owner); entradas con video ya borrado también en Favoritos (limpieza). */
+  const canUserRemoveItem = (videoItem) => {
+    if (!isOwner) return false;
+    if (isVideoDeleted(videoItem)) return true;
+    return canEdit;
+  };
 
   useEffect(() => {
     fetchPlaylist();
@@ -478,7 +491,7 @@ export const PlaylistDetailPage = () => {
   };
 
   const handleRemoveVideo = async (videoItem) => {
-    if (!canEdit) return;
+    if (!canUserRemoveItem(videoItem)) return;
     try {
       // If the referenced video was deleted, populate returns null and we can't rely on videoId.
       // In that case, force-remove the playlist entry by its subdocument _id.
@@ -663,10 +676,14 @@ export const PlaylistDetailPage = () => {
                         {t("videoDeletedDescription")}
                       </span>
                     </VideoMeta>
-                    {canEdit && (
-                      <VideoActions>
+                    {canUserRemoveItem(videoItem) && (
+                      <VideoActions
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ pointerEvents: "auto" }}
+                      >
                         <ActionButton
                           danger
+                          type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleRemoveVideo(videoItem);
@@ -730,17 +747,18 @@ export const PlaylistDetailPage = () => {
                       <BiPlayCircle aria-hidden="true" />
                       {t("play")}
                     </ActionButton>
-                    {canEdit && (
+                    {canUserRemoveItem(videoItem) && (
                       <ActionButton
                         danger
+                        type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleRemoveVideo(videoItem);
                         }}
-                        aria-label={`${t("delete")}: ${videoItem.videoTitle}`}
+                        aria-label={`${t("removeFromPlaylist")}: ${videoItem.videoTitle}`}
                       >
                         <BiTrash aria-hidden="true" />
-                        {t("delete")}
+                        {t("removeFromPlaylist")}
                       </ActionButton>
                     )}
                   </VideoActions>

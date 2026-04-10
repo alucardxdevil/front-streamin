@@ -37,6 +37,17 @@ const translations = {
     errorLoadingVideos: "Error al cargar videos. Haz clic para reintentar.",
     discover: "Descubre",
     discoverSubtitle: "Explora videos aleatorios de nuestra comunidad",
+    homeTabRandom: "Aleatorio",
+    homeTabForYou: "Para ti",
+    homeFeedTabsLabel: "Tipo de feed en inicio",
+    discoverForYouSubtitle:
+      "Videos según las etiquetas de lo que sueles ver (se aprende al ver cada video)",
+    forYouEmpty: "Aún no sabemos qué temas te interesan.",
+    forYouEmptyHint:
+      "Mira videos hasta que se cuente la vista; guardamos sus etiquetas para personalizar esta sección.",
+    forYouNoMatchingVideos: "No hay videos con esas etiquetas por ahora.",
+    forYouTryRandomHint:
+      "Prueba la pestaña Aleatorio o sigue viendo contenido con etiquetas.",
     loadMore: "Cargar más videos",
     // Advertising
     adLabel: "Publicidad",
@@ -767,6 +778,17 @@ const translations = {
     errorLoadingVideos: "Error loading videos. Click to retry.",
     discover: "Discover",
     discoverSubtitle: "Explore random videos from our community",
+    homeTabRandom: "Random",
+    homeTabForYou: "For you",
+    homeFeedTabsLabel: "Home feed type",
+    discoverForYouSubtitle:
+      "Videos based on tags from what you watch (learned when each view is counted)",
+    forYouEmpty: "We don't know your interests yet.",
+    forYouEmptyHint:
+      "Watch videos until a view is counted; we save their tags to personalize this feed.",
+    forYouNoMatchingVideos: "No videos match those tags right now.",
+    forYouTryRandomHint:
+      "Try the Random tab or keep watching tagged content.",
     loadMore: "Load more videos",
     // Advertising
     adLabel: "Advertisement",
@@ -1480,6 +1502,20 @@ const translations = {
     loading: "Carregando...",
     noMoreVideos: "Não há mais vídeos.",
     errorLoadingVideos: "Erro ao carregar vídeos. Clique para tentar novamente.",
+    discover: "Descobrir",
+    discoverSubtitle: "Explore vídeos aleatórios da nossa comunidade",
+    homeTabRandom: "Aleatório",
+    homeTabForYou: "Para você",
+    homeFeedTabsLabel: "Tipo de feed na página inicial",
+    discoverForYouSubtitle:
+      "Vídeos com base nas tags do que você costuma assistir (aprendemos ao contar cada visualização)",
+    forYouEmpty: "Ainda não sabemos quais temas te interessam.",
+    forYouEmptyHint:
+      "Assista a vídeos até a visualização ser contada; guardamos as tags para personalizar esta seção.",
+    forYouNoMatchingVideos: "Não há vídeos com essas tags no momento.",
+    forYouTryRandomHint:
+      "Experimente a aba Aleatório ou continue vendo conteúdo com tags.",
+    loadMore: "Carregar mais vídeos",
     views: "visualizações",
     // Advertising
     adLabel: "Publicidade",
@@ -1937,6 +1973,20 @@ const translations = {
     loading: "Lädt...",
     noMoreVideos: "Keine weiteren Videos.",
     errorLoadingVideos: "Fehler beim Laden der Videos. Klicke zum Wiederholen.",
+    discover: "Entdecken",
+    discoverSubtitle: "Zufällige Videos aus unserer Community entdecken",
+    homeTabRandom: "Zufall",
+    homeTabForYou: "Für dich",
+    homeFeedTabsLabel: "Startseiten-Feed",
+    discoverForYouSubtitle:
+      "Videos passend zu Tags aus deinem Konsum (gelernt, wenn eine Wiedergabe zählt)",
+    forYouEmpty: "Wir kennen deine Interessen noch nicht.",
+    forYouEmptyHint:
+      "Schau Videos, bis ein View zählt; wir speichern die Tags für diesen Feed.",
+    forYouNoMatchingVideos: "Gerade keine Videos mit diesen Tags.",
+    forYouTryRandomHint:
+      "Probiere den Tab Zufall oder schau weiter getaggte Inhalte.",
+    loadMore: "Weitere Videos laden",
     views: "Aufrufe",
     // Advertising
     adLabel: "Werbung",
@@ -2396,6 +2446,17 @@ const translations = {
     errorLoadingVideos: "Ошибка загрузки видео. Нажмите, чтобы повторить.",
     discover: "Откройте для себя",
     discoverSubtitle: "Смотрите случайные видео от нашего сообщества",
+    homeTabRandom: "Случайные",
+    homeTabForYou: "Для вас",
+    homeFeedTabsLabel: "Тип ленты на главной",
+    discoverForYouSubtitle:
+      "Видео по тегам из того, что вы смотрите (учитывается при засчёте просмотра)",
+    forYouEmpty: "Мы ещё не знаем ваши интересы.",
+    forYouEmptyHint:
+      "Смотрите ролики, пока не засчитается просмотр — теги сохраняются для персонализации.",
+    forYouNoMatchingVideos: "Сейчас нет видео с такими тегами.",
+    forYouTryRandomHint:
+      "Откройте вкладку «Случайные» или смотрите контент с тегами.",
     loadMore: "Загрузить еще",
 
     // Advertising
@@ -2999,6 +3060,16 @@ const translations = {
     errorLoadingVideos: "视频加载失败。点击重试。",
     discover: "发现",
     discoverSubtitle: "探索社区随机视频",
+    homeTabRandom: "随机",
+    homeTabForYou: "为你推荐",
+    homeFeedTabsLabel: "首页内容类型",
+    discoverForYouSubtitle:
+      "根据你常看内容的标签推荐（在计入播放后学习你的兴趣）",
+    forYouEmpty: "我们还不了解你的兴趣。",
+    forYouEmptyHint:
+      "观看到计入播放后，我们会保存视频标签用于个性化本页。",
+    forYouNoMatchingVideos: "暂时没有符合这些标签的视频。",
+    forYouTryRandomHint: "试试「随机」标签页，或继续观看带标签的内容。",
     loadMore: "加载更多视频",
 
     // Advertising (广告)
@@ -3598,6 +3669,17 @@ const translations = {
     errorLoadingVideos: "動画の読み込み中にエラーが発生しました。クリックして再試行してください。",
     discover: "見つける",
     discoverSubtitle: "コミュニティのランダムな動画を見る",
+    homeTabRandom: "ランダム",
+    homeTabForYou: "おすすめ",
+    homeFeedTabsLabel: "ホームのフィードの種類",
+    discoverForYouSubtitle:
+      "よく見る動画のタグに基づく動画（再生がカウントされたときに学習）",
+    forYouEmpty: "まだ興味の傾向が分かりません。",
+    forYouEmptyHint:
+      "再生がカウントされるまで視聴すると、タグを保存してこの欄をパーソナライズします。",
+    forYouNoMatchingVideos: "該当タグの動画は今ありません。",
+    forYouTryRandomHint:
+      "「ランダム」タブを試すか、タグ付きのコンテンツを続けて視聴してください。",
     loadMore: "さらに読み込む",
 
     // Advertising (広告)
@@ -4187,6 +4269,17 @@ const translations = {
     errorLoadingVideos: "Erreur lors du chargement des vidéos. Cliquez pour réessayer.",
     discover: "Découvrir",
     discoverSubtitle: "Explorez des vidéos aléatoires de la communauté",
+    homeTabRandom: "Aléatoire",
+    homeTabForYou: "Pour vous",
+    homeFeedTabsLabel: "Type de fil d’accueil",
+    discoverForYouSubtitle:
+      "Vidéos selon les tags de ce que vous regardez (appris au comptage des vues)",
+    forYouEmpty: "Nous ne connaissons pas encore vos centres d’intérêt.",
+    forYouEmptyHint:
+      "Regardez des vidéos jusqu’à ce qu’une vue soit comptée ; nous enregistrons les tags pour personnaliser ce fil.",
+    forYouNoMatchingVideos: "Aucune vidéo ne correspond à ces tags pour l’instant.",
+    forYouTryRandomHint:
+      "Essayez l’onglet Aléatoire ou continuez du contenu étiqueté.",
     loadMore: "Charger plus de vidéos",
 
     // Advertising (Publicité)
@@ -4629,6 +4722,17 @@ const translations = {
     errorLoadingVideos: "वीडियो लोड करने में त्रुटि। पुनः प्रयास करने के लिए क्लिक करें।",
     discover: "खोजें",
     discoverSubtitle: "समुदाय के यादृच्छिक वीडियो देखें",
+    homeTabRandom: "रैंडम",
+    homeTabForYou: "आपके लिए",
+    homeFeedTabsLabel: "होम फ़ीड प्रकार",
+    discoverForYouSubtitle:
+      "आप जो देखते हैं उनके टैग के आधार पर वीडियो (जब दृश्य गिना जाता है तब सीखते हैं)",
+    forYouEmpty: "हम अभी आपकी रुचियाँ नहीं जानते।",
+    forYouEmptyHint:
+      "जब तक दृश्य गिना न जाए वीडियो देखें; हम टैग सहेजकर इस फ़ीड को व्यक्तिगत बनाते हैं।",
+    forYouNoMatchingVideos: "अभी इन टैग से मेल खाते वीडियो नहीं हैं।",
+    forYouTryRandomHint:
+      "रैंडम टैब आज़माएँ या टैग वाली सामग्री देखते रहें।",
     loadMore: "अधिक वीडियो लोड करें",
 
     // Advertising (विज्ञापन)
@@ -5064,6 +5168,17 @@ const translations = {
     errorLoadingVideos: "خطأ في تحميل الفيديوهات. انقر لإعادة المحاولة.",
     discover: "اكتشف",
     discoverSubtitle: "استكشف فيديوهات عشوائية من المجتمع",
+    homeTabRandom: "عشوائي",
+    homeTabForYou: "لك",
+    homeFeedTabsLabel: "نوع الصفحة الرئيسية",
+    discoverForYouSubtitle:
+      "فيديوهات حسب وسوم ما تشاهده غالبًا (نتعلم عند احتساب المشاهدة)",
+    forYouEmpty: "لا نعرف اهتماماتك بعد.",
+    forYouEmptyHint:
+      "شاهد الفيديوهات حتى تُحسب المشاهدة؛ نحفظ الوسوم لتخصيص هذا القسم.",
+    forYouNoMatchingVideos: "لا توجد فيديوهات بهذه الوسوم حاليًا.",
+    forYouTryRandomHint:
+      "جرّب تبويب العشوائي أو تابع محتوى مُوسومًا.",
     loadMore: "تحميل المزيد من الفيديوهات",
 
     // Advertising (إعلانات)
@@ -5502,6 +5617,17 @@ const translations = {
     errorLoadingVideos: "Errore durante il caricamento dei video. Clicca per riprovare.",
     discover: "Scopri",
     discoverSubtitle: "Esplora video casuali della community",
+    homeTabRandom: "Casuale",
+    homeTabForYou: "Per te",
+    homeFeedTabsLabel: "Tipo di feed in home",
+    discoverForYouSubtitle:
+      "Video in base ai tag di ciò che guardi (impariamo quando conta la visualizzazione)",
+    forYouEmpty: "Non conosciamo ancora i tuoi interessi.",
+    forYouEmptyHint:
+      "Guarda i video finché non viene contata la visualizzazione; salviamo i tag per personalizzare questo feed.",
+    forYouNoMatchingVideos: "Al momento non ci sono video con quei tag.",
+    forYouTryRandomHint:
+      "Prova la scheda Casuale o continua con contenuti taggati.",
     loadMore: "Carica altri video",
 
     // Advertising (Pubblicità)
@@ -5940,6 +6066,17 @@ const translations = {
     errorLoadingVideos: "영상을 불러오는 중에 오류가 발생했습니다. 다시 시도하려면 클릭하세요.",
     discover: "발견",
     discoverSubtitle: "커뮤니티의 다양한 영상을 탐색해 보세요",
+    homeTabRandom: "랜덤",
+    homeTabForYou: "맞춤",
+    homeFeedTabsLabel: "홈 피드 유형",
+    discoverForYouSubtitle:
+      "자주 보는 영상의 태그 기반 추천(조회가 집계될 때 학습)",
+    forYouEmpty: "아직 취향 정보가 없습니다.",
+    forYouEmptyHint:
+      "조회가 집계될 때까지 시청하면 태그를 저장해 이 피드를 맞춤화합니다.",
+    forYouNoMatchingVideos: "해당 태그의 영상이 아직 없습니다.",
+    forYouTryRandomHint:
+      "「랜덤」 탭을 쓰거나 태그가 있는 콘텐츠를 계속 시청해 보세요.",
     loadMore: "더 보기",
 
     // Advertising (광고)

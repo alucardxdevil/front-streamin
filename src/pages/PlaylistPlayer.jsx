@@ -1,7 +1,7 @@
 /**
  * PlaylistPlayer.jsx — Full playlist player with video list, playback controls,
- * deleted-video markers, owner-only editing, read-only mode for non-owners,
- * sharing, polling for real-time consistency, and accessibility.
+ * unavailable entries in the list (deleted source videos), read-only mode for
+ * non-owners, sharing, polling for real-time consistency, and accessibility.
  *
  * ============================================================================
  * DATA STRUCTURES
@@ -43,17 +43,16 @@
  * }
  *
  * When a video has been deleted by its uploader, `videoItem.videoId` will be
- * `null` after Mongoose populate. The component detects this and shows a
- * "video deleted" marker. The owner can remove these from the playlist.
+ * `null` after Mongoose populate. The player skips those entries silently and
+ * they remain visible as unavailable rows in the side list.
  *
  * ============================================================================
  * ACCESS CONTROL
  * ============================================================================
  *
  * - isOwner: currentUser._id === playlist.userId
- *   - Can remove deleted videos from the playlist
- *   - Can see delete/remove buttons on items
- *   - Full edit capabilities
+ *   - Playlist editing (add/remove items) is done from the playlist detail page,
+ *     not from this player view.
  *
  * - Non-owner (viewer via shared link or direct URL):
  *   - Read-only mode: no delete buttons, no edit actions
@@ -67,32 +66,38 @@
  * Owner flow:
  *   1. Navigates to /playlist-player/:userId/:playlistId
  *   2. Sees full player with all controls
- *   3. Deleted videos show "Video Deleted" marker with "Remove" button
- *   4. Clicking "Remove" calls DELETE API and refreshes playlist
- *   5. Share button generates correct URL
+ *   3. Deleted entries are skipped automatically during playback
+ *   4. Share button generates correct URL
  *
  * Viewer flow (shared link):
  *   1. Opens /shared-playlist/:playlistId → redirected to /playlist/:userId/:playlistId
  *   2. Or navigates directly to /playlist-player/:userId/:playlistId
  *   3. Sees player in read-only mode
- *   4. Deleted videos show "Video Unavailable" message (no remove button)
+ *   4. Deleted entries are skipped during playback (still listed as unavailable)
  *   5. Can play, skip, navigate — cannot edit
  *
  * Real-time consistency:
  *   - Playlist is polled every 30 seconds to detect changes by other users
  *   - On poll, deleted videos are detected and UI updates
  *   - Current playback index is preserved across polls
- *   - If currently playing video is deleted, auto-advance to next available
+ *   - If the current entry becomes deleted, the player jumps to the next
+ *     available video before paint (no intermediate “deleted” screen)
  */
 
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
 import styled, { keyframes } from "styled-components";
 import { useLanguage } from "../utils/LanguageContext";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { BiSkipNext, BiSkipPrevious, BiTrash, BiArrowBack } from "react-icons/bi";
+import { BiSkipNext, BiSkipPrevious, BiArrowBack } from "react-icons/bi";
 import { MdPlaylistAdd, MdErrorOutline, MdDeleteForever } from "react-icons/md";
-import { FaPlay, FaRegShareSquare } from "react-icons/fa";
+import { FaPlay } from "react-icons/fa";
 import { formats } from "./Video";
 import VideoReproducer from "../components/Reproducer/VideoReproducer2";
 import ShareModalPlaylist from "../components/ModalSharePlaylist";
@@ -401,38 +406,6 @@ const DeletedBadge = styled.span`
   margin-top: 2px;
 `;
 
-const ItemActions = styled.div`
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-`;
-
-const RemoveButton = styled.button`
-  background: transparent;
-  border: none;
-  color: ${({ theme }) => theme.textSoft};
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba(255, 62, 108, 0.15);
-    color: #ff3e6c;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #ff3e6c;
-    outline-offset: 2px;
-  }
-
-  svg { font-size: 16px; }
-`;
-
 // --- States ---
 
 const LoadingContainer = styled.div`
@@ -515,34 +488,6 @@ const ErrorState = styled.div`
   }
 `;
 
-const DeletedVideoPlayer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  background: ${({ theme }) => theme.soft};
-  color: ${({ theme }) => theme.textSoft};
-  border-radius: 16px 16px 0 0;
-  gap: 12px;
-
-  svg {
-    font-size: 48px;
-    color: #ff3e6c;
-  }
-
-  h3 {
-    font-size: 18px;
-    color: ${({ theme }) => theme.text};
-    margin: 0;
-  }
-
-  p {
-    font-size: 14px;
-    margin: 0;
-  }
-`;
-
 const NowPlayingIcon = styled.span`
   color: #ff3e6c;
   font-size: 14px;
@@ -582,6 +527,15 @@ const findNextAvailableIndex = (videos, startIndex, direction = 1) => {
   return -1;
 };
 
+/** Nearest playable list index, or -1 if every entry is deleted. */
+const skipToNearestPlayable = (videos, index) => {
+  if (!videos?.length || index < 0 || index >= videos.length) return -1;
+  if (!isVideoDeleted(videos[index])) return index;
+  const forward = findNextAvailableIndex(videos, index + 1, 1);
+  if (forward >= 0) return forward;
+  return findNextAvailableIndex(videos, index - 1, -1);
+};
+
 // ============================================================================
 // COMPONENT
 // ============================================================================
@@ -598,22 +552,34 @@ export const PlaylistPlayerPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [removing, setRemoving] = useState(null); // videoItem._id being removed
 
-  // Ref for preserving playback across polls
+  // Ref for preserving playback across polls and avoiding setState inside setState
   const currentIndexRef = useRef(0);
   const pollTimerRef = useRef(null);
   const playlistLoadedRef = useRef(false); // tracks if initial load succeeded
+  const playlistSnapshotRef = useRef(null); // last committed playlist (for poll merge)
 
   // Derived state
   const isOwner = currentUser && playlist && currentUser._id === playlist.userId;
   const isFavoritesPlaylist = playlist?.name === "Favorites" || playlist?.name === "Mis videos favoritos";
-  const canEdit = isOwner && !isFavoritesPlaylist; // Favorites playlist is auto-managed via likes
   const currentVideoItem = playlist?.videos?.[currentIndex];
-  const isCurrentDeleted = currentVideoItem ? isVideoDeleted(currentVideoItem) : false;
 
   // Available (non-deleted) video count
   const availableCount = playlist?.videos?.filter((v) => !isVideoDeleted(v)).length || 0;
+
+  useEffect(() => {
+    playlistSnapshotRef.current = playlist;
+  }, [playlist]);
+
+  // Skip deleted entries before paint so the main player never flashes a “deleted” screen.
+  useLayoutEffect(() => {
+    if (!playlist?.videos?.length) return;
+    const playable = skipToNearestPlayable(playlist.videos, currentIndex);
+    if (playable >= 0 && playable !== currentIndex) {
+      setCurrentIndex(playable);
+      currentIndexRef.current = playable;
+    }
+  }, [playlist, currentIndex]);
 
   // =========================================================================
   // DATA FETCHING
@@ -626,30 +592,41 @@ export const PlaylistPlayerPage = () => {
         const newPlaylist = response.data;
         playlistLoadedRef.current = true;
 
-        setPlaylist((prevPlaylist) => {
-          if (preserveIndex && prevPlaylist) {
-            const prevVideo = prevPlaylist.videos?.[currentIndexRef.current];
+        const videos = newPlaylist.videos || [];
+        let nextIndex = currentIndexRef.current;
+
+        if (preserveIndex) {
+          const prev = playlistSnapshotRef.current;
+          if (prev?.videos?.length && videos.length) {
+            const safePrevIdx = Math.min(
+              currentIndexRef.current,
+              prev.videos.length - 1
+            );
+            const prevVideo = prev.videos[safePrevIdx];
             if (prevVideo) {
-              const newIdx = newPlaylist.videos?.findIndex(
-                (v) => v._id === prevVideo._id
-              );
+              const newIdx = videos.findIndex((v) => v._id === prevVideo._id);
               if (newIdx >= 0) {
-                setCurrentIndex(newIdx);
-                currentIndexRef.current = newIdx;
+                nextIndex = newIdx;
               } else {
-                const nextIdx = findNextAvailableIndex(
-                  newPlaylist.videos,
-                  Math.min(currentIndexRef.current, newPlaylist.videos.length - 1)
+                const fallback = findNextAvailableIndex(
+                  videos,
+                  Math.min(currentIndexRef.current, videos.length - 1)
                 );
-                if (nextIdx >= 0) {
-                  setCurrentIndex(nextIdx);
-                  currentIndexRef.current = nextIdx;
-                }
+                if (fallback >= 0) nextIndex = fallback;
               }
             }
           }
-          return newPlaylist;
-        });
+        } else {
+          const firstPlayable = findNextAvailableIndex(videos, 0, 1);
+          nextIndex = firstPlayable >= 0 ? firstPlayable : 0;
+        }
+
+        const playable = skipToNearestPlayable(videos, nextIndex);
+        if (playable >= 0) nextIndex = playable;
+
+        setPlaylist(newPlaylist);
+        setCurrentIndex(nextIndex);
+        currentIndexRef.current = nextIndex;
 
         setError(null);
       } catch (err) {
@@ -662,7 +639,7 @@ export const PlaylistPlayerPage = () => {
         setLoading(false);
       }
     },
-    [userId, playlistId] // removed `playlist` to avoid infinite re-creation
+    [userId, playlistId]
   );
 
   // Initial fetch
@@ -671,9 +648,9 @@ export const PlaylistPlayerPage = () => {
     setError(null);
     playlistLoadedRef.current = false;
     fetchPlaylist();
-  }, [playlistId, userId]);
+  }, [playlistId, userId, fetchPlaylist]);
 
-  // Polling for real-time consistency — stable interval, no dependency on fetchPlaylist
+  // Polling for real-time consistency
   useEffect(() => {
     pollTimerRef.current = setInterval(() => {
       fetchPlaylist(true);
@@ -682,7 +659,7 @@ export const PlaylistPlayerPage = () => {
     return () => {
       if (pollTimerRef.current) clearInterval(pollTimerRef.current);
     };
-  }, [userId, playlistId]); // stable deps instead of fetchPlaylist
+  }, [fetchPlaylist]);
 
   // =========================================================================
   // VIDEO DISPATCH — Fetch full video data for the player
@@ -691,27 +668,28 @@ export const PlaylistPlayerPage = () => {
   useEffect(() => {
     currentIndexRef.current = currentIndex;
 
-    if (playlist && playlist.videos?.length > 0) {
-      const videoItem = playlist.videos[currentIndex];
-      if (videoItem && videoItem.videoId && !isVideoDeleted(videoItem)) {
-        // The populated videoId only has partial fields (title, imgUrl, etc.)
-        // VideoReproducer2 needs the full video document (_id, hlsMasterUrl,
-        // status, qualities, likes, dislikes, views, etc.)
-        const videoId = videoItem.videoId._id || videoItem.videoId;
-        if (videoId) {
-          axios
-            .get(`/videos/find/${videoId}`)
-            .then((res) => {
-              dispatch(fetchSuccess(res.data));
-            })
-            .catch((err) => {
-              console.error("Error fetching video for player:", err);
-              // Fallback: dispatch partial data so at least title shows
-              dispatch(fetchSuccess(videoItem.videoId));
-            });
-        }
-      }
-    }
+    if (!playlist?.videos?.length) return undefined;
+
+    const videoItem = playlist.videos[currentIndex];
+    if (!videoItem?.videoId || isVideoDeleted(videoItem)) return undefined;
+
+    const videoId = videoItem.videoId._id || videoItem.videoId;
+    if (!videoId) return undefined;
+
+    let cancelled = false;
+    axios
+      .get(`/videos/find/${videoId}`)
+      .then((res) => {
+        if (!cancelled) dispatch(fetchSuccess(res.data));
+      })
+      .catch((err) => {
+        console.error("Error fetching video for player:", err);
+        if (!cancelled) dispatch(fetchSuccess(videoItem.videoId));
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [playlist, currentIndex, dispatch]);
 
   // =========================================================================
@@ -719,15 +697,16 @@ export const PlaylistPlayerPage = () => {
   // =========================================================================
 
   useEffect(() => {
-    if (currentVideoItem?.videoTitle && !isCurrentDeleted) {
-      document.title = `${currentVideoItem.videoTitle} | stream-in`;
+    const item = playlist?.videos?.[currentIndex];
+    if (item?.videoTitle && !isVideoDeleted(item)) {
+      document.title = `${item.videoTitle} | stream-in`;
     } else if (playlist?.name) {
       document.title = `${playlist.name} | stream-in`;
     }
     return () => {
       document.title = "stream-in";
     };
-  }, [currentVideoItem, playlist, isCurrentDeleted]);
+  }, [playlist, currentIndex]);
 
   // =========================================================================
   // NAVIGATION
@@ -761,52 +740,6 @@ export const PlaylistPlayerPage = () => {
       }
     },
     [playlist]
-  );
-
-  // =========================================================================
-  // OWNER ACTIONS
-  // =========================================================================
-
-  const handleRemoveVideo = useCallback(
-    async (videoItem) => {
-      if (!isOwner || isFavoritesPlaylist) return;
-      const videoId = videoItem.videoId?._id || videoItem.videoId;
-      if (!videoId) {
-        // For deleted videos where videoId is null, we need to refetch
-        // after removing. Use the subdocument _id to identify.
-        // The backend expects the original videoId from the playlist entry.
-        // Since the video is deleted, we need a different approach.
-        // We'll remove by refetching and filtering on the client, then
-        // the backend pull will handle it via the videoId stored in the doc.
-        // Actually, the playlist schema stores videoId as ObjectId ref.
-        // Even if the video is deleted, the ObjectId reference persists in
-        // the playlist document. We can extract it from the raw response.
-      }
-
-      setRemoving(videoItem._id);
-      try {
-        // For deleted videos, we need to get the raw videoId from the playlist
-        // We'll re-fetch the raw playlist to get the ObjectId string
-        const rawResponse = await axios.get(`/users/playlists/${userId}/${playlistId}`);
-        const rawPlaylist = rawResponse.data;
-        const rawItem = rawPlaylist.videos?.find((v) => v._id === videoItem._id);
-        const rawVideoId = rawItem?.videoId?._id || rawItem?.videoId;
-
-        if (rawVideoId) {
-          await axios.delete(
-            `/users/playlists/${userId}/${playlistId}/${rawVideoId}`
-          );
-        }
-
-        // Refresh playlist
-        await fetchPlaylist(true);
-      } catch (err) {
-        console.error("Error removing video from playlist:", err);
-      } finally {
-        setRemoving(null);
-      }
-    },
-    [isOwner, isFavoritesPlaylist, userId, playlistId, fetchPlaylist]
   );
 
   // =========================================================================
@@ -920,6 +853,40 @@ export const PlaylistPlayerPage = () => {
     );
   }
 
+  if (availableCount === 0) {
+    return (
+      <PageContainer>
+        <TopBar>
+          <BackButton
+            onClick={() => navigate(-1)}
+            aria-label={t("back")}
+          >
+            <BiArrowBack />
+            {t("back")}
+          </BackButton>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            {(!isOwner || isFavoritesPlaylist) && (
+              <ReadOnlyBadge aria-label={t("playlistReadOnly")}>
+                {t("playlistReadOnly")}
+              </ReadOnlyBadge>
+            )}
+            <ShareModalPlaylist
+              playlistId={playlistId}
+              playlistName={playlist.name}
+              videoCount={0}
+              userId={userId}
+            />
+          </div>
+        </TopBar>
+        <EmptyState role="status">
+          <MdErrorOutline aria-hidden="true" />
+          <h3>{t("videosUnavailable")}</h3>
+          <p>{t("playlistEmptyDescription")}</p>
+        </EmptyState>
+      </PageContainer>
+    );
+  }
+
   // =========================================================================
   // RENDER — Main Player
   // =========================================================================
@@ -953,28 +920,10 @@ export const PlaylistPlayerPage = () => {
       <PlayerContainer>
         {/* ====== Main Video Area ====== */}
         <MainPlayer role="region" aria-label={t("videoPlayer")}>
-          {/* TODO: Remove this video player  {isCurrentDeleted ? (
-            <DeletedVideoPlayer role="alert">
-              <MdDeleteForever aria-hidden="true" />
-              <h3>{t("videoDeletedTitle")}</h3>
-              <p>{t("videoDeletedDescription")}</p>
-              {canGoNext && (
-                <NavButton onClick={handleNext} aria-label={t("next")}>
-                  {t("playNextVideo")}
-                  <BiSkipNext />
-                </NavButton>
-              )}
-            </DeletedVideoPlayer> */}
-          {/* ) : (
-            <VideoReproducer onVideoEnd={handleVideoEnd} />
-          )} */}
+          <VideoReproducer onVideoEnd={handleVideoEnd} />
 
           <VideoInfoSection>
-            <VideoTitle>
-              {isCurrentDeleted
-                ? currentVideoItem?.videoTitle || t("videoDeletedTitle")
-                : currentVideoItem?.videoTitle}
-            </VideoTitle>
+            <VideoTitle>{currentVideoItem?.videoTitle}</VideoTitle>
             <VideoMeta>
               <span>
                 {formatDate(currentVideoItem?.addedAt || playlist.updatedAt)}
@@ -1113,43 +1062,6 @@ export const PlaylistPlayerPage = () => {
                       </ItemDuration>
                     )}
                   </ItemInfo>
-
-                  {/* Owner-only: Remove button for deleted videos (not on favorites) */}
-                  {canEdit && deleted && (
-                    <ItemActions> {/* TODO: Remove this button */}
-                      {/* <RemoveButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemoveVideo(videoItem);
-                        }}
-                        disabled={removing === videoItem._id}
-                        aria-label={`${t("removeFromPlaylist")}: ${videoItem.videoTitle}`}
-                        title={t("removeFromPlaylist")}
-                      >
-                        <BiTrash />
-                        {removing === videoItem._id
-                          ? "..."
-                          : t("remove")}
-                      </RemoveButton> */ }
-                    </ItemActions>
-                  )}
-
-                  {/* Owner-only: Remove button for any video (not on favorites) */}
-                  {canEdit && !deleted && (
-                    <ItemActions>
-                      <RemoveButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemoveVideo(videoItem);
-                        }}
-                        disabled={removing === videoItem._id}
-                        aria-label={`${t("removeFromPlaylist")}: ${videoItem.videoTitle}`}
-                        title={t("removeFromPlaylist")}
-                      >
-                        <BiTrash />
-                      </RemoveButton>
-                    </ItemActions>
-                  )}
                 </PlaylistItem>
               );
             })}
