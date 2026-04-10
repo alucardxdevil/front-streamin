@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useLanguage } from "../utils/LanguageContext";
+import { useLocation } from "react-router-dom";
 
 const Bar = styled.div`
   margin-top: 60px;
@@ -17,6 +18,7 @@ const Bar = styled.div`
   padding: 4px 12px;
 
   @media (max-width: 768px) {
+    display: ${({ $hideOnMobile }) => ($hideOnMobile ? "none" : "flex")};
     margin-top: 56px;
     top: 56px;
     min-height: 34px;
@@ -60,7 +62,9 @@ const DonationButton = styled.a`
 
 const BetaNoticeBar = ({ donationUrl = "https://example.com/donate" }) => {
   const { t } = useLanguage();
+  const location = useLocation();
   const barRef = useRef(null);
+  const hideOnMobile = /^\/video\/[^/]+/.test(location.pathname);
 
   useEffect(() => {
     const barEl = barRef.current;
@@ -84,7 +88,7 @@ const BetaNoticeBar = ({ donationUrl = "https://example.com/donate" }) => {
   }, []);
 
   return (
-    <Bar ref={barRef}>
+    <Bar ref={barRef} $hideOnMobile={hideOnMobile}>
       <Content>
         <Message>{t("betaBannerMessage")}</Message>
         <DonationButton
