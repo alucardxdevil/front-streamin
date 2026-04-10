@@ -408,7 +408,10 @@ const Register = () => {
     if (!email.trim()) errors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(email)) errors.email = "Invalid email format";
     if (!password) errors.password = "Password is required";
-    else if (password.length < 6) errors.password = "At least 6 characters";
+    else if (password.length < 8) errors.password = "At least 8 characters";
+    else if (!/[A-Z]/.test(password)) errors.password = "At least one uppercase letter";
+    else if (!/[a-z]/.test(password)) errors.password = "At least one lowercase letter";
+    else if (!/[0-9]/.test(password)) errors.password = "At least one number";
     if (!confirmPassword) errors.confirmPassword = "Please confirm your password";
     else if (password !== confirmPassword)
       errors.confirmPassword = "Passwords do not match";
