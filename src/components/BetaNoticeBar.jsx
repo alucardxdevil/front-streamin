@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { useLanguage } from "../utils/LanguageContext";
 
 const Bar = styled.div`
   margin-top: 60px;
-  min-height: 44px;
+  min-height: 36px;
   width: 100%;
   background: linear-gradient(90deg, #1f2937 0%, #7c2d12 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
@@ -13,12 +14,13 @@ const Bar = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
+  padding: 4px 12px;
 
   @media (max-width: 768px) {
     margin-top: 56px;
     top: 56px;
-    padding: 10px 12px;
+    min-height: 34px;
+    padding: 4px 10px;
   }
 `;
 
@@ -35,7 +37,7 @@ const Content = styled.div`
 const Message = styled.p`
   margin: 0;
   color: #fff3cd;
-  font-size: 14px;
+  font-size: 13px;
   text-align: center;
 `;
 
@@ -57,20 +59,19 @@ const DonationButton = styled.a`
 `;
 
 const BetaNoticeBar = ({ donationUrl = "https://example.com/donate" }) => {
+  const { t } = useLanguage();
+
   return (
     <Bar>
       <Content>
-        <Message>
-          Stream-In esta en version beta. Si quieres apoyar el mantenimiento de la
-          plataforma, puedes hacer una donacion o contribucion.
-        </Message>
+        <Message>{t("betaBannerMessage")}</Message>
         <DonationButton
           href={donationUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Ir a plataforma de donacion"
+          aria-label={t("betaBannerDonate")}
         >
-          Apoyar proyecto
+          {t("betaBannerDonate")}
         </DonationButton>
       </Content>
     </Bar>

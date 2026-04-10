@@ -6,6 +6,9 @@ const translations = {
     darkTheme: "Oscuro",
     lightTheme: "Claro",
     sunsetTheme: "Atardecer",
+    betaBannerMessage:
+      "Stream-In está en versión beta. Si quieres apoyar el mantenimiento de la plataforma, puedes hacer una donación o contribución.",
+    betaBannerDonate: "Apoyar proyecto",
 
     // Sidebar
     home: "Inicio",
@@ -805,6 +808,9 @@ const translations = {
     darkTheme: "Dark",
     lightTheme: "Light",
     sunsetTheme: "Sunset",
+    betaBannerMessage:
+      "Stream-In is in beta. If you want to support platform maintenance, you can make a donation or contribution.",
+    betaBannerDonate: "Support project",
 
     // Sidebar
     home: "Home",
@@ -1589,6 +1595,9 @@ const translations = {
     darkTheme: "Escuro",
     lightTheme: "Claro",
     sunsetTheme: "Pôr do sol",
+    betaBannerMessage:
+      "A Stream-In está em versão beta. Se quiser apoiar a manutenção da plataforma, você pode fazer uma doação ou contribuição.",
+    betaBannerDonate: "Apoiar projeto",
 
     // Sidebar
     home: "Início",
@@ -2121,6 +2130,9 @@ const translations = {
     darkTheme: "Dunkel",
     lightTheme: "Hell",
     sunsetTheme: "Sonnenuntergang",
+    betaBannerMessage:
+      "Stream-In befindet sich in der Beta-Version. Wenn du die Wartung der Plattform unterstützen möchtest, kannst du eine Spende oder einen Beitrag leisten.",
+    betaBannerDonate: "Projekt unterstützen",
 
     // Sidebar
     home: "Startseite",
@@ -2653,6 +2665,9 @@ const translations = {
     darkTheme: "Темная",
     lightTheme: "Светлая",
     sunsetTheme: "Закат",
+    betaBannerMessage:
+      "Stream-In находится в бета-версии. Если вы хотите поддержать развитие и поддержку платформы, вы можете сделать пожертвование или внести вклад.",
+    betaBannerDonate: "Поддержать проект",
 
     // Sidebar
     home: "Главная",
@@ -3330,6 +3345,9 @@ const translations = {
     darkTheme: "深色模式",
     lightTheme: "浅色模式",
     sunsetTheme: "日落",
+    betaBannerMessage:
+      "Stream-In 当前为测试版。如果你想支持平台维护，可以进行捐赠或其他形式的支持。",
+    betaBannerDonate: "支持项目",
 
     // Sidebar (侧边栏)
     home: "首页",
@@ -3997,6 +4015,9 @@ const translations = {
     darkTheme: "ダークモード",
     lightTheme: "ライトモード",
     sunsetTheme: "サンセット",
+    betaBannerMessage:
+      "Stream-In は現在ベータ版です。プラットフォーム運営を支援したい場合は、寄付や貢献をお願いします。",
+    betaBannerDonate: "プロジェクトを支援",
 
     // Sidebar (サイドバー)
     home: "ホーム",
@@ -4657,6 +4678,9 @@ const translations = {
     darkTheme: "Mode sombre",
     lightTheme: "Mode clair",
     sunsetTheme: "Coucher de soleil",
+    betaBannerMessage:
+      "Stream-In est en version bêta. Si vous souhaitez soutenir la maintenance de la plateforme, vous pouvez faire un don ou contribuer.",
+    betaBannerDonate: "Soutenir le projet",
 
     // Sidebar (Barre latérale)
     home: "Accueil",
@@ -5173,6 +5197,9 @@ const translations = {
     darkTheme: "डार्क मोड",
     lightTheme: "लाइट मोड",
     sunsetTheme: "सूर्यास्त",
+    betaBannerMessage:
+      "Stream-In अभी बीटा संस्करण में है। यदि आप प्लेटफ़ॉर्म के रखरखाव में सहयोग करना चाहते हैं, तो दान या योगदान कर सकते हैं।",
+    betaBannerDonate: "प्रोजेक्ट को सहयोग दें",
 
     // Sidebar (साइडबार)
     home: "होम",
@@ -5684,6 +5711,9 @@ const translations = {
     darkTheme: "الوضع الداكن",
     lightTheme: "الوضع الفاتح",
     sunsetTheme: "غروب الشمس",
+    betaBannerMessage:
+      "Stream-In ما زال في النسخة التجريبية. إذا أردت دعم استمرارية المنصة، يمكنك التبرع أو المساهمة.",
+    betaBannerDonate: "ادعم المشروع",
 
     // Sidebar (الشريط الجانبي)
     home: "الصفحة الرئيسية",
@@ -6198,6 +6228,9 @@ const translations = {
     darkTheme: "Tema scuro",
     lightTheme: "Tema chiaro",
     sunsetTheme: "Tramonto",
+    betaBannerMessage:
+      "Stream-In è in versione beta. Se vuoi supportare la manutenzione della piattaforma, puoi fare una donazione o contribuire.",
+    betaBannerDonate: "Supporta il progetto",
 
     // Sidebar (Barra laterale)
     home: "Home",
@@ -6712,6 +6745,9 @@ const translations = {
     darkTheme: "다크 모드",
     lightTheme: "라이트 모드",
     sunsetTheme: "선셋 모드",
+    betaBannerMessage:
+      "Stream-In은 현재 베타 버전입니다. 플랫폼 운영을 지원하고 싶다면 기부나 기여를 할 수 있습니다.",
+    betaBannerDonate: "프로젝트 후원",
 
     // Sidebar (사이드바)
     home: "홈",
