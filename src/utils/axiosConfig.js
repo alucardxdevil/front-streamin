@@ -10,6 +10,7 @@
  */
 
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 // URL base del backend según el entorno
 // En producción: http://89.167.94.4/api
@@ -55,14 +56,30 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Solo limpiar token de autenticación si el 401 viene de un endpoint de auth/usuario,
-      // NO de endpoints de streaming (que usan tokens de sesión anónimos diferentes)
-      const url = error.config?.url || ''
-      const isStreamEndpoint = url.includes('/stream/')
+    const status = error.response?.status
+    const message = error.response?.data?.message || ''
+    const url = error.config?.url || ''
+    const isStreamEndpoint = url.includes('/stream/')
+    
+    // Manejar errores de autenticación
+    if (status === 401 || status === 403) {
+      // No limpiar tokens para streaming (usan tokens diferentes)
       if (!isStreamEndpoint) {
         localStorage.removeItem('token')
         sessionStorage.removeItem('token')
+        localStorage.removeItem('user')
+        sessionStorage.removeItem('user')
+        
+        // Verificar si es cuenta eliminada
+        if (message.includes('deleted') || message.includes('eliminated') || message.includes('Account has been deleted')) {
+          alert('Your account has been deleted. You will be redirected to the login page.')
+          window.location.href = '/signin'
+        } else {
+          // Redireccionar al login solo si no es el endpoint de login
+          if (!url.includes('/auth/')) {
+            window.location.href = '/signin'
+          }
+        }
       }
     }
     return Promise.reject(error)
