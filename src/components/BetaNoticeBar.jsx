@@ -60,7 +60,7 @@ const DonationButton = styled.a`
   }
 `;
 
-const BetaNoticeBar = ({ donationUrl = "https://example.com/donate" }) => {
+const BetaNoticeBar = ({ donationUrl = "https://ko-fi.com/streamincom" }) => {
   const { t } = useLanguage();
   const location = useLocation();
   const barRef = useRef(null);
@@ -72,7 +72,10 @@ const BetaNoticeBar = ({ donationUrl = "https://example.com/donate" }) => {
 
     const updateHeightVar = () => {
       const height = Math.ceil(barEl.getBoundingClientRect().height || 0);
-      document.documentElement.style.setProperty("--beta-notice-height", `${height}px`);
+      document.documentElement.style.setProperty(
+        "--beta-notice-height",
+        `${height}px`,
+      );
     };
 
     updateHeightVar();

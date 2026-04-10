@@ -228,7 +228,9 @@ const Settings = ({ themeMode, setThemeMode }) => {
       {/* theme */}
       <Section>
         <SectionHeader>
-          <SectionIcon><DarkModeOutlined /></SectionIcon>
+          <SectionIcon>
+            <DarkModeOutlined />
+          </SectionIcon>
           {t("appearance")}
         </SectionHeader>
         <Card>
@@ -238,27 +240,45 @@ const Settings = ({ themeMode, setThemeMode }) => {
               <SettingDesc>{t("appearanceDesc")}</SettingDesc>
             </SettingInfo>
             <ThemeOptions>
-              <ThemeOption $active={themeMode === "dark"} onClick={() => setThemeMode("dark")}>
+              <ThemeOption
+                $active={themeMode === "dark"}
+                onClick={() => setThemeMode("dark")}
+              >
                 <DarkModeOutlined style={{ fontSize: 18 }} />
                 {t("dark")}
               </ThemeOption>
-              <ThemeOption $active={themeMode === "sunset"} onClick={() => setThemeMode("sunset")}>
+              <ThemeOption
+                $active={themeMode === "sunset"}
+                onClick={() => setThemeMode("sunset")}
+              >
                 <NightsStayOutlined style={{ fontSize: 18 }} />
                 {t("sunset")}
               </ThemeOption>
-              <ThemeOption $active={themeMode === "light"} onClick={() => setThemeMode("light")}>
+              <ThemeOption
+                $active={themeMode === "light"}
+                onClick={() => setThemeMode("light")}
+              >
                 <LightModeOutlined style={{ fontSize: 18 }} />
                 {t("light")}
               </ThemeOption>
-              <ThemeOption $active={themeMode === "vintage"} onClick={() => setThemeMode("vintage")}>
+              <ThemeOption
+                $active={themeMode === "vintage"}
+                onClick={() => setThemeMode("vintage")}
+              >
                 <FilterVintageOutlined style={{ fontSize: 18 }} />
                 {t("vintage")}
               </ThemeOption>
-              <ThemeOption $active={themeMode === "cyberpunk"} onClick={() => setThemeMode("cyberpunk")}>
+              <ThemeOption
+                $active={themeMode === "cyberpunk"}
+                onClick={() => setThemeMode("cyberpunk")}
+              >
                 <SmartToyOutlined style={{ fontSize: 18 }} />
                 {t("cyberpunk")}
               </ThemeOption>
-              <ThemeOption $active={themeMode === "sunrise"} onClick={() => setThemeMode("sunrise")}>
+              <ThemeOption
+                $active={themeMode === "sunrise"}
+                onClick={() => setThemeMode("sunrise")}
+              >
                 <WbTwilightOutlined style={{ fontSize: 18 }} />
                 {t("sunrise")}
               </ThemeOption>
@@ -270,7 +290,9 @@ const Settings = ({ themeMode, setThemeMode }) => {
       {/* Lenguage */}
       <Section>
         <SectionHeader>
-          <SectionIcon><LanguageOutlined /></SectionIcon>
+          <SectionIcon>
+            <LanguageOutlined />
+          </SectionIcon>
           {t("languageSection")}
         </SectionHeader>
         <Card>
@@ -280,40 +302,76 @@ const Settings = ({ themeMode, setThemeMode }) => {
               <SettingDesc>{t("languageDesc")}</SettingDesc>
             </SettingInfo>
             <LangOptions>
-              <LangOption $active={language === "es"} onClick={() => setLanguage("es")}>
-               {t("spanish")}
+              <LangOption
+                $active={language === "en"}
+                onClick={() => setLanguage("en")}
+              >
+                {t("english")}
               </LangOption>
-              <LangOption $active={language === "en"} onClick={() => setLanguage("en")}>
-               {t("english")}
+              <LangOption
+                $active={language === "pt"}
+                onClick={() => setLanguage("pt")}
+              >
+                {t("portuguese")}
               </LangOption>
-              <LangOption $active={language === "pt"} onClick={() => setLanguage("pt")}>
-               {t("portuguese")}
+              <LangOption
+                $active={language === "de"}
+                onClick={() => setLanguage("de")}
+              >
+                {t("german")}
               </LangOption>
-              <LangOption $active={language === "de"} onClick={() => setLanguage("de")}>
-               {t("german")}
+              <LangOption
+                $active={language === "es"}
+                onClick={() => setLanguage("es")}
+              >
+                {t("spanish")}
               </LangOption>
-              <LangOption $active={language === "fr"} onClick={() => setLanguage("fr")}>
-               {t("french")}
+              <LangOption
+                $active={language === "fr"}
+                onClick={() => setLanguage("fr")}
+              >
+                {t("french")}
               </LangOption>
-              <LangOption $active={language === "zh"} onClick={() => setLanguage("zh")}>
-               {t("chinese")}
+              <LangOption
+                $active={language === "zh"}
+                onClick={() => setLanguage("zh")}
+              >
+                {t("chinese")}
               </LangOption>
-              <LangOption $active={language === "jp"} onClick={() => setLanguage("jp")}>
-               {t("japanese")}
+              <LangOption
+                $active={language === "jp"}
+                onClick={() => setLanguage("jp")}
+              >
+                {t("japanese")}
               </LangOption>
-              <LangOption $active={language === "ru"} onClick={() => setLanguage("ru")}>
+              <LangOption
+                $active={language === "ru"}
+                onClick={() => setLanguage("ru")}
+              >
                 {t("russian")}
               </LangOption>
-              <LangOption $active={language === "it"} onClick={() => setLanguage("it")}>
+              <LangOption
+                $active={language === "it"}
+                onClick={() => setLanguage("it")}
+              >
                 {t("italian")}
               </LangOption>
-              <LangOption $active={language === "ko"} onClick={() => setLanguage("ko")}>
+              <LangOption
+                $active={language === "ko"}
+                onClick={() => setLanguage("ko")}
+              >
                 {t("korean")}
               </LangOption>
-               <LangOption $active={language === "ar"} onClick={() => setLanguage("ar")}>
+              <LangOption
+                $active={language === "ar"}
+                onClick={() => setLanguage("ar")}
+              >
                 {t("arabic")}
               </LangOption>
-               <LangOption $active={language === "hi"} onClick={() => setLanguage("hi")}>
+              <LangOption
+                $active={language === "hi"}
+                onClick={() => setLanguage("hi")}
+              >
                 {t("hindi")}
               </LangOption>
             </LangOptions>
@@ -324,7 +382,9 @@ const Settings = ({ themeMode, setThemeMode }) => {
       {/* Playing */}
       <Section>
         <SectionHeader>
-          <SectionIcon><PlayCircleOutline /></SectionIcon>
+          <SectionIcon>
+            <PlayCircleOutline />
+          </SectionIcon>
           {t("autoplay")}
         </SectionHeader>
         <Card>
@@ -334,7 +394,9 @@ const Settings = ({ themeMode, setThemeMode }) => {
               <SettingDesc>{t("autoplayDesc")}</SettingDesc>
             </SettingInfo>
             <ToggleWrapper>
-              <ToggleLabel>{autoplay ? t("enabled") : t("disabled")}</ToggleLabel>
+              <ToggleLabel>
+                {autoplay ? t("enabled") : t("disabled")}
+              </ToggleLabel>
               <Toggle $on={autoplay} onClick={() => setAutoplay(!autoplay)}>
                 <ToggleKnob $on={autoplay} />
               </Toggle>
@@ -346,7 +408,9 @@ const Settings = ({ themeMode, setThemeMode }) => {
       {/* notifications */}
       <Section>
         <SectionHeader>
-          <SectionIcon><NotificationsOutlined /></SectionIcon>
+          <SectionIcon>
+            <NotificationsOutlined />
+          </SectionIcon>
           {t("notifications")}
         </SectionHeader>
         <Card>
@@ -356,8 +420,13 @@ const Settings = ({ themeMode, setThemeMode }) => {
               <SettingDesc>{t("notificationsDesc")}</SettingDesc>
             </SettingInfo>
             <ToggleWrapper>
-              <ToggleLabel>{notifications ? t("enabled") : t("disabled")}</ToggleLabel>
-              <Toggle $on={notifications} onClick={() => setNotifications(!notifications)}>
+              <ToggleLabel>
+                {notifications ? t("enabled") : t("disabled")}
+              </ToggleLabel>
+              <Toggle
+                $on={notifications}
+                onClick={() => setNotifications(!notifications)}
+              >
                 <ToggleKnob $on={notifications} />
               </Toggle>
             </ToggleWrapper>
@@ -368,7 +437,9 @@ const Settings = ({ themeMode, setThemeMode }) => {
       {/* access */}
       <Section>
         <SectionHeader>
-          <SectionIcon><SpeedOutlined /></SectionIcon>
+          <SectionIcon>
+            <SpeedOutlined />
+          </SectionIcon>
           {t("reducedMotion")}
         </SectionHeader>
         <Card>
@@ -378,8 +449,13 @@ const Settings = ({ themeMode, setThemeMode }) => {
               <SettingDesc>{t("reducedMotionDesc")}</SettingDesc>
             </SettingInfo>
             <ToggleWrapper>
-              <ToggleLabel>{reducedMotion ? t("enabled") : t("disabled")}</ToggleLabel>
-              <Toggle $on={reducedMotion} onClick={() => setReducedMotion(!reducedMotion)}>
+              <ToggleLabel>
+                {reducedMotion ? t("enabled") : t("disabled")}
+              </ToggleLabel>
+              <Toggle
+                $on={reducedMotion}
+                onClick={() => setReducedMotion(!reducedMotion)}
+              >
                 <ToggleKnob $on={reducedMotion} />
               </Toggle>
             </ToggleWrapper>
@@ -390,8 +466,13 @@ const Settings = ({ themeMode, setThemeMode }) => {
               <SettingDesc>{t("compactModeDesc")}</SettingDesc>
             </SettingInfo>
             <ToggleWrapper>
-              <ToggleLabel>{compactMode ? t("enabled") : t("disabled")}</ToggleLabel>
-              <Toggle $on={compactMode} onClick={() => setCompactMode(!compactMode)}>
+              <ToggleLabel>
+                {compactMode ? t("enabled") : t("disabled")}
+              </ToggleLabel>
+              <Toggle
+                $on={compactMode}
+                onClick={() => setCompactMode(!compactMode)}
+              >
                 <ToggleKnob $on={compactMode} />
               </Toggle>
             </ToggleWrapper>

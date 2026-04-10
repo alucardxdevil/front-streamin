@@ -591,6 +591,17 @@ const translations = {
     // Language
     language: "Idioma",
     spanish: "Español",
+    english: "English",
+    portuguese: "Português",
+    german: "Deutsch",
+    russian: "Русский",
+    french: "Français",
+    italian: "Italiano",
+    chinese: "简体中文",
+    japanese: "日本語",
+    korean: "한국어",
+    arabic: "العربية",
+    hindi: "हिंदी",
 
     // Settings
     settingsTitle: "Configuración",
@@ -1418,7 +1429,18 @@ const translations = {
 
     // Language
     language: "Language",
+    spanish: "Español",
     english: "English",
+    portuguese: "Português",
+    german: "Deutsch",
+    russian: "Русский",
+    french: "Français",
+    italian: "Italiano",
+    chinese: "简体中文",
+    japanese: "日本語",
+    korean: "한국어",
+    arabic: "العربية",
+    hindi: "हिंदी",
 
     // Settings
     settingsTitle: "Settings",
@@ -1895,7 +1917,18 @@ const translations = {
 
     // Language
     language: "Idioma",
+    spanish: "Español",
+    english: "English",
     portuguese: "Português",
+    german: "Deutsch",
+    russian: "Русский",
+    french: "Français",
+    italian: "Italiano",
+    chinese: "简体中文",
+    japanese: "日本語",
+    korean: "한국어",
+    arabic: "العربية",
+    hindi: "हिंदी",
 
     // Settings
     settingsTitle: "Configurações",
@@ -2430,7 +2463,18 @@ const translations = {
 
     // Language
     language: "Sprache",
+    spanish: "Español",
+    english: "English",
+    portuguese: "Português",
     german: "Deutsch",
+    russian: "Русский",
+    french: "Français",
+    italian: "Italiano",
+    chinese: "简体中文",
+    japanese: "日本語",
+    korean: "한국어",
+    arabic: "العربية",
+    hindi: "हिंदी",
 
     // Settings
     settingsTitle: "Einstellungen",
@@ -3153,7 +3197,18 @@ const translations = {
 
     // Language
     language: "Язык",
+    spanish: "Español",
+    english: "English",
+    portuguese: "Português",
+    german: "Deutsch",
     russian: "Русский",
+    french: "Français",
+    italian: "Italiano",
+    chinese: "简体中文",
+    japanese: "日本語",
+    korean: "한국어",
+    arabic: "العربية",
+    hindi: "हिंदी",
 
     // Settings
     settingsTitle: "Настройки",
@@ -3825,7 +3880,18 @@ const translations = {
 
     // Language (语言)
     language: "语言",
-    chinnese: "中文",
+    spanish: "Español",
+    english: "English",
+    portuguese: "Português",
+    german: "Deutsch",
+    russian: "Русский",
+    french: "Français",
+    italian: "Italiano",
+    chinese: "简体中文",
+    japanese: "日本語",
+    korean: "한국어",
+    arabic: "العربية",
+    hindi: "हिंदी",
 
     // Settings (设置)
     settingsTitle: "设置",
@@ -4494,7 +4560,18 @@ const translations = {
 
     // Language (言語)
     language: "言語",
+    spanish: "Español",
+    english: "English",
+    portuguese: "Português",
+    german: "Deutsch",
+    russian: "Русский",
+    french: "Français",
+    italian: "Italiano",
+    chinese: "简体中文",
     japanese: "日本語",
+    korean: "한국어",
+    arabic: "العربية",
+    hindi: "हिंदी",
 
     // Settings (設定)
     settingsTitle: "設定",
@@ -4996,7 +5073,18 @@ const translations = {
 
     // Language (Langue)
     language: "Langue",
+    spanish: "Español",
+    english: "English",
+    portuguese: "Português",
+    german: "Deutsch",
+    russian: "Русский",
     french: "Français",
+    italian: "Italiano",
+    chinese: "简体中文",
+    japanese: "日本語",
+    korean: "한국어",
+    arabic: "العربية",
+    hindi: "हिंदी",
 
     // Settings (Paramètres)
     settingsTitle: "Paramètres",
@@ -5510,6 +5598,17 @@ const translations = {
 
     // Language (भाषा)
     language: "भाषा",
+    spanish: "Español",
+    english: "English",
+    portuguese: "Português",
+    german: "Deutsch",
+    russian: "Русский",
+    french: "Français",
+    italian: "Italiano",
+    chinese: "简体中文",
+    japanese: "日本語",
+    korean: "한국어",
+    arabic: "العربية",
     hindi: "हिंदी",
 
     // Settings (सेटिंग्स)
@@ -6024,10 +6123,18 @@ const translations = {
 
     // Language (اللغة)
     language: "اللغة",
-    spanish: "الإسبانية",
-    english: "الإنجليزية",
-    portuguese: "البرتغالية",
-    german: "الألمانية",
+    spanish: "Español",
+    english: "English",
+    portuguese: "Português",
+    german: "Deutsch",
+    russian: "Русский",
+    french: "Français",
+    italian: "Italiano",
+    chinese: "简体中文",
+    japanese: "日本語",
+    korean: "한국어",
+    arabic: "العربية",
+    hindi: "हिंदी",
 
     // Settings (الإعدادات)
     settingsTitle: "الإعدادات",
@@ -6545,10 +6652,18 @@ const translations = {
 
     // Language (Lingua)
     language: "Lingua",
-    spanish: "Spagnolo",
-    english: "Inglese",
-    portuguese: "Portoghese",
-    german: "Tedesco",
+    spanish: "Español",
+    english: "English",
+    portuguese: "Português",
+    german: "Deutsch",
+    russian: "Русский",
+    french: "Français",
+    italian: "Italiano",
+    chinese: "简体中文",
+    japanese: "日本語",
+    korean: "한국어",
+    arabic: "العربية",
+    hindi: "हिंदी",
 
     // Settings (Impostazioni)
     settingsTitle: "Impostazioni",
@@ -7058,10 +7173,18 @@ const translations = {
 
     // Language (언어)
     language: "언어",
-    spanish: "스페인어",
-    english: "영어",
-    portuguese: "포르투갈어",
-    german: "독일어",
+    spanish: "Español",
+    english: "English",
+    portuguese: "Português",
+    german: "Deutsch",
+    russian: "Русский",
+    french: "Français",
+    italian: "Italiano",
+    chinese: "简体中文",
+    japanese: "日本語",
+    korean: "한국어",
+    arabic: "العربية",
+    hindi: "हिंदी",
 
     // Settings (설정)
     settingsTitle: "설정",
