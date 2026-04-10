@@ -457,15 +457,15 @@ const Advertise = () => {
       {/* Stats */}
       <StatsGrid>
         <StatCard>
-          <StatNumber>50K+</StatNumber>
+          <StatNumber>8K+</StatNumber>
           <StatLabel>{t("advertiseStatUniqueUsers")}</StatLabel>
         </StatCard>
         <StatCard>
-          <StatNumber>200K+</StatNumber>
+          <StatNumber>35K+</StatNumber>
           <StatLabel>{t("advertiseStatMonthlyViews")}</StatLabel>
         </StatCard>
         <StatCard>
-          <StatNumber>85%</StatNumber>
+          <StatNumber>62%</StatNumber>
           <StatLabel>{t("advertiseStatRetentionRate")}</StatLabel>
         </StatCard>
         <StatCard>
@@ -537,7 +537,7 @@ const Advertise = () => {
           <PricingCard>
             <PriceName>{t("advertisePlanBasicName")}</PriceName>
             <PriceAmount>
-              $19<span>{t("advertisePerWeek")}</span>
+              $9<span>{t("advertisePerWeek")}</span>
             </PriceAmount>
             <PriceFeatures>
               <PriceFeature>
@@ -564,7 +564,7 @@ const Advertise = () => {
             <PopularBadge>{t("advertisePopularBadge")}</PopularBadge>
             <PriceName>{t("advertisePlanProName")}</PriceName>
             <PriceAmount>
-              $49<span>{t("advertisePerWeek")}</span>
+              $19<span>{t("advertisePerWeek")}</span>
             </PriceAmount>
             <PriceFeatures>
               <PriceFeature>
@@ -594,7 +594,7 @@ const Advertise = () => {
           <PricingCard>
             <PriceName>{t("advertisePlanEnterpriseName")}</PriceName>
             <PriceAmount>
-              $99<span>{t("advertisePerWeek")}</span>
+              $39<span>{t("advertisePerWeek")}</span>
             </PriceAmount>
             <PriceFeatures>
               <PriceFeature>
