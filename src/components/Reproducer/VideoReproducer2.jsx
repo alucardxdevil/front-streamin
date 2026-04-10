@@ -70,7 +70,7 @@ const VideoWrapper = styled.div`
   /* ── Mobile: fijo debajo del navbar, no se mueve al hacer scroll ── */
   @media (max-width: 768px) {
     position: fixed;
-    top: 60px; /* Altura del navbar */
+    top: calc(56px + var(--beta-notice-height, 0px)); /* Navbar + beta banner */
     left: 0;
     right: 0;
     z-index: 50;

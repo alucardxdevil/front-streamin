@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useLanguage } from "../utils/LanguageContext";
 
@@ -60,9 +60,31 @@ const DonationButton = styled.a`
 
 const BetaNoticeBar = ({ donationUrl = "https://example.com/donate" }) => {
   const { t } = useLanguage();
+  const barRef = useRef(null);
+
+  useEffect(() => {
+    const barEl = barRef.current;
+    if (!barEl) return undefined;
+
+    const updateHeightVar = () => {
+      const height = Math.ceil(barEl.getBoundingClientRect().height || 0);
+      document.documentElement.style.setProperty("--beta-notice-height", `${height}px`);
+    };
+
+    updateHeightVar();
+    const resizeObserver = new ResizeObserver(updateHeightVar);
+    resizeObserver.observe(barEl);
+    window.addEventListener("resize", updateHeightVar);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", updateHeightVar);
+      document.documentElement.style.setProperty("--beta-notice-height", "0px");
+    };
+  }, []);
 
   return (
-    <Bar>
+    <Bar ref={barRef}>
       <Content>
         <Message>{t("betaBannerMessage")}</Message>
         <DonationButton

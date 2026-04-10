@@ -306,7 +306,7 @@ const StatLabel = styled.span`
 `;
 
 const DescriptionContainer = styled.div`
-  max-height: 170px;
+  max-height: 190px;
   overflow-y: auto;
   width: 100%;
   margin: 0 auto;
@@ -321,10 +321,11 @@ const DescriptionContainer = styled.div`
   box-shadow: inset 0px 2px 6px rgba(0, 0, 0, 0.25);
 
   @media (min-width: 1024px) {
-    font-size: 19px;
-    line-height: 1.8;
+    min-height: 230px;
+    max-height: 320px;
+    font-size: 16px;
+    line-height: 1.7;
     padding: 18px;
-    max-height: 210px;
   }
 
   @media (max-width: 768px) {
