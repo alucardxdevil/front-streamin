@@ -537,7 +537,7 @@ const Advertise = () => {
           <PricingCard>
             <PriceName>{t("advertisePlanBasicName")}</PriceName>
             <PriceAmount>
-              $9<span>{t("advertisePerWeek")}</span>
+              $5<span>{t("advertisePerWeek")}</span>
             </PriceAmount>
             <PriceFeatures>
               <PriceFeature>
@@ -564,7 +564,7 @@ const Advertise = () => {
             <PopularBadge>{t("advertisePopularBadge")}</PopularBadge>
             <PriceName>{t("advertisePlanProName")}</PriceName>
             <PriceAmount>
-              $19<span>{t("advertisePerWeek")}</span>
+              $12<span>{t("advertisePerWeek")}</span>
             </PriceAmount>
             <PriceFeatures>
               <PriceFeature>
@@ -594,7 +594,7 @@ const Advertise = () => {
           <PricingCard>
             <PriceName>{t("advertisePlanEnterpriseName")}</PriceName>
             <PriceAmount>
-              $39<span>{t("advertisePerWeek")}</span>
+              $25<span>{t("advertisePerWeek")}</span>
             </PriceAmount>
             <PriceFeatures>
               <PriceFeature>

@@ -5,6 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { FaCloudUploadAlt, FaVideo } from "react-icons/fa";
 import { uploadToB2 } from "../utils/uploadB2";
 import { useLanguage } from "../utils/LanguageContext";
+import {
+  MAX_VIDEO_UPLOAD_BYTES,
+  MAX_IMAGE_UPLOAD_BYTES,
+} from "../constants/uploadLimits";
 
 const Container = styled.div`
   position: fixed;
@@ -180,6 +184,17 @@ const ErrorText = styled.div`
   border-radius: 8px;
 `;
 
+const BetaLimitsHint = styled.p`
+  font-size: 12px;
+  line-height: 1.45;
+  color: ${({ theme }) => theme.textSoft || "#aaa"};
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: ${({ theme }) => theme.bg || "#202020"};
+  border: 1px solid ${({ theme }) => theme.soft || "#333"};
+`;
+
 const PreviewImage = styled.img`
   width: 100%;
   max-height: 160px;
@@ -257,7 +272,7 @@ export const EditVideo = ({ setOpen, videoId }) => {
       setError(t("onlyJpgPngWebp"));
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
+    if (file.size > MAX_IMAGE_UPLOAD_BYTES) {
       setError(t("max10Mb"));
       return;
     }
@@ -275,8 +290,8 @@ export const EditVideo = ({ setOpen, videoId }) => {
       setError(t("onlyMp4WebmMkv"));
       return;
     }
-    if (file.size > 500 * 1024 * 1024) {
-      setError(t("max500Mb"));
+    if (file.size > MAX_VIDEO_UPLOAD_BYTES) {
+      setError(t("max800Mb"));
       return;
     }
     setError(null);
@@ -343,6 +358,8 @@ export const EditVideo = ({ setOpen, videoId }) => {
           <Title>{t("editVideo")}</Title>
           <Close onClick={() => setOpen(false)}>✕</Close>
         </Header>
+
+        <BetaLimitsHint>{t("uploadBetaLimitsHint")}</BetaLimitsHint>
 
         {error && <ErrorText>{error}</ErrorText>}
 

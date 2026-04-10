@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import useVideoUpload from "../utils/useVideoUpload";
 import { useLanguage } from "../utils/LanguageContext";
+import {
+  MAX_VIDEO_UPLOAD_BYTES,
+  MAX_IMAGE_UPLOAD_BYTES,
+} from "../constants/uploadLimits";
 
 /* =======================
    🎨 STYLED COMPONENTS
@@ -170,6 +174,17 @@ const StatusText = styled.div`
   gap: 8px;
 `;
 
+const BetaLimitsHint = styled.p`
+  font-size: 12px;
+  line-height: 1.45;
+  color: ${({ theme }) => theme.textSoft || "#aaa"};
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: ${({ theme }) => theme.bg || "#202020"};
+  border: 1px solid ${({ theme }) => theme.soft || "#333"};
+`;
+
 const Spinner = styled.span`
   display: inline-block;
   width: 14px;
@@ -236,7 +251,7 @@ export const Upload = ({ setOpen }) => {
       setLocalError(t("onlyJpgPngWebp"));
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
+    if (file.size > MAX_IMAGE_UPLOAD_BYTES) {
       setLocalError(t("imageMax10Mb"));
       return;
     }
@@ -252,8 +267,8 @@ export const Upload = ({ setOpen }) => {
       setLocalError(t("onlyMp4WebmMkv"));
       return;
     }
-    if (file.size > 500 * 1024 * 1024) {
-      setLocalError(t("videoMax500Mb"));
+    if (file.size > MAX_VIDEO_UPLOAD_BYTES) {
+      setLocalError(t("videoMax800Mb"));
       return;
     }
     setLocalError(null);
@@ -354,6 +369,8 @@ export const Upload = ({ setOpen }) => {
             ✕
           </Close>
         </Header>
+
+        <BetaLimitsHint>{t("uploadBetaLimitsHint")}</BetaLimitsHint>
 
         {error && <ErrorText>{error}</ErrorText>}
 

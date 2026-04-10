@@ -4,17 +4,13 @@ import { useLanguage } from "../utils/LanguageContext";
 import {
   ExpandMore,
   ExpandLess,
-  Gavel,
-  Security,
-  Person,
-  Block,
+  RocketLaunch,
+  RecordVoiceOver,
+  OndemandVideo,
   MonetizationOn,
-  Update,
-  ContactMail,
+  Stars,
   Shield,
-  Copyright,
-  Warning,
-  Public,
+  ContactMail,
 } from "@mui/icons-material";
 
 const Container = styled.div`
@@ -42,7 +38,7 @@ const Subtitle = styled.p`
   color: ${({ theme }) => theme.textSoft || "#aaa"};
   margin-bottom: 32px;
   text-align: center;
-  max-width: 600px;
+  max-width: 640px;
 `;
 
 const LastUpdated = styled.p`
@@ -112,7 +108,7 @@ const SectionNumber = styled.span`
 
 const SectionContent = styled.div`
   padding: ${({ $isOpen }) => ($isOpen ? "0 20px 20px 52px" : "0 20px 0 52px")};
-  max-height: ${({ $isOpen }) => ($isOpen ? "2000px" : "0")};
+  max-height: ${({ $isOpen }) => ($isOpen ? "3200px" : "0")};
   opacity: ${({ $isOpen }) => ($isOpen ? "1" : "0")};
   overflow: hidden;
   transition: all 0.4s ease;
@@ -199,271 +195,96 @@ const Us = () => {
 
   const sections = [
     {
-      icon: <Gavel />,
-      title: t("acceptanceOfTermsUs"),
+      icon: <RocketLaunch />,
+      title: t("usSecWhatTitle"),
       content: (
         <>
-          <Paragraph>
-            Al acceder y utilizar stream-in, aceptas estos Términos y Condiciones
-            en su totalidad. Si no estás de acuerdo con alguna parte, te pedimos
-            que no utilices la plataforma.
-          </Paragraph>
+          <Paragraph>{t("usSecWhatP1")}</Paragraph>
+          <Paragraph>{t("usSecWhatP2")}</Paragraph>
           <HighlightBox>
-            <HighlightText>
-              📌 El uso continuado de stream-in después de cualquier modificación
-              constituye tu aceptación de los términos actualizados.
-            </HighlightText>
+            <HighlightText>{t("usSecWhatHighlight")}</HighlightText>
           </HighlightBox>
         </>
       ),
     },
     {
-      icon: <Public />,
-      title: t("serviceDescription"),
+      icon: <RecordVoiceOver />,
+      title: t("usSecFreedomTitle"),
       content: (
         <>
-          <Paragraph>
-            stream-in es una plataforma de streaming que permite a los usuarios:
-          </Paragraph>
-          <BulletList>
-            <BulletItem>Subir, compartir y descubrir contenido de audio (podcasts, música, etc.)</BulletItem>
-            <BulletItem>Crear y personalizar perfiles de creador</BulletItem>
-            <BulletItem>Interactuar con otros usuarios y creadores</BulletItem>
-            <BulletItem>Acceder a herramientas de monetización para creadores elegibles</BulletItem>
-          </BulletList>
-          <Paragraph>
-            Nos reservamos el derecho de modificar, suspender o descontinuar
-            cualquier aspecto del servicio en cualquier momento, con o sin previo
-            aviso.
-          </Paragraph>
+          <Paragraph>{t("usSecFreedomP1")}</Paragraph>
+          <Paragraph>{t("usSecFreedomP2")}</Paragraph>
         </>
       ),
     },
     {
-      icon: <Person />,
-      title: t("userAccounts"),
+      icon: <OndemandVideo />,
+      title: t("usSecExperienceTitle"),
       content: (
         <>
-          <Paragraph>
-            Para utilizar ciertas funciones de stream-in, necesitarás crear una
-            cuenta. Al hacerlo, te comprometes a:
-          </Paragraph>
-          <BulletList>
-            <BulletItem>Proporcionar información veraz y actualizada</BulletItem>
-            <BulletItem>Mantener la seguridad de tu contraseña y credenciales</BulletItem>
-            <BulletItem>Ser responsable de toda actividad bajo tu cuenta</BulletItem>
-            <BulletItem>Notificarnos inmediatamente sobre cualquier uso no autorizado</BulletItem>
-          </BulletList>
-          <HighlightBox>
-            <HighlightText>
-              ⚠️ Nos reservamos el derecho de suspender o eliminar cuentas que
-              violen estos términos o que permanezcan inactivas por períodos
-              prolongados.
-            </HighlightText>
-          </HighlightBox>
-        </>
-      ),
-    },
-    {
-      icon: <Copyright />,
-      title: t("contentAndIP"),
-      content: (
-        <>
-          <Paragraph>
-            Tú conservas los derechos sobre el contenido que subes a stream-in.
-            Sin embargo, al publicar contenido, nos otorgas una licencia
-            mundial, no exclusiva, libre de regalías para usar, reproducir,
-            modificar, distribuir y mostrar dicho contenido dentro de la
-            plataforma.
-          </Paragraph>
-          <Paragraph>Te comprometes a que tu contenido:</Paragraph>
-          <BulletList>
-            <BulletItem>Es original o tienes los derechos necesarios para compartirlo</BulletItem>
-            <BulletItem>No infringe derechos de autor, marcas registradas u otros derechos de terceros</BulletItem>
-            <BulletItem>No contiene material difamatorio, obsceno o ilegal</BulletItem>
-          </BulletList>
-          <HighlightBox>
-            <HighlightText>
-              🎵 Si subes música o audio que no es tuyo, asegúrate de contar con
-              las licencias correspondientes. stream-in no se hace responsable
-              por infracciones de derechos de autor cometidas por usuarios.
-            </HighlightText>
-          </HighlightBox>
-        </>
-      ),
-    },
-    {
-      icon: <Block />,
-      title: t("prohibitedConduct"),
-      content: (
-        <>
-          <Paragraph>
-            Para mantener stream-in como un espacio seguro y respetuoso, está
-            prohibido:
-          </Paragraph>
-          <BulletList>
-            <BulletItem>Subir contenido que promueva odio, violencia o discriminación</BulletItem>
-            <BulletItem>Acosar, intimidar o amenazar a otros usuarios</BulletItem>
-            <BulletItem>Usar la plataforma para actividades ilegales o fraudulentas</BulletItem>
-            <BulletItem>Intentar hackear, descompilar o interferir con los sistemas de stream-in</BulletItem>
-            <BulletItem>Crear múltiples cuentas para evadir restricciones</BulletItem>
-            <BulletItem>Distribuir spam, malware o contenido engañoso</BulletItem>
-            <BulletItem>Suplantar la identidad de otra persona o entidad</BulletItem>
-          </BulletList>
-          <Paragraph>
-            Las violaciones pueden resultar en la suspensión o eliminación
-            permanente de tu cuenta, sin previo aviso.
-          </Paragraph>
+          <Paragraph>{t("usSecExperienceP1")}</Paragraph>
+          <Paragraph>{t("usSecExperienceP2")}</Paragraph>
         </>
       ),
     },
     {
       icon: <MonetizationOn />,
-      title: t("monetizationAndPayments"),
+      title: t("usSecMoneyTitle"),
       content: (
         <>
-          <Paragraph>
-            stream-in ofrece opciones de monetización para creadores elegibles.
-            Los términos específicos incluyen:
-          </Paragraph>
-          <BulletList>
-            <BulletItem>Los ingresos se calculan según las métricas de la plataforma</BulletItem>
-            <BulletItem>Los pagos se procesan según el calendario establecido</BulletItem>
-            <BulletItem>stream-in se reserva el derecho de modificar las tasas de monetización</BulletItem>
-            <BulletItem>Los creadores son responsables de sus obligaciones fiscales</BulletItem>
-          </BulletList>
-          <HighlightBox>
-            <HighlightText>
-              💰 Los detalles específicos de monetización se encuentran en el
-              Acuerdo de Creador, que complementa estos términos generales.
-            </HighlightText>
-          </HighlightBox>
+          <Paragraph>{t("usSecMoneyP1")}</Paragraph>
+          <Paragraph>{t("usSecMoneyP2")}</Paragraph>
         </>
       ),
     },
     {
-      icon: <Security />,
-      title: t("privacyAndData"),
+      icon: <Stars />,
+      title: t("usSecCreatorsTitle"),
       content: (
         <>
-          <Paragraph>
-            Tu privacidad es importante para nosotros. Recopilamos y procesamos
-            datos personales de acuerdo con nuestra Política de Privacidad, que
-            incluye:
-          </Paragraph>
-          <BulletList>
-            <BulletItem>Información de registro (nombre, email, etc.)</BulletItem>
-            <BulletItem>Datos de uso y preferencias</BulletItem>
-            <BulletItem>Información técnica del dispositivo</BulletItem>
-            <BulletItem>Cookies y tecnologías similares</BulletItem>
-          </BulletList>
-          <Paragraph>
-            Implementamos medidas de seguridad técnicas y organizativas para
-            proteger tu información. Sin embargo, ningún sistema es 100% seguro
-            y no podemos garantizar la seguridad absoluta de tus datos.
-          </Paragraph>
+          <Paragraph>{t("usSecCreatorsP1")}</Paragraph>
+          <Paragraph>{t("usSecCreatorsP2")}</Paragraph>
         </>
       ),
     },
     {
       icon: <Shield />,
-      title: t("liabilityLimitationUs"),
+      title: t("usSecLimitsTitle"),
       content: (
         <>
-          <Paragraph>
-            stream-in se proporciona "tal cual" y "según disponibilidad". En la
-            máxima medida permitida por la ley:
-          </Paragraph>
+          <Paragraph>{t("usSecLimitsP1")}</Paragraph>
+          <Paragraph>{t("usSecLimitsIntroList")}</Paragraph>
           <BulletList>
-            <BulletItem>
-              No garantizamos que el servicio sea ininterrumpido, seguro o libre
-              de errores
-            </BulletItem>
-            <BulletItem>
-              No somos responsables por pérdidas indirectas, incidentales o
-              consecuentes
-            </BulletItem>
-            <BulletItem>
-              Nuestra responsabilidad total no excederá el monto que hayas
-              pagado a stream-in en los últimos 12 meses
-            </BulletItem>
+            <BulletItem>{t("usSecLimitsItemThreat")}</BulletItem>
+            <BulletItem>{t("usSecLimitsItemViolence")}</BulletItem>
+            <BulletItem>{t("usSecLimitsItemNudity")}</BulletItem>
+            <BulletItem>{t("usSecLimitsItemPorn")}</BulletItem>
+            <BulletItem>{t("usSecLimitsItemRacism")}</BulletItem>
           </BulletList>
           <HighlightBox>
-            <HighlightText>
-              🛡️ Esta limitación aplica en la máxima medida permitida por la
-              legislación aplicable en tu jurisdicción.
-            </HighlightText>
+            <HighlightText>{t("usSecLimitsP2")}</HighlightText>
           </HighlightBox>
-        </>
-      ),
-    },
-    {
-      icon: <Warning />,
-      title: t("indemnification"),
-      content: (
-        <>
-          <Paragraph>
-            Aceptas indemnizar y mantener indemne a stream-in, sus directores,
-            empleados y afiliados de cualquier reclamación, daño, pérdida o
-            gasto (incluyendo honorarios legales) que surja de:
-          </Paragraph>
-          <BulletList>
-            <BulletItem>Tu uso de la plataforma</BulletItem>
-            <BulletItem>Tu violación de estos términos</BulletItem>
-            <BulletItem>Tu violación de derechos de terceros</BulletItem>
-            <BulletItem>El contenido que publiques en stream-in</BulletItem>
-          </BulletList>
-        </>
-      ),
-    },
-    {
-      icon: <Update />,
-      title: t("termsModificationsUs"),
-      content: (
-        <>
-          <Paragraph>
-            Podemos actualizar estos términos periódicamente. Cuando lo hagamos:
-          </Paragraph>
-          <BulletList>
-            <BulletItem>Publicaremos la versión actualizada en esta página</BulletItem>
-            <BulletItem>Actualizaremos la fecha de "última modificación"</BulletItem>
-            <BulletItem>
-              Para cambios significativos, te notificaremos por email o mediante
-              un aviso destacado en la plataforma
-            </BulletItem>
-          </BulletList>
-          <Paragraph>
-            Te recomendamos revisar estos términos regularmente para estar al
-            tanto de cualquier cambio.
-          </Paragraph>
         </>
       ),
     },
     {
       icon: <ContactMail />,
-      title: t("contactAndDisputes"),
+      title: t("usSecContactTitle"),
       content: (
         <>
-          <Paragraph>
-            Si tienes preguntas sobre estos términos o necesitas reportar un
-            problema, puedes contactarnos a través de:
-          </Paragraph>
+          <Paragraph>{t("usSecContactP1")}</Paragraph>
           <BulletList>
             <BulletItem>
-              Email: <ContactLink href="mailto:legal@stream-in.com">legal@stream-in.com</ContactLink>
+              <ContactLink href="mailto:support@stream-in.com">
+                support@stream-in.com
+              </ContactLink>
             </BulletItem>
             <BulletItem>
-              Soporte: <ContactLink href="mailto:support@stream-in.com">support@streamin.com</ContactLink>
+              <ContactLink href="mailto:legal@stream-in.com">
+                legal@stream-in.com
+              </ContactLink>
             </BulletItem>
           </BulletList>
-          <HighlightBox>
-            <HighlightText>
-              ⚖️ Cualquier disputa se resolverá primero mediante negociación de
-              buena fe. Si no se alcanza un acuerdo, se someterá a arbitraje
-              vinculante según las leyes aplicables de la jurisdicción
-              correspondiente.
-            </HighlightText>
-          </HighlightBox>
         </>
       ),
     },
@@ -471,11 +292,9 @@ const Us = () => {
 
   return (
     <Container>
-      <Title>{t("termsTitleUs")}</Title>
-      <Subtitle>
-        {t("termsSubtitleUs")}
-      </Subtitle>
-      <LastUpdated>{t("lastUpdatedUs")}</LastUpdated>
+      <Title>{t("usAboutPageTitle")}</Title>
+      <Subtitle>{t("usAboutPageSubtitle")}</Subtitle>
+      <LastUpdated>{t("usAboutPageBetaLine")}</LastUpdated>
 
       {sections.map((section, index) => {
         const isOpen = openSections.has(index);
@@ -497,11 +316,7 @@ const Us = () => {
       })}
 
       <Footer>
-        <FooterText>
-          © 2026 stream-in. Todos los derechos reservados. Si tienes dudas sobre
-          estos términos, no dudes en{" "}
-          <ContactLink href="mailto:legal@streamin.com">contactarnos</ContactLink>.
-        </FooterText>
+        <FooterText>{t("usAboutFooter")}</FooterText>
       </Footer>
     </Container>
   );

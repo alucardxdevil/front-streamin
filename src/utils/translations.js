@@ -318,7 +318,7 @@ const translations = {
     advertiseTitle: "Publicidad en stream-in",
     advertisePageHeroTitle: "Anuncia tu negocio en Stream-In",
     advertisePageHeroSubtitle:
-      "Aprovecha nuestras tarifas de lanzamiento para dar a conocer tu marca desde hoy. Ideal para negocios que quieren probar campañas accesibles y empezar a captar nuevos clientes.",
+      "Aprovecha nuestras tarifas de lanzamiento para mostrar tu marca a usuarios en todos los idiomas de la plataforma. Llega a nuevas audiencias con formatos accesibles y de alto impacto.",
     advertiseStatUniqueUsers: "Usuarios únicos",
     advertiseStatMonthlyViews: "Vistas mensuales",
     advertiseStatRetentionRate: "Tasa de retención",
@@ -329,10 +329,10 @@ const translations = {
       "Tu anuncio llega a una audiencia activa y comprometida. Los usuarios vienen a buscar entretenimiento.",
     advertiseFeatAudienceTitle: "Público diverso",
     advertiseFeatAudienceDesc:
-      "Alcance demográfico amplio: desde jóvenes hasta adultos, disfrutando de contenido en español.",
+      "Alcance demográfico amplio en una comunidad multilenguaje: conecta con usuarios en todos los idiomas disponibles en Stream-In.",
     advertiseFeatVideoTitle: "Anuncios en video",
     advertiseFeatVideoDesc:
-      "Formatos que no interrumpen la experiencia, integrados de forma natural en el contenido.",
+      "Publica anuncios estaticos, banner, GIF y video pre-roll justo antes de iniciar un video.",
     advertiseFeatPricingTitle: "Precios accesibles",
     advertiseFeatPricingDesc:
       "Tarifas de introducción pensadas para marcas nuevas, negocios locales y anunciantes que quieren validar resultados sin invertir de más.",
@@ -348,16 +348,16 @@ const translations = {
     advertisePlanProName: "Profesional",
     advertisePlanEnterpriseName: "Empresarial",
     advertisePerWeek: "/semana",
-    advertisePlanBasicF1: "3000 impresiones estimadas",
+    advertisePlanBasicF1: "1500 impresiones estimadas",
     advertisePlanBasicF2: "Anuncio de hasta 15 segundos",
     advertisePlanBasicF3: "Posicion pre-roll o banner destacado",
     advertisePlanBasicF4: "Soporte por email y puesta en marcha rapida",
-    advertisePlanProF1: "10000 impresiones estimadas",
+    advertisePlanProF1: "5000 impresiones estimadas",
     advertisePlanProF2: "Anuncio de hasta 30 segundos",
     advertisePlanProF3: "Mejor frecuencia y ubicaciones destacadas",
     advertisePlanProF4: "Reporte semanal de alcance",
     advertisePlanProF5: "Soporte prioritario para optimizar la campana",
-    advertisePlanEntF1: "25000 impresiones estimadas",
+    advertisePlanEntF1: "12000 impresiones estimadas",
     advertisePlanEntF2: "Anuncio de hasta 60 segundos",
     advertisePlanEntF3: "Mayor visibilidad en posiciones premium",
     advertisePlanEntF4: "Seguimiento personalizado",
@@ -370,10 +370,10 @@ const translations = {
       "Activamos tu anuncio en las ubicaciones disponibles de la plataforma y te ayudamos a elegir el formato mas conveniente. En esta etapa ofrecemos paquetes simples con alcance estimado y precios de lanzamiento.",
     advertiseFaq2Q: "¿Qué formatos de anuncio aceptan?",
     advertiseFaq2A:
-      "Aceptamos videos en MP4, MOV o AVI. Recomendamos resolución mínima de 720p. También puedes enviarnos tu material y nosotros lo producimos.",
+      "Aceptamos anuncios estaticos, banner, GIF y videos (MP4, MOV o AVI). Los anuncios en video pueden mostrarse como pre-roll justo antes de iniciar el contenido.",
     advertiseFaq3Q: "¿Puedo segmentar mi audiencia?",
     advertiseFaq3A:
-      "Sí: categorías de contenido, ubicación geográfica y demografía. También hay opciones de retargeting para usuarios que ya visitaron tu sitio.",
+      "Si: categorias de contenido, ubicacion geografica, demografia e idioma de la interfaz. Tambien hay opciones de retargeting para usuarios que ya visitaron tu sitio.",
     advertiseFaq4Q: "¿Cuánto tarda en configurarse una campaña?",
     advertiseFaq4A:
       "Una vez aprobado el contenido, normalmente la dejamos activa en 24-48 horas. Recibiras seguimiento del alcance y apoyo para ajustar la campana si hace falta.",
@@ -419,6 +419,62 @@ const translations = {
     termsSubtitleUs: "En stream-in nos importa que entiendas tus derechos y responsabilidades. Hemos escrito estos términos de la forma más clara posible.",
     lastUpdatedUs: "Última actualización: Enero 2025",
 
+    usAboutPageTitle: "Sobre stream-in.com",
+    usAboutPageSubtitle:
+      "stream-in.com es una plataforma nueva de streaming en fase beta. Aquí explicamos nuestra visión, cómo pensamos la experiencia de quienes ven y crean contenido, y qué límites defendemos.",
+    usAboutPageBetaLine: "Versión beta · Abril 2026",
+
+    usSecWhatTitle: "Qué es stream-in.com",
+    usSecWhatP1:
+      "stream-in.com nace como una alternativa de streaming con las ideas recientes: menos muros arbitrarios sobre lo que se puede decir, y más foco en que la herramienta sirva de verdad a la audiencia y a quien produce contenido.",
+    usSecWhatP2:
+      "Estamos en fase beta: construimos con calma, escuchamos feedback y vamos sumando funciones a medida que la plataforma crece.",
+    usSecWhatHighlight:
+      "Prioridad real en la experiencia de usuarios y creadores — no en rellenar la pantalla de ruido.",
+
+    usSecFreedomTitle: "Libertad de expresión, sin censura desmedida",
+    usSecFreedomP1:
+      "Nos inspira un entorno donde la libertad de expresión cuente: donde las voces no se apaguen por decisiones opacas o por un clima de miedo a equivocarse. Eso no significa ausencia de normas: significa no castigar opiniones legítimas ni borrar debates con el pretexto fácil de “moderación”.",
+    usSecFreedomP2:
+      "Buscamos equilibrio: espacio amplio para ideas, formatos y conversaciones; criterios claros cuando haya que actuar.",
+
+    usSecExperienceTitle: "Poca publicidad intrusiva, poco ruido comercial",
+    usSecExperienceP1:
+      "No queremos una plataforma atascada de anuncios ni un feed que parezca un tablero de intereses ajenos al usuario. Sí puede haber publicidad cuando tenga sentido para sostener el servicio, pero el objetivo es que no ahogue la experiencia ni sustituya lo que viniste a ver.",
+    usSecExperienceP2:
+      "stream-in.com está pensada para priorizar la experiencia de quienes consumen contenido y de quienes lo crean, no para empujar agendas comerciales por encima de todo.",
+
+    usSecMoneyTitle: "Monetización para creadores, cuando el proyecto lo permita",
+    usSecMoneyP1:
+      "Queremos que los creadores puedan monetizar el contenido que suben. Eso irá ligado a que la plataforma sea sostenible: cuando sea rentable o cuando contemos con anunciantes suficientes para repartir ingresos de forma justa con quienes aportan valor.",
+    usSecMoneyP2:
+      "Mientras tanto, seguimos construyendo base técnica y comunidad; los detalles concretos de programas de monetización se irán comunicando con transparencia.",
+
+    usSecCreatorsTitle: "Invitación a creadores: este es un buen momento para subir",
+    usSecCreatorsP1:
+      "Si creas vídeo, audio u otro formato que encaje aquí, te invitamos a subir contenido nuevo y a probar la beta. Los primeros en construir audiencia suelen dejar huella: puedes ser de los referentes de la plataforma y ganar visibilidad también más allá de ella.",
+    usSecCreatorsP2:
+      "Cuanto más variado y auténtico sea el catálogo, mejor para todos: espectadores y creadores.",
+
+    usSecLimitsTitle: "Límites claros: lo que no tiene cabida",
+    usSecLimitsP1:
+      "Defendemos la libertad de expresión y rechazamos la censura desmedida, pero eso no convierte a stream-in.com en un espacio sin reglas. Estamos en contra de todo contenido que busque dañar, explotar o discriminar.",
+    usSecLimitsIntroList: "No está permitido subir ni promover, entre otras cosas:",
+    usSecLimitsItemThreat: "Amenazas o incitación a dañar a personas o colectivos.",
+    usSecLimitsItemViolence: "Violencia explícita gratuita o contenido cuyo fin principal sea el morbo sangriento.",
+    usSecLimitsItemNudity: "Desnudos o material sexualizado presentado de forma inadecuada para una plataforma de streaming generalista.",
+    usSecLimitsItemPorn: "Pornografía o contenido sexual explícito.",
+    usSecLimitsItemRacism: "Racismo, odio hacia colectivos por origen, religión, orientación, identidad u otras características protegidas.",
+    usSecLimitsP2:
+      "Estas líneas rojas existen para proteger a la comunidad y cumplir con un estándar mínimo de convivencia. Las moderamos con seriedad.",
+
+    usSecContactTitle: "Contacto",
+    usSecContactP1:
+      "Para consultas generales, propuestas o reportes relacionados con la plataforma, puedes escribirnos. Valoramos el diálogo directo con usuarios y creadores.",
+
+    usAboutFooter:
+      "© 2026 stream-in.com — Plataforma en beta. Gracias por formar parte de este arranque.",
+
     // Edit Video
     editVideo: "Editar video",
     currentVideo: "Video actual",
@@ -440,9 +496,11 @@ const translations = {
     onlyJpgPngWebp: "Solo JPG, PNG, WebP",
     max10Mb: "Máximo 10 MB",
     onlyMp4WebmMkv: "Solo MP4, WebM, MKV",
-    max500Mb: "Máximo 500 MB",
+    max800Mb: "Máximo 800 MB",
     imageMax10Mb: "Imagen máximo 10 MB",
-    videoMax500Mb: "Video máximo 500 MB",
+    videoMax800Mb: "Video máximo 800 MB",
+    uploadBetaLimitsHint:
+      "Beta stream-in.com: hasta 800 MB por vídeo y 10 MB por miniatura.",
     waitForUpload: "Espera a que terminen de subir",
     errorSaving: "Error al guardar",
     thumbnailImage: "Imagen de miniatura",
@@ -1084,7 +1142,7 @@ const translations = {
     advertiseTitle: "Advertising on stream-in",
     advertisePageHeroTitle: "Advertise your business on Stream-In",
     advertisePageHeroSubtitle:
-      "Take advantage of our launch pricing to get your brand in front of early viewers. Built for businesses that want affordable campaigns and a practical way to attract new customers.",
+      "Take advantage of our launch pricing to show your brand to users across all platform languages. Reach new audiences with affordable, high-impact ad formats.",
     advertiseStatUniqueUsers: "Unique users",
     advertiseStatMonthlyViews: "Monthly views",
     advertiseStatRetentionRate: "Retention rate",
@@ -1095,10 +1153,10 @@ const translations = {
       "Your ad reaches an active, engaged audience—users come here for entertainment.",
     advertiseFeatAudienceTitle: "Diverse audience",
     advertiseFeatAudienceDesc:
-      "Wide demographic reach, from young adults to older viewers enjoying Spanish-language content.",
+      "Wide demographic reach in a multilingual community: connect with users across all languages available on Stream-In.",
     advertiseFeatVideoTitle: "Video ads",
     advertiseFeatVideoDesc:
-      "Formats that fit the experience and feel natural within the content.",
+      "Run static ads, banners, GIFs, and pre-roll video ads right before a video starts.",
     advertiseFeatPricingTitle: "Accessible pricing",
     advertiseFeatPricingDesc:
       "Introductory pricing designed for emerging brands, local businesses, and advertisers who want to validate results before scaling up.",
@@ -1114,16 +1172,16 @@ const translations = {
     advertisePlanProName: "Professional",
     advertisePlanEnterpriseName: "Enterprise",
     advertisePerWeek: "/week",
-    advertisePlanBasicF1: "3,000 estimated impressions",
+    advertisePlanBasicF1: "1,500 estimated impressions",
     advertisePlanBasicF2: "Up to 15-second ad",
     advertisePlanBasicF3: "Pre-roll or featured banner placement",
     advertisePlanBasicF4: "Email support and quick launch setup",
-    advertisePlanProF1: "10,000 estimated impressions",
+    advertisePlanProF1: "5,000 estimated impressions",
     advertisePlanProF2: "Up to 30-second ad",
     advertisePlanProF3: "Higher frequency and featured placements",
     advertisePlanProF4: "Weekly reach report",
     advertisePlanProF5: "Priority support to optimize the campaign",
-    advertisePlanEntF1: "25,000 estimated impressions",
+    advertisePlanEntF1: "12,000 estimated impressions",
     advertisePlanEntF2: "Up to 60-second ad",
     advertisePlanEntF3: "Greater visibility in premium placements",
     advertisePlanEntF4: "Personalized follow-up",
@@ -1136,10 +1194,10 @@ const translations = {
       "We place your ad in the available spots across the platform and help you choose the format that best fits your goals. At this stage we offer simple packages with estimated reach and launch pricing.",
     advertiseFaq2Q: "What ad formats do you accept?",
     advertiseFaq2A:
-      "We accept MP4, MOV, or AVI. We recommend at least 720p. You can also send us assets and we can help produce the spot.",
+      "We accept static ads, banners, GIFs, and video ads (MP4, MOV, or AVI). Video ads can run as pre-roll right before content starts.",
     advertiseFaq3Q: "Can I target my audience?",
     advertiseFaq3A:
-      "Yes—content categories, geography, and demographics. Retargeting options are available for users who have visited your site.",
+      "Yes-content categories, geography, demographics, and interface language. Retargeting options are also available for users who have visited your site.",
     advertiseFaq4Q: "How long does it take to launch a campaign?",
     advertiseFaq4A:
       "Once your creative is approved, campaigns usually go live within 24-48 hours. You will get reach follow-up and support to adjust the campaign if needed.",
@@ -1185,6 +1243,62 @@ const translations = {
     termsSubtitleUs: "At stream-in we care about you understanding your rights and responsibilities. We have written these terms as clearly as possible.",
     lastUpdatedUs: "Last updated: January 2025",
 
+    usAboutPageTitle: "About stream-in.com",
+    usAboutPageSubtitle:
+      "stream-in.com is a new streaming platform in beta. Here we share our vision, how we think about the experience for viewers and creators, and the boundaries we stand by.",
+    usAboutPageBetaLine: "Beta release · April 2026",
+
+    usSecWhatTitle: "What is stream-in.com?",
+    usSecWhatP1:
+      "stream-in.com is built as a streaming alternative with a modern take: fewer arbitrary walls around what can be said, and more focus on the product actually serving audiences and people who make content.",
+    usSecWhatP2:
+      "We are in beta: we ship thoughtfully, listen to feedback, and add features as the platform grows.",
+    usSecWhatHighlight:
+      "We prioritize viewers and creators—not filling the screen with noise.",
+
+    usSecFreedomTitle: "Freedom of expression, without excessive censorship",
+    usSecFreedomP1:
+      "We want an environment where freedom of expression matters: where voices are not silenced by opaque decisions or a climate of fear over saying the wrong thing. That does not mean no rules—it means not punishing legitimate opinions or wiping debates under the blanket of “moderation.”",
+    usSecFreedomP2:
+      "We aim for balance: broad room for ideas, formats, and discussion; clear criteria when action is needed.",
+
+    usSecExperienceTitle: "Light on intrusive ads and commercial noise",
+    usSecExperienceP1:
+      "We do not want a site clogged with ads or a feed that feels like a billboard for interests unrelated to why you came. There may be advertising when it helps sustain the service, but the goal is that it never drowns out what you came to watch.",
+    usSecExperienceP2:
+      "stream-in.com is meant to prioritize the experience of viewers and creators—not to push commercial agendas above everything else.",
+
+    usSecMoneyTitle: "Creator monetization when the project can support it",
+    usSecMoneyP1:
+      "We want creators to be able to monetize what they upload. That will be tied to sustainability: when the platform is viable or when we have enough advertisers to share revenue fairly with those who create value.",
+    usSecMoneyP2:
+      "In the meantime we keep building the product and community; specifics of monetization programs will be shared transparently as they roll out.",
+
+    usSecCreatorsTitle: "An open invite to creators: early days matter",
+    usSecCreatorsP1:
+      "If you make video, audio, or other formats that fit here, we invite you to publish new work and try the beta. People who grow an audience early often shape the platform—you can become a top creator here and gain visibility beyond it too.",
+    usSecCreatorsP2:
+      "The more varied and authentic the catalog, the better for everyone—viewers and creators alike.",
+
+    usSecLimitsTitle: "Clear limits: what does not belong",
+    usSecLimitsP1:
+      "We support freedom of expression and reject over-censorship, but stream-in.com is not a rule-free zone. We oppose content meant to harm, exploit, or discriminate.",
+    usSecLimitsIntroList: "Uploading or promoting the following is not allowed, including but not limited to:",
+    usSecLimitsItemThreat: "Threats or incitement to harm people or groups.",
+    usSecLimitsItemViolence: "Gratuitous explicit violence or content whose main purpose is graphic shock.",
+    usSecLimitsItemNudity: "Nudity or sexualized material that is inappropriate for a general-audience streaming platform.",
+    usSecLimitsItemPorn: "Pornography or sexually explicit content.",
+    usSecLimitsItemRacism: "Racism or hatred toward people based on origin, religion, orientation, identity, or other protected characteristics.",
+    usSecLimitsP2:
+      "These red lines exist to protect the community and a baseline of respectful coexistence. We enforce them seriously.",
+
+    usSecContactTitle: "Contact",
+    usSecContactP1:
+      "For general questions, ideas, or platform-related reports, you can reach out. We value direct dialogue with viewers and creators.",
+
+    usAboutFooter:
+      "© 2026 stream-in.com — Beta platform. Thank you for being part of this launch.",
+
     // Edit Video
     editVideo: "Edit video",
     currentVideo: "Current video",
@@ -1206,9 +1320,11 @@ const translations = {
     onlyJpgPngWebp: "Only JPG, PNG, WebP",
     max10Mb: "Maximum 10 MB",
     onlyMp4WebmMkv: "Only MP4, WebM, MKV",
-    max500Mb: "Maximum 500 MB",
+    max800Mb: "Maximum 800 MB",
     imageMax10Mb: "Image maximum 10 MB",
-    videoMax500Mb: "Video maximum 500 MB",
+    videoMax800Mb: "Video maximum 800 MB",
+    uploadBetaLimitsHint:
+      "stream-in.com beta: up to 800 MB per video and 10 MB per thumbnail.",
     waitForUpload: "Wait for upload to complete",
     errorSaving: "Error saving",
     thumbnailImage: "Thumbnail image",
@@ -2757,9 +2873,11 @@ const translations = {
     onlyJpgPngWebp: "Только JPG, PNG, WebP",
     max10Mb: "Максимум 10 МБ",
     onlyMp4WebmMkv: "Только MP4, WebM, MKV",
-    max500Mb: "Максимум 500 МБ",
+    max800Mb: "Максимум 800 МБ",
     imageMax10Mb: "Изображение макс. 10 МБ",
-    videoMax500Mb: "Видео макс. 500 МБ",
+    videoMax800Mb: "Видео макс. 800 МБ",
+    uploadBetaLimitsHint:
+      "Бета stream-in.com: до 800 МБ на видео и 10 МБ на превью.",
     waitForUpload: "Дождитесь окончания загрузки",
     errorSaving: "Ошибка при сохранении",
     thumbnailImage: "Изображение миниатюры",
@@ -3370,9 +3488,11 @@ const translations = {
     onlyJpgPngWebp: "仅支持 JPG, PNG, WebP",
     max10Mb: "最大 10 MB",
     onlyMp4WebmMkv: "仅支持 MP4, WebM, MKV",
-    max500Mb: "最大 500 MB",
+    max800Mb: "最大 800 MB",
     imageMax10Mb: "图片最大 10 MB",
-    videoMax500Mb: "视频最大 500 MB",
+    videoMax800Mb: "视频最大 800 MB",
+    uploadBetaLimitsHint:
+      "stream-in.com 测试版：单视频最大 800 MB，缩略图最大 10 MB。",
     waitForUpload: "请等待上传完成",
     errorSaving: "保存出错",
     thumbnailImage: "视频封面",
@@ -3976,9 +4096,11 @@ const translations = {
     onlyJpgPngWebp: "JPG, PNG, WebPのみ",
     max10Mb: "最大 10 MB",
     onlyMp4WebmMkv: "MP4, WebM, MKVのみ",
-    max500Mb: "最大 500 MB",
+    max800Mb: "最大 800 MB",
     imageMax10Mb: "画像最大 10 MB",
-    videoMax500Mb: "動画最大 500 MB",
+    videoMax800Mb: "動画最大 800 MB",
+    uploadBetaLimitsHint:
+      "stream-in.com ベータ：動画は最大 800 MB、サムネイルは最大 10 MB。",
     waitForUpload: "アップロード完了をお待ちください",
     errorSaving: "保存エラー",
     thumbnailImage: "サムネイル画像",
@@ -4486,9 +4608,11 @@ const translations = {
     onlyJpgPngWebp: "Seulement JPG, PNG, WebP",
     max10Mb: "Max 10 Mo",
     onlyMp4WebmMkv: "Seulement MP4, WebM, MKV",
-    max500Mb: "Max 500 Mo",
+    max800Mb: "Max 800 Mo",
     imageMax10Mb: "Image max 10 Mo",
-    videoMax500Mb: "Vidéo max 500 Mo",
+    videoMax800Mb: "Vidéo max 800 Mo",
+    uploadBetaLimitsHint:
+      "Bêta stream-in.com : jusqu'à 800 Mo par vidéo et 10 Mo pour la miniature.",
     waitForUpload: "Veuillez attendre la fin de l'upload",
     errorSaving: "Erreur lors de l'enregistrement",
     thumbnailImage: "Image de miniature",
@@ -4934,7 +5058,11 @@ const translations = {
     onlyJpgPngWebp: "केवल JPG, PNG, WebP",
     max10Mb: "अधिकतम 10 MB",
     onlyMp4WebmMkv: "केवल MP4, WebM, MKV",
-    max500Mb: "अधिकतम 500 MB",
+    max800Mb: "अधिकतम 800 MB",
+    imageMax10Mb: "छवि अधिकतम 10 MB",
+    videoMax800Mb: "वीडियो अधिकतम 800 MB",
+    uploadBetaLimitsHint:
+      "stream-in.com बीटा: प्रति वीडियो 800 MB तक, थंबनेल 10 MB तक।",
     waitForUpload: "कृपया अपलोड समाप्त होने की प्रतीक्षा करें",
     errorSaving: "सहेजने में त्रुटि",
     thumbnailImage: "थंबनेल छवि",
@@ -5380,7 +5508,11 @@ const translations = {
     onlyJpgPngWebp: "فقط JPG, PNG, WebP",
     max10Mb: "الحد الأقصى 10 ميجابايت",
     onlyMp4WebmMkv: "فقط MP4, WebM, MKV",
-    max500Mb: "الحد الأقصى 500 ميجابايت",
+    max800Mb: "الحد الأقصى 800 ميجابايت",
+    imageMax10Mb: "الحد الأقصى 10 ميجابايت للصورة",
+    videoMax800Mb: "الحد الأقصى 800 ميجابايت للفيديو",
+    uploadBetaLimitsHint:
+      "نسخة بيتا stream-in.com: حتى 800 ميجابايت للفيديو و10 ميجابايت للصورة المصغرة.",
     waitForUpload: "يرجى الانتظار حتى ينتهي الرفع",
     errorSaving: "خطأ أثناء الحفظ",
     thumbnailImage: "صورة الفيديو",
@@ -5833,7 +5965,11 @@ const translations = {
     onlyJpgPngWebp: "Solo JPG, PNG, WebP",
     max10Mb: "Max 10 MB",
     onlyMp4WebmMkv: "Solo MP4, WebM, MKV",
-    max500Mb: "Max 500 MB",
+    max800Mb: "Max 800 MB",
+    imageMax10Mb: "Immagine max 10 MB",
+    videoMax800Mb: "Video max 800 MB",
+    uploadBetaLimitsHint:
+      "Beta stream-in.com: fino a 800 MB per video e 10 MB per la miniatura.",
     waitForUpload: "Attendi la fine del caricamento",
     errorSaving: "Errore durante il salvataggio",
     thumbnailImage: "Immagine miniatura",
@@ -6278,7 +6414,11 @@ const translations = {
     onlyJpgPngWebp: "JPG, PNG, WebP만 가능",
     max10Mb: "최대 10MB",
     onlyMp4WebmMkv: "MP4, WebM, MKV만 가능",
-    max500Mb: "최대 500MB",
+    max800Mb: "최대 800MB",
+    imageMax10Mb: "이미지 최대 10MB",
+    videoMax800Mb: "동영상 최대 800MB",
+    uploadBetaLimitsHint:
+      "stream-in.com 베타: 동영상 최대 800MB, 썸네일 최대 10MB.",
     waitForUpload: "업로드가 완료될 때까지 기다려 주세요",
     errorSaving: "저장 중 오류 발생",
     thumbnailImage: "썸네일 이미지",
