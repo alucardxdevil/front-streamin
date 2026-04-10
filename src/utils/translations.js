@@ -7,7 +7,7 @@ const translations = {
     lightTheme: "Claro",
     sunsetTheme: "Atardecer",
     betaBannerMessage:
-      "Stream-In está en versión beta. Si quieres apoyar el mantenimiento de la plataforma, puedes hacer una donación o contribución.",
+      "stream-in está en versión beta. Si quieres apoyar el mantenimiento de la plataforma, puedes hacer una donación o contribución.",
     betaBannerDonate: "Apoyar proyecto",
 
     // Sidebar
@@ -326,7 +326,7 @@ const translations = {
     advertiseStatMonthlyViews: "Vistas mensuales",
     advertiseStatRetentionRate: "Tasa de retención",
     advertiseStatAvailability: "Disponibilidad",
-    advertiseWhySectionTitle: "¿Por qué publicidad en Stream-In?",
+    advertiseWhySectionTitle: "¿Por qué publicidad en stream-in?",
     advertiseFeatExposureTitle: "Gran exposición",
     advertiseFeatExposureDesc:
       "Tu anuncio llega a una audiencia activa y comprometida. Los usuarios vienen a buscar entretenimiento.",
@@ -809,7 +809,7 @@ const translations = {
     lightTheme: "Light",
     sunsetTheme: "Sunset",
     betaBannerMessage:
-      "Stream-In is in beta. If you want to support platform maintenance, you can make a donation or contribution.",
+      "stream-in is in beta. If you want to support platform maintenance, you can make a donation or contribution.",
     betaBannerDonate: "Support project",
 
     // Sidebar
@@ -1146,20 +1146,20 @@ const translations = {
     // Advertise page
     advertise: "Advertise with us",
     advertiseTitle: "Advertising on stream-in",
-    advertisePageHeroTitle: "Advertise your business on Stream-In",
+    advertisePageHeroTitle: "Advertise your business on stream-in",
     advertisePageHeroSubtitle:
       "Take advantage of our launch pricing to show your brand to users across all platform languages. Reach new audiences with affordable, high-impact ad formats.",
     advertiseStatUniqueUsers: "Unique users",
     advertiseStatMonthlyViews: "Monthly views",
     advertiseStatRetentionRate: "Retention rate",
     advertiseStatAvailability: "Availability",
-    advertiseWhySectionTitle: "Why advertise on Stream-In?",
+    advertiseWhySectionTitle: "Why advertise on stream-in?",
     advertiseFeatExposureTitle: "Broad reach",
     advertiseFeatExposureDesc:
       "Your ad reaches an active, engaged audience—users come here for entertainment.",
     advertiseFeatAudienceTitle: "Diverse audience",
     advertiseFeatAudienceDesc:
-      "Wide demographic reach in a multilingual community: connect with users across all languages available on Stream-In.",
+      "Wide demographic reach in a multilingual community: connect with users across all languages available on stream-in.",
     advertiseFeatVideoTitle: "Video ads",
     advertiseFeatVideoDesc:
       "Run static ads, banners, GIFs, and pre-roll video ads right before a video starts.",
@@ -1195,7 +1195,7 @@ const translations = {
     advertisePlanEntF6: "Basic creative adjustments included",
     advertiseCtaSubscribe: "Subscribe",
     advertiseFaqTitle: "Frequently asked questions",
-    advertiseFaq1Q: "How does advertising on Stream-In work?",
+    advertiseFaq1Q: "How does advertising on stream-in work?",
     advertiseFaq1A:
       "We place your ad in the available spots across the platform and help you choose the format that best fits your goals. At this stage we offer simple packages with estimated reach and launch pricing.",
     advertiseFaq2Q: "What ad formats do you accept?",
@@ -1596,7 +1596,7 @@ const translations = {
     lightTheme: "Claro",
     sunsetTheme: "Pôr do sol",
     betaBannerMessage:
-      "A Stream-In está em versão beta. Se quiser apoiar a manutenção da plataforma, você pode fazer uma doação ou contribuição.",
+      "A stream-in está em versão beta. Se quiser apoiar a manutenção da plataforma, você pode fazer uma doação ou contribuição.",
     betaBannerDonate: "Apoiar projeto",
 
     // Sidebar
@@ -2131,7 +2131,7 @@ const translations = {
     lightTheme: "Hell",
     sunsetTheme: "Sonnenuntergang",
     betaBannerMessage:
-      "Stream-In befindet sich in der Beta-Version. Wenn du die Wartung der Plattform unterstützen möchtest, kannst du eine Spende oder einen Beitrag leisten.",
+      "stream-in befindet sich in der Beta-Version. Wenn du die Wartung der Plattform unterstützen möchtest, kannst du eine Spende oder einen Beitrag leisten.",
     betaBannerDonate: "Projekt unterstützen",
 
     // Sidebar
@@ -2666,7 +2666,7 @@ const translations = {
     lightTheme: "Светлая",
     sunsetTheme: "Закат",
     betaBannerMessage:
-      "Stream-In находится в бета-версии. Если вы хотите поддержать развитие и поддержку платформы, вы можете сделать пожертвование или внести вклад.",
+      "stream-in находится в бета-версии. Если вы хотите поддержать развитие и поддержку платформы, вы можете сделать пожертвование или внести вклад.",
     betaBannerDonate: "Поддержать проект",
 
     // Sidebar
@@ -3346,7 +3346,7 @@ const translations = {
     lightTheme: "浅色模式",
     sunsetTheme: "日落",
     betaBannerMessage:
-      "Stream-In 当前为测试版。如果你想支持平台维护，可以进行捐赠或其他形式的支持。",
+      "stream-in 当前为测试版。如果你想支持平台维护，可以进行捐赠或其他形式的支持。",
     betaBannerDonate: "支持项目",
 
     // Sidebar (侧边栏)
@@ -4016,7 +4016,7 @@ const translations = {
     lightTheme: "ライトモード",
     sunsetTheme: "サンセット",
     betaBannerMessage:
-      "Stream-In は現在ベータ版です。プラットフォーム運営を支援したい場合は、寄付や貢献をお願いします。",
+      "stream-in は現在ベータ版です。プラットフォーム運営を支援したい場合は、寄付や貢献をお願いします。",
     betaBannerDonate: "プロジェクトを支援",
 
     // Sidebar (サイドバー)
@@ -4679,7 +4679,7 @@ const translations = {
     lightTheme: "Mode clair",
     sunsetTheme: "Coucher de soleil",
     betaBannerMessage:
-      "Stream-In est en version bêta. Si vous souhaitez soutenir la maintenance de la plateforme, vous pouvez faire un don ou contribuer.",
+      "stream-in est en version bêta. Si vous souhaitez soutenir la maintenance de la plateforme, vous pouvez faire un don ou contribuer.",
     betaBannerDonate: "Soutenir le projet",
 
     // Sidebar (Barre latérale)
@@ -5198,7 +5198,7 @@ const translations = {
     lightTheme: "लाइट मोड",
     sunsetTheme: "सूर्यास्त",
     betaBannerMessage:
-      "Stream-In अभी बीटा संस्करण में है। यदि आप प्लेटफ़ॉर्म के रखरखाव में सहयोग करना चाहते हैं, तो दान या योगदान कर सकते हैं।",
+      "stream-in अभी बीटा संस्करण में है। यदि आप प्लेटफ़ॉर्म के रखरखाव में सहयोग करना चाहते हैं, तो दान या योगदान कर सकते हैं।",
     betaBannerDonate: "प्रोजेक्ट को सहयोग दें",
 
     // Sidebar (साइडबार)
@@ -6229,7 +6229,7 @@ const translations = {
     lightTheme: "Tema chiaro",
     sunsetTheme: "Tramonto",
     betaBannerMessage:
-      "Stream-In è in versione beta. Se vuoi supportare la manutenzione della piattaforma, puoi fare una donazione o contribuire.",
+      "stream-in è in versione beta. Se vuoi supportare la manutenzione della piattaforma, puoi fare una donazione o contribuire.",
     betaBannerDonate: "Supporta il progetto",
 
     // Sidebar (Barra laterale)
@@ -6391,7 +6391,7 @@ const translations = {
 
     // Help (Centro assistenza)
     helpCenter: "Centro Assistenza",
-    helpSubtitle: "Trova risposte, guide e tutto il necessario per usare Stream-In.",
+    helpSubtitle: "Trova risposte, guide e tutto il necessario per usare stream-in.",
     searchHelp: "Cerca nella guida...",
     helpCategories: "Categorie",
     faq: "Domande frequenti (FAQ)",
@@ -6552,7 +6552,7 @@ const translations = {
 
     // Settings (Impostazioni)
     settingsTitle: "Impostazioni",
-    settingsSubtitle: "Personalizza la tua esperienza su Stream-In",
+    settingsSubtitle: "Personalizza la tua esperienza su stream-in",
     appearance: "Aspetto",
     appearanceDesc: "Scegli il tema visivo",
     dark: "Scuro",
@@ -6746,7 +6746,7 @@ const translations = {
     lightTheme: "라이트 모드",
     sunsetTheme: "선셋 모드",
     betaBannerMessage:
-      "Stream-In은 현재 베타 버전입니다. 플랫폼 운영을 지원하고 싶다면 기부나 기여를 할 수 있습니다.",
+      "stream-in은 현재 베타 버전입니다. 플랫폼 운영을 지원하고 싶다면 기부나 기여를 할 수 있습니다.",
     betaBannerDonate: "프로젝트 후원",
 
     // Sidebar (사이드바)
@@ -6908,7 +6908,7 @@ const translations = {
 
     // Help (도움말 센터)
     helpCenter: "도움말 센터",
-    helpSubtitle: "Stream-In을 최대한 활용하는 데 필요한 답변과 가이드를 찾아보세요.",
+    helpSubtitle: "stream-in을 최대한 활용하는 데 필요한 답변과 가이드를 찾아보세요.",
     searchHelp: "도움말 검색...",
     helpCategories: "도움말 카테고리",
     faq: "자주 묻는 질문",
@@ -7065,7 +7065,7 @@ const translations = {
 
     // Settings (설정)
     settingsTitle: "설정",
-    settingsSubtitle: "Stream-In 경험을 맞춤 설정하세요",
+    settingsSubtitle: "stream-in 경험을 맞춤 설정하세요",
     appearance: "디자인",
     appearanceDesc: "시각 테마 선택",
     dark: "어둡게",

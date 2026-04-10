@@ -183,12 +183,12 @@ const ActionBtn = styled.button`
 `;
 
 const EditButton = styled(ActionBtn)`
-  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  background: linear-gradient(135deg, #0b67dc, #0b67dc);
   color: white;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 4px 12px rgba(11, 103, 220, 0.4);
   
   &:hover {
-    box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5);
+    box-shadow: 0 6px 16px rgba(11, 103, 220, 0.5);
   }
   
   svg {

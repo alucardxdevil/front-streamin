@@ -27,6 +27,7 @@ const Container = styled.main`
 
   @media (min-width: 769px) {
     flex-direction: row;
+    min-height: calc(100vh - 60px);
   }
 `;
 
@@ -35,11 +36,16 @@ const LeftImageContainer = styled.div`
   position: relative;
   overflow: hidden;
   min-height: 200px;
+  display: flex;
 
   @media (max-width: 768px) {
     flex: none;
     width: 100%;
     min-height: 250px;
+  }
+
+  @media (min-width: 769px) {
+    min-height: calc(100vh - 60px);
   }
 `;
 
@@ -49,11 +55,6 @@ const LeftImage = styled.img`
   object-fit: cover;
   filter: brightness(0.7);
   min-height: 200px;
-
-  @media (max-width: 1366px) {
-    width: 650px;
-    height: 650px;
-  }
 
   @media (max-width: 768px) {
     height: 250px;
@@ -66,20 +67,39 @@ const ContentContainer = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-  padding: 24px;
-  background: ${({ theme }) => theme.bgLighter || "rgba(30,30,30,0.85)"};
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 28px 26px 24px;
+  background:
+    linear-gradient(165deg, rgba(11, 103, 220, 0.16), rgba(11, 103, 220, 0.03) 45%, rgba(20, 20, 20, 0.88) 100%),
+    ${({ theme }) => theme.bgLighter || "rgba(30,30,30,0.85)"};
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-radius: 20px;
-  margin: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 16px;
   box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.4);
-  max-width: 600px;
+  max-width: 640px;
   width: 100%;
   animation: ${fadeIn} 0.6s ease;
+  max-height: calc(100vh - 92px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 12px;
+  }
 
   @media (max-width: 768px) {
     margin: -30px 16px 20px;
     padding: 20px 16px;
+    max-height: none;
+    overflow-y: visible;
   }
 `;
 
@@ -87,7 +107,7 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 16px;
-  margin: 20px 0;
+  margin: 8px 0 4px;
   flex-wrap: wrap;
 `;
 
@@ -95,21 +115,21 @@ const CardButton = styled.button`
   background: ${({ following, theme }) =>
     following
       ? theme.soft
-      : "linear-gradient(135deg, #0b67dc 0%, #ff3e6c 100%)"};
+      : "linear-gradient(135deg, rgba(11, 103, 220, 0.95), rgba(11, 103, 220, 0.75))"};
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-radius: 12px;
   padding: 10px 18px;
   font-size: 15px;
   font-weight: bold;
-  color: ${({ theme }) => theme.text || "#fff"};
-  border: none;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   cursor: pointer;
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease,
     background 0.3s ease;
-  display: list-item;
+  display: flex;
   align-items: center;
   gap: 6px;
 
@@ -119,24 +139,27 @@ const CardButton = styled.button`
   }
 
   &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 16px rgba(11, 103, 220, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(11, 103, 220, 0.35);
   }
 `;
 
 const ProfileImage = styled.img`
-  width: 140px;
-  height: 140px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
-  border: 3px solid ${({ theme }) => theme.soft || "#333"};
+  border: 4px solid rgba(11, 103, 220, 0.9);
   object-fit: cover;
-  margin-top: -70px;
+  margin-top: 4px;
+  box-shadow:
+    0 0 0 5px rgba(11, 103, 220, 0.2),
+    0 10px 24px rgba(11, 103, 220, 0.25);
   transition: transform 0.3s ease;
 
   @media (max-width: 768px) {
     width: 100px;
     height: 100px;
-    margin-top: -50px;
+    margin-top: 0;
   }
 
   &:hover {
@@ -146,12 +169,12 @@ const ProfileImage = styled.img`
 
 const ChannelDetail = styled.div`
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 6px;
 `;
 
 const ChannelName = styled.h1`
   font-weight: 600;
-  font-size: 25px;
+  font-size: 27px;
   margin: 0;
   background: linear-gradient(135deg, #d1d1d1, #999);
   background-clip: text;
@@ -166,8 +189,8 @@ const ChannelName = styled.h1`
 
 const StatsContainer = styled.div`
   display: flex;
-  gap: 5px;
-  margin: 7px 0;
+  gap: 10px;
+  margin: 6px 0 2px;
   justify-content: center;
   flex-wrap: wrap;
   width: 100%;
@@ -183,21 +206,22 @@ const StatsContainer = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: rgba(255, 255, 255, 0.05);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-radius: 16px;
-  padding: 3px 20px;
+  padding: 10px 16px;
   text-align: center;
   color: ${({ theme }) => theme.text || "#fff"};
+  border: 1px solid rgba(255, 255, 255, 0.09);
   min-width: 100px;
   flex: 1;
   max-width: 180px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 8px 20px rgba(0,0,0,0.4);
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 20px rgba(11, 103, 220, 0.25);
   }
 
   @media (max-width: 768px) {
@@ -214,13 +238,10 @@ const StatCard = styled.div`
 `;
 
 const StatNumber = styled.h1`
-  font-size: 16px;
+  font-size: 24px;
   font-weight: bold;
-  margin: 8px 0;
-  background: linear-gradient(90deg, #27f1ff, #00c2ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  margin: 0 0 2px;
+  color: #0b67dc;
 
   @media (max-width: 768px) {
     font-size: 20px;
@@ -233,7 +254,7 @@ const StatNumber = styled.h1`
 `;
 
 const StatLabel = styled.span`
-  font-size: 14px;
+  font-size: 12px;
   color: #b0b0b0;
   letter-spacing: 1px;
 
@@ -249,11 +270,12 @@ const StatLabel = styled.span`
 const DescriptionContainer = styled.div`
   max-height: 110px;
   overflow-y: auto;
-  width: 85%;
+  width: 100%;
   margin: 0 auto;
-  padding: 12px;
-  background: ${({ theme }) => theme.bg || "rgba(255,255,255,0.03)"};
-  border-radius: 10px;
+  padding: 14px;
+  background: ${({ theme }) => theme.bg || "rgba(255,255,255,0.04)"};
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
   font-size: 15px;
   line-height: 1.6;
   color: ${({ theme }) => theme.textSoft || "#bbb"};
@@ -266,11 +288,12 @@ const DescriptionContainer = styled.div`
 `;
 
 const SocialLinksContainer = styled.div`
-  width: 85%;
-  margin: 20px auto 0;
+  width: 100%;
+  margin: 6px auto 0;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
   display: flex;
   flex-direction: column;
   gap: 12px;

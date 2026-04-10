@@ -275,7 +275,7 @@ const Button = styled.button`
 `;
 
 const ButtonOne = styled.button`
-  background: #ff3e6c;
+  background: #e43c62;
   color: white;
   border: none;
   border-radius: 8px;
@@ -314,7 +314,7 @@ const ActionButton = styled(Button)`
 
 const ActionButtonOne = styled(Button)`
   white-space: nowrap;
-  background: #ff3e6c;
+  background: #e43c62;
 
   @media (max-width: 768px) {
     font-size: 11px;
@@ -409,7 +409,7 @@ const ModalTitle = styled.h2`
   }
   
   svg {
-    color: #ff3e6c;
+    color: #e43c62;
   }
 `;
 
@@ -437,7 +437,7 @@ const Input = styled.input`
   
   &:focus {
     outline: none;
-    border-color: #ff3e6c;
+    border-color: #e43c62;
     box-shadow: 0 0 0 3px rgba(255, 62, 108, 0.1);
   }
   
@@ -489,7 +489,7 @@ const ModalButton = styled.button`
   `}
 
   ${({ confirm }) => confirm && `
-    background: linear-gradient(135deg, #ff3e6c 0%, #0b67dc 100%);
+    background: linear-gradient(135deg, #e43c62 0%, #0b67dc 100%);
     color: white;
     
     &:hover {
@@ -542,7 +542,7 @@ const PlaylistSelectItem = styled.div`
   
   &:hover {
     background: ${({ theme }) => theme.soft};
-    border-color: #ff3e6c;
+    border-color: #e43c62;
     transform: translateX(4px);
   }
   
@@ -596,7 +596,7 @@ const PlaylistSelectMeta = styled.div`
 const PlaylistIcon = styled.div`
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #ff3e6c 0%, #0b67dc 100%);
+  background: linear-gradient(135deg, #e43c62 0%, #0b67dc 100%);
   border-radius: 10px;
   display: flex;
   align-items: center;
