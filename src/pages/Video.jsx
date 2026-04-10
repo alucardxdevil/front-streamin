@@ -109,9 +109,9 @@ const VideoWrapper = styled.div`
      La altura es 56.25vw (relación 16:9 del ancho completo). ── */
   @media (max-width: 768px) {
     /* Evita que el contenido de abajo se asome bajo el player fijo al hacer scroll */
-    height: calc(56.25vw + 2px);
+    height: calc(56.25vw + 14px);
     border-radius: 0;
-    margin-bottom: 0;
+    margin-bottom: 8px;
     position: relative;
     z-index: 2;
     background: #000;
