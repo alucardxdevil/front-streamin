@@ -38,12 +38,12 @@ const PageContainer = styled.div`
   color: ${({ theme }) => theme.text};
   background-color: ${({ theme }) => theme.bg};
   min-height: 100vh;
-  padding-top: 80px;
+  padding-top: 0;
   animation: ${fadeIn} 0.5s ease;
 
   @media (max-width: 768px) {
     padding: 12px;
-    padding-top: 70px;
+    padding-top: 0;
   }
 `;
 

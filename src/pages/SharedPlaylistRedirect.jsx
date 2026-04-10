@@ -11,7 +11,7 @@ const LoadingContainer = styled.div`
   justify-content: center;
   min-height: 50vh;
   color: ${({ theme }) => theme.text};
-  padding-top: 80px;
+  padding-top: 0;
 
   .spinner {
     width: 50px;
@@ -41,7 +41,7 @@ const ErrorContainer = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 50vh;
-  padding-top: 80px;
+  padding-top: 0;
   color: ${({ theme }) => theme.textSoft};
   text-align: center;
 
