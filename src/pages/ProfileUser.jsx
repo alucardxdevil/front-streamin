@@ -19,7 +19,7 @@ const Container = styled.main`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-top: 60px;
+  padding-top: 0;
   background: ${({ theme }) => theme.bg || "#181818"};
   width: 100%;
   max-width: 100%;
@@ -314,10 +314,18 @@ const DescriptionContainer = styled.div`
   background: ${({ theme }) => theme.bg || "rgba(255,255,255,0.04)"};
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.07);
-  font-size: 17px;
-  line-height: 1.75;
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 500;
   color: ${({ theme }) => theme.text || "#e6e6e6"};
   box-shadow: inset 0px 2px 6px rgba(0, 0, 0, 0.25);
+
+  @media (min-width: 1024px) {
+    font-size: 19px;
+    line-height: 1.8;
+    padding: 18px;
+    max-height: 210px;
+  }
 
   @media (max-width: 768px) {
     width: 100%;
@@ -428,11 +436,18 @@ export const ProfileUser = () => {
   const { slug } = useParams();
   const path = slug;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [notFound, setNotFound] = useState(false);
   const [showProfilePreview, setShowProfilePreview] = useState(false);
   const { t } = useLanguage();
+  const isOwnProfile = Boolean(currentUser?._id && channel?._id && currentUser._id === channel._id);
 
   const handleSub = async () => {
+    if (!currentUser) return;
+    if (isOwnProfile) {
+      navigate("/profile");
+      return;
+    }
     try {
       if (currentUser.followsProfile.includes(channel._id)) {
         await axios.put(`/users/unfol/${channel._id}`);
@@ -455,6 +470,10 @@ export const ProfileUser = () => {
         }
 
         setChannel(channelRes.data);
+        if (currentUser?._id && currentUser._id === channelRes.data._id) {
+          navigate("/profile", { replace: true });
+          return;
+        }
 
         await axios.put(`/users/${path}/update-total-views`);
 
@@ -476,7 +495,7 @@ export const ProfileUser = () => {
       }
     };
     fetchData();
-  }, [path]);
+  }, [path, currentUser?._id, navigate]);
 
   if (notFound) return <NotFound />;
 
@@ -523,14 +542,20 @@ export const ProfileUser = () => {
             </ProfileImageZoomHint>
           </ProfileImageWrapper>
           <ButtonContainer>
-            <CardButton
-              following={currentUser?.followsProfile.includes(channel._id)}
-              onClick={handleSub}
-            >
-              {currentUser?.followsProfile.includes(channel._id)
-                ? t("following")
-                : t("follow")}
-            </CardButton>
+            {isOwnProfile ? (
+              <CardButton following={false} onClick={() => navigate("/profile")}>
+                {t("myProfile")}
+              </CardButton>
+            ) : (
+              <CardButton
+                following={currentUser?.followsProfile.includes(channel._id)}
+                onClick={handleSub}
+              >
+                {currentUser?.followsProfile.includes(channel._id)
+                  ? t("following")
+                  : t("follow")}
+              </CardButton>
+            )}
 
             <Link
               to={`/videosProfile/${channel.slug || channel._id}`}

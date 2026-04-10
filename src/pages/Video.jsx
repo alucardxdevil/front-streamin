@@ -38,8 +38,7 @@ const ContainerO = styled.main`
   grid-template-columns: 260px 1fr 260px;
   gap: 16px;
   max-width: 1800px;
-  /* margin-top = altura exacta del navbar (60px), sin espacio extra */
-  margin: 60px auto 0;
+  margin: 0 auto;
   /* Sin padding-top para que el ad quede pegado al navbar */
   padding: 0 28px 40px;
   width: 100%;
@@ -56,7 +55,7 @@ const ContainerO = styled.main`
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     padding: 12px;
-    margin-top: 60px;
+    margin-top: 0;
     overflow-x: hidden;
     overflow-x: clip;
   }

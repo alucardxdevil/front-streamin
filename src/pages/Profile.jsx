@@ -18,7 +18,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-top: 60px;
+  padding-top: 0;
   background: ${({ theme }) => theme.bg || "#181818"};
   width: 100%;
   max-width: 100%;
@@ -307,10 +307,18 @@ const DescriptionContainer = styled.div`
   background: ${({ theme }) => theme.bg || "rgba(255,255,255,0.04)"};
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.07);
-  font-size: 17px;
-  line-height: 1.75;
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 500;
   color: ${({ theme }) => theme.text || "#e6e6e6"};
   box-shadow: inset 0px 2px 6px rgba(0, 0, 0, 0.25);
+
+  @media (min-width: 1024px) {
+    font-size: 19px;
+    line-height: 1.8;
+    padding: 18px;
+    max-height: 210px;
+  }
 
   @media (max-width: 480px) {
     width: 100%;
