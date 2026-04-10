@@ -2051,6 +2051,67 @@ const translations = {
     playlistNavigation: "Navegacao da playlist",
     playlistVideos: "Videos da playlist",
     nowPlaying: "Reproduzindo agora",
+
+    // Us / About stream-in.com (Beta)
+    usAboutPageTitle: "Sobre stream-in.com",
+    usAboutPageSubtitle:
+      "stream-in.com é uma nova plataforma de streaming em fase beta. Aqui compartilhamos nossa visão, como pensamos a experiência de quem assiste e de quem cria, e quais limites defendemos.",
+    usAboutPageBetaLine: "Versão beta · Abril 2026",
+
+    usSecWhatTitle: "O que é stream-in.com?",
+    usSecWhatP1:
+      "stream-in.com nasce como uma alternativa de streaming com uma ideia atual: menos barreiras arbitrárias sobre o que pode ser dito e mais foco em a ferramenta realmente servir ao público e a quem cria conteúdo.",
+    usSecWhatP2:
+      "Estamos em beta: evoluímos com cuidado, ouvimos feedback e adicionamos recursos conforme a plataforma cresce.",
+    usSecWhatHighlight:
+      "Priorizamos usuários e criadores — não preencher a tela com ruído.",
+
+    usSecFreedomTitle: "Liberdade de expressão, sem censura excessiva",
+    usSecFreedomP1:
+      "Queremos um ambiente onde a liberdade de expressão importe: onde vozes não sejam silenciadas por decisões opacas ou por medo de errar. Isso não significa ausência de regras; significa não punir opiniões legítimas nem apagar debates sob o rótulo fácil de “moderação”.",
+    usSecFreedomP2:
+      "Buscamos equilíbrio: espaço amplo para ideias, formatos e conversas; critérios claros quando for preciso agir.",
+
+    usSecExperienceTitle: "Publicidade leve e foco na experiência",
+    usSecExperienceP1:
+      "Não queremos um site entupido de anúncios nem um feed que pareça um outdoor de interesses alheios ao que você veio ver. Queremos ser sustentáveis e que criadores ganhem com o que publicam, então anúncios podem existir quando ajudam a manter a plataforma. O ponto é equilíbrio: publicidade relevante e respeitosa, sem sufocar a experiência.",
+    usSecExperienceP2:
+      "stream-in.com foi pensada para crescer com anunciantes (não contra eles): um ambiente seguro para marcas e, ao mesmo tempo, centrado no usuário, onde a promoção apoia o ecossistema em vez de virar o produto principal.",
+
+    usSecMoneyTitle: "Monetização para criadores, quando for viável",
+    usSecMoneyP1:
+      "Queremos que criadores possam monetizar o conteúdo que sobem. Isso estará ligado à sustentabilidade: quando a plataforma for rentável ou quando tivermos anunciantes suficientes para repartir receitas de forma justa com quem gera valor.",
+    usSecMoneyP2:
+      "Enquanto isso, seguimos construindo produto e comunidade; os detalhes de programas de monetização serão comunicados com transparência conforme forem lançados.",
+
+    usSecCreatorsTitle: "Convite a criadores: comece cedo",
+    usSecCreatorsP1:
+      "Se você cria vídeo, áudio ou outros formatos que se encaixem aqui, convidamos você a publicar conteúdo novo e testar a beta. Quem cresce no começo costuma marcar a plataforma — você pode se tornar um criador top aqui e ganhar visibilidade também fora dela.",
+    usSecCreatorsP2:
+      "Quanto mais variado e autêntico for o catálogo, melhor para todos — público e criadores.",
+
+    usSecLimitsTitle: "Limites claros: o que não tem espaço",
+    usSecLimitsP1:
+      "Defendemos a liberdade de expressão e rejeitamos censura excessiva, mas stream-in.com não é uma zona sem regras. Somos contra conteúdo feito para ferir, explorar ou discriminar.",
+    usSecLimitsIntroList:
+      "Não é permitido enviar ou promover, entre outras coisas:",
+    usSecLimitsItemThreat: "Ameaças ou incitação a ferir pessoas ou grupos.",
+    usSecLimitsItemViolence:
+      "Violência explícita gratuita ou conteúdo cujo objetivo principal seja choque gráfico.",
+    usSecLimitsItemNudity:
+      "Nudez ou material sexualizado inadequado para uma plataforma geral de streaming.",
+    usSecLimitsItemPorn: "Pornografia ou conteúdo sexual explícito.",
+    usSecLimitsItemRacism:
+      "Racismo ou ódio contra pessoas por origem, religião, orientação, identidade ou outras características protegidas.",
+    usSecLimitsP2:
+      "Essas linhas vermelhas existem para proteger a comunidade e um mínimo de convivência respeitosa. Aplicamos isso com seriedade.",
+
+    usSecContactTitle: "Contato",
+    usSecContactP1:
+      "Para dúvidas gerais, ideias ou relatos relacionados à plataforma, fale com a gente. Valorizamos o diálogo direto com público e criadores.",
+
+    usAboutFooter:
+      "© 2026 stream-in.com — Plataforma em beta. Obrigado por fazer parte deste começo.",
   },
 
   de: {
@@ -2522,6 +2583,67 @@ const translations = {
     playlistNavigation: "Playlist-Navigation",
     playlistVideos: "Playlist-Videos",
     nowPlaying: "Wird gerade abgespielt",
+
+    // Us / About stream-in.com (Beta)
+    usAboutPageTitle: "Über stream-in.com",
+    usAboutPageSubtitle:
+      "stream-in.com ist eine neue Streaming-Plattform in der Beta-Phase. Hier teilen wir unsere Vision, wie wir die Erfahrung für Zuschauer und Creator denken, und welche Grenzen wir klar ziehen.",
+    usAboutPageBetaLine: "Beta-Version · April 2026",
+
+    usSecWhatTitle: "Was ist stream-in.com?",
+    usSecWhatP1:
+      "stream-in.com entsteht als Streaming-Alternative mit einem modernen Ansatz: weniger willkürliche Schranken dafür, was gesagt werden darf, und mehr Fokus darauf, dass das Produkt wirklich Publikum und Creator unterstützt.",
+    usSecWhatP2:
+      "Wir sind in der Beta: Wir entwickeln bedacht, hören auf Feedback und erweitern Funktionen, während die Plattform wächst.",
+    usSecWhatHighlight:
+      "Wir priorisieren Nutzer und Creator – nicht das Füllen des Bildschirms mit Lärm.",
+
+    usSecFreedomTitle: "Meinungsfreiheit ohne übermäßige Zensur",
+    usSecFreedomP1:
+      "Wir wollen ein Umfeld, in dem Meinungsfreiheit zählt: Stimmen sollen nicht durch intransparente Entscheidungen oder Angst vor Fehlern verstummen. Das heißt nicht „keine Regeln“ – es heißt, legitime Meinungen nicht zu bestrafen und Debatten nicht pauschal unter dem Label „Moderation“ zu löschen.",
+    usSecFreedomP2:
+      "Unser Ziel ist Balance: viel Raum für Ideen, Formate und Diskussionen; klare Kriterien, wenn gehandelt werden muss.",
+
+    usSecExperienceTitle: "Weniger aufdringliche Werbung, mehr Fokus",
+    usSecExperienceP1:
+      "Wir wollen keine Plattform, die mit Werbung vollgestopft ist oder deren Feed wie eine Litfaßsäule für fremde Interessen wirkt. Wir wollen wirtschaftlich nachhaltig sein – und Creator sollen mit ihren Inhalten verdienen können –, daher kann Werbung existieren, wenn sie die Plattform trägt. Entscheidend ist das Gleichgewicht: relevant, respektvoll und niemals dominierend.",
+    usSecExperienceP2:
+      "stream-in.com soll mit Werbekunden wachsen (nicht gegen sie): ein markensicheres, nutzerorientiertes Erlebnis, in dem Werbung das Ökosystem unterstützt statt zum Hauptprodukt zu werden.",
+
+    usSecMoneyTitle: "Monetarisierung für Creator, wenn es tragfähig ist",
+    usSecMoneyP1:
+      "Wir möchten, dass Creator ihr hochgeladenes Content monetarisieren können. Das hängt an Nachhaltigkeit: wenn die Plattform rentabel ist oder wenn genügend Werbekunden vorhanden sind, um Einnahmen fair mit denen zu teilen, die Wert schaffen.",
+    usSecMoneyP2:
+      "Bis dahin bauen wir Produkt und Community weiter aus; Details zu Monetarisierungsprogrammen kommunizieren wir transparent, sobald sie starten.",
+
+    usSecCreatorsTitle: "Einladung an Creator: Früh dabei sein zählt",
+    usSecCreatorsP1:
+      "Wenn du Video, Audio oder andere passende Formate machst, laden wir dich ein, neue Inhalte zu veröffentlichen und die Beta zu testen. Wer früh eine Audience aufbaut, prägt oft die Plattform – du kannst hier zu den Top-Creatorn gehören und auch darüber hinaus sichtbar werden.",
+    usSecCreatorsP2:
+      "Je vielfältiger und authentischer der Katalog, desto besser für alle – Zuschauer und Creator.",
+
+    usSecLimitsTitle: "Klare Grenzen: Was nicht dazugehört",
+    usSecLimitsP1:
+      "Wir unterstützen Meinungsfreiheit und lehnen Überzensur ab, aber stream-in.com ist kein regel-freier Raum. Wir lehnen Inhalte ab, die schaden, ausbeuten oder diskriminieren sollen.",
+    usSecLimitsIntroList:
+      "Das Hochladen oder Bewerben ist nicht erlaubt (u. a.):",
+    usSecLimitsItemThreat: "Drohungen oder Aufrufe, Menschen oder Gruppen zu schaden.",
+    usSecLimitsItemViolence:
+      "Grobe, explizite Gewalt ohne Kontext oder Inhalte, deren Hauptzweck grafischer Schock ist.",
+    usSecLimitsItemNudity:
+      "Nacktheit oder sexualisierte Inhalte, die für eine allgemeine Streaming-Plattform unangemessen sind.",
+    usSecLimitsItemPorn: "Pornografie oder sexuell explizite Inhalte.",
+    usSecLimitsItemRacism:
+      "Rassismus oder Hass gegen Menschen aufgrund von Herkunft, Religion, Orientierung, Identität oder anderen geschützten Merkmalen.",
+    usSecLimitsP2:
+      "Diese roten Linien schützen die Community und ein Mindestmaß an respektvollem Miteinander. Wir setzen sie konsequent durch.",
+
+    usSecContactTitle: "Kontakt",
+    usSecContactP1:
+      "Für allgemeine Fragen, Ideen oder Meldungen zur Plattform kannst du uns schreiben. Wir schätzen den direkten Austausch mit Zuschauern und Creatorn.",
+
+    usAboutFooter:
+      "© 2026 stream-in.com — Beta-Plattform. Danke, dass du von Anfang an dabei bist.",
   },
 
   ru: {
@@ -2851,6 +2973,67 @@ const translations = {
     termsTitleUs: "Условия использования",
     termsSubtitleUs: "В stream-in нам важно, чтобы вы понимали свои права и обязанности.",
     lastUpdatedUs: "Последнее обновление: Январь 2025",
+
+    usAboutPageTitle: "О stream-in.com",
+    usAboutPageSubtitle:
+      "stream-in.com — новая стриминговая платформа в бета‑стадии. Здесь мы описываем нашу идею, как мы думаем об опыте зрителей и авторов, и какие границы считаем важными.",
+    usAboutPageBetaLine: "Бета‑версия · Апрель 2026",
+
+    usSecWhatTitle: "Что такое stream-in.com?",
+    usSecWhatP1:
+      "stream-in.com создаётся как альтернатива для стриминга с современным подходом: меньше произвольных запретов на высказывания и больше фокуса на том, чтобы продукт реально служил зрителям и создателям контента.",
+    usSecWhatP2:
+      "Мы в бете: развиваемся аккуратно, слушаем обратную связь и добавляем функции по мере роста платформы.",
+    usSecWhatHighlight:
+      "В центре — зрители и авторы, а не шум и лишние отвлечения.",
+
+    usSecFreedomTitle: "Свобода выражения без чрезмерной цензуры",
+    usSecFreedomP1:
+      "Мы хотим среду, где свобода выражения важна: голоса не должны исчезать из‑за непрозрачных решений или страха «сказать не то». Это не означает отсутствие правил — это означает не наказывать законные мнения и не стирать дискуссии под удобной вывеской «модерации».",
+    usSecFreedomP2:
+      "Нам нужен баланс: широкий простор для идей, форматов и обсуждений и понятные критерии, когда вмешательство действительно необходимо.",
+
+    usSecExperienceTitle: "Реклама без перегруза и без навязчивости",
+    usSecExperienceP1:
+      "Мы не хотим платформу, забитую рекламой, или ленту, которая ощущается как билборд чужих интересов. Мы хотим быть устойчивым бизнесом — и хотим, чтобы авторы зарабатывали на своём контенте — поэтому реклама может быть, когда она поддерживает платформу. Главное — баланс: релевантно, уважительно и без того, чтобы реклама перекрывала то, ради чего вы пришли.",
+    usSecExperienceP2:
+      "stream-in.com строится так, чтобы расти вместе с рекламодателями: «brand‑safe» и ориентировано на пользователя — где продвижение поддерживает экосистему, а не становится главным продуктом.",
+
+    usSecMoneyTitle: "Монетизация для авторов, когда это станет возможно",
+    usSecMoneyP1:
+      "Мы хотим, чтобы авторы могли монетизировать загружаемый контент. Это будет связано с устойчивостью: когда платформа станет прибыльной или когда будет достаточно рекламодателей, чтобы честно делиться доходом с теми, кто создаёт ценность.",
+    usSecMoneyP2:
+      "Пока мы развиваем продукт и сообщество; детали программ монетизации будем сообщать прозрачно по мере запуска.",
+
+    usSecCreatorsTitle: "Приглашение авторам: ранний старт важен",
+    usSecCreatorsP1:
+      "Если вы делаете видео, аудио или другие подходящие форматы — загружайте новое и пробуйте бета‑версию. Те, кто строит аудиторию в начале, часто задают тон платформе — вы можете стать одним из топ‑авторов здесь и получить видимость и за её пределами.",
+    usSecCreatorsP2:
+      "Чем разнообразнее и честнее каталог, тем лучше всем — зрителям и авторам.",
+
+    usSecLimitsTitle: "Чёткие границы: чему здесь не место",
+    usSecLimitsP1:
+      "Мы поддерживаем свободу выражения и против чрезмерной цензуры, но stream-in.com — не зона без правил. Мы против контента, который направлен на вред, эксплуатацию или дискриминацию.",
+    usSecLimitsIntroList:
+      "Запрещено загружать или продвигать, включая (но не ограничиваясь):",
+    usSecLimitsItemThreat:
+      "Угрозы или призывы причинить вред людям или группам.",
+    usSecLimitsItemViolence:
+      "Графическую/явную жестокую насилие ради шока или контент, где цель — кровавый морбидный эффект.",
+    usSecLimitsItemNudity:
+      "Наготу или сексуализированный материал, неприемлемый для общей стриминговой платформы.",
+    usSecLimitsItemPorn: "Порнографию или сексуально‑явный контент.",
+    usSecLimitsItemRacism:
+      "Расизм и ненависть к людям по происхождению, религии, ориентации, идентичности или другим защищённым признакам.",
+    usSecLimitsP2:
+      "Эти «красные линии» нужны, чтобы защищать сообщество и базовый уровень уважительного общения. Мы относимся к этому серьёзно.",
+
+    usSecContactTitle: "Контакты",
+    usSecContactP1:
+      "По общим вопросам, идеям или сообщениям о проблемах на платформе — пишите нам. Мы ценим прямой диалог со зрителями и авторами.",
+
+    usAboutFooter:
+      "© 2026 stream-in.com — Платформа в бета‑стадии. Спасибо, что вы с нами с самого начала.",
 
     // Edit Video
     editVideo: "Редактировать видео",
@@ -3467,6 +3650,62 @@ const translations = {
     termsSubtitleUs: "在 stream-in，我们希望您了解您的权利和责任。",
     lastUpdatedUs: "最后更新：2025年1月",
 
+    usAboutPageTitle: "关于 stream-in.com",
+    usAboutPageSubtitle:
+      "stream-in.com 是一个处于 Beta 阶段的新流媒体平台。在这里我们介绍愿景、如何兼顾观众与创作者体验，以及我们坚持的边界与底线。",
+    usAboutPageBetaLine: "Beta 版本 · 2026 年 4 月",
+
+    usSecWhatTitle: "什么是 stream-in.com？",
+    usSecWhatP1:
+      "stream-in.com 作为一种流媒体新选择诞生：减少不透明、过度的限制，把重心放在真正服务观众与内容创作者的产品体验上。",
+    usSecWhatP2:
+      "我们仍在 Beta：稳步迭代、倾听反馈，并随着平台成长不断完善功能。",
+    usSecWhatHighlight:
+      "以用户与创作者为先，而不是用噪音填满屏幕。",
+
+    usSecFreedomTitle: "支持表达自由，反对过度审查",
+    usSecFreedomP1:
+      "我们希望表达自由真正重要：不因不透明决定或“说错话”的恐惧而让声音消失。这不等于没有规则；而是不随意惩罚合理观点，也不轻易用“审核”之名抹去讨论。",
+    usSecFreedomP2:
+      "我们追求平衡：为观点、形式与讨论留足空间，同时在需要介入时有清晰标准。",
+
+    usSecExperienceTitle: "广告不过载，体验不被打断",
+    usSecExperienceP1:
+      "我们不希望平台被广告塞满，也不希望信息流像无关利益的广告牌。我们需要可持续经营，也希望创作者能通过内容获得收益，因此在支持平台的前提下可以有广告。关键是平衡：广告要相关、克制、尊重用户，不应淹没你想看的内容。",
+    usSecExperienceP2:
+      "stream-in.com 也希望与广告主共同成长：在保证品牌安全的同时坚持用户优先，让推广支持生态，而不是把“投放”变成平台的主产品。",
+
+    usSecMoneyTitle: "创作者变现：在平台具备条件时推出",
+    usSecMoneyP1:
+      "我们希望创作者能对上传内容进行变现。这将与可持续性绑定：当平台具备盈利能力，或拥有足够广告主以便公平分成时，我们会推进相应计划。",
+    usSecMoneyP2:
+      "与此同时，我们继续建设产品与社区；变现方案的具体细节会在推出时透明公布。",
+
+    usSecCreatorsTitle: "邀请创作者：现在是入场好时机",
+    usSecCreatorsP1:
+      "如果你创作视频、音频或其他适合的内容，欢迎你发布新作品并参与 Beta。早期建立受众的人往往能塑造平台——你也有机会成为这里的头部创作者，并获得更广的影响力。",
+    usSecCreatorsP2:
+      "内容越多样、越真实，对观众与创作者就越好。",
+
+    usSecLimitsTitle: "明确底线：哪些内容不允许",
+    usSecLimitsP1:
+      "我们支持表达自由、反对过度审查，但 stream-in.com 不是无规则地带。我们反对任何旨在伤害、剥削或歧视的内容。",
+    usSecLimitsIntroList: "禁止上传或传播（包括但不限于）：",
+    usSecLimitsItemThreat: "威胁或煽动对个人/群体实施伤害。",
+    usSecLimitsItemViolence: "纯粹以血腥冲击为目的的露骨暴力内容。",
+    usSecLimitsItemNudity: "不适合大众流媒体平台的裸露或性暗示内容。",
+    usSecLimitsItemPorn: "色情或露骨性内容。",
+    usSecLimitsItemRacism: "种族主义或针对群体的仇恨与歧视。",
+    usSecLimitsP2:
+      "这些红线用于保护社区与基本的尊重氛围，我们会严肃执行。",
+
+    usSecContactTitle: "联系",
+    usSecContactP1:
+      "如有一般问题、建议或平台相关举报，欢迎联系我们。我们重视与观众和创作者的直接沟通。",
+
+    usAboutFooter:
+      "© 2026 stream-in.com — Beta 平台。感谢你参与这一段起步。",
+
     // Edit Video (编辑视频)
     editVideo: "编辑视频",
     currentVideo: "当前视频",
@@ -4074,6 +4313,64 @@ const translations = {
     termsTitleUs: "利用規約",
     termsSubtitleUs: "stream-in では、ユーザーの権利と責任を明確にすることを重視しています。",
     lastUpdatedUs: "最終更新：2025年1月",
+
+    usAboutPageTitle: "stream-in.com について",
+    usAboutPageSubtitle:
+      "stream-in.com はベータ版として始まった新しいストリーミング・プラットフォームです。私たちのビジョン、視聴者とクリエイター双方の体験の考え方、そして守るべき境界線を説明します。",
+    usAboutPageBetaLine: "ベータ版 · 2026年4月",
+
+    usSecWhatTitle: "stream-in.com とは？",
+    usSecWhatP1:
+      "stream-in.com は、発言を不透明に縛る過度な制限を減らし、視聴者とクリエイターのための体験を第一に設計したストリーミングの新しい選択肢です。",
+    usSecWhatP2:
+      "現在はベータ版です。慎重に改善を重ね、フィードバックを聞きながら機能を追加していきます。",
+    usSecWhatHighlight:
+      "画面をノイズで埋めるのではなく、視聴者とクリエイターを優先します。",
+
+    usSecFreedomTitle: "過度な検閲ではなく、表現の自由を",
+    usSecFreedomP1:
+      "私たちは、表現の自由が本当に大切にされる環境を目指します。不透明な判断や「間違ったことを言ったら…」という恐れで声が消えるべきではありません。これは“ルールなし”という意味ではなく、正当な意見を罰したり、議論を安易に「モデレーション」の名で消したりしないということです。",
+    usSecFreedomP2:
+      "私たちはバランスを重視します。多様な意見や形式、議論の余地を広く保ちつつ、介入が必要なときは基準を明確にします。",
+
+    usSecExperienceTitle: "広告で埋め尽くさない、体験優先",
+    usSecExperienceP1:
+      "広告だらけのサイトや、無関係な利害の看板のようなフィードにはしたくありません。一方で、プラットフォームの継続とクリエイターの収益のために、広告が支えになる場面はあります。要点はバランスで、広告は関連性があり、節度があり、見たいコンテンツを圧倒しないことです。",
+    usSecExperienceP2:
+      "stream-in.com は広告主とも共に成長したいと考えています。ブランドセーフでユーザーファーストな体験の中で、広告がエコシステムを支え、主役にならない設計を目指します。",
+
+    usSecMoneyTitle: "収益化は、持続可能になった段階で",
+    usSecMoneyP1:
+      "クリエイターが投稿したコンテンツで収益化できるようにしたいと考えています。これは持続可能性と連動します。プラットフォームが採算に乗る、または十分な広告主が集まり、公正に分配できる段階で進めます。",
+    usSecMoneyP2:
+      "それまでの間はプロダクトとコミュニティを育てます。収益化プログラムの詳細は導入時に透明性をもって共有します。",
+
+    usSecCreatorsTitle: "クリエイターへ：今が投稿のチャンス",
+    usSecCreatorsP1:
+      "動画・音声など、この場所に合う作品を作っている方は、ぜひ新しいコンテンツを投稿してベータ版を試してください。初期に視聴者を獲得した人はプラットフォームを形づくります。ここでトップクリエイターになり、外でも注目を得られる可能性があります。",
+    usSecCreatorsP2:
+      "カタログが多様で本物であるほど、視聴者にもクリエイターにも良い環境になります。",
+
+    usSecLimitsTitle: "明確な線引き：許容しないもの",
+    usSecLimitsP1:
+      "私たちは表現の自由を尊重し、過度な検閲に反対しますが、stream-in.com は無秩序な場所ではありません。害を与える、搾取する、差別する目的のコンテンツには反対します。",
+    usSecLimitsIntroList: "以下のアップロード／拡散は禁止です（例）：",
+    usSecLimitsItemThreat: "個人または集団への脅迫、危害の扇動。",
+    usSecLimitsItemViolence:
+      "露骨な暴力の煽りや、ショック目的の過度に残虐な表現。",
+    usSecLimitsItemNudity:
+      "一般向けストリーミングに不適切なヌード／性的に露骨な素材。",
+    usSecLimitsItemPorn: "ポルノ／露骨な性的コンテンツ。",
+    usSecLimitsItemRacism: "人種差別や特定集団へのヘイト。",
+    usSecLimitsP2:
+      "これらのレッドラインはコミュニティを守るためのものです。私たちは真剣に運用します。",
+
+    usSecContactTitle: "お問い合わせ",
+    usSecContactP1:
+      "一般的な質問、提案、プラットフォームに関する報告はご連絡ください。視聴者とクリエイターの直接的な対話を大切にしています。",
+
+    usAboutFooter:
+      "© 2026 stream-in.com — ベータ版プラットフォーム。立ち上げに参加してくれてありがとうございます。",
 
     // Edit Video (動画編集)
     editVideo: "動画の編集",
@@ -4806,6 +5103,67 @@ const translations = {
     playlistNavigation: "Navigation de la playlist",
     playlistVideos: "Videos de la playlist",
     nowPlaying: "En cours de lecture",
+
+    // Us / About stream-in.com (Beta)
+    usAboutPageTitle: "À propos de stream-in.com",
+    usAboutPageSubtitle:
+      "stream-in.com est une nouvelle plateforme de streaming en phase bêta. Ici, nous partageons notre vision, notre approche pour l’expérience des spectateurs et des créateurs, ainsi que les limites que nous défendons.",
+    usAboutPageBetaLine: "Version bêta · Avril 2026",
+
+    usSecWhatTitle: "Qu’est-ce que stream-in.com ?",
+    usSecWhatP1:
+      "stream-in.com est une alternative de streaming avec une idée simple : moins de barrières arbitraires sur ce qui peut être dit, et davantage de focus sur un produit qui sert réellement le public et les créateurs.",
+    usSecWhatP2:
+      "Nous sommes en bêta : nous avançons avec soin, écoutons les retours et ajoutons des fonctionnalités au fil de la croissance.",
+    usSecWhatHighlight:
+      "Nous privilégions les utilisateurs et les créateurs — pas le bruit à l’écran.",
+
+    usSecFreedomTitle: "Liberté d’expression, sans censure excessive",
+    usSecFreedomP1:
+      "Nous voulons un environnement où la liberté d’expression compte : des voix qui ne disparaissent pas à cause de décisions opaques ou d’un climat de peur de se tromper. Cela ne veut pas dire « pas de règles » ; cela veut dire ne pas punir des opinions légitimes ni effacer des débats sous le prétexte facile de « modération ».",
+    usSecFreedomP2:
+      "Nous cherchons l’équilibre : un large espace pour les idées, les formats et les discussions ; des critères clairs lorsqu’il faut agir.",
+
+    usSecExperienceTitle: "Publicité mesurée, expérience d’abord",
+    usSecExperienceP1:
+      "Nous ne voulons pas d’un site saturé de pubs ni d’un fil qui ressemble à un panneau publicitaire d’intérêts sans rapport. Nous voulons être rentables et permettre aux créateurs de gagner grâce à leur contenu, donc la publicité peut exister lorsqu’elle soutient la plateforme. L’essentiel, c’est l’équilibre : pertinente, respectueuse, et jamais au point d’étouffer ce que vous êtes venu regarder.",
+    usSecExperienceP2:
+      "stream-in.com est pensée pour grandir avec les annonceurs (pas contre eux) : une expérience « brand-safe » et centrée utilisateur, où la promotion soutient l’écosystème sans devenir le produit principal.",
+
+    usSecMoneyTitle: "Monétisation des créateurs quand ce sera viable",
+    usSecMoneyP1:
+      "Nous voulons que les créateurs puissent monétiser ce qu’ils publient. Cela dépend de la viabilité : quand la plateforme sera rentable ou quand nous aurons assez d’annonceurs pour partager les revenus de façon juste.",
+    usSecMoneyP2:
+      "En attendant, nous construisons le produit et la communauté ; les détails des programmes de monétisation seront partagés de façon transparente au fur et à mesure.",
+
+    usSecCreatorsTitle: "Invitation aux créateurs : les débuts comptent",
+    usSecCreatorsP1:
+      "Si vous créez de la vidéo, de l’audio ou d’autres formats adaptés, publiez du contenu et testez la bêta. Les premiers à construire une audience marquent souvent la plateforme — vous pouvez devenir un créateur « top » ici et gagner en visibilité ailleurs aussi.",
+    usSecCreatorsP2:
+      "Plus le catalogue est varié et authentique, mieux c’est pour tout le monde — spectateurs et créateurs.",
+
+    usSecLimitsTitle: "Limites claires : ce qui n’a pas sa place",
+    usSecLimitsP1:
+      "Nous soutenons la liberté d’expression et refusons la censure excessive, mais stream-in.com n’est pas une zone sans règles. Nous refusons tout contenu visant à nuire, exploiter ou discriminer.",
+    usSecLimitsIntroList:
+      "Il est interdit de publier ou de promouvoir, notamment :",
+    usSecLimitsItemThreat: "Menaces ou incitation à nuire à des personnes ou groupes.",
+    usSecLimitsItemViolence:
+      "Violence explicite gratuite ou contenu dont le but principal est le choc graphique.",
+    usSecLimitsItemNudity:
+      "Nudité ou contenu sexualisé inadapté à une plateforme de streaming généraliste.",
+    usSecLimitsItemPorn: "Pornographie ou contenu sexuellement explicite.",
+    usSecLimitsItemRacism:
+      "Racisme ou haine envers des personnes selon l’origine, la religion, l’orientation, l’identité ou d’autres caractéristiques protégées.",
+    usSecLimitsP2:
+      "Ces lignes rouges protègent la communauté et un minimum de respect. Nous les appliquons sérieusement.",
+
+    usSecContactTitle: "Contact",
+    usSecContactP1:
+      "Pour toute question générale, idée ou signalement lié à la plateforme, contactez-nous. Nous valorisons le dialogue direct avec les spectateurs et les créateurs.",
+
+    usAboutFooter:
+      "© 2026 stream-in.com — Plateforme en bêta. Merci de faire partie du lancement.",
   },
 
   hi: {
@@ -5256,6 +5614,67 @@ const translations = {
     playlistNavigation: "प्लेलिस्ट नेविगेशन",
     playlistVideos: "प्लेलिस्ट वीडियो",
     nowPlaying: "अभी चल रहा है",
+
+    // Us / About stream-in.com (Beta)
+    usAboutPageTitle: "stream-in.com के बारे में",
+    usAboutPageSubtitle:
+      "stream-in.com एक नई स्ट्रीमिंग प्लेटफ़ॉर्म है जो बीटा चरण में है। यहाँ हम अपना विज़न, दर्शकों और क्रिएटर्स के अनुभव को लेकर हमारा दृष्टिकोण, और जिन सीमाओं पर हम स्पष्ट हैं, साझा करते हैं।",
+    usAboutPageBetaLine: "बीटा रिलीज़ · अप्रैल 2026",
+
+    usSecWhatTitle: "stream-in.com क्या है?",
+    usSecWhatP1:
+      "stream-in.com एक स्ट्रीमिंग विकल्प के रूप में बना है—जहाँ अभिव्यक्ति पर अनावश्यक/मनमानी रोक कम हो और असली फोकस दर्शकों व कंटेंट क्रिएटर्स के लिए बेहतर अनुभव पर हो।",
+    usSecWhatP2:
+      "हम बीटा में हैं: सोच-समझकर सुधार करते हैं, फीडबैक सुनते हैं, और प्लेटफ़ॉर्म के बढ़ने के साथ फीचर्स जोड़ते हैं।",
+    usSecWhatHighlight:
+      "हम यूज़र्स और क्रिएटर्स को प्राथमिकता देते हैं—स्क्रीन को शोर से नहीं भरते।",
+
+    usSecFreedomTitle: "अभिव्यक्ति की स्वतंत्रता, अति-सेंसरशिप नहीं",
+    usSecFreedomP1:
+      "हम ऐसा वातावरण चाहते हैं जहाँ अभिव्यक्ति की स्वतंत्रता मायने रखे—जहाँ अस्पष्ट/अपारदर्शी फैसलों या “गलत बोल दिया” के डर से आवाज़ें दबें नहीं। इसका मतलब बिना नियम के नहीं है; इसका मतलब है वैध विचारों को दंडित न करना और “मॉडरेशन” के नाम पर बहस मिटा न देना।",
+    usSecFreedomP2:
+      "हम संतुलन चाहते हैं: विचारों, फॉर्मैट्स और चर्चा के लिए व्यापक जगह; और जब कार्रवाई ज़रूरी हो तो स्पष्ट मानदंड।",
+
+    usSecExperienceTitle: "कम बाधक विज्ञापन, अनुभव पहले",
+    usSecExperienceP1:
+      "हम नहीं चाहते कि प्लेटफ़ॉर्म विज्ञापनों से भरा हो या फ़ीड किसी बिलबोर्ड जैसा लगे। हम टिकाऊ बिज़नेस बनना चाहते हैं और क्रिएटर्स को उनके कंटेंट से कमाई करने देना चाहते हैं, इसलिए प्लेटफ़ॉर्म को सपोर्ट करने के लिए विज्ञापन हो सकते हैं। मुद्दा संतुलन है: विज्ञापन प्रासंगिक और सम्मानजनक हों, और आपका देखने का अनुभव दबे नहीं।",
+    usSecExperienceP2:
+      "stream-in.com को विज्ञापनदाताओं के साथ (उनके खिलाफ नहीं) बढ़ने के लिए बनाया गया है: brand-safe और user-first अनुभव, जहाँ प्रमोशन इकोसिस्टम को सपोर्ट करे—मुख्य उत्पाद न बन जाए।",
+
+    usSecMoneyTitle: "क्रिएटर मॉनेटाइज़ेशन—जब प्लेटफ़ॉर्म सक्षम हो",
+    usSecMoneyP1:
+      "हम चाहते हैं कि क्रिएटर्स अपने अपलोड किए गए कंटेंट से कमाई कर सकें। यह टिकाऊपन से जुड़ा होगा: जब प्लेटफ़ॉर्म लाभदायक हो, या पर्याप्त विज्ञापनदाता हों ताकि कमाई को न्यायसंगत तरीके से साझा किया जा सके।",
+    usSecMoneyP2:
+      "फिलहाल हम प्रोडक्ट और कम्युनिटी बना रहे हैं; मॉनेटाइज़ेशन प्रोग्राम के विवरण समय के साथ पारदर्शी तरीके से साझा होंगे।",
+
+    usSecCreatorsTitle: "क्रिएटर्स के लिए खुला निमंत्रण: शुरुआती दौर खास है",
+    usSecCreatorsP1:
+      "अगर आप वीडियो, ऑडियो या अन्य उपयुक्त फॉर्मैट बनाते हैं, तो नया कंटेंट अपलोड करें और बीटा आज़माएँ। शुरुआत में ऑडियंस बनाने वाले अक्सर प्लेटफ़ॉर्म को आकार देते हैं—आप यहाँ टॉप क्रिएटर बन सकते हैं और बाहर भी पहचान बना सकते हैं।",
+    usSecCreatorsP2:
+      "कैटलॉग जितना विविध और असली होगा, उतना बेहतर—दर्शकों और क्रिएटर्स दोनों के लिए।",
+
+    usSecLimitsTitle: "स्पष्ट सीमाएँ: क्या स्वीकार नहीं",
+    usSecLimitsP1:
+      "हम अभिव्यक्ति की स्वतंत्रता का समर्थन करते हैं और अति-सेंसरशिप के खिलाफ हैं, लेकिन stream-in.com बिना नियम का क्षेत्र नहीं है। हम नुकसान पहुँचाने, शोषण करने या भेदभाव करने वाले कंटेंट के खिलाफ हैं।",
+    usSecLimitsIntroList:
+      "इन चीज़ों को अपलोड/प्रमोट करना मना है (उदाहरण सहित):",
+    usSecLimitsItemThreat: "धमकियाँ या लोगों/समूहों को नुकसान पहुँचाने के लिए उकसाना।",
+    usSecLimitsItemViolence:
+      "बेहद स्पष्ट/ग्राफ़िक हिंसा, खासकर जब उद्देश्य केवल झटका देना हो।",
+    usSecLimitsItemNudity:
+      "नग्नता या अत्यधिक यौन सामग्री जो सामान्य-ऑडियंस स्ट्रीमिंग के लिए अनुपयुक्त हो।",
+    usSecLimitsItemPorn: "पोर्नोग्राफ़ी या यौन रूप से स्पष्ट कंटेंट।",
+    usSecLimitsItemRacism:
+      "नस्लवाद या मूल/धर्म/ओरिएंटेशन/पहचान आदि के आधार पर घृणा।",
+    usSecLimitsP2:
+      "ये ‘रेड लाइन’ कम्युनिटी की सुरक्षा और सम्मानजनक माहौल के लिए हैं। हम इन्हें गंभीरता से लागू करते हैं।",
+
+    usSecContactTitle: "संपर्क",
+    usSecContactP1:
+      "सामान्य सवाल, सुझाव या प्लेटफ़ॉर्म से जुड़े रिपोर्ट के लिए आप हमसे संपर्क कर सकते हैं। हम दर्शकों और क्रिएटर्स के साथ सीधे संवाद को महत्व देते हैं।",
+
+    usAboutFooter:
+      "© 2026 stream-in.com — बीटा प्लेटफ़ॉर्म। इस शुरुआत का हिस्सा बनने के लिए धन्यवाद।",
   },
 
   ar: {
@@ -5709,6 +6128,67 @@ const translations = {
     playlistNavigation: "التنقل في قائمة التشغيل",
     playlistVideos: "فيديوهات قائمة التشغيل",
     nowPlaying: "يتم التشغيل الآن",
+
+    // Us / About stream-in.com (Beta)
+    usAboutPageTitle: "حول stream-in.com",
+    usAboutPageSubtitle:
+      "stream-in.com منصة بث جديدة في مرحلة البيتا. نشارك هنا رؤيتنا وكيف نفكر بتجربة المشاهدين وصُنّاع المحتوى، وما هي الحدود التي نتمسك بها بوضوح.",
+    usAboutPageBetaLine: "إصدار بيتا · أبريل 2026",
+
+    usSecWhatTitle: "ما هو stream-in.com؟",
+    usSecWhatP1:
+      "stream-in.com بُني كخيار بث بديل بفكرة حديثة: تقليل القيود التعسفية على ما يمكن قوله، وزيادة التركيز على خدمة الجمهور وصُنّاع المحتوى فعلياً.",
+    usSecWhatP2:
+      "نحن في مرحلة البيتا: نطوّر بعناية، نستمع للملاحظات، ونضيف الميزات مع نمو المنصة.",
+    usSecWhatHighlight:
+      "نضع المستخدمين وصُنّاع المحتوى أولاً—لا نملأ الشاشة بالضجيج.",
+
+    usSecFreedomTitle: "حرية التعبير دون رقابة مفرطة",
+    usSecFreedomP1:
+      "نريد بيئة تُحترم فيها حرية التعبير: لا تُسكت الأصوات بسبب قرارات غير واضحة أو خوف من “قول شيء خاطئ”. هذا لا يعني عدم وجود قواعد؛ بل يعني عدم معاقبة الآراء المشروعة أو محو النقاشات تحت ذريعة “الإشراف”.",
+    usSecFreedomP2:
+      "نبحث عن توازن: مساحة واسعة للأفكار والأشكال والحوار، ومعايير واضحة عندما يكون التدخل ضرورياً.",
+
+    usSecExperienceTitle: "إعلانات غير مزعجة وتجربة أولاً",
+    usSecExperienceP1:
+      "لا نريد منصة ممتلئة بالإعلانات أو موجزاً يبدو كلوحة إعلانية لمصالح لا علاقة لها بما جئت لمشاهدته. نريد أن نكون مشروعاً مستداماً وأن يحصل صُنّاع المحتوى على أرباح من أعمالهم، لذلك قد توجد إعلانات عندما تدعم المنصة. الفكرة هي التوازن: إعلانات ذات صلة ومحترمة دون أن تطغى على التجربة.",
+    usSecExperienceP2:
+      "stream-in.com مصممة للنمو مع المعلنين (لا ضدهم): بيئة آمنة للعلامات التجارية وتجربة تضع المستخدم أولاً، حيث يدعم الإعلان النظام البيئي بدل أن يصبح المنتج الأساسي.",
+
+    usSecMoneyTitle: "تحقيق الدخل للمبدعين عندما تصبح المنصة قادرة",
+    usSecMoneyP1:
+      "نريد أن يتمكن المبدعون من تحقيق دخل من المحتوى الذي يرفعونه. سيكون ذلك مرتبطاً بالاستدامة: عندما تصبح المنصة مربحة أو عندما يتوفر عدد كافٍ من المعلنين لمشاركة الإيرادات بشكل عادل.",
+    usSecMoneyP2:
+      "إلى ذلك الحين نواصل بناء المنتج والمجتمع؛ وسيتم توضيح تفاصيل برامج تحقيق الدخل بشفافية عند إطلاقها.",
+
+    usSecCreatorsTitle: "دعوة للمبدعين: البداية فرصة كبيرة",
+    usSecCreatorsP1:
+      "إذا كنت تصنع فيديو أو صوتاً أو أي صيغة مناسبة هنا، ندعوك لرفع محتوى جديد وتجربة البيتا. من يبني جمهوره مبكراً غالباً يترك بصمته—يمكنك أن تصبح من أبرز المبدعين هنا وتكسب ظهوراً خارجها أيضاً.",
+    usSecCreatorsP2:
+      "كلما كان المحتوى متنوعاً وأصيلاً كان ذلك أفضل للجميع—للمشاهدين والمبدعين.",
+
+    usSecLimitsTitle: "حدود واضحة: ما لا مكان له",
+    usSecLimitsP1:
+      "نحن مع حرية التعبير وضد الرقابة المفرطة، لكن stream-in.com ليست مساحة بلا قواعد. نحن ضد أي محتوى يهدف إلى الإيذاء أو الاستغلال أو التمييز.",
+    usSecLimitsIntroList:
+      "يُمنع رفع أو الترويج لما يلي (ومن ذلك على سبيل المثال):",
+    usSecLimitsItemThreat: "التهديدات أو التحريض على إيذاء أشخاص أو مجموعات.",
+    usSecLimitsItemViolence:
+      "العنف الصريح المجاني أو المحتوى الذي هدفه الأساسي الصدمة الدموية.",
+    usSecLimitsItemNudity:
+      "العري أو المحتوى المُجنّس غير المناسب لمنصة بث عامة.",
+    usSecLimitsItemPorn: "الإباحية أو المحتوى الجنسي الصريح.",
+    usSecLimitsItemRacism:
+      "العنصرية أو الكراهية تجاه فئات بسبب الأصل أو الدين أو التوجه أو الهوية أو غير ذلك.",
+    usSecLimitsP2:
+      "هذه الخطوط الحمراء لحماية المجتمع وحد أدنى من الاحترام. نطبّقها بجدية.",
+
+    usSecContactTitle: "التواصل",
+    usSecContactP1:
+      "للأسئلة العامة أو الأفكار أو البلاغات المتعلقة بالمنصة، يمكنك التواصل معنا. نحن نقدر الحوار المباشر مع المشاهدين والمبدعين.",
+
+    usAboutFooter:
+      "© 2026 stream-in.com — منصة في مرحلة البيتا. شكراً لكونك جزءاً من هذه البداية.",
   },
 
   it: {
@@ -6162,6 +6642,67 @@ const translations = {
     playlistNavigation: "Navigazione playlist",
     playlistVideos: "Video della playlist",
     nowPlaying: "In riproduzione",
+
+    // Us / About stream-in.com (Beta)
+    usAboutPageTitle: "Informazioni su stream-in.com",
+    usAboutPageSubtitle:
+      "stream-in.com è una nuova piattaforma di streaming in fase beta. Qui condividiamo la nostra visione, come pensiamo all’esperienza di spettatori e creator, e quali limiti difendiamo.",
+    usAboutPageBetaLine: "Versione beta · Aprile 2026",
+
+    usSecWhatTitle: "Cos’è stream-in.com?",
+    usSecWhatP1:
+      "stream-in.com nasce come alternativa di streaming con un’idea moderna: meno barriere arbitrarie su ciò che si può dire e più focus su un prodotto che serva davvero il pubblico e chi crea contenuti.",
+    usSecWhatP2:
+      "Siamo in beta: rilasciamo con cura, ascoltiamo i feedback e aggiungiamo funzionalità man mano che la piattaforma cresce.",
+    usSecWhatHighlight:
+      "Diamo priorità a utenti e creator, non al rumore sullo schermo.",
+
+    usSecFreedomTitle: "Libertà di espressione, senza censura eccessiva",
+    usSecFreedomP1:
+      "Vogliamo un ambiente in cui la libertà di espressione conti: senza silenziare voci tramite decisioni opache o un clima di paura di “dire la cosa sbagliata”. Questo non significa assenza di regole; significa non punire opinioni legittime né cancellare dibattiti con la scusa della “moderazione”.",
+    usSecFreedomP2:
+      "Cerchiamo equilibrio: ampio spazio per idee, formati e discussioni; criteri chiari quando è necessario intervenire.",
+
+    usSecExperienceTitle: "Pubblicità non invadente, esperienza prima di tutto",
+    usSecExperienceP1:
+      "Non vogliamo un sito pieno di annunci o un feed che sembri un cartellone di interessi estranei a ciò per cui sei qui. Vogliamo un business sostenibile e vogliamo che i creator guadagnino dai loro contenuti, quindi la pubblicità può esistere quando sostiene la piattaforma. Il punto è il bilanciamento: annunci pertinenti e rispettosi che non soffochino l’esperienza.",
+    usSecExperienceP2:
+      "stream-in.com è progettata per crescere insieme agli inserzionisti (non contro di loro): un’esperienza brand-safe e user-first, dove la promozione supporta l’ecosistema invece di diventare il prodotto principale.",
+
+    usSecMoneyTitle: "Monetizzazione per i creator quando sarà sostenibile",
+    usSecMoneyP1:
+      "Vogliamo che i creator possano monetizzare ciò che caricano. Questo sarà legato alla sostenibilità: quando la piattaforma sarà redditizia o quando avremo abbastanza inserzionisti per condividere i ricavi in modo equo con chi crea valore.",
+    usSecMoneyP2:
+      "Nel frattempo continuiamo a costruire prodotto e community; i dettagli dei programmi di monetizzazione saranno comunicati con trasparenza man mano che vengono introdotti.",
+
+    usSecCreatorsTitle: "Invito ai creator: i primi contano",
+    usSecCreatorsP1:
+      "Se crei video, audio o altri formati adatti, ti invitiamo a pubblicare contenuti nuovi e provare la beta. Chi costruisce un pubblico all’inizio spesso lascia il segno: puoi diventare un creator top qui e ottenere visibilità anche fuori dalla piattaforma.",
+    usSecCreatorsP2:
+      "Più il catalogo è vario e autentico, meglio è per tutti — spettatori e creator.",
+
+    usSecLimitsTitle: "Limiti chiari: cosa non è ammesso",
+    usSecLimitsP1:
+      "Sosteniamo la libertà di espressione e rifiutiamo l’eccesso di censura, ma stream-in.com non è una zona senza regole. Siamo contrari a contenuti pensati per nuocere, sfruttare o discriminare.",
+    usSecLimitsIntroList:
+      "È vietato caricare o promuovere (tra le altre cose):",
+    usSecLimitsItemThreat: "Minacce o istigazione a fare del male a persone o gruppi.",
+    usSecLimitsItemViolence:
+      "Violenza esplicita gratuita o contenuti il cui scopo principale è lo shock grafico.",
+    usSecLimitsItemNudity:
+      "Nudità o materiale sessualizzato inappropriato per una piattaforma generalista.",
+    usSecLimitsItemPorn: "Pornografia o contenuti sessualmente espliciti.",
+    usSecLimitsItemRacism:
+      "Razzismo o odio verso persone per origine, religione, orientamento, identità o altre caratteristiche protette.",
+    usSecLimitsP2:
+      "Queste linee rosse servono a proteggere la community e un minimo di rispetto. Le applichiamo con serietà.",
+
+    usSecContactTitle: "Contatti",
+    usSecContactP1:
+      "Per domande generali, idee o segnalazioni legate alla piattaforma, contattaci. Valorizziamo il dialogo diretto con spettatori e creator.",
+
+    usAboutFooter:
+      "© 2026 stream-in.com — Piattaforma in beta. Grazie per far parte di questo inizio.",
   },
 
   ko: {
@@ -6615,6 +7156,66 @@ const translations = {
     playlistNavigation: "재생목록 탐색",
     playlistVideos: "재생목록 영상",
     nowPlaying: "현재 재생 중",
+
+    // Us / About stream-in.com (Beta)
+    usAboutPageTitle: "stream-in.com 소개",
+    usAboutPageSubtitle:
+      "stream-in.com은 베타 단계의 새로운 스트리밍 플랫폼입니다. 여기에서 우리의 비전, 시청자와 크리에이터 경험에 대한 방향, 그리고 우리가 지키는 명확한 기준을 소개합니다.",
+    usAboutPageBetaLine: "베타 버전 · 2026년 4월",
+
+    usSecWhatTitle: "stream-in.com은 무엇인가요?",
+    usSecWhatP1:
+      "stream-in.com은 최신 관점의 스트리밍 대안입니다. 말할 수 있는 것에 대한 과도하고 임의적인 장벽을 줄이고, 시청자와 콘텐츠 크리에이터에게 실제로 도움이 되는 제품 경험에 집중합니다.",
+    usSecWhatP2:
+      "현재는 베타입니다. 신중하게 개선하고 피드백을 듣으며, 플랫폼이 성장하는 만큼 기능을 더해 갑니다.",
+    usSecWhatHighlight:
+      "화면을 소음으로 채우기보다, 사용자와 크리에이터를 우선합니다.",
+
+    usSecFreedomTitle: "과도한 검열이 아닌, 표현의 자유",
+    usSecFreedomP1:
+      "우리는 표현의 자유가 의미 있게 작동하는 환경을 원합니다. 불투명한 결정이나 ‘잘못 말할까’ 하는 두려움 때문에 목소리가 사라지지 않도록 말입니다. 그렇다고 규칙이 없다는 뜻은 아닙니다. 정당한 의견을 벌주거나, ‘모더레이션’이라는 이유로 대화를 쉽게 지워 버리지 않겠다는 뜻입니다.",
+    usSecFreedomP2:
+      "우리는 균형을 추구합니다. 아이디어·형식·대화를 넓게 허용하되, 개입이 필요할 때는 명확한 기준으로 대응합니다.",
+
+    usSecExperienceTitle: "광고에 잠기지 않는 경험, 지속 가능성도 함께",
+    usSecExperienceP1:
+      "우리는 광고로 가득 찬 플랫폼이나, 피드가 ‘관심 없는 이해관계의 광고판’처럼 보이길 원치 않습니다. 동시에 플랫폼도 지속 가능해야 하고, 크리에이터도 자신의 콘텐츠로 수익을 얻을 수 있어야 합니다. 그래서 광고는 플랫폼을 유지하는 범위에서 존재할 수 있습니다. 핵심은 균형입니다: 관련성 있고 절제된 광고, 그리고 시청 경험을 압도하지 않는 광고.",
+    usSecExperienceP2:
+      "stream-in.com은 광고주와도 함께 성장하도록 설계되었습니다(대립이 아니라). 브랜드 세이프하고 사용자 중심의 경험 속에서, 프로모션이 생태계를 지원하되 ‘플랫폼의 본질’이 되지 않게 합니다.",
+
+    usSecMoneyTitle: "크리에이터 수익화: 가능한 시점에",
+    usSecMoneyP1:
+      "우리는 크리에이터가 업로드한 콘텐츠로 수익을 낼 수 있길 바랍니다. 이는 지속 가능성과 연결됩니다. 플랫폼이 수익 구조를 갖추거나, 충분한 광고주가 확보되어 공정한 분배가 가능해졌을 때 진행됩니다.",
+    usSecMoneyP2:
+      "그 전까지는 제품과 커뮤니티를 구축합니다. 수익화 프로그램의 구체 내용은 도입 시점에 투명하게 공유하겠습니다.",
+
+    usSecCreatorsTitle: "크리에이터 초대: 지금이 시작하기 좋을 때",
+    usSecCreatorsP1:
+      "영상·오디오 등 이곳에 맞는 콘텐츠를 만든다면, 새로운 작품을 올리고 베타를 함께 테스트해 주세요. 초기에 시청자를 확보한 크리에이터는 플랫폼을 만들고 성장시키는 주역이 됩니다. 여기서 탑 크리에이터가 되고, 플랫폼 밖에서도 더 큰 가시성을 얻을 수 있습니다.",
+    usSecCreatorsP2:
+      "카탈로그가 다양하고 진정성 있을수록 모두에게 좋습니다 — 시청자도, 크리에이터도요.",
+
+    usSecLimitsTitle: "명확한 한계: 허용되지 않는 콘텐츠",
+    usSecLimitsP1:
+      "우리는 표현의 자유를 지지하고 과도한 검열에 반대하지만, stream-in.com은 규칙 없는 공간이 아닙니다. 해를 끼치거나, 착취하거나, 차별하려는 콘텐츠에는 반대합니다.",
+    usSecLimitsIntroList: "다음과 같은 업로드/홍보는 금지됩니다(예시):",
+    usSecLimitsItemThreat: "개인 또는 집단에 대한 위협, 위해를 선동하는 내용.",
+    usSecLimitsItemViolence:
+      "과도한 잔혹/폭력 묘사(특히 충격 자체가 목적일 때).",
+    usSecLimitsItemNudity:
+      "일반 스트리밍 플랫폼에 부적절한 노출 또는 성적 콘텐츠.",
+    usSecLimitsItemPorn: "포르노 또는 노골적인 성적 콘텐츠.",
+    usSecLimitsItemRacism:
+      "출신·종교·성적 지향·정체성 등 보호 특성에 기반한 인종차별/혐오.",
+    usSecLimitsP2:
+      "이 레드라인은 커뮤니티와 최소한의 존중을 지키기 위한 것입니다. 우리는 이를 엄격하게 집행합니다.",
+
+    usSecContactTitle: "문의",
+    usSecContactP1:
+      "일반 문의, 제안, 플랫폼 관련 신고는 연락해 주세요. 시청자와 크리에이터와의 직접적인 소통을 중요하게 생각합니다.",
+
+    usAboutFooter:
+      "© 2026 stream-in.com — 베타 플랫폼. 이 시작에 함께해 주셔서 감사합니다.",
   },
 };
 
