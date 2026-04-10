@@ -6,6 +6,12 @@ const initialState = {
     error: false
 }
 
+const ensureReactionArrays = (video) => {
+    if (!video) return;
+    if (!Array.isArray(video.likes)) video.likes = [];
+    if (!Array.isArray(video.dislikes)) video.dislikes = [];
+};
+
 export const videoSlice = createSlice({
     name: 'video',
     initialState,
@@ -16,12 +22,14 @@ export const videoSlice = createSlice({
         fetchSuccess: (state, action) => {
             state.loading = false
             state.currentVideo = action.payload
+            ensureReactionArrays(state.currentVideo);
         },
         fetchFailure: (state) => {
             state.loading = false
             state.error = true
         },
         like: (state, action) => {
+            ensureReactionArrays(state.currentVideo);
             const index = state.currentVideo.likes.findIndex(
                 (userId) => userId === action.payload
             );
@@ -42,6 +50,7 @@ export const videoSlice = createSlice({
             }
         },
       dislike: (state, action) => {
+        ensureReactionArrays(state.currentVideo);
         const index = state.currentVideo.dislikes.findIndex(
             (userId) => userId === action.payload
         );

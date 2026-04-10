@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import Navbar from "./components/Navbar";
+import BetaNoticeBar from "./components/BetaNoticeBar";
 import BackButton from "./components/BackButton";
 import { darkTheme, lightTheme, sunsetTheme, cyberpunkTheme,sunriseTheme, vintageTheme } from "./utils/Theme";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
@@ -90,6 +91,7 @@ function App() {
         <BrowserRouter>
           <Main>
             <Navbar themeMode={themeMode} setThemeMode={setThemeMode} />
+            <BetaNoticeBar donationUrl="https://example.com/donate" />
             <BackButton />
             {/* SEO: metadatos por defecto (cada página puede sobreescribirlos) */}
             <SEOHead />

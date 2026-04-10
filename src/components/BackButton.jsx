@@ -15,12 +15,12 @@ const rotate180 = keyframes`
 
 const ButtonContainer = styled.div`
   position: fixed;
-  top: 60px;
+  top: calc(60px + 44px);
   left: 15px;
   z-index: 99;
   
   @media (max-width: 768px) {
-    top: 56px;
+    top: calc(56px + 44px);
     left: 10px;
   }
 `;

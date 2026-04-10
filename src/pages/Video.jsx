@@ -541,6 +541,10 @@ const Video = () => {
     description: '',
     videoId: null
   });
+  const likes = Array.isArray(currentVideo?.likes) ? currentVideo.likes : [];
+  const dislikes = Array.isArray(currentVideo?.dislikes) ? currentVideo.dislikes : [];
+  const hasLiked = currentUser?._id ? likes.includes(currentUser._id) : false;
+  const hasDisliked = currentUser?._id ? dislikes.includes(currentUser._id) : false;
 
   const openLoginModal = () => setShowLoginModal(true);
   const closeLoginModal = () => setShowLoginModal(false);
@@ -585,7 +589,8 @@ const Video = () => {
 
   const handleLike = async () => {
     if (!currentUser) return openLoginModal();
-    const res = currentVideo.likes.includes(currentUser._id)
+    if (!currentVideo?._id) return;
+    const res = hasLiked
       ? await axios.put(`/users/notlike/${currentVideo._id}`)
       : await axios.put(`/users/like/${currentVideo._id}`);
     if (res.status === 200) dispatch(like(currentUser._id));
@@ -593,7 +598,8 @@ const Video = () => {
 
   const handleDislike = async () => {
     if (!currentUser) return openLoginModal();
-    const res = currentVideo.dislikes.includes(currentUser._id)
+    if (!currentVideo?._id) return;
+    const res = hasDisliked
       ? await axios.put(`/users/notdislike/${currentVideo._id}`)
       : await axios.put(`/users/dislike/${currentVideo._id}`);
     if (res.status === 200) dispatch(dislike(currentUser._id));
@@ -794,24 +800,24 @@ const Video = () => {
                         <BiLike
                           size={26}
                           color={
-                            currentVideo.likes.includes(currentUser?._id)
+                            hasLiked
                               ? "#0b67dc"
                               : "white"
                           }
                         />
-                        {currentVideo.likes.length}
+                        {likes.length}
                       </Action>
 
                       <Action onClick={handleDislike}>
                         <BiDislike
                           size={26}
                           color={
-                            currentVideo.dislikes.includes(currentUser?._id)
+                            hasDisliked
                               ? "#e94560"
                               : "white"
                           }
                         />
-                        {currentVideo.dislikes.length}
+                        {dislikes.length}
                       </Action>
 
                       <ClassificationText>

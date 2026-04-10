@@ -1495,7 +1495,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     return () => {
       if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
     };
-  }, [currentVideo]);
+  }, [currentVideo?._id]);
 
   /* ========== Sticky Player ========== */
 
@@ -1558,7 +1558,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   // Resetear el estado de dismiss al cambiar de video
   useEffect(() => {
     setStickyDismissed(false);
-  }, [currentVideo]);
+  }, [currentVideo?._id]);
 
   /* ========== Cleanup ========== */
   useEffect(() => {
