@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { loginSuccess } from "../redux/userSlice";
 import { uploadToB2 } from "../utils/uploadB2";
 import { useLanguage } from "../utils/LanguageContext";
 
@@ -66,11 +67,16 @@ const Label = styled.span`
 
 const Input = styled.input`
   background: ${({ theme }) => theme.bg || "#202020"};
-  border: 1px solid ${({ theme }) => theme.soft || "#333"};
+  border: 1px solid ${({ theme, error }) => error ? "#ff5252" : (theme.soft || "#333")};
   border-radius: 12px;
   padding: 12px;
   color: ${({ theme }) => theme.text || "#fff"};
   font-size: 15px;
+  
+  &:focus {
+    outline: none;
+    border-color: ${({ error }) => error ? "#ff5252" : "#3ea6ff"};
+  }
 `;
 
 const Textarea = styled.textarea`
@@ -128,6 +134,14 @@ const ErrorText = styled.div`
   border-radius: 8px;
 `;
 
+const SuccessText = styled.div`
+  font-size: 13px;
+  color: #4caf50;
+  padding: 8px;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 8px;
+`;
+
 const Preview = styled.img`
   width: 100%;
   max-height: 160px;
@@ -149,6 +163,21 @@ const SaveButton = styled.button`
   pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
 `;
 
+const SlugPreview = styled.div`
+  font-size: 12px;
+  color: ${({ theme }) => theme.textSoft || "#aaa"};
+  margin-top: 4px;
+`;
+
+const ValidationMessage = styled.div`
+  font-size: 12px;
+  color: ${({ available }) => available ? "#4caf50" : "#ff5252"};
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+
 export const UploadProfile = ({ setOpen }) => {
   const [img, setImg] = useState(null);
   const [imgBanner, setImgBanner] = useState(null);
@@ -160,9 +189,13 @@ export const UploadProfile = ({ setOpen }) => {
   const [previewBanner, setPreviewBanner] = useState(null);
   const [inputs, setInputs] = useState({});
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [nameChecking, setNameChecking] = useState(false);
+  const [nameAvailable, setNameAvailable] = useState(null);
   const { t } = useLanguage();
 
   const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [imgData, setImgData] = useState(null);
@@ -173,7 +206,50 @@ export const UploadProfile = ({ setOpen }) => {
     (imgBannerPorc > 0 && imgBannerPorc < 100);
 
   const handleChanges = (e) => {
-    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setInputs((prev) => ({ ...prev, [name]: value }));
+    setError(null);
+    setSuccess(null);
+    
+    // Verificar disponibilidad del nombre cuando cambie
+    if (name === 'name' && value.trim()) {
+      checkNameAvailability(value.trim());
+    } else if (name === 'name' && !value.trim()) {
+      setNameAvailable(null);
+    }
+  };
+
+  const checkNameAvailability = async (name) => {
+    if (!name || name === currentUser?.name) {
+      setNameAvailable(null);
+      return;
+    }
+    
+    setNameChecking(true);
+    try {
+      // Intentar actualizar con el nuevo nombre para verificar si está disponible
+      // El backend retornará error 400 si el nombre ya existe
+      await axios.put(`/users/${currentUser._id}`, { name }, {
+        withCredentials: true,
+        validateStatus: (status) => status < 500 // Aceptar 400 como respuesta válida
+      }).then(res => {
+        if (res.status === 200) {
+          setNameAvailable(true);
+        } else if (res.status === 400 && res.data?.message?.includes('taken')) {
+          setNameAvailable(false);
+        } else {
+          setNameAvailable(null);
+        }
+      });
+    } catch (err) {
+      if (err.response?.status === 400 && err.response?.data?.message?.includes('taken')) {
+        setNameAvailable(false);
+      } else {
+        setNameAvailable(null);
+      }
+    } finally {
+      setNameChecking(false);
+    }
   };
 
   const handleImgChange = (e) => {
@@ -240,17 +316,60 @@ export const UploadProfile = ({ setOpen }) => {
       });
   }, [imgBanner]);
 
+  const generateSlug = (name) => {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  };
+
   const handleUpload = async () => {
     try {
+      // Si hay un nombre nuevo, verificar disponibilidad primero
+      if (inputs.name && inputs.name.trim()) {
+        if (inputs.name.trim() !== currentUser?.name) {
+          // Verificar que el nombre esté disponible
+          setNameChecking(true);
+          try {
+            const checkRes = await axios.put(`/users/${currentUser._id}`, { name: inputs.name.trim() }, {
+              withCredentials: true,
+              validateStatus: () => true
+            });
+            
+            if (checkRes.status === 400 && checkRes.data?.message?.includes('taken')) {
+              setError(t("usernameTaken") || "This username is already taken");
+              setNameChecking(false);
+              return;
+            }
+          } catch (checkErr) {
+            if (checkErr.response?.status === 400 && checkErr.response?.data?.message?.includes('taken')) {
+              setError(t("usernameTaken") || "This username is already taken");
+              setNameChecking(false);
+              return;
+            }
+          }
+          setNameChecking(false);
+        }
+      }
+      
       const res = await axios.put(`/users/${currentUser._id}`, inputs, {
         withCredentials: true,
       });
-      setOpen(false);
-      if (res.status === 200) navigate("/signin");
+      
+      if (res.status === 200) {
+        // Actualizar el usuario en Redux con los nuevos datos
+        dispatch(loginSuccess(res.data));
+        setSuccess(t("profileUpdated") || "Profile updated successfully!");
+        
+        // Cerrar modal después de 1.5 segundos
+        setTimeout(() => {
+          setOpen(false);
+        }, 1500);
+      }
     } catch (err) {
       setError(err.response?.data?.message || t("errorSaving"));
     }
   };
+
+  const newSlug = inputs.name ? generateSlug(inputs.name) : (currentUser?.slug || '');
+  const hasChanges = inputs.name || inputs.descriptionAccount || inputs.img || inputs.imgBanner;
 
   return (
     <Container>
@@ -261,6 +380,7 @@ export const UploadProfile = ({ setOpen }) => {
         </Header>
 
         {error && <ErrorText>{error}</ErrorText>}
+        {success && <SuccessText>{success}</SuccessText>}
 
         <Section>
           <Label>{t("profileImage")}</Label>
@@ -282,7 +402,33 @@ export const UploadProfile = ({ setOpen }) => {
 
         <Section>
           <Label>{t("name")}</Label>
-          <Input name="name" placeholder={t("yourName")} onChange={handleChanges} />
+          <Input 
+            name="name" 
+            placeholder={currentUser?.name || t("yourName")} 
+            onChange={handleChanges}
+            defaultValue={currentUser?.name || ''}
+            error={nameAvailable === false}
+          />
+          {inputs.name && (
+            <SlugPreview>
+              stream-in.com/@{newSlug}
+            </SlugPreview>
+          )}
+          {nameChecking && (
+            <ValidationMessage available={null}>
+              {t("checking") || "Checking availability..."}
+            </ValidationMessage>
+          )}
+          {!nameChecking && nameAvailable === true && (
+            <ValidationMessage available={true}>
+              ✓ {t("usernameAvailable") || "Username available"}
+            </ValidationMessage>
+          )}
+          {!nameChecking && nameAvailable === false && (
+            <ValidationMessage available={false}>
+              ✕ {t("usernameTaken") || "Username already taken"}
+            </ValidationMessage>
+          )}
         </Section>
 
         <Section>
@@ -292,6 +438,7 @@ export const UploadProfile = ({ setOpen }) => {
             name="descriptionAccount"
             placeholder={t("aboutYou")}
             onChange={handleChanges}
+            defaultValue={currentUser?.descriptionAccount || ''}
           />
         </Section>
 
@@ -313,7 +460,10 @@ export const UploadProfile = ({ setOpen }) => {
           </UploadBox>
         </Section>
 
-        <SaveButton disabled={isUploading} onClick={handleUpload}>
+        <SaveButton 
+          disabled={isUploading || nameChecking || nameAvailable === false} 
+          onClick={handleUpload}
+        >
           {isUploading ? t("uploading") : t("save")}
         </SaveButton>
       </Modal>
