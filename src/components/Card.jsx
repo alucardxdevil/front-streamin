@@ -174,6 +174,31 @@ const InfoDuration = styled.span`
   backdrop-filter: blur(3px);
 `;
 
+// Badge de clasificación
+const InfoClassification = styled.span`
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  background: ${({ classification }) => {
+    switch(classification) {
+      case 'A': return 'rgba(76, 175, 80, 0.85)';
+      case 'B': return 'rgba(255, 193, 7, 0.85)';
+      case 'C': return 'rgba(255, 152, 0, 0.85)';
+      case 'D': return 'rgba(244, 67, 54, 0.85)';
+      default: return 'rgba(76, 175, 80, 0.85)';
+    }
+  }};
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+`;
+
 // Sección de información
 const Details = styled.div`
   display: flex;
@@ -323,6 +348,7 @@ const Card = ({ type, video }) => {
         <PlayOverlay>
           <FaPlay />
         </PlayOverlay>
+        <InfoClassification classification={video?.classification}>{video?.classification || "A"}</InfoClassification>
         <InfoDuration>{formattedTotalDuration}</InfoDuration>
       </ImageWrapper>
       <Details type={type}>
