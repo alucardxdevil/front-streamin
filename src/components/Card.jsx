@@ -167,7 +167,7 @@ const InfoDuration = styled.span`
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.2px;
-  background: rgba(18, 18, 18, 0.7);
+  background: rgba(228, 60, 98, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
   -webkit-backdrop-filter: blur(3px);

@@ -579,13 +579,20 @@ const AdCardSubtitle = styled.p`
 
 const AdCard = ({ t }) => (
   <AdCardContainer>
-    <ins className="adsbygoogle"
-        style={{ display: 'block', width: '100%', height: '250px' }}
-        data-ad-client="ca-pub-7445263311603329"
-        data-ad-slot="1234567890"
-        data-ad-format="auto"
-        data-full-width-responsive="true">
-    </ins>
+    <AdCardImageArea>
+      <AdCardIcon>
+        <FaBullhorn />
+      </AdCardIcon>
+      <AdCardBadge>{t("adLabel")}</AdCardBadge>
+    </AdCardImageArea>
+    <AdCardDetails>
+      <AdCardTexts>
+        <AdCardTitle>{t("adCardTitle")}</AdCardTitle>
+        <AdCardSubtitle>
+          <MdCampaign /> {t("adCardSubtitle")}
+        </AdCardSubtitle>
+      </AdCardTexts>
+    </AdCardDetails>
   </AdCardContainer>
 );
 
@@ -853,16 +860,6 @@ const Home = ({ type }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [hasMore, loading, feedMode, forYouPlaceholder]);
 
-  // Cargar anuncios de Google Adsense
-  useEffect(() => {
-      const ads = document.querySelectorAll('.adsbygoogle');
-      ads.forEach((ad) => {
-          if (!ad.getAttribute('data-adsbygoogle-status')) {
-              (window.adsbygoogle = window.adsbygoogle || []).push({});
-          }
-      });
-  });
-
   const retryAfterError = () => {
     const cancelledRef = { current: false };
     setError(null);
@@ -943,13 +940,11 @@ const Home = ({ type }) => {
 
         {/* Banner publicitario secundario — misma anchura, menor altura */}
         <SecondaryAdBanner>
-          <ins className="adsbygoogle"
-              style={{ display: 'block', width: '100%', height: '100px' }}
-              data-ad-client="ca-pub-7445263311603329"
-              data-ad-slot="1234567890"
-              data-ad-format="auto"
-              data-full-width-responsive="true">
-          </ins>
+          <AdBannerLabel>{t("adLabel")}</AdBannerLabel>
+          <AdBannerContent>
+            <FaBullhorn />
+            <span>{t("adBannerText")}</span>
+          </AdBannerContent>
         </SecondaryAdBanner>
       </HeaderWrapper>
 
