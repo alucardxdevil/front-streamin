@@ -33,5 +33,5 @@
   Cache-Control: public, max-age=86400
 
 # Imágenes públicas: cache largo
-/logo-pest.jpg
+/logo-pest.png
   Cache-Control: public, max-age=604800

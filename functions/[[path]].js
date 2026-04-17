@@ -124,7 +124,7 @@ function build404Html(pathname) {
   <meta name="robots" content="noindex, nofollow" />
   <meta property="og:title" content="Page Not Found | ${SITE_NAME}" />
   <meta property="og:description" content="The page you are looking for does not exist." />
-  <meta property="og:image" content="${SITE_URL}/logo-pest.jpg" />
+  <meta property="og:image" content="${SITE_URL}/logo-pest.png" />
   <meta property="og:url" content="${SITE_URL}" />
   <link rel="canonical" href="${SITE_URL}" />
 </head>

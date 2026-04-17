@@ -1,5 +1,5 @@
 # Cloudflare Pages — Redirects
-# Los archivos estáticos en public/ (robots.txt, logo-pest.jpg, etc.)
+# Los archivos estáticos en public/ (robots.txt, logo-pest.png, etc.)
 # se sirven automáticamente ANTES de estas reglas.
 
 # SPA catch-all: Todas las rutas no-estáticas sirven index.html

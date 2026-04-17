@@ -15,7 +15,7 @@ const seoConfig = {
   defaultTitle: 'stream-in — Share and discover videos',
   defaultDescription:
     'stream-in is the platform for uploading, sharing, and discovering videos from independent creators. Explore trends, follow your favorite creators, and enjoy high-quality content.',
-  defaultImage: `${SITE_URL}/logo-pest.jpg`,
+  defaultImage: `${SITE_URL}/logo-pest.png`,
   twitterHandle: '@streamin',
   locale: 'en_US',
 };
