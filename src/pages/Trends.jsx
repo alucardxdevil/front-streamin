@@ -653,6 +653,16 @@ function Trends({ }) {
     fetchTrends();
   }, []);
 
+  // Cargar anuncios de Google Adsense
+  useEffect(() => {
+      const ads = document.querySelectorAll('.adsbygoogle');
+      ads.forEach((ad) => {
+          if (!ad.getAttribute('data-adsbygoogle-status')) {
+              (window.adsbygoogle = window.adsbygoogle || []).push({});
+          }
+      });
+  });
+
   const formatDuration = (seconds) => {
     if (!seconds) return "0:00";
     const mins = Math.floor(seconds / 60);
@@ -756,14 +766,13 @@ function Trends({ }) {
           <Subtitle>{t("discoverPopular")}</Subtitle>
         </HeaderSection>
         <SecondaryAdBanner>
-          <AdBannerLabel>{t("adLabel")}</AdBannerLabel>
-          <AdBannerContent>
-            <FaBullhorn />
-            <span>
-              <MdCampaign style={{ marginRight: "4px" }} />
-              {t("adBannerText")}
-            </span>
-          </AdBannerContent>
+          <ins className="adsbygoogle"
+              style={{ display: 'block', width: '100%', height: '100px' }}
+              data-ad-client="ca-pub-7445263311603329"
+              data-ad-slot="1234567890"
+              data-ad-format="auto"
+              data-full-width-responsive="true">
+          </ins>
         </SecondaryAdBanner>
       </HeaderWrapper>
 

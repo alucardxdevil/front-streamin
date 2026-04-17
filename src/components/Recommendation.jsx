@@ -183,6 +183,16 @@ export const Recommendation = ({tags, currentPlayingVideoId}) => {
         fetchVideos(0);
     }, [tags, currentPlayingVideoId]);
 
+    // Cargar anuncios de Google Adsense
+    useEffect(() => {
+        const ads = document.querySelectorAll('.adsbygoogle');
+        ads.forEach((ad) => {
+            if (!ad.getAttribute('data-adsbygoogle-status')) {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+            }
+        });
+    });
+
     const lastCardElement = (node) => {
         if (loading) return;
         if (observer.current) observer.current.disconnect();
@@ -204,8 +214,13 @@ export const Recommendation = ({tags, currentPlayingVideoId}) => {
         <Container>
             {/* Espacio reservado para publicidad — se reemplazará con el componente de anuncio */}
             <AdPlaceholder>
-                <AdIcon>📢</AdIcon>
-                <AdLabel>{t("adLabel")}</AdLabel>
+                <ins className="adsbygoogle"
+                    style={{ display: 'block', width: '100%', height: '160px' }}
+                    data-ad-client="ca-pub-7445263311603329"
+                    data-ad-slot="1234567890"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true">
+                </ins>
             </AdPlaceholder>
 
             {/* Las cards de recomendación hacen scroll independientemente del ad */}
