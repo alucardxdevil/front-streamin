@@ -5,10 +5,10 @@ import styled from "styled-components";
 import { format } from "timeago.js";
 import { formats } from "../pages/Video";
 import { FiEdit3, FiTrash2 } from "react-icons/fi";
-import { EditVideo } from "./EditVideo";
 import { DeleteAlert } from "./DeleteAlert";
 import defaultProfile from "../img/profileUser.png";
 import { useLanguage } from "../utils/LanguageContext";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   margin-bottom: 20px;
@@ -251,6 +251,7 @@ const Overlay = styled.div`
 
 const CardSec = ({ video }) => {
   const [channel, setChannel] = useState({});
+  const navigate = useNavigate();
   const { t } = useLanguage();
 
   const formattedTotalDuration = formats(video.duration);
@@ -266,8 +267,6 @@ const CardSec = ({ video }) => {
   const formattedViews = video.views.toLocaleString();
   const [open, setOpen] = useState(false);
   const [openO, setOpenO] = useState(false);
-
-  const navigate = useNavigate();
 
   return (
     <>
@@ -303,7 +302,7 @@ const CardSec = ({ video }) => {
           </InfoSection>
 
           <ActionsSection>
-            <EditButton onClick={() => setOpen(true)}>
+            <EditButton onClick={() => navigate(`/edit-video/${video._id}`)}>
               <FiEdit3 />
               {t("edit")}
             </EditButton>
@@ -314,15 +313,6 @@ const CardSec = ({ video }) => {
           </ActionsSection>
         </Container>
       </Wrapper>
-
-      {open && (
-        <>
-          <Overlay onClick={() => setOpen(false)} />
-          <Popover>
-            <EditVideo setOpen={setOpen} videoId={video._id} />
-          </Popover>
-        </>
-      )}
 
       {openO && (
         <>

@@ -32,6 +32,8 @@ import { PlaylistPlayerPage } from "./pages/PlaylistPlayer";
 import { SharedPlaylistRedirect } from "./pages/SharedPlaylistRedirect";
 import Advertise from "./pages/Advertise";
 import SEOHead from "./components/seo/SEOHead";
+import UploadPage from "./pages/Upload";
+import EditVideoPage from "./pages/EditVideo";
 
 
 const GlobalStyle = createGlobalStyle`
@@ -128,6 +130,8 @@ function App() {
                     <Route path="playlist/:userId/:playlistId" element={<PlaylistDetailPage />} />
                     <Route path="playlist-player/:userId/:playlistId" element={<PlaylistPlayerPage />} />
                     <Route path="shared-playlist/:playlistId" element={<SharedPlaylistRedirect />} />
+                    <Route path="upload" element={<UploadPage />} />
+                    <Route path="edit-video/:id" element={<EditVideoPage />} />
                     <Route path="*" element={<NotFound/>} />
                   </Route>
                 </Routes>

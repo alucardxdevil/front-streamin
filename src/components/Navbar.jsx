@@ -7,7 +7,6 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "../utils/LanguageContext";
 import { useSelector } from "react-redux";
-import { Upload } from "./Upload";
 import { AiOutlineVideoCameraAdd } from "react-icons/ai";
 import Navbbar from "./Navbbar";
 import LogoNav from "../img/logo-banner.png";
@@ -273,7 +272,6 @@ const NameChannel = styled.span`
 
 const Navbar = ({ themeMode, setThemeMode }) => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
@@ -339,7 +337,7 @@ const Navbar = ({ themeMode, setThemeMode }) => {
             {currentUser ? (
               <AiOutlineVideoCameraAdd
                 style={{ fontSize: 28, color: "#e94560", cursor: "pointer" }}
-                onClick={() => setOpen(true)}
+                onClick={() => navigate("/upload")}
               />
             ) : (
               <>
@@ -382,8 +380,6 @@ const Navbar = ({ themeMode, setThemeMode }) => {
           }} 
         />
       </MobileSearchContainer>
-
-      {open && <Upload setOpen={setOpen} />}
     </>
   );
 };
