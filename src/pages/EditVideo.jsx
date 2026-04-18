@@ -9,7 +9,6 @@ import {
   MAX_VIDEO_UPLOAD_BYTES,
   MAX_IMAGE_UPLOAD_BYTES,
 } from "../constants/uploadLimits";
-import Navbar from "../components/Navbar";
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -18,7 +17,7 @@ const PageContainer = styled.div`
 `;
 
 const Container = styled.div`
-  max-width: 720px;
+  max-width: 1100px;
   margin: 0 auto;
   background: ${({ theme }) => theme.bgLighter || "#181818"};
   color: ${({ theme }) => theme.text || "#fff"};
@@ -38,6 +37,23 @@ const Header = styled.div`
 const Title = styled.h2`
   font-size: 22px;
   font-weight: 600;
+`;
+
+// Layout de dos columnas
+const TwoColumnLayout = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 const Section = styled.div`
@@ -89,6 +105,7 @@ const Input = styled.input`
   padding: 12px;
   color: ${({ theme }) => theme.text || "#fff"};
   font-size: 15px;
+  width: 100%;
 `;
 
 const Textarea = styled.textarea`
@@ -99,6 +116,8 @@ const Textarea = styled.textarea`
   color: ${({ theme }) => theme.text || "#fff"};
   resize: none;
   font-size: 15px;
+  width: 100%;
+  min-height: 100px;
 `;
 
 const UploadBox = styled.label`
@@ -108,6 +127,11 @@ const UploadBox = styled.label`
   text-align: center;
   cursor: pointer;
   color: ${({ theme }) => theme.textSoft || "#aaa"};
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.text || "#fff"};
+  }
 
   input {
     display: none;
@@ -122,6 +146,11 @@ const VideoUploadBox = styled.label`
   cursor: pointer;
   color: ${({ theme }) => theme.textSoft || "#aaa"};
   background: ${({ theme }) => theme.bg || "#202020"};
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.text || "#fff"};
+  }
 
   input {
     display: none;
@@ -183,9 +212,10 @@ const BetaLimitsHint = styled.p`
 
 const PreviewImage = styled.img`
   width: 100%;
-  max-height: 160px;
+  max-height: 200px;
   object-fit: cover;
   border-radius: 12px;
+  border: 2px solid ${({ theme }) => theme.soft || "#333"};
 `;
 
 const SaveButton = styled.button`
@@ -200,6 +230,7 @@ const SaveButton = styled.button`
   color: #fff;
   opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
   pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
+  width: 100%;
 `;
 
 const BackLink = styled.button`
@@ -211,12 +242,19 @@ const BackLink = styled.button`
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 16px;
   padding: 0;
 
   &:hover {
     color: ${({ theme }) => theme.text || "#fff"};
   }
+`;
+
+const FileInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: ${({ theme }) => theme.textSoft || "#aaa"};
 `;
 
 export default function EditVideoPage() {
@@ -369,97 +407,105 @@ export default function EditVideoPage() {
 
         {error && <ErrorText>{error}</ErrorText>}
 
-        <Section>
-          <Label>{t("currentVideo")}</Label>
-          <CurrentVideo>
-            <VideoIcon><FaVideo /></VideoIcon>
-            <VideoInfo>
-              <VideoTitle>{inputs.title || t("noTitle")}</VideoTitle>
-              {originalData?.duration && (
-                <VideoDuration>
-                  {t("duration")}:{" "}
-                  {Math.floor(originalData.duration / 60)}:
-                  {String(originalData.duration % 60).padStart(2, "0")}
-                </VideoDuration>
+        <TwoColumnLayout>
+          {/* LADO IZQUIERDO - Inputs */}
+          <Column>
+            <Section>
+              <Label>{t("currentVideo")}</Label>
+              <CurrentVideo>
+                <VideoIcon><FaVideo /></VideoIcon>
+                <VideoInfo>
+                  <VideoTitle>{inputs.title || t("noTitle")}</VideoTitle>
+                  {originalData?.duration && (
+                    <VideoDuration>
+                      {t("duration")}:{" "}
+                      {Math.floor(originalData.duration / 60)}:
+                      {String(originalData.duration % 60).padStart(2, "0")}
+                    </VideoDuration>
+                  )}
+                </VideoInfo>
+              </CurrentVideo>
+            </Section>
+
+            <Section>
+              <Label>{t("title")}</Label>
+              <Input
+                name="title"
+                placeholder={t("title")}
+                value={inputs.title || ""}
+                onChange={handleChange}
+              />
+            </Section>
+
+            <Section>
+              <Label>{t("description")}</Label>
+              <Textarea
+                rows={4}
+                name="description"
+                placeholder={t("description")}
+                value={inputs.description || ""}
+                onChange={handleChange}
+              />
+            </Section>
+
+            <Section>
+              <Label>{t("tags")}</Label>
+              <Input
+                placeholder={t("tagsPlaceholder")}
+                value={tags.join(", ")}
+                onChange={handleTags}
+              />
+            </Section>
+
+            <SaveButton disabled={isUploading} onClick={handleSave}>
+              {isUploading ? t("saving") : t("save")}
+            </SaveButton>
+          </Column>
+
+          {/* LADO DERECHO - Archivos */}
+          <Column>
+            <Section>
+              <Label>{t("replaceVideo")}</Label>
+              {videoPorc > 0 && videoPorc < 100 && (
+                <VideoProgressBar value={videoPorc}><div /></VideoProgressBar>
               )}
-            </VideoInfo>
-          </CurrentVideo>
-        </Section>
+              {videoComplete && <CompleteText>✔ {t("videoUploaded")}</CompleteText>}
+              {!videoComplete && videoPorc === 0 && (
+                <VideoUploadBox>
+                  <FaCloudUploadAlt style={{ fontSize: "32px", marginBottom: "8px" }} />
+                  <div>{t("clickToSelectVideo")}</div>
+                  <div style={{ fontSize: "12px", marginTop: "4px" }}>{t("videoFormats")}</div>
+                  <input
+                    type="file"
+                    accept="video/mp4,video/webm,video/x-matroska"
+                    onChange={handleVideoChange}
+                    disabled={videoComplete}
+                  />
+                </VideoUploadBox>
+              )}
+            </Section>
 
-        <Section>
-          <Label>{t("replaceVideo")}</Label>
-          {videoPorc > 0 && videoPorc < 100 && (
-            <VideoProgressBar value={videoPorc}><div /></VideoProgressBar>
-          )}
-          {videoComplete && <CompleteText>✔ {t("videoUploaded")}</CompleteText>}
-          {!videoComplete && videoPorc === 0 && (
-            <VideoUploadBox>
-              <FaCloudUploadAlt style={{ fontSize: "32px", marginBottom: "8px" }} />
-              <div>{t("clickToSelectVideo")}</div>
-              <div style={{ fontSize: "12px", marginTop: "4px" }}>{t("videoFormats")}</div>
-              <input
-                type="file"
-                accept="video/mp4,video/webm,video/x-matroska"
-                onChange={handleVideoChange}
-                disabled={videoComplete}
-              />
-            </VideoUploadBox>
-          )}
-        </Section>
-
-        <Section>
-          <Label>{t("thumbnail")}</Label>
-          {previewImg && <PreviewImage src={previewImg} />}
-          {imgPorc > 0 && imgPorc < 100 && (
-            <ProgressBar value={imgPorc}><div /></ProgressBar>
-          )}
-          {imgComplete && <CompleteText>✔ {t("imageUploaded")}</CompleteText>}
-          {!imgComplete && imgPorc === 0 && (
-            <UploadBox>
-              {t("clickToChangeImage")}
-              <input
-                type="file"
-                accept="image/jpeg, image/jpg, image/png, image/webp"
-                onChange={handleImgChange}
-                disabled={imgComplete}
-              />
-            </UploadBox>
-          )}
-        </Section>
-
-        <Section>
-          <Label>{t("title")}</Label>
-          <Input
-            name="title"
-            placeholder={t("title")}
-            value={inputs.title || ""}
-            onChange={handleChange}
-          />
-        </Section>
-
-        <Section>
-          <Label>{t("description")}</Label>
-          <Textarea
-            rows={4}
-            name="description"
-            placeholder={t("description")}
-            value={inputs.description || ""}
-            onChange={handleChange}
-          />
-        </Section>
-
-        <Section>
-          <Label>{t("tags")}</Label>
-          <Input
-            placeholder={t("tagsPlaceholder")}
-            value={tags.join(", ")}
-            onChange={handleTags}
-          />
-        </Section>
-
-        <SaveButton disabled={isUploading} onClick={handleSave}>
-          {isUploading ? t("saving") : t("save")}
-        </SaveButton>
+            <Section>
+              <Label>{t("thumbnail")}</Label>
+              {previewImg && <PreviewImage src={previewImg} />}
+              {imgPorc > 0 && imgPorc < 100 && (
+                <ProgressBar value={imgPorc}><div /></ProgressBar>
+              )}
+              {imgComplete && <CompleteText>✔ {t("imageUploaded")}</CompleteText>}
+              {!imgComplete && imgPorc === 0 && (
+                <UploadBox>
+                  {t("clickToChangeImage")}
+                  <input
+                    type="file"
+                    accept="image/jpeg, image/jpg, image/png, image/webp"
+                    onChange={handleImgChange}
+                    disabled={imgComplete}
+                  />
+                </UploadBox>
+              )}
+            </Section>
+          </Column>
+        </TwoColumnLayout>
       </Container>
     </PageContainer>
   );

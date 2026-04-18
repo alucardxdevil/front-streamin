@@ -8,7 +8,6 @@ import {
   MAX_VIDEO_UPLOAD_BYTES,
   MAX_IMAGE_UPLOAD_BYTES,
 } from "../constants/uploadLimits";
-import Navbar from "../components/Navbar";
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -17,7 +16,7 @@ const PageContainer = styled.div`
 `;
 
 const Container = styled.div`
-  max-width: 720px;
+  max-width: 1100px;
   margin: 0 auto;
   background: ${({ theme }) => theme.bgLighter || "#181818"};
   color: ${({ theme }) => theme.text || "#fff"};
@@ -40,6 +39,23 @@ const Title = styled.h2`
   font-weight: 600;
 `;
 
+// Layout de dos columnas
+const TwoColumnLayout = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
 const Section = styled.div`
   display: flex;
   flex-direction: column;
@@ -59,6 +75,7 @@ const Input = styled.input`
   padding: 12px;
   color: ${({ theme }) => theme.text || "#fff"};
   font-size: 15px;
+  width: 100%;
 `;
 
 const Select = styled.select`
@@ -68,6 +85,7 @@ const Select = styled.select`
   padding: 12px;
   color: ${({ theme }) => theme.text || "#fff"};
   font-size: 15px;
+  width: 100%;
 `;
 
 const Textarea = styled.textarea`
@@ -78,6 +96,8 @@ const Textarea = styled.textarea`
   color: ${({ theme }) => theme.text || "#fff"};
   resize: none;
   font-size: 15px;
+  width: 100%;
+  min-height: 100px;
 `;
 
 const UploadBox = styled.label`
@@ -87,6 +107,7 @@ const UploadBox = styled.label`
   text-align: center;
   cursor: pointer;
   color: ${({ theme }) => theme.textSoft || "#aaa"};
+  transition: all 0.3s ease;
 
   &:hover {
     border-color: ${({ theme }) => theme.text || "#fff"};
@@ -128,16 +149,18 @@ const ErrorText = styled.div`
 
 const PreviewImage = styled.img`
   width: 100%;
-  max-height: 160px;
+  max-height: 200px;
   object-fit: cover;
   border-radius: 12px;
+  border: 2px solid ${({ theme }) => theme.soft || "#333"};
 `;
 
 const PreviewVideo = styled.video`
   width: 100%;
-  max-height: 200px;
+  max-height: 250px;
   border-radius: 12px;
   background: #000;
+  border: 2px solid ${({ theme }) => theme.soft || "#333"};
 `;
 
 const SaveButton = styled.button`
@@ -152,6 +175,7 @@ const SaveButton = styled.button`
   color: #fff;
   opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
   pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
+  width: 100%;
 `;
 
 const StatusText = styled.div`
@@ -197,7 +221,6 @@ const BackLink = styled.button`
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 16px;
   padding: 0;
 
   &:hover {
@@ -205,14 +228,26 @@ const BackLink = styled.button`
   }
 `;
 
+const PreviewContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const FileInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: ${({ theme }) => theme.textSoft || "#aaa"};
+`;
+
 export default function UploadPage() {
-  // Archivos seleccionados (solo para preview local)
   const [imgFile, setImgFile] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
   const [previewImg, setPreviewImg] = useState(null);
   const [previewVideo, setPreviewVideo] = useState(null);
 
-  // Metadata del video
   const [inputs, setInputs] = useState({ classification: "A" });
   const [tags, setTags] = useState([]);
   const [localError, setLocalError] = useState(null);
@@ -221,7 +256,6 @@ export default function UploadPage() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  // Hook de upload + transcodificación HLS
   const {
     upload,
     cancel,
@@ -278,15 +312,6 @@ export default function UploadPage() {
     setPreviewVideo(URL.createObjectURL(file));
   };
 
-  /**
-   * Flujo completo de upload + transcodificación HLS:
-   *  1. Sube miniatura a B2 (vía proxy del servidor)
-   *  2. Obtiene presigned URL para el video
-   *  3. Sube MP4 directamente a B2 (sin pasar por el servidor)
-   *  4. Encola transcodificación en el backend (BullMQ + FFmpeg)
-   *  5. Hace polling hasta que status === 'ready'
-   *  6. Navega al video cuando está listo
-   */
   const handleUpload = async () => {
     if (!imgFile || !videoFile) {
       setLocalError(t("waitForUpload"));
@@ -300,7 +325,7 @@ export default function UploadPage() {
     setLocalError(null);
 
     try {
-      const result = await upload({
+      await upload({
         videoFile,
         imageFile: imgFile,
         title: inputs.title,
@@ -313,14 +338,12 @@ export default function UploadPage() {
     }
   };
 
-  // Navegar al video cuando la transcodificación termine
   React.useEffect(() => {
     if (isReady && videoId) {
       navigate(`/video/${videoId}`);
     }
   }, [isReady, videoId, navigate]);
 
-  // Determinar texto y estado del botón
   const getButtonText = () => {
     if (isUploading) return `${t("uploading")} ${uploadProgress}%`;
     if (isProcessing) return `${t("processing") || "Procesando"} ${transcodeProgress}%`;
@@ -332,7 +355,6 @@ export default function UploadPage() {
   const isButtonDisabled =
     isUploading || isProcessing || !imgFile || !videoFile || !inputs.title || !inputs.description;
 
-  // Determinar texto de estado
   const getStatusMessage = () => {
     switch (state) {
       case "uploading":
@@ -344,7 +366,7 @@ export default function UploadPage() {
       case "ready":
         return t("videoReady") || "¡Video listo para reproducir!";
       case "error":
-        return null; // Se muestra en ErrorText
+        return null;
       default:
         return null;
     }
@@ -367,7 +389,6 @@ export default function UploadPage() {
 
         {error && <ErrorText>{error}</ErrorText>}
 
-        {/* Estado de progreso */}
         {statusMessage && (
           <StatusText>
             {(isUploading || isProcessing) && <Spinner />}
@@ -375,104 +396,122 @@ export default function UploadPage() {
           </StatusText>
         )}
 
-        {/* Barra de progreso de subida */}
         {isUploading && uploadProgress > 0 && (
           <ProgressBar value={uploadProgress}>
             <div />
           </ProgressBar>
         )}
 
-        {/* Barra de progreso de transcodificación */}
         {isProcessing && transcodeProgress > 0 && (
           <ProgressBar value={transcodeProgress}>
             <div />
           </ProgressBar>
         )}
 
-        <Section>
-          <Label>{t("thumbnailImage")}</Label>
-          {previewImg && <PreviewImage src={previewImg} />}
-          <UploadBox>
-            {imgFile ? (
-              <CompleteText>✔ {imgFile.name}</CompleteText>
-            ) : (
-              t("clickToUploadImage")
-            )}
-            <input
-              type="file"
-              accept="image/jpeg, image/jpg, image/png, image/webp"
-              onChange={handleImgChange}
-              disabled={isUploading || isProcessing}
-            />
-          </UploadBox>
-        </Section>
+        <TwoColumnLayout>
+          {/* LADO IZQUIERDO - Inputs */}
+          <Column>
+            <Section>
+              <Label>{t("title")}</Label>
+              <Input
+                name="title"
+                placeholder={t("videoTitlePlaceholder")}
+                onChange={handleChange}
+                disabled={isUploading || isProcessing}
+              />
+            </Section>
 
-        <Section>
-          <Label>{t("videoFile")}</Label>
-          {previewVideo && <PreviewVideo src={previewVideo} controls />}
-          <UploadBox>
-            {videoFile ? (
-              <CompleteText>✔ {videoFile.name}</CompleteText>
-            ) : (
-              t("clickToUploadVideo")
-            )}
-            <input
-              type="file"
-              accept="video/mp4, video/webm, video/x-matroska"
-              onChange={handleVideoChange}
-              disabled={isUploading || isProcessing}
-            />
-          </UploadBox>
-        </Section>
+            <Section>
+              <Label>{t("description")}</Label>
+              <Textarea
+                rows={4}
+                name="description"
+                placeholder={t("descriptionPlaceholder")}
+                onChange={handleChange}
+                disabled={isUploading || isProcessing}
+              />
+            </Section>
 
-        <Section>
-          <Label>{t("title")}</Label>
-          <Input
-            name="title"
-            placeholder={t("videoTitlePlaceholder")}
-            onChange={handleChange}
-            disabled={isUploading || isProcessing}
-          />
-        </Section>
+            <Section>
+              <Label>{t("classification")}</Label>
+              <Select
+                name="classification"
+                value={inputs.classification}
+                onChange={handleChange}
+                disabled={isUploading || isProcessing}
+              >
+                <option value="A">A - {t("classA")}</option>
+                <option value="B">B - {t("classB")}</option>
+                <option value="C">C - {t("classC")}</option>
+                <option value="D">D - {t("classD")}</option>
+              </Select>
+            </Section>
 
-        <Section>
-          <Label>{t("description")}</Label>
-          <Textarea
-            rows={4}
-            name="description"
-            placeholder={t("descriptionPlaceholder")}
-            onChange={handleChange}
-            disabled={isUploading || isProcessing}
-          />
-        </Section>
+            <Section>
+              <Label>{t("tags")}</Label>
+              <Input
+                placeholder={t("tagsPlaceholder")}
+                onChange={handleTags}
+                disabled={isUploading || isProcessing}
+              />
+            </Section>
 
-        <Section>
-          <Label>{t("classification")}</Label>
-          <Select
-            name="classification"
-            value={inputs.classification}
-            onChange={handleChange}
-            disabled={isUploading || isProcessing}
-          >
-            <option value="A">A - {t("classA")}</option>
-            <option value="B">B - {t("classB")}</option>
-            <option value="C">C - {t("classC")}</option>
-            <option value="D">D - {t("classD")}</option>
-          </Select>
-        </Section>
+            <SaveButton disabled={isButtonDisabled} onClick={handleUpload}>
+              {getButtonText()}
+            </SaveButton>
+          </Column>
 
-        <Section>
-          <Label>{t("tags")}</Label>
-          <Input
-            placeholder={t("tagsPlaceholder")}
-            onChange={handleTags}
-            disabled={isUploading || isProcessing}
-          />
-        </Section>
+          {/* LADO DERECHO - Previsualizaciones */}
+          <Column>
+            <PreviewContainer>
+              <Section>
+                <Label>{t("thumbnailImage")}</Label>
+                {previewImg && <PreviewImage src={previewImg} />}
+                <UploadBox>
+                  {imgFile ? (
+                    <>
+                      <CompleteText>✔ {imgFile.name}</CompleteText>
+                      <FileInfo>
+                        {(imgFile.size / 1024 / 1024).toFixed(2)} MB
+                      </FileInfo>
+                    </>
+                  ) : (
+                    t("clickToUploadImage")
+                  )}
+                  <input
+                    type="file"
+                    accept="image/jpeg, image/jpg, image/png, image/webp"
+                    onChange={handleImgChange}
+                    disabled={isUploading || isProcessing}
+                  />
+                </UploadBox>
+              </Section>
 
-        <SaveButton disabled={isButtonDisabled} onClick={handleUpload}>
-          {getButtonText()}
-        </SaveButton>
+              <Section>
+                <Label>{t("videoFile")}</Label>
+                {previewVideo && <PreviewVideo src={previewVideo} controls />}
+                <UploadBox>
+                  {videoFile ? (
+                    <>
+                      <CompleteText>✔ {videoFile.name}</CompleteText>
+                      <FileInfo>
+                        {(videoFile.size / 1024 / 1024).toFixed(2)} MB
+                      </FileInfo>
+                    </>
+                  ) : (
+                    t("clickToUploadVideo")
+                  )}
+                  <input
+                    type="file"
+                    accept="video/mp4, video/webm, video/x-matroska"
+                    onChange={handleVideoChange}
+                    disabled={isUploading || isProcessing}
+                  />
+                </UploadBox>
+              </Section>
+            </PreviewContainer>
+          </Column>
+        </TwoColumnLayout>
       </Container>
     </PageContainer>
   );
