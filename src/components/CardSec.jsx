@@ -8,7 +8,6 @@ import { FiEdit3, FiTrash2 } from "react-icons/fi";
 import { DeleteAlert } from "./DeleteAlert";
 import defaultProfile from "../img/profileUser.png";
 import { useLanguage } from "../utils/LanguageContext";
-import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   margin-bottom: 20px;
