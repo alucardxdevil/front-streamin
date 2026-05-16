@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
 import styled, { keyframes } from "styled-components";
 import Hls from "hls.js";
 import { CircularProgress } from "@mui/material";
@@ -240,7 +241,7 @@ const ControlsWrapper = styled.div`
   /* El contenedor no captura toques: solo los hijos interactivos (data-player-control) */
   pointer-events: none;
   transition: opacity 0.35s ease;
-  z-index: 5;
+  z-index: 25;
 `;
 
 /* ===== Play/Pause Feedback Animation ===== */
@@ -615,10 +616,12 @@ const MenuOverlay = styled.div`
   min-width: 220px;
   max-height: 340px;
   overflow-y: auto;
-  z-index: 200;
+  z-index: 500;
   animation: ${fadeInScale} 0.2s ease;
   transform-origin: bottom right;
   touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
 
   /* Firefox scrollbar */
   scrollbar-width: thin;
@@ -878,10 +881,11 @@ const LoadingOverlay = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 15;
+  z-index: 8;
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 `;
 
 /* ============= Utils ============= */
@@ -1090,7 +1094,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   // Refs
   const hideTimeout = useRef(null);
   const lastTouchTapRef = useRef(0);
-  const lastSettingsActivateRef = useRef(0);
   const videoElRef = useRef(null);
   const playerRef = useRef({
     seekTo: function(seconds) {
@@ -1127,7 +1130,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const menuButtonRef = useRef(null);
   const menuPanelRef = useRef(null);
   const menuOpenRef = useRef(false);
-  const menuSuppressOutsideUntilRef = useRef(0);
   const clickTimeoutRef = useRef(null);
   const progressRafRef = useRef(null);
   const lastProgressSyncRef = useRef(0);
@@ -1567,7 +1569,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   }, [scheduleControlsHide]);
 
   const openSettingsMenu = useCallback(() => {
-    menuSuppressOutsideUntilRef.current = Date.now() + 600;
     menuOpenRef.current = true;
     clearTimeout(hideTimeout.current);
     bufferingRef.current = false;
@@ -1581,14 +1582,9 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     setMenuOpen(true);
   }, []);
 
-  const handleSettingsButtonActivate = useCallback(
+  const handleSettingsClick = useCallback(
     (e) => {
       e.stopPropagation();
-      e.preventDefault();
-      const now = Date.now();
-      if (now - lastSettingsActivateRef.current < 400) return;
-      lastSettingsActivateRef.current = now;
-
       if (menuOpenRef.current) {
         closeSettingsMenu();
       } else {
@@ -1597,27 +1593,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     },
     [closeSettingsMenu, openSettingsMenu]
   );
-
-  // Cerrar al tocar fuera (con retardo para no cerrar con el mismo toque que abre en móvil)
-  useEffect(() => {
-    if (!menuOpen) return;
-
-    const handleOutside = (e) => {
-      if (Date.now() < menuSuppressOutsideUntilRef.current) return;
-      if (menuButtonRef.current?.contains(e.target)) return;
-      if (menuPanelRef.current?.contains(e.target)) return;
-      closeSettingsMenu();
-    };
-
-    const attachTimer = window.setTimeout(() => {
-      document.addEventListener("pointerdown", handleOutside, true);
-    }, 400);
-
-    return () => {
-      window.clearTimeout(attachTimer);
-      document.removeEventListener("pointerdown", handleOutside, true);
-    };
-  }, [menuOpen, closeSettingsMenu]);
 
   /* ========== Firefox HLS playback recovery ========== */
   // En Firefox, cuando ReactPlayer pasa playing={true} con HLS, el primer
@@ -2286,7 +2261,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         <ClickOverlay onDoubleClick={handleStageDoublePointerUp} />
 
         {/* Loading spinner */}
-        {loading && !menuOpen && (
+        {loading && !menuOpen && !showControls && (
           <LoadingOverlay>
             <CircularProgress
               size={48}
@@ -2491,12 +2466,16 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   {...controlProps}
                   data-settings-trigger
                   type="button"
-                  onPointerUp={handleSettingsButtonActivate}
+                  onClick={handleSettingsClick}
                   title={t("settings")}
+                  aria-expanded={menuOpen}
+                  aria-haspopup="menu"
                   style={{
                     color: menuOpen && menuView === "main" ? "#5fa8ff" : undefined,
                     transition: "transform 0.3s ease, color 0.15s ease",
                     transform: menuOpen ? "rotate(30deg)" : "rotate(0deg)",
+                    position: "relative",
+                    zIndex: 30,
                   }}
                 >
                   <SettingsIcon />
@@ -2511,18 +2490,22 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           </BottomControls>
         </ControlsWrapper>
 
-        {/* Menú de ajustes: fuera de ControlsWrapper para no quedar oculto por opacity/pointer-events */}
-        {menuOpen && (
-          <MenuOverlay
-            ref={menuPanelRef}
-            data-player-menu
-            onPointerDown={(e) => e.stopPropagation()}
-            onPointerUp={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {renderMenuContent()}
-          </MenuOverlay>
-        )}
+        {/* Menú de ajustes (portal dentro del player, por encima del spinner) */}
+        {menuOpen &&
+          playerContainerRef.current &&
+          createPortal(
+            <MenuOverlay
+              ref={menuPanelRef}
+              data-player-menu
+              role="menu"
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {renderMenuContent()}
+            </MenuOverlay>,
+            playerContainerRef.current
+          )}
       </PlayerWrapper>
       </div>
     </VideoWrapper>
