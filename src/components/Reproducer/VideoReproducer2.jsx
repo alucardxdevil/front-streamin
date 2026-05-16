@@ -267,7 +267,7 @@ const CenterControls = styled.div`
   }
 `;
 
-const CenterButton = styled.button.attrs({ "data-player-control": true })`
+const CenterButton = styled.button`
   color: #f1f1f1;
   pointer-events: auto;
   font-size: ${({ $large }) => ($large ? "clamp(40px, 8vw, 70px)" : "clamp(28px, 5vw, 44px)")};
@@ -322,7 +322,7 @@ const BottomControls = styled.div`
 `;
 
 /* ===== Timeline / Progress Bar ===== */
-const TimelineContainer = styled.div.attrs({ "data-player-control": true })`
+const TimelineContainer = styled.div`
   position: relative;
   width: 100%;
   height: 20px;
@@ -431,7 +431,7 @@ const ControlGroup = styled.div`
   gap: 2px;
 `;
 
-const ControlBtn = styled.button.attrs({ "data-player-control": true })`
+const ControlBtn = styled.button`
   color: #e0e0e0;
   font-size: 24px;
   background: none;
@@ -517,7 +517,7 @@ const VolumeSliderWrap = styled.div`
   margin-left: 0;
 `;
 
-const VolumeSliderTrack = styled.div.attrs({ "data-player-control": true })`
+const VolumeSliderTrack = styled.div`
   position: relative;
   width: 100%;
   height: 4px;
@@ -552,7 +552,7 @@ const VolumeSliderThumb = styled.div`
 `;
 
 /* ===== Settings Menu ===== */
-const MenuOverlay = styled.div.attrs({ "data-player-control": true })`
+const MenuOverlay = styled.div`
   position: absolute;
   bottom: 56px;
   right: 0;
@@ -599,7 +599,7 @@ const MenuOverlay = styled.div.attrs({ "data-player-control": true })`
   }
 `;
 
-const MenuHeader = styled.div.attrs({ "data-player-control": true })`
+const MenuHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -628,7 +628,7 @@ const MenuHeader = styled.div.attrs({ "data-player-control": true })`
   }
 `;
 
-const MenuItem = styled.div.attrs({ "data-player-control": true })`
+const MenuItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -735,7 +735,7 @@ const CountdownButtons = styled.div`
   gap: 12px;
 `;
 
-const CountdownButton = styled.button.attrs({ "data-player-control": true })`
+const CountdownButton = styled.button`
   padding: 10px 22px;
   pointer-events: auto;
   font-size: 14px;
@@ -854,6 +854,9 @@ const isCoarsePointerDevice = () =>
   (window.matchMedia("(max-width: 768px)").matches ||
     window.matchMedia("(pointer: coarse)").matches ||
     "ontouchstart" in window);
+
+/** Marca controles interactivos para no propagar tap al overlay de play/pause */
+const controlProps = { "data-player-control": "" };
 
 /**
  * Convierte la altura reportada por hls.js a una etiqueta coherente con las
@@ -1012,6 +1015,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   // Refs
   const hideTimeout = useRef(null);
+  const videoElRef = useRef(null);
   const playerRef = useRef({
     seekTo: function(seconds) {
       var video = videoElRef.current;
@@ -1038,7 +1042,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
       if (video) video.pause();
     },
   });
-  const videoElRef = useRef(null); // Referencia directa al elemento video
   const playerContainerRef = useRef(null);
   const playerWrapperRef = useRef(null); // Ref para el wrapper del player (sticky)
   const countdownTimerRef = useRef(null);
@@ -1189,6 +1192,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     }
   }, [muted, volume, prevVolume]);
 
+  const getPointerClientX = useCallback((e) => {
+    if (e.clientX != null) return e.clientX;
+    if (e.changedTouches?.[0]) return e.changedTouches[0].clientX;
+    if (e.touches?.[0]) return e.touches[0].clientX;
+    return 0;
+  }, []);
+
   const handleVolumeChange = useCallback((e) => {
     const track = volumeTrackRef.current;
     if (!track) return;
@@ -1219,13 +1229,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   }, [handleVolumeChange]);
 
   /* ========== Seek / Timeline ========== */
-  const getPointerClientX = useCallback((e) => {
-    if (e.clientX != null) return e.clientX;
-    if (e.changedTouches?.[0]) return e.changedTouches[0].clientX;
-    if (e.touches?.[0]) return e.touches[0].clientX;
-    return 0;
-  }, []);
-
   const getTimeFromEvent = useCallback((e) => {
     const bar = timelineRef.current;
     if (!bar) return 0;
@@ -1266,13 +1269,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
     const onMove = (ev) => {
       if (ev.cancelable) ev.preventDefault();
-      const t = getTimeFromEvent(ev);
-      setPlayed(t / duration);
+      const pointerTime = getTimeFromEvent(ev);
+      setPlayed(pointerTime / duration);
     };
 
     const onUp = (ev) => {
-      const t = getTimeFromEvent(ev);
-      const f = t / duration;
+      const pointerTime = getTimeFromEvent(ev);
+      const f = pointerTime / duration;
       setPlayed(f);
       playerRef.current?.seekTo(f * duration);
       setSeeking(false);
@@ -1503,6 +1506,152 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     return () => clearInterval(interval);
   }, [playing, hasHLS, proxyVideoUrl]);
 
+  /* ========== HLS setup (fuera del ref callback para evitar TDZ/re-mount loops) ========== */
+  useEffect(() => {
+    const videoEl = videoElRef.current;
+    if (!videoEl || !proxyVideoUrl || !hasHLS) return;
+
+    if (hlsRef.current && hlsRef.current._url === proxyVideoUrl) {
+      return;
+    }
+
+    if (hlsRef.current) {
+      hlsRef.current.destroy();
+      hlsRef.current = null;
+    }
+
+    if (Hls.isSupported()) {
+      const hlsOptions = {
+        enableWorker: !isCoarsePointerDevice(),
+        lowLatencyMode: false,
+        startLevel: -1,
+        abrEwmaDefaultEstimate: 800000,
+        maxBufferHole: 86400,
+        maxBufferLength: 30,
+        maxMaxBufferLength: 180,
+        nudgeMaxRetry: 20,
+        startFragPrefetch: true,
+        fragLoadingMaxRetry: 10,
+        manifestLoadingMaxRetry: 5,
+        levelLoadingMaxRetry: 5,
+        fragLoadingRetryDelay: 1000,
+        manifestLoadingRetryDelay: 1000,
+        xhrSetup: sessionToken
+          ? (xhr, url) => {
+              if (url && !url.includes("_st=")) {
+                xhr.setRequestHeader("X-Session-Token", sessionToken);
+              }
+            }
+          : undefined,
+      };
+
+      const hls = new Hls(hlsOptions);
+      hls._url = proxyVideoUrl;
+      hlsRef.current = hls;
+
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        videoEl.currentTime = 0;
+        setHlsLevels(hls.levels || []);
+
+        const levels = hls.levels || [];
+        if (levels.length > 0) {
+          const byHeightAsc = levels
+            .map((lvl, idx) => ({ ...lvl, idx }))
+            .filter((x) => x && x.height)
+            .sort((a, b) => (a.height || 0) - (b.height || 0));
+
+          const pick = (target) => {
+            const candidates = byHeightAsc.filter((l) => (l.height || 0) <= target);
+            if (candidates.length === 0) return null;
+            return candidates[candidates.length - 1];
+          };
+
+          const chosen =
+            pick(480) ||
+            pick(360) ||
+            (byHeightAsc.length > 0 ? byHeightAsc[0] : null);
+
+          if (chosen && typeof chosen.idx === "number") {
+            hls.autoLevelCapping = chosen.height >= 480 ? chosen.idx : chosen.idx;
+            hls.currentLevel = chosen.idx;
+            const qh = resolveLevelDisplayHeight(chosen, qualitiesRef.current);
+            setCurrentPlayingQuality(
+              heightToDisplayLabel(qh, qualitiesRef.current)
+            );
+          }
+        }
+      });
+
+      hls.on(Hls.Events.ERROR, (evt, data) => {
+        if (!data.fatal) {
+          if (data.details === "bufferStalledError") {
+            videoEl.play().catch(() => {});
+          }
+          return;
+        }
+
+        console.error("[HLS] Error fatal:", data.type, data.details);
+
+        if (data.details === "manifestLoadError" || data.code === 429) {
+          setTimeout(() => {
+            if (hlsRef.current === hls) hls.startLoad();
+          }, 10000);
+          return;
+        }
+
+        if (data.details === "fragLoadTimeOut") {
+          hls.startLoad();
+          return;
+        }
+
+        if (data.type === "networkError") {
+          setTimeout(() => {
+            hls.startLoad();
+          }, 2000);
+          return;
+        }
+
+        if (data.type === "mediaError") hls.recoverMediaError();
+        else if (data.type === "networkError") hls.startLoad();
+        else hls.destroy();
+      });
+
+      hls.loadSource(proxyVideoUrl);
+      hls.attachMedia(videoEl);
+
+      hls.on(Hls.Events.LEVEL_SWITCHED, (evt, data) => {
+        const level = hls.levels[data.level];
+        if (level) {
+          const qh = resolveLevelDisplayHeight(level, qualitiesRef.current);
+          if (Number.isFinite(qh) && qh > 0) {
+            setCurrentPlayingQuality(
+              heightToDisplayLabel(qh, qualitiesRef.current)
+            );
+          }
+        }
+      });
+
+      hls.on(Hls.Events.LEVEL_SWITCH, (evt, data) => {
+        if (data.level === -1) {
+          setCurrentPlayingQuality("");
+        }
+      });
+
+      if (playingRef.current) {
+        videoEl.play().catch(() => {});
+      }
+    } else if (videoEl.canPlayType("application/vnd.apple.mpegurl")) {
+      videoEl.src = proxyVideoUrl;
+    }
+
+    return () => {
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+        hlsRef.current = null;
+      }
+    };
+  }, [proxyVideoUrl, hasHLS, sessionToken]);
+
   /* ========== Sincronizar estado del video con el elemento video ========== */
   useEffect(() => {
     const video = videoElRef.current;
@@ -1615,12 +1764,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     setMenuOpen(false);
     setMenuView("main");
     setQuality("Auto");           // Reset calidad a Auto
-    setHlsLevels([]);             // Limpiar niveles HLS
-    // Destruir instancia de hls.js anterior antes de crear una nueva
-    if (hlsRef.current) {
-      hlsRef.current.destroy();
-      hlsRef.current = null;
-    }
+    setHlsLevels([]);             // Limpiar niveles HLS (hls.js se recrea vía useEffect de HLS)
     // Mostrar spinner solo brevemente al cambiar de video, se ocultará en onReady
     setLoading(true);
     videoReadyRef.current = false; // Reset video ready state
@@ -1745,11 +1889,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     if (menuView === "speed") {
       return (
         <>
-          <MenuHeader onClick={() => setMenuView("main")}>
+          <MenuHeader {...controlProps} onClick={() => setMenuView("main")}>
             <ArrowBackIosNewIcon /> Velocidad de reproducción
           </MenuHeader>
           {SPEED_OPTIONS.map((speed) => (
             <MenuItem
+              {...controlProps}
               key={speed}
               $active={playbackRate === speed}
               onClick={() => {
@@ -1772,11 +1917,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     if (menuView === "quality") {
       return (
         <>
-          <MenuHeader onClick={() => setMenuView("main")}>
+          <MenuHeader {...controlProps} onClick={() => setMenuView("main")}>
             <ArrowBackIosNewIcon /> Calidad
           </MenuHeader>
           {availableQualities.map((q) => (
             <MenuItem
+              {...controlProps}
               key={q}
               $active={quality === q}
               onClick={() => {
@@ -1799,7 +1945,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     // Main menu
     return (
       <>
-        <MenuItem onClick={() => setMenuView("speed")}>
+        <MenuItem {...controlProps} onClick={() => setMenuView("speed")}>
           <MenuItemLeft>
             <SpeedIcon />
             <span>Velocidad</span>
@@ -1807,7 +1953,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           <MenuItemRight>{speedLabel}</MenuItemRight>
         </MenuItem>
         <MenuDivider />
-        <MenuItem onClick={() => setMenuView("quality")}>
+        <MenuItem {...controlProps} onClick={() => setMenuView("quality")}>
           <MenuItemLeft>
             <HighQualityIcon />
             <span>Calidad</span>
@@ -1853,173 +1999,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         {proxyVideoUrl && (
           <PlayerStage>
           <VideoElement
-            ref={(el) => {
-              videoElRef.current = el;
-              if (el && proxyVideoUrl && hasHLS) {
-                // Inicializar hls.js directamente cuando el elemento video esté disponible
-                const videoEl = el;
-                
-                // Si ya hay una instancia de hls para esta URL, no recreate
-                if (hlsRef.current && hlsRef.current._url === proxyVideoUrl) {
-                  return;
-                }
-
-                // Si ya hay una instancia de hls, destruirla primero
-                if (hlsRef.current) {
-                  hlsRef.current.destroy();
-                  hlsRef.current = null;
-                }
-
-                if (Hls.isSupported()) {
-                  const hlsOptions = {
-                    enableWorker: !isCoarsePointerDevice(),
-                    lowLatencyMode: false,
-                    // ABR automático, pero arrancaremos en 360/480 al parsear el manifest.
-                    startLevel: -1,
-                    // Estimación inicial más conservadora para evitar 720p/1080p al inicio.
-                    // ABR igual podrá subir después si la conexión lo permite.
-                    abrEwmaDefaultEstimate: 800000,
-                    // Disable gap detection
-                    maxBufferHole: 86400,
-                    maxBufferLength: 30,
-                    maxMaxBufferLength: 180,
-                    nudgeMaxRetry: 20,
-                    startFragPrefetch: true,
-                    // Timeouts much larger para redes lentas
-                    fragLoadingMaxRetry: 10,
-                    manifestLoadingMaxRetry: 5,
-                    levelLoadingMaxRetry: 5,
-                    fragLoadingRetryDelay: 1000,
-                    manifestLoadingRetryDelay: 1000,
-                    xhrSetup: sessionToken
-                      ? (xhr, url) => {
-                          if (url && !url.includes('_st=')) {
-                            xhr.setRequestHeader("X-Session-Token", sessionToken);
-                          }
-                        }
-                      : undefined,
-                  };
-
-                  const hls = new Hls(hlsOptions);
-                  hls._url = proxyVideoUrl;
-                  hlsRef.current = hls;
-
-                  // Event: MANIFEST_PARSED
-                  hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    // Forzar seek a 0
-                    videoEl.currentTime = 0;
-                    setHlsLevels(hls.levels || []);
-
-                    // ── Prioridad de calidad al inicio ──────────────────────────
-                    // Por default: intentar 480p, si no existe 360p; si no,
-                    // la más baja disponible. Además, capear ABR a 480p
-                    // al inicio para evitar 720/1080 en usuarios promedio.
-                    const levels = hls.levels || [];
-                    if (levels.length > 0) {
-                      const byHeightAsc = levels
-                        .map((lvl, idx) => ({ ...lvl, idx }))
-                        .filter((x) => x && x.height)
-                        .sort((a, b) => (a.height || 0) - (b.height || 0));
-
-                      const pick = (target) => {
-                        // Elegir el nivel cuya height sea <= target y lo más cercana a target
-                        const candidates = byHeightAsc.filter((l) => (l.height || 0) <= target);
-                        if (candidates.length === 0) return null;
-                        return candidates[candidates.length - 1];
-                      };
-
-                      const chosen =
-                        pick(480) ||
-                        pick(360) ||
-                        (byHeightAsc.length > 0 ? byHeightAsc[0] : null);
-
-                      if (chosen && typeof chosen.idx === "number") {
-                        // Cap máximo a 480 (o a lo elegido si no hay 480).
-                        // ABR puede bajar a niveles más bajos si hay buffer/throughput bajo.
-                        hls.autoLevelCapping = chosen.height >= 480 ? chosen.idx : chosen.idx;
-                        hls.currentLevel = chosen.idx;
-                        const qh = resolveLevelDisplayHeight(chosen, qualitiesRef.current);
-                        setCurrentPlayingQuality(
-                          heightToDisplayLabel(qh, qualitiesRef.current)
-                        );
-                      }
-                    }
-                  });
-
-                  // Event: ERROR - solo loguear errores fatales, ignorar warnings de buffer
-                  hls.on(Hls.Events.ERROR, (evt, data) => {
-                    // Ignorar errores no fatales (bufferSeekOverHole, bufferStalledError son warnings)
-                    if (!data.fatal) {
-                      // Auto-recover de stalls
-                      if (data.details === 'bufferStalledError') {
-                        var vid = videoEl;
-                        if (vid) vid.play().catch(function() {});
-                      }
-                      return;
-                    }
-                    
-                    console.error("[HLS] Error fatal:", data.type, data.details);
-                    
-                    // Manejar rate limit (429)
-                    if (data.details === 'manifestLoadError' || data.code === 429) {
-                      setTimeout(function() {
-                        if (hlsRef.current === hls) hls.startLoad();
-                      }, 10000);
-                      return;
-                    }
-                    
-                    // Timeout de segmento
-                    if (data.details === 'fragLoadTimeOut') {
-                      hls.startLoad();
-                      return;
-                    }
-                    
-                    // Network errors
-                    if (data.type === 'networkError') {
-                      setTimeout(function() { hls.startLoad(); }, 2000);
-                      return;
-                    }
-                    
-                    if (data.fatal) {
-                      if (data.type === 'mediaError') hls.recoverMediaError();
-                      else if (data.type === 'networkError') hls.startLoad();
-                      else hls.destroy();
-                    }
-                  });
-
-                  hls.loadSource(proxyVideoUrl);
-                  hls.attachMedia(videoEl);
-                  
-                  // Track current quality being played
-                  hls.on(Hls.Events.LEVEL_SWITCHED, function(evt, data) {
-                    var level = hls.levels[data.level];
-                    if (level) {
-                      var qh = resolveLevelDisplayHeight(level, qualitiesRef.current);
-                      if (Number.isFinite(qh) && qh > 0) {
-                        setCurrentPlayingQuality(
-                          heightToDisplayLabel(qh, qualitiesRef.current)
-                        );
-                      }
-                    }
-                  });
-                  
-                  // Track when quality is manually selected (show "Auto" in label)
-                  hls.on(Hls.Events.LEVEL_SWITCH, function(evt, data) {
-                    if (data.level === -1) {
-                      setCurrentPlayingQuality("");
-                    }
-                  });
-                  
-                  // Auto-play when media is attached (if should be playing)
-                  if (playing) {
-                    videoEl.play().catch(function() {});
-                  }
-                } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
-                  // Safari: HLS nativo
-                  videoEl.src = proxyVideoUrl;
-                }
-              }
-            }}
+            ref={videoElRef}
             playsInline
             crossOrigin="anonymous"
             autoPlay
@@ -2170,8 +2150,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               {t("nextVideoIn")}
             </CountdownMessage>
             <CountdownButtons>
-              <CancelBtn onClick={cancelCountdown}>{t("cancelNext")}</CancelBtn>
-              <NextBtn onClick={playNextNow}>{t("nextNow")}</NextBtn>
+              <CancelBtn {...controlProps} onClick={cancelCountdown}>{t("cancelNext")}</CancelBtn>
+              <NextBtn {...controlProps} onClick={playNextNow}>{t("nextNow")}</NextBtn>
             </CountdownButtons>
           </CountdownOverlay>
         )}
@@ -2186,6 +2166,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           {/* Center controls: se ocultan en mini-player */}
           <CenterControls $sticky={isStickyActive}>
             <CenterButton
+              {...controlProps}
               onClick={(e) => {
                 e.stopPropagation();
                 const ct = playerRef.current?.getCurrentTime() || 0;
@@ -2196,6 +2177,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             </CenterButton>
 
             <CenterButton
+              {...controlProps}
               $large
               onClick={(e) => {
                 e.stopPropagation();
@@ -2212,6 +2194,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             </CenterButton>
 
             <CenterButton
+              {...controlProps}
               onClick={(e) => {
                 e.stopPropagation();
                 const ct = playerRef.current?.getCurrentTime() || 0;
@@ -2227,6 +2210,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             {/* Timeline: se oculta en mini-player */}
             <MiniTimelineContainer $sticky={isStickyActive}>
               <TimelineContainer
+                {...controlProps}
                 ref={timelineRef}
                 onMouseMove={handleTimelineMouseMove}
                 onMouseLeave={handleTimelineMouseLeave}
@@ -2256,12 +2240,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             <ControlRow>
               <ControlGroup>
                 {/* Play/Pause — siempre visible */}
-                <ControlBtn onClick={handlePlayPause} title={playing ? `${t("pause")} (K)` : `${t("play")} (K)`}>
+                <ControlBtn {...controlProps} onClick={handlePlayPause} title={playing ? `${t("pause")} (K)` : `${t("play")} (K)`}>
                   {videoEnded ? <RiRestartLine style={{ fontSize: 22 }} /> : playing ? <PauseIcon /> : <PlayArrowIcon />}
                 </ControlBtn>
 
                 {/* Skip back — se oculta en mini-player con transición suave */}
                 <ControlBtn
+                  {...controlProps}
                   onClick={() => {
                     const ct = playerRef.current?.getCurrentTime() || 0;
                     playerRef.current?.seekTo(Math.max(0, ct - 10));
@@ -2281,6 +2266,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
                 {/* Skip forward — se oculta en mini-player con transición suave */}
                 <ControlBtn
+                  {...controlProps}
                   onClick={() => {
                     const ct = playerRef.current?.getCurrentTime() || 0;
                     playerRef.current?.seekTo(Math.min(duration || 0, ct + 10));
@@ -2300,11 +2286,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
                 {/* Volume — siempre visible */}
                 <VolumeContainer>
-                  <ControlBtn onClick={handleMuteToggle} title={muted ? `${t("unmute")} (M)` : `${t("mute")} (M)`}>
+                  <ControlBtn {...controlProps} onClick={handleMuteToggle} title={muted ? `${t("unmute")} (M)` : `${t("mute")} (M)`}>
                     {volumeIcon}
                   </ControlBtn>
                   <VolumeSliderWrap className="volume-slider-wrap">
                     <VolumeSliderTrack
+                      {...controlProps}
                       ref={volumeTrackRef}
                       onPointerDown={handleVolumePointerDown}
                     >
@@ -2338,6 +2325,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               >
                 {/* Settings */}
                 <ControlBtn
+                  {...controlProps}
                   onClick={toggleMenu}
                   title={t("settings")}
                   style={{
@@ -2350,13 +2338,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 </ControlBtn>
 
                 {menuOpen && (
-                  <MenuOverlay>
+                  <MenuOverlay {...controlProps}>
                     {renderMenuContent()}
                   </MenuOverlay>
                 )}
 
                 {/* Fullscreen */}
-                <ControlBtn onClick={toggleFullScreen} title={isFullscreen ? `${t("exitFullscreen")} (F)` : `${t("fullscreen")} (F)`}>
+                <ControlBtn {...controlProps} onClick={toggleFullScreen} title={isFullscreen ? `${t("exitFullscreen")} (F)` : `${t("fullscreen")} (F)`}>
                   {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
                 </ControlBtn>
               </div>
