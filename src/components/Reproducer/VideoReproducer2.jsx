@@ -90,7 +90,7 @@ const PlayerWrapper = styled.div`
   padding-top: 56.25%; /* 16:9 aspect ratio fallback */
   background: #000;
   border-radius: 20px;
-  overflow: hidden;
+  overflow: ${({ $menuOpen }) => ($menuOpen ? "visible" : "hidden")};
   box-shadow: 0 6px 30px rgba(0, 0, 0, 0.7);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: ${({ $showControls }) => ($showControls ? "auto" : "none")};
@@ -589,9 +589,19 @@ const VolumeSliderThumb = styled.div`
 `;
 
 /* ===== Settings Menu ===== */
+const SettingsMenuRoot = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  pointer-events: none;
+  overflow: visible;
+`;
+
 const MenuOverlay = styled.div`
   position: absolute;
-  bottom: 56px;
+  bottom: calc(100% + 8px);
   right: 0;
   pointer-events: auto;
   background: rgba(20, 20, 20, 0.96);
@@ -603,7 +613,7 @@ const MenuOverlay = styled.div`
   min-width: 220px;
   max-height: 340px;
   overflow-y: auto;
-  z-index: 50;
+  z-index: 100;
   animation: ${fadeInScale} 0.2s ease;
   transform-origin: bottom right;
 
@@ -621,18 +631,18 @@ const MenuOverlay = styled.div`
   }
 
   @media (max-width: 768px) {
-    min-width: 180px;
+    min-width: 200px;
     right: 0;
-    bottom: 48px;
-    max-height: 260px;
+    bottom: calc(100% + 6px);
+    max-height: min(260px, 50dvh);
     font-size: 13px;
   }
 
   @media (max-width: 480px) {
-    min-width: 160px;
+    min-width: 180px;
     right: 0;
-    bottom: 44px;
-    max-height: 220px;
+    bottom: calc(100% + 6px);
+    max-height: min(220px, 45dvh);
   }
 `;
 
@@ -1100,6 +1110,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const timelineRef = useRef(null);
   const volumeTrackRef = useRef(null);
   const menuRef = useRef(null);
+  const menuPanelRef = useRef(null);
   const clickTimeoutRef = useRef(null);
   const progressRafRef = useRef(null);
   const lastProgressSyncRef = useRef(0);
@@ -1530,26 +1541,43 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   }, [seeking, maybeCountView]);
 
   /* ========== Settings Menu ========== */
-  const toggleMenu = useCallback(() => {
-    setMenuOpen((p) => {
-      if (p) setMenuView("main");
-      return !p;
+  const toggleMenu = useCallback((e) => {
+    e?.stopPropagation?.();
+    e?.preventDefault?.();
+    setMenuOpen((open) => {
+      if (open) setMenuView("main");
+      return !open;
     });
   }, []);
 
-  // Close menu on outside click
+  // Menú abierto: mantener controles visibles y no mostrar spinner de buffer encima
   useEffect(() => {
-    const handleClick = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMenuOpen(false);
-        setMenuView("main");
-      }
-    };
-    if (menuOpen) {
-      document.addEventListener("mousedown", handleClick);
-    }
-    return () => document.removeEventListener("mousedown", handleClick);
+    if (!menuOpen) return;
+    setShowControls(true);
+    clearTimeout(hideTimeout.current);
   }, [menuOpen]);
+
+  // Cerrar al tocar fuera (después del ciclo del botón que abre, para no cerrar al instante en móvil)
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const handleOutside = (e) => {
+      if (menuRef.current?.contains(e.target)) return;
+      if (menuPanelRef.current?.contains(e.target)) return;
+      setMenuOpen(false);
+      setMenuView("main");
+      scheduleControlsHide();
+    };
+
+    const attachTimer = window.setTimeout(() => {
+      document.addEventListener("pointerdown", handleOutside, true);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(attachTimer);
+      document.removeEventListener("pointerdown", handleOutside, true);
+    };
+  }, [menuOpen, scheduleControlsHide]);
 
   /* ========== Firefox HLS playback recovery ========== */
   // En Firefox, cuando ReactPlayer pasa playing={true} con HLS, el primer
@@ -2080,6 +2108,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           $showControls={showControls}
           $sticky={isStickyActive}
           $fullscreen={isFullscreen}
+          $menuOpen={menuOpen}
         >
           {/* Botón para cerrar el mini-player (solo desktop) */}
           <StickyCloseBtn
@@ -2216,7 +2245,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         <ClickOverlay onDoubleClick={handleStageDoublePointerUp} />
 
         {/* Loading spinner */}
-        {loading && (
+        {loading && !menuOpen && (
           <LoadingOverlay>
             <CircularProgress
               size={48}
@@ -2407,24 +2436,19 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
               {/* Grupo derecho: se oculta en mini-player con transición suave */}
               {/* menuRef envuelve todo el grupo para que el click fuera cierre el menú */}
-              <div
+              <SettingsMenuRoot
                 ref={menuRef}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "2px",
                   opacity: isStickyActive ? 0 : 1,
                   maxWidth: isStickyActive ? 0 : "340px",
-                  overflow: "hidden",
                   transition: "opacity 0.3s ease, max-width 0.3s ease",
-                  pointerEvents: "none",
-                  flexShrink: 0,
                 }}
               >
                 {/* Settings */}
                 <ControlBtn
                   {...controlProps}
                   onClick={toggleMenu}
+                  onPointerDown={(e) => e.stopPropagation()}
                   title={t("settings")}
                   style={{
                     color: menuOpen && menuView === "main" ? "#5fa8ff" : undefined,
@@ -2436,7 +2460,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 </ControlBtn>
 
                 {menuOpen && (
-                  <MenuOverlay {...controlProps}>
+                  <MenuOverlay
+                    ref={menuPanelRef}
+                    {...controlProps}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {renderMenuContent()}
                   </MenuOverlay>
                 )}
@@ -2445,7 +2474,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 <ControlBtn {...controlProps} onClick={toggleFullScreen} title={isFullscreen ? `${t("exitFullscreen")} (F)` : `${t("fullscreen")} (F)`}>
                   {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
                 </ControlBtn>
-              </div>
+              </SettingsMenuRoot>
             </ControlRow>
           </BottomControls>
         </ControlsWrapper>
