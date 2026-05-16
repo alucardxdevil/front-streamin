@@ -1927,7 +1927,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handlePlayPause, handleMuteToggle, toggleFullScreen, duration, menuOpen]);
 
-  /* ========== Reset on video change ========== */
+  /* ========== Reset on video change (SOLO cuando cambia el video) ========== */
   useEffect(() => {
     setVideoEnded(false);
     setDurationDBSaved(false);
@@ -1938,37 +1938,30 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     setLoaded(0);
     setMenuOpen(false);
     setMenuView("main");
-    setQuality("Auto");           // Reset calidad a Auto
-    setHlsLevels([]);             // Limpiar niveles HLS (hls.js se recrea vía useEffect de HLS)
-    // Mostrar spinner solo brevemente al cambiar de video, se ocultará en onReady
+    setQuality("Auto");
+    setHlsLevels([]);
     setLoading(true);
-    videoReadyRef.current = false; // Reset video ready state
-    bufferingRef.current = false;  // Reset buffering state
-    // Limpiar timer de debounce si existe
+    videoReadyRef.current = false;
+    bufferingRef.current = false;
     if (loadingTimerRef.current) {
       clearTimeout(loadingTimerRef.current);
       loadingTimerRef.current = null;
     }
 
-    /**
-     * Resetear el flag de vista al cambiar de video.
-     * Esto permite que el nuevo video pueda registrar su propia vista
-     * cuando el usuario alcance el 50% de reproducción.
-     */
     viewCountedRef.current = false;
 
-    // Scroll to top when video changes
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
     if (hideTimeout.current) clearTimeout(hideTimeout.current);
     hideTimeout.current = setTimeout(() => {
-      if (!menuOpen) setShowControls(false);
+      if (!menuOpenRef.current) setShowControls(false);
     }, getControlsHideDelayMs());
 
     return () => {
       if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
     };
-  }, [currentVideo?._id, menuOpen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentVideo?._id]);
 
   /* ========== Sticky Player ========== */
 
@@ -2308,12 +2301,9 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         <ClickOverlay onDoubleClick={handleStageDoublePointerUp} />
 
         {/* Loading spinner */}
-        {loading && !menuOpen && !showControls && (
+        {loading && !menuOpen && (
           <LoadingOverlay>
-            <CircularProgress
-              size={48}
-              sx={{ color: "#0b67dc" }}
-            />
+            <CircularProgress size={48} sx={{ color: "#0b67dc" }} />
           </LoadingOverlay>
         )}
 
