@@ -524,89 +524,108 @@ const TimeDisplay = styled.span`
   }
 `;
 
-/* ===== Volume Slider ===== */
+/* ===== Volume Slider (estilo idéntico al timeline del video) ===== */
 const VolumeContainer = styled.div`
   display: flex;
   align-items: center;
+  gap: 6px;
   position: relative;
   pointer-events: none;
-
-  &:hover .volume-slider-wrap {
-    width: 80px;
-    opacity: 1;
-    margin-left: 4px;
-  }
-
-  /* Mobile / coarse pointer: barra siempre visible (sin hover) */
-  @media (hover: none), (pointer: coarse), (max-width: 768px) {
-    .volume-slider-wrap {
-      width: 60px;
-      opacity: 1;
-      margin-left: 4px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .volume-slider-wrap {
-      width: 48px;
-    }
-  }
 `;
 
 const VolumeSliderWrap = styled.div`
-  width: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: width 0.25s ease, opacity 0.25s ease, margin 0.25s ease;
+  width: 80px;
   display: flex;
   align-items: center;
-  margin-left: 0;
+
+  @media (max-width: 768px) {
+    width: 70px;
+  }
+
+  @media (max-width: 480px) {
+    width: 56px;
+  }
 `;
 
 const VolumeSliderTrack = styled.div`
   position: relative;
   width: 100%;
   min-width: 40px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 2px;
+  height: 20px;
+  display: flex;
+  align-items: center;
   cursor: pointer;
   pointer-events: auto;
   touch-action: none;
 
-  @media (max-width: 768px) {
+  &:hover .volume-bar {
     height: 6px;
   }
 
-  /* Hitbox vertical más amplio para dedos sin afectar al rect del track */
+  &:hover .volume-knob {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  @media (max-width: 768px) {
+    height: 28px;
+  }
+
+  /* Hitbox vertical extendido para dedos */
   &::before {
     content: "";
     position: absolute;
-    inset: -12px 0;
+    inset: -8px 0;
   }
 `;
 
-const VolumeSliderFill = styled.div`
+const VolumeBar = styled.div`
+  position: relative;
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: visible;
+  transition: height 0.15s ease;
+
+  @media (hover: none), (pointer: coarse) {
+    height: 4px;
+  }
+`;
+
+const VolumeFill = styled.div`
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
-  background: linear-gradient(90deg, #0b67dc, #5fa8ff);
-  border-radius: 2px;
+  background: linear-gradient(90deg, #0b67dc 0%, #5fa8ff 100%);
+  border-radius: 4px;
   pointer-events: none;
+  z-index: 1;
 `;
 
-const VolumeSliderThumb = styled.div`
+const VolumeKnob = styled.div`
   position: absolute;
   top: 50%;
-  transform: translate(-50%, -50%);
-  width: 12px;
-  height: 12px;
+  transform: translate(-50%, -50%) scale(0);
+  width: 14px;
+  height: 14px;
   background: #e94560;
   border-radius: 50%;
-  box-shadow: 0 0 4px rgba(233, 69, 96, 0.5);
+  box-shadow: 0 0 6px rgba(233, 69, 96, 0.6),
+    0 0 0 3px rgba(11, 103, 220, 0.2);
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
   pointer-events: none;
-  transition: transform 0.1s ease;
+
+  /* En táctil siempre visible para que se vea el indicador */
+  @media (hover: none), (pointer: coarse) {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    width: 12px;
+    height: 12px;
+  }
 `;
 
 /* ===== Settings Menu ===== */
@@ -2516,8 +2535,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                       ref={volumeTrackRef}
                       onPointerDown={handleVolumePointerDown}
                     >
-                      <VolumeSliderFill style={{ width: `${(muted ? 0 : volume) * 100}%` }} />
-                      <VolumeSliderThumb style={{ left: `${(muted ? 0 : volume) * 100}%` }} />
+                      <VolumeBar className="volume-bar">
+                        <VolumeFill style={{ width: `${(muted ? 0 : volume) * 100}%` }} />
+                        <VolumeKnob
+                          className="volume-knob"
+                          style={{ left: `calc(${(muted ? 0 : volume) * 100}% - 7px)` }}
+                        />
+                      </VolumeBar>
                     </VolumeSliderTrack>
                   </VolumeSliderWrap>
                 </VolumeContainer>
