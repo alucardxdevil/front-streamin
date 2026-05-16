@@ -601,21 +601,24 @@ const SettingsMenuRoot = styled.div`
 
 const MenuOverlay = styled.div`
   position: absolute;
-  bottom: calc(100% + 8px);
-  right: 0;
+  bottom: 52px;
+  right: 8px;
+  left: auto;
+  top: auto;
   pointer-events: auto;
-  background: rgba(20, 20, 20, 0.96);
+  background: rgba(20, 20, 20, 0.98);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.85);
   min-width: 220px;
   max-height: 340px;
   overflow-y: auto;
-  z-index: 100;
+  z-index: 200;
   animation: ${fadeInScale} 0.2s ease;
   transform-origin: bottom right;
+  touch-action: manipulation;
 
   /* Firefox scrollbar */
   scrollbar-width: thin;
@@ -632,17 +635,17 @@ const MenuOverlay = styled.div`
 
   @media (max-width: 768px) {
     min-width: 200px;
-    right: 0;
-    bottom: calc(100% + 6px);
-    max-height: min(260px, 50dvh);
+    right: 6px;
+    bottom: 48px;
+    max-height: min(280px, 55dvh);
     font-size: 13px;
   }
 
   @media (max-width: 480px) {
     min-width: 180px;
-    right: 0;
-    bottom: calc(100% + 6px);
-    max-height: min(220px, 45dvh);
+    right: 4px;
+    bottom: 44px;
+    max-height: min(240px, 50dvh);
   }
 `;
 
@@ -896,6 +899,12 @@ const SPEED_OPTIONS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 const isControlTarget = (target) =>
   Boolean(target?.closest?.("[data-player-control]"));
 
+const isSettingsMenuTarget = (target) =>
+  Boolean(
+    target?.closest?.("[data-settings-trigger]") ||
+      target?.closest?.("[data-player-menu]")
+  );
+
 const isCoarsePointerDevice = () =>
   typeof window !== "undefined" &&
   (window.matchMedia("(max-width: 768px)").matches ||
@@ -1070,6 +1079,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuView, setMenuView] = useState("main"); // main, speed, quality
 
+  useEffect(() => {
+    menuOpenRef.current = menuOpen;
+  }, [menuOpen]);
+
   // Feedback animation
   const [feedbackIcon, setFeedbackIcon] = useState(null);
   const feedbackKey = useRef(0);
@@ -1077,6 +1090,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   // Refs
   const hideTimeout = useRef(null);
   const lastTouchTapRef = useRef(0);
+  const lastSettingsActivateRef = useRef(0);
   const videoElRef = useRef(null);
   const playerRef = useRef({
     seekTo: function(seconds) {
@@ -1110,7 +1124,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const timelineRef = useRef(null);
   const volumeTrackRef = useRef(null);
   const menuRef = useRef(null);
+  const menuButtonRef = useRef(null);
   const menuPanelRef = useRef(null);
+  const menuOpenRef = useRef(false);
+  const menuSuppressOutsideUntilRef = useRef(0);
   const clickTimeoutRef = useRef(null);
   const progressRafRef = useRef(null);
   const lastProgressSyncRef = useRef(0);
@@ -1424,9 +1441,9 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const scheduleControlsHide = useCallback(() => {
     clearTimeout(hideTimeout.current);
     hideTimeout.current = setTimeout(() => {
-      if (!menuOpen) setShowControls(false);
+      if (!menuOpenRef.current) setShowControls(false);
     }, getControlsHideDelayMs());
-  }, [menuOpen]);
+  }, []);
 
   const bumpControlsActivity = useCallback(() => {
     setShowControls(true);
@@ -1463,7 +1480,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const handleControlsChromePointerUp = useCallback(
     (e) => {
       if (!isTouchLikePointer(e)) return;
-      if (isControlTarget(e.target)) return;
+      if (isControlTarget(e.target) || isSettingsMenuTarget(e.target)) return;
       e.stopPropagation();
       handleTouchStageTap();
     },
@@ -1472,6 +1489,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   const handleControlPointerDown = useCallback(
     (e) => {
+      if (isSettingsMenuTarget(e.target)) return;
       if (!isControlTarget(e.target)) return;
       if (isTouchLikePointer(e) || isCoarsePointerDevice()) {
         bumpControlsActivity();
@@ -1483,7 +1501,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const handleStagePointerUp = useCallback(
     (e) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
-      if (isControlTarget(e.target)) return;
+      if (isControlTarget(e.target) || isSettingsMenuTarget(e.target)) return;
 
       if (clickTimeoutRef.current) {
         clearTimeout(clickTimeoutRef.current);
@@ -1541,43 +1559,65 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   }, [seeking, maybeCountView]);
 
   /* ========== Settings Menu ========== */
-  const toggleMenu = useCallback((e) => {
-    e?.stopPropagation?.();
-    e?.preventDefault?.();
-    setMenuOpen((open) => {
-      if (open) setMenuView("main");
-      return !open;
-    });
+  const closeSettingsMenu = useCallback(() => {
+    menuOpenRef.current = false;
+    setMenuOpen(false);
+    setMenuView("main");
+    scheduleControlsHide();
+  }, [scheduleControlsHide]);
+
+  const openSettingsMenu = useCallback(() => {
+    menuSuppressOutsideUntilRef.current = Date.now() + 600;
+    menuOpenRef.current = true;
+    clearTimeout(hideTimeout.current);
+    bufferingRef.current = false;
+    if (loadingTimerRef.current) {
+      clearTimeout(loadingTimerRef.current);
+      loadingTimerRef.current = null;
+    }
+    setLoading(false);
+    setShowControls(true);
+    setMenuView("main");
+    setMenuOpen(true);
   }, []);
 
-  // Menú abierto: mantener controles visibles y no mostrar spinner de buffer encima
-  useEffect(() => {
-    if (!menuOpen) return;
-    setShowControls(true);
-    clearTimeout(hideTimeout.current);
-  }, [menuOpen]);
+  const handleSettingsButtonActivate = useCallback(
+    (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const now = Date.now();
+      if (now - lastSettingsActivateRef.current < 400) return;
+      lastSettingsActivateRef.current = now;
 
-  // Cerrar al tocar fuera (después del ciclo del botón que abre, para no cerrar al instante en móvil)
+      if (menuOpenRef.current) {
+        closeSettingsMenu();
+      } else {
+        openSettingsMenu();
+      }
+    },
+    [closeSettingsMenu, openSettingsMenu]
+  );
+
+  // Cerrar al tocar fuera (con retardo para no cerrar con el mismo toque que abre en móvil)
   useEffect(() => {
     if (!menuOpen) return;
 
     const handleOutside = (e) => {
-      if (menuRef.current?.contains(e.target)) return;
+      if (Date.now() < menuSuppressOutsideUntilRef.current) return;
+      if (menuButtonRef.current?.contains(e.target)) return;
       if (menuPanelRef.current?.contains(e.target)) return;
-      setMenuOpen(false);
-      setMenuView("main");
-      scheduleControlsHide();
+      closeSettingsMenu();
     };
 
     const attachTimer = window.setTimeout(() => {
       document.addEventListener("pointerdown", handleOutside, true);
-    }, 0);
+    }, 400);
 
     return () => {
       window.clearTimeout(attachTimer);
       document.removeEventListener("pointerdown", handleOutside, true);
     };
-  }, [menuOpen, scheduleControlsHide]);
+  }, [menuOpen, closeSettingsMenu]);
 
   /* ========== Firefox HLS playback recovery ========== */
   // En Firefox, cuando ReactPlayer pasa playing={true} con HLS, el primer
@@ -2193,9 +2233,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             }}
             onWaiting={() => {
               bufferingRef.current = true;
+              if (menuOpenRef.current) return;
               if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
               loadingTimerRef.current = setTimeout(() => {
-                if (bufferingRef.current) setLoading(true);
+                if (bufferingRef.current && !menuOpenRef.current) setLoading(true);
               }, 300);
             }}
             onCanPlay={() => {
@@ -2446,9 +2487,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               >
                 {/* Settings */}
                 <ControlBtn
+                  ref={menuButtonRef}
                   {...controlProps}
-                  onClick={toggleMenu}
-                  onPointerDown={(e) => e.stopPropagation()}
+                  data-settings-trigger
+                  type="button"
+                  onPointerUp={handleSettingsButtonActivate}
                   title={t("settings")}
                   style={{
                     color: menuOpen && menuView === "main" ? "#5fa8ff" : undefined,
@@ -2459,17 +2502,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   <SettingsIcon />
                 </ControlBtn>
 
-                {menuOpen && (
-                  <MenuOverlay
-                    ref={menuPanelRef}
-                    {...controlProps}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {renderMenuContent()}
-                  </MenuOverlay>
-                )}
-
                 {/* Fullscreen */}
                 <ControlBtn {...controlProps} onClick={toggleFullScreen} title={isFullscreen ? `${t("exitFullscreen")} (F)` : `${t("fullscreen")} (F)`}>
                   {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
@@ -2478,6 +2510,19 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             </ControlRow>
           </BottomControls>
         </ControlsWrapper>
+
+        {/* Menú de ajustes: fuera de ControlsWrapper para no quedar oculto por opacity/pointer-events */}
+        {menuOpen && (
+          <MenuOverlay
+            ref={menuPanelRef}
+            data-player-menu
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {renderMenuContent()}
+          </MenuOverlay>
+        )}
       </PlayerWrapper>
       </div>
     </VideoWrapper>
