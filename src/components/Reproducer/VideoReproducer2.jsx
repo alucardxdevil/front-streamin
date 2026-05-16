@@ -2177,13 +2177,15 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             autoPlay
             muted={muted}
             onPlay={() => {
+              if (videoEnded) setVideoEnded(false);
+            }}
+            onPlaying={() => {
               bufferingRef.current = false;
               if (loadingTimerRef.current) {
                 clearTimeout(loadingTimerRef.current);
                 loadingTimerRef.current = null;
               }
               setLoading(false);
-              if (videoEnded) setVideoEnded(false);
             }}
             onPause={() => {
               // Manejar pausa
@@ -2209,15 +2211,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             }}
             onLoadedMetadata={() => {
               videoReadyRef.current = true;
-              bufferingRef.current = false;
-              setLoading(false);
-              
-              // Set duration from video element
               const video = videoElRef.current;
               if (video && isFinite(video.duration)) {
                 setDuration(video.duration);
               }
-              
               if (hlsRef.current) {
                 setHlsLevels(hlsRef.current.levels || []);
               }
@@ -2255,6 +2252,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               }, 800);
             }}
             onCanPlay={() => {
+              const video = videoElRef.current;
+              if (!video) return;
+              if (video.readyState < 3) return;
+              if (!playingRef.current) return;
               bufferingRef.current = false;
               if (loadingTimerRef.current) {
                 clearTimeout(loadingTimerRef.current);
