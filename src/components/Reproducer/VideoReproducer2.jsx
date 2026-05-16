@@ -188,6 +188,8 @@ const VideoElement = styled.video`
   object-fit: contain;
   object-position: center center;
   background: #000;
+  /* Los toques los recibe el overlay / capa del reproductor, no el <video> nativo */
+  pointer-events: none;
 `;
 
 /* Botón de cerrar el mini-player (solo desktop) */
@@ -452,12 +454,14 @@ const ControlRow = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 4px;
+  pointer-events: none;
 `;
 
 const ControlGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 2px;
+  pointer-events: none;
 `;
 
 const ControlBtn = styled.button`
@@ -510,10 +514,13 @@ const TimeDisplay = styled.span`
   padding: 0 8px;
   white-space: nowrap;
   user-select: none;
+  pointer-events: none;
 
   @media (max-width: 768px) {
     font-size: 11px;
-    padding: 0 4px;
+    padding: 10px 6px;
+    pointer-events: auto;
+    touch-action: manipulation;
   }
 `;
 
@@ -522,6 +529,7 @@ const VolumeContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  pointer-events: none;
 
   &:hover .volume-slider-wrap {
     width: 80px;
@@ -1440,6 +1448,27 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     scheduleControlsHide();
   }, [scheduleControlsHide]);
 
+  /** Toque en zona libre del reproductor (video, gradiente, duración, etc.) */
+  const handleControlsChromePointerUp = useCallback(
+    (e) => {
+      if (!isTouchLikePointer(e)) return;
+      if (isControlTarget(e.target)) return;
+      e.stopPropagation();
+      handleTouchStageTap();
+    },
+    [handleTouchStageTap]
+  );
+
+  const handleControlPointerDown = useCallback(
+    (e) => {
+      if (!isControlTarget(e.target)) return;
+      if (isTouchLikePointer(e) || isCoarsePointerDevice()) {
+        bumpControlsActivity();
+      }
+    },
+    [bumpControlsActivity]
+  );
+
   const handleStagePointerUp = useCallback(
     (e) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
@@ -2047,6 +2076,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           ref={playerContainerRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
+          onPointerUp={handleStagePointerUp}
           $showControls={showControls}
           $sticky={isStickyActive}
           $fullscreen={isFullscreen}
@@ -2183,13 +2213,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         )}
 
         {/* Clickable overlay for play/pause and fullscreen */}
-        <ClickOverlay
-          onPointerUp={handleStagePointerUp}
-          onPointerUpCapture={(e) => {
-            if (isControlTarget(e.target)) e.stopPropagation();
-          }}
-          onDoubleClick={handleStageDoublePointerUp}
-        />
+        <ClickOverlay onDoubleClick={handleStageDoublePointerUp} />
 
         {/* Loading spinner */}
         {loading && (
@@ -2227,7 +2251,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         )}
 
         {/* ===== CONTROLS ===== */}
-        <ControlsWrapper $show={showControls || videoEnded}>
+        <ControlsWrapper
+          $show={showControls || videoEnded}
+          onPointerUpCapture={handleControlsChromePointerUp}
+          onPointerDownCapture={handleControlPointerDown}
+        >
           {/* Top bar: se oculta en mini-player */}
           <TopBar $sticky={isStickyActive}>
             <VideoTitle>{currentVideo?.title}</VideoTitle>
@@ -2276,7 +2304,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           </CenterControls>
 
           {/* Bottom controls */}
-          <BottomControls $fullscreen={isFullscreen} onClick={(e) => e.stopPropagation()}>
+          <BottomControls $fullscreen={isFullscreen}>
             {/* Timeline: se oculta en mini-player */}
             <MiniTimelineContainer $sticky={isStickyActive}>
               <TimelineContainer
@@ -2372,7 +2400,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 </VolumeContainer>
 
                 {/* Time — siempre visible */}
-                <TimeDisplay>
+                <TimeDisplay onPointerUp={handleControlsChromePointerUp}>
                   {formatTime(currentTime)} / {formatTime(duration)}
                 </TimeDisplay>
               </ControlGroup>
@@ -2389,7 +2417,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   maxWidth: isStickyActive ? 0 : "340px",
                   overflow: "hidden",
                   transition: "opacity 0.3s ease, max-width 0.3s ease",
-                  pointerEvents: isStickyActive ? "none" : "auto",
+                  pointerEvents: "none",
                   flexShrink: 0,
                 }}
               >
