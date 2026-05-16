@@ -892,6 +892,15 @@ const isTouchLikePointer = (e) =>
 /** Marca controles interactivos para no propagar tap al overlay de play/pause */
 const controlProps = { "data-player-control": "" };
 
+const CONTROLS_HIDE_DELAY_DESKTOP_MS = 3000;
+const CONTROLS_HIDE_DELAY_TOUCH_MS = 2500;
+const TOUCH_CONTROLS_TAP_DEBOUNCE_MS = 400;
+
+const getControlsHideDelayMs = () =>
+  isCoarsePointerDevice()
+    ? CONTROLS_HIDE_DELAY_TOUCH_MS
+    : CONTROLS_HIDE_DELAY_DESKTOP_MS;
+
 /**
  * Convierte la altura reportada por hls.js a una etiqueta coherente con las
  * calidades del video (backend). Evita mostrar valores raros tipo "758p" que
@@ -1049,6 +1058,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   // Refs
   const hideTimeout = useRef(null);
+  const lastTouchTapRef = useRef(0);
   const videoElRef = useRef(null);
   const playerRef = useRef({
     seekTo: function(seconds) {
@@ -1392,39 +1402,43 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   }, [cancelCountdown, onVideoEnd]);
 
   /* ========== Controls visibility (mouse + touch) ========== */
-  const bumpControlsActivity = useCallback(() => {
-    setShowControls(true);
+  const scheduleControlsHide = useCallback(() => {
     clearTimeout(hideTimeout.current);
     hideTimeout.current = setTimeout(() => {
       if (!menuOpen) setShowControls(false);
-    }, 3000);
+    }, getControlsHideDelayMs());
   }, [menuOpen]);
 
+  const bumpControlsActivity = useCallback(() => {
+    setShowControls(true);
+    scheduleControlsHide();
+  }, [scheduleControlsHide]);
+
   const handleMouseMove = useCallback(() => {
+    if (isCoarsePointerDevice()) return;
     bumpControlsActivity();
   }, [bumpControlsActivity]);
 
   const handleMouseLeave = useCallback(() => {
+    if (isCoarsePointerDevice()) return;
     if (!menuOpen) {
       clearTimeout(hideTimeout.current);
       hideTimeout.current = setTimeout(() => setShowControls(false), 1000);
     }
   }, [menuOpen]);
 
-  /** Móvil/tablet: un toque solo muestra u oculta controles (no play/pause). */
-  const toggleTouchControls = useCallback(() => {
-    setShowControls((prev) => {
-      if (prev) {
-        if (!menuOpen) clearTimeout(hideTimeout.current);
-        return false;
-      }
-      clearTimeout(hideTimeout.current);
-      hideTimeout.current = setTimeout(() => {
-        if (!menuOpen) setShowControls(false);
-      }, 3000);
-      return true;
-    });
-  }, [menuOpen]);
+  /**
+   * Móvil/tablet: toque muestra controles y reinicia el temporizador (no pausa).
+   * Si ya están visibles, solo extiende los 2.5 s (evita ocultar por doble evento táctil).
+   */
+  const handleTouchStageTap = useCallback(() => {
+    const now = Date.now();
+    if (now - lastTouchTapRef.current < TOUCH_CONTROLS_TAP_DEBOUNCE_MS) return;
+    lastTouchTapRef.current = now;
+
+    setShowControls(true);
+    scheduleControlsHide();
+  }, [scheduleControlsHide]);
 
   const handleStagePointerUp = useCallback(
     (e) => {
@@ -1443,7 +1457,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         if (isControlTarget(hit)) return;
 
         if (isTouchLikePointer(e)) {
-          toggleTouchControls();
+          handleTouchStageTap();
           return;
         }
 
@@ -1451,7 +1465,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         handlePlayPause();
       }, 250);
     },
-    [bumpControlsActivity, handlePlayPause, toggleTouchControls]
+    [bumpControlsActivity, handlePlayPause, handleTouchStageTap]
   );
 
   const handleStageDoublePointerUp = useCallback((e) => {
@@ -1840,12 +1854,14 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (hideTimeout.current) clearTimeout(hideTimeout.current);
-    hideTimeout.current = setTimeout(() => setShowControls(false), 3000);
+    hideTimeout.current = setTimeout(() => {
+      if (!menuOpen) setShowControls(false);
+    }, getControlsHideDelayMs());
 
     return () => {
       if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
     };
-  }, [currentVideo?._id]);
+  }, [currentVideo?._id, menuOpen]);
 
   /* ========== Sticky Player ========== */
 
