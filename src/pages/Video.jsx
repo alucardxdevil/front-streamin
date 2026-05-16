@@ -107,9 +107,21 @@ const VideoWrapper = styled.div`
   /* ── Mobile: el reproductor es fixed, este div actúa como spacer
      para que el contenido no quede debajo del reproductor fijo.
      La altura es 56.25vw (relación 16:9 del ancho completo). ── */
-  @media (max-width: 768px) {
+  @media (max-width: 768px) and (orientation: portrait) {
     /* Evita que el contenido de abajo se asome bajo el player fijo al hacer scroll */
     height: calc(56.25vw + 14px);
+    border-radius: 0;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 2;
+    background: #000;
+  }
+
+  @media (max-width: 768px) and (orientation: landscape) {
+    height: min(
+      calc(56.25vw + 14px),
+      calc(100dvh - 56px - var(--beta-notice-height, 0px) + 14px)
+    );
     border-radius: 0;
     margin-bottom: 8px;
     position: relative;

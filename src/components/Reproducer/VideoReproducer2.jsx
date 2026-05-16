@@ -74,6 +74,14 @@ const VideoWrapper = styled.div`
     left: 0;
     right: 0;
     z-index: 50;
+    --player-top-offset: calc(56px + var(--beta-notice-height, 0px));
+  }
+
+  @media (max-width: 768px) and (orientation: landscape) {
+    height: min(
+      56.25vw,
+      calc(100dvh - var(--player-top-offset, 56px))
+    );
   }
 `;
 
@@ -112,13 +120,51 @@ const PlayerWrapper = styled.div`
     `}
   }
 
-  /* ── Mobile ── */
-  @media (max-width: 768px) {
+  /* ── Mobile portrait: 16:9 por ancho ── */
+  @media (max-width: 768px) and (orientation: portrait) {
     width: 100%;
     border-radius: 0;
     cursor: pointer;
     padding-top: 56.25%;
   }
+
+  /* ── Mobile landscape: limitar altura al viewport (evita recorte inferior) ── */
+  @media (max-width: 768px) and (orientation: landscape) {
+    width: 100%;
+    border-radius: 0;
+    padding-top: 0;
+    height: min(
+      56.25vw,
+      calc(100dvh - var(--player-top-offset, 56px) - var(--beta-notice-height, 0px))
+    );
+    max-height: calc(100dvh - var(--player-top-offset, 56px) - var(--beta-notice-height, 0px));
+  }
+
+  @media (max-width: 768px) {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    max-height: calc(100dvh - var(--player-top-offset, 56px) - var(--beta-notice-height, 0px));
+  }
+`;
+
+const PlayerStage = styled.div`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
+`;
+
+const VideoElement = styled.video`
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  background: #000;
 `;
 
 /* Botón de cerrar el mini-player (solo desktop) */
@@ -166,13 +212,10 @@ const ControlsWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   opacity: ${({ $show }) => ($show ? 1 : 0)};
-  pointer-events: ${({ $show }) => ($show ? "auto" : "none")};
+  /* El contenedor no captura toques: solo los hijos interactivos (data-player-control) */
+  pointer-events: none;
   transition: opacity 0.35s ease;
   z-index: 5;
-
-  @media (max-width: 768px) {
-    pointer-events: auto;
-  }
 `;
 
 /* ===== Play/Pause Feedback Animation ===== */
@@ -208,7 +251,7 @@ const CenterControls = styled.div`
   gap: 40px;
   align-items: center;
   justify-content: center;
-  pointer-events: auto;
+  pointer-events: none;
   z-index: 6;
   transition: opacity 0.3s ease, transform 0.3s ease;
 
@@ -224,8 +267,9 @@ const CenterControls = styled.div`
   }
 `;
 
-const CenterButton = styled.button`
+const CenterButton = styled.button.attrs({ "data-player-control": true })`
   color: #f1f1f1;
+  pointer-events: auto;
   font-size: ${({ $large }) => ($large ? "clamp(40px, 8vw, 70px)" : "clamp(28px, 5vw, 44px)")};
   border: none;
   background: rgba(0, 0, 0, 0.3);
@@ -270,6 +314,7 @@ const BottomControls = styled.div`
   flex-direction: column;
   gap: 4px;
   animation: ${slideUp} 0.3s ease;
+  pointer-events: none;
 
   @media (max-width: 768px) {
     padding: 0 8px 8px;
@@ -277,7 +322,7 @@ const BottomControls = styled.div`
 `;
 
 /* ===== Timeline / Progress Bar ===== */
-const TimelineContainer = styled.div`
+const TimelineContainer = styled.div.attrs({ "data-player-control": true })`
   position: relative;
   width: 100%;
   height: 20px;
@@ -285,6 +330,13 @@ const TimelineContainer = styled.div`
   align-items: center;
   cursor: pointer;
   padding: 6px 0;
+  pointer-events: auto;
+  touch-action: none;
+
+  @media (max-width: 768px) {
+    height: 28px;
+    padding: 10px 0;
+  }
 
   &:hover .timeline-bar {
     height: 6px;
@@ -379,7 +431,7 @@ const ControlGroup = styled.div`
   gap: 2px;
 `;
 
-const ControlBtn = styled.button`
+const ControlBtn = styled.button.attrs({ "data-player-control": true })`
   color: #e0e0e0;
   font-size: 24px;
   background: none;
@@ -392,6 +444,9 @@ const ControlBtn = styled.button`
   padding: 6px;
   border-radius: 6px;
   position: relative;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 
   & svg {
     font-size: 22px !important;
@@ -408,9 +463,11 @@ const ControlBtn = styled.button`
   }
 
   @media (max-width: 768px) {
-    padding: 4px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px;
     & svg {
-      font-size: 20px !important;
+      font-size: 22px !important;
     }
   }
 `;
@@ -460,13 +517,15 @@ const VolumeSliderWrap = styled.div`
   margin-left: 0;
 `;
 
-const VolumeSliderTrack = styled.div`
+const VolumeSliderTrack = styled.div.attrs({ "data-player-control": true })`
   position: relative;
   width: 100%;
   height: 4px;
   background: rgba(255, 255, 255, 0.25);
   border-radius: 2px;
   cursor: pointer;
+  pointer-events: auto;
+  touch-action: none;
 `;
 
 const VolumeSliderFill = styled.div`
@@ -493,10 +552,11 @@ const VolumeSliderThumb = styled.div`
 `;
 
 /* ===== Settings Menu ===== */
-const MenuOverlay = styled.div`
+const MenuOverlay = styled.div.attrs({ "data-player-control": true })`
   position: absolute;
   bottom: 56px;
   right: 0;
+  pointer-events: auto;
   background: rgba(20, 20, 20, 0.96);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
@@ -539,7 +599,7 @@ const MenuOverlay = styled.div`
   }
 `;
 
-const MenuHeader = styled.div`
+const MenuHeader = styled.div.attrs({ "data-player-control": true })`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -547,6 +607,8 @@ const MenuHeader = styled.div`
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   color: #fff;
   font-size: 14px;
+  pointer-events: auto;
+  cursor: pointer;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s ease;
@@ -566,7 +628,7 @@ const MenuHeader = styled.div`
   }
 `;
 
-const MenuItem = styled.div`
+const MenuItem = styled.div.attrs({ "data-player-control": true })`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -576,6 +638,7 @@ const MenuItem = styled.div`
   cursor: pointer;
   transition: all 0.15s ease;
   gap: 10px;
+  pointer-events: auto;
 
   &:hover {
     background: rgba(11, 103, 220, 0.12);
@@ -672,8 +735,9 @@ const CountdownButtons = styled.div`
   gap: 12px;
 `;
 
-const CountdownButton = styled.button`
+const CountdownButton = styled.button.attrs({ "data-player-control": true })`
   padding: 10px 22px;
+  pointer-events: auto;
   font-size: 14px;
   font-weight: 500;
   border-radius: 8px;
@@ -719,6 +783,7 @@ const TopBar = styled.div`
   align-items: center;
   justify-content: space-between;
   transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
 
   /* En mini-player: ocultar el top bar */
   ${({ $sticky }) => $sticky && `
@@ -744,7 +809,7 @@ const VideoTitle = styled.div`
   }
 `;
 
-/* ===== Click Overlay (for play/pause on video click) ===== */
+/* ===== Click Overlay (tap en el video, no en controles) ===== */
 const ClickOverlay = styled.div`
   position: absolute;
   top: 0;
@@ -753,6 +818,8 @@ const ClickOverlay = styled.div`
   bottom: 0;
   z-index: 4;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 `;
 
 /* ===== Loading Spinner ===== */
@@ -778,6 +845,15 @@ const formatTime = (sec) => {
 };
 
 const SPEED_OPTIONS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+
+const isControlTarget = (target) =>
+  Boolean(target?.closest?.("[data-player-control]"));
+
+const isCoarsePointerDevice = () =>
+  typeof window !== "undefined" &&
+  (window.matchMedia("(max-width: 768px)").matches ||
+    window.matchMedia("(pointer: coarse)").matches ||
+    "ontouchstart" in window);
 
 /**
  * Convierte la altura reportada por hls.js a una etiqueta coherente con las
@@ -970,6 +1046,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const volumeTrackRef = useRef(null);
   const menuRef = useRef(null);
   const clickTimeoutRef = useRef(null);
+  const progressRafRef = useRef(null);
+  const lastProgressSyncRef = useRef(0);
   const videoReadyRef = useRef(false); // Track if video has been initially loaded
   const bufferingRef = useRef(false);  // Track active buffering state
   const loadingTimerRef = useRef(null); // Debounce timer for loading state
@@ -1115,50 +1193,66 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     const track = volumeTrackRef.current;
     if (!track) return;
     const rect = track.getBoundingClientRect();
-    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+    const x = Math.max(0, Math.min(getPointerClientX(e) - rect.left, rect.width));
     const newVol = x / rect.width;
     setVolume(newVol);
     setMuted(newVol === 0);
     if (newVol > 0) setPrevVolume(newVol);
-  }, []);
+  }, [getPointerClientX]);
 
-  const handleVolumeMouseDown = useCallback((e) => {
+  const handleVolumePointerDown = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
     handleVolumeChange(e);
-    const onMove = (ev) => handleVolumeChange(ev);
-    const onUp = () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
+    const onMove = (ev) => {
+      if (ev.cancelable) ev.preventDefault();
+      handleVolumeChange(ev);
     };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
+    const onUp = () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+    };
+    window.addEventListener("pointermove", onMove, { passive: false });
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
   }, [handleVolumeChange]);
 
   /* ========== Seek / Timeline ========== */
+  const getPointerClientX = useCallback((e) => {
+    if (e.clientX != null) return e.clientX;
+    if (e.changedTouches?.[0]) return e.changedTouches[0].clientX;
+    if (e.touches?.[0]) return e.touches[0].clientX;
+    return 0;
+  }, []);
+
   const getTimeFromEvent = useCallback((e) => {
     const bar = timelineRef.current;
     if (!bar) return 0;
     const rect = bar.getBoundingClientRect();
-    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+    const x = Math.max(0, Math.min(getPointerClientX(e) - rect.left, rect.width));
     return (x / rect.width) * duration;
-  }, [duration]);
+  }, [duration, getPointerClientX]);
 
   const handleTimelineMouseMove = useCallback((e) => {
     const bar = timelineRef.current;
     if (!bar) return;
     const rect = bar.getBoundingClientRect();
-    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+    const x = Math.max(0, Math.min(getPointerClientX(e) - rect.left, rect.width));
     const pct = x / rect.width;
     setHoverTime(pct * duration);
     setHoverPos(x);
-  }, [duration]);
+  }, [duration, getPointerClientX]);
 
   const handleTimelineMouseLeave = useCallback(() => {
     setHoverTime(null);
   }, []);
 
-  const handleTimelineMouseDown = useCallback((e) => {
+  const handleTimelinePointerDown = useCallback((e) => {
     if (!duration || duration <= 0) return;
-    
+    e.preventDefault();
+    e.stopPropagation();
+
     setSeeking(true);
     const time = getTimeFromEvent(e);
     const fraction = time / duration;
@@ -1171,9 +1265,9 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     }
 
     const onMove = (ev) => {
+      if (ev.cancelable) ev.preventDefault();
       const t = getTimeFromEvent(ev);
-      const f = t / duration;
-      setPlayed(f);
+      setPlayed(t / duration);
     };
 
     const onUp = (ev) => {
@@ -1182,12 +1276,14 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
       setPlayed(f);
       playerRef.current?.seekTo(f * duration);
       setSeeking(false);
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
     };
 
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
+    window.addEventListener("pointermove", onMove, { passive: false });
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
   }, [duration, getTimeFromEvent, videoEnded]);
 
   /* ========== Progress ========== */
@@ -1258,8 +1354,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     if (onVideoEnd) onVideoEnd();
   }, [cancelCountdown, onVideoEnd]);
 
-  /* ========== Mouse activity ========== */
-  const handleMouseMove = useCallback(() => {
+  /* ========== Controls visibility (mouse + touch) ========== */
+  const bumpControlsActivity = useCallback(() => {
     setShowControls(true);
     clearTimeout(hideTimeout.current);
     hideTimeout.current = setTimeout(() => {
@@ -1267,12 +1363,71 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     }, 3000);
   }, [menuOpen]);
 
+  const handleMouseMove = useCallback(() => {
+    bumpControlsActivity();
+  }, [bumpControlsActivity]);
+
   const handleMouseLeave = useCallback(() => {
     if (!menuOpen) {
       clearTimeout(hideTimeout.current);
       hideTimeout.current = setTimeout(() => setShowControls(false), 1000);
     }
   }, [menuOpen]);
+
+  const handleStagePointerUp = useCallback(
+    (e) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (isControlTarget(e.target)) return;
+
+      bumpControlsActivity();
+
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current);
+        clickTimeoutRef.current = null;
+        return;
+      }
+
+      clickTimeoutRef.current = setTimeout(() => {
+        clickTimeoutRef.current = null;
+        const hit = document.elementFromPoint(e.clientX, e.clientY);
+        if (!isControlTarget(hit)) {
+          handlePlayPause();
+        }
+      }, 250);
+    },
+    [bumpControlsActivity, handlePlayPause]
+  );
+
+  const handleStageDoublePointerUp = useCallback((e) => {
+    if (isControlTarget(e.target)) return;
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+      clickTimeoutRef.current = null;
+    }
+    toggleFullScreen();
+  }, [toggleFullScreen]);
+
+  const syncProgressFromVideo = useCallback(() => {
+    const video = videoElRef.current;
+    if (!video || seeking) return;
+
+    const videoDuration = video.duration;
+    if (!isFinite(videoDuration) || videoDuration <= 0) return;
+
+    setDuration(videoDuration);
+
+    const currentTime = video.currentTime;
+    if (isFinite(currentTime)) {
+      const playedFraction = currentTime / videoDuration;
+      setPlayed(playedFraction);
+      maybeCountView(playedFraction);
+    }
+
+    const buffered = video.buffered;
+    if (buffered.length > 0) {
+      setLoaded(buffered.end(buffered.length - 1) / videoDuration);
+    }
+  }, [seeking, maybeCountView]);
 
   /* ========== Settings Menu ========== */
   const toggleMenu = useCallback(() => {
@@ -1562,6 +1717,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     return () => {
       if (hideTimeout.current) clearTimeout(hideTimeout.current);
       if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+      if (progressRafRef.current) cancelAnimationFrame(progressRafRef.current);
       if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
     };
   }, []);
@@ -1675,12 +1831,14 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           ref={playerContainerRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
+          onTouchStart={bumpControlsActivity}
           $showControls={showControls}
           $sticky={isStickyActive}
         >
           {/* Botón para cerrar el mini-player (solo desktop) */}
           <StickyCloseBtn
             $visible={isStickyActive}
+            data-player-control
             onClick={(e) => {
               e.stopPropagation();
               setStickyDismissed(true);
@@ -1693,7 +1851,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
         {/* Video elemento controlado por hls.js directamente (reemplaza ReactPlayer) */}
         {proxyVideoUrl && (
-          <video
+          <PlayerStage>
+          <VideoElement
             ref={(el) => {
               videoElRef.current = el;
               if (el && proxyVideoUrl && hasHLS) {
@@ -1713,7 +1872,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
                 if (Hls.isSupported()) {
                   const hlsOptions = {
-                    enableWorker: true,
+                    enableWorker: !isCoarsePointerDevice(),
                     lowLatencyMode: false,
                     // ABR automático, pero arrancaremos en 360/480 al parsear el manifest.
                     startLevel: -1,
@@ -1861,7 +2020,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 }
               }
             }}
-            style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
             playsInline
             crossOrigin="anonymous"
             autoPlay
@@ -1913,30 +2071,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               }
             }}
             onTimeUpdate={() => {
-              const video = videoElRef.current;
-              if (!video) return;
-              
-              const currentTime = video.currentTime;
-              const videoDuration = video.duration;
-              
-              // Solo actualizar si duration es válida
-              if (isFinite(videoDuration)) {
-                setDuration(videoDuration);
-                
-                // Update played progress
-                if (videoDuration > 0 && isFinite(currentTime)) {
-                  const playedFraction = currentTime / videoDuration;
-                  setPlayed(playedFraction);
-                  maybeCountView(playedFraction);
-                }
-                
-                // Update loaded progress
-                const buffered = video.buffered;
-                if (buffered.length > 0) {
-                  const loadedEnd = buffered.end(buffered.length - 1);
-                  setLoaded(loadedEnd / videoDuration);
-                }
-              }
+              if (progressRafRef.current) return;
+              progressRafRef.current = requestAnimationFrame(() => {
+                progressRafRef.current = null;
+                syncProgressFromVideo();
+              });
             }}
             onSeeked={() => {
               const video = videoElRef.current;
@@ -1962,6 +2101,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               console.error("[Video] Error:", e);
             }}
           />
+          </PlayerStage>
         )}
 
         {/* Mensaje cuando el video está procesándose */}
@@ -1994,27 +2134,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
         {/* Clickable overlay for play/pause and fullscreen */}
         <ClickOverlay
-          onClick={(e) => {
-            e.stopPropagation();
-            // Use timeout to distinguish single click from double click
-            if (clickTimeoutRef.current) {
-              clearTimeout(clickTimeoutRef.current);
-              clickTimeoutRef.current = null;
-              return; // This is the second click of a double-click
-            }
-            clickTimeoutRef.current = setTimeout(() => {
-              clickTimeoutRef.current = null;
-              handlePlayPause();
-            }, 250);
+          onPointerUp={handleStagePointerUp}
+          onPointerUpCapture={(e) => {
+            if (isControlTarget(e.target)) e.stopPropagation();
           }}
-          onDoubleClick={(e) => {
-            e.stopPropagation();
-            if (clickTimeoutRef.current) {
-              clearTimeout(clickTimeoutRef.current);
-              clickTimeoutRef.current = null;
-            }
-            toggleFullScreen();
-          }}
+          onDoubleClick={handleStageDoublePointerUp}
         />
 
         {/* Loading spinner */}
@@ -2106,7 +2230,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 ref={timelineRef}
                 onMouseMove={handleTimelineMouseMove}
                 onMouseLeave={handleTimelineMouseLeave}
-                onMouseDown={handleTimelineMouseDown}
+                onPointerDown={handleTimelinePointerDown}
               >
                 <TimelineBar className="timeline-bar">
                   <BufferedBar style={{ width: `${loaded * 100}%` }} />
@@ -2182,7 +2306,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                   <VolumeSliderWrap className="volume-slider-wrap">
                     <VolumeSliderTrack
                       ref={volumeTrackRef}
-                      onMouseDown={handleVolumeMouseDown}
+                      onPointerDown={handleVolumePointerDown}
                     >
                       <VolumeSliderFill style={{ width: `${(muted ? 0 : volume) * 100}%` }} />
                       <VolumeSliderThumb style={{ left: `${(muted ? 0 : volume) * 100}%` }} />
