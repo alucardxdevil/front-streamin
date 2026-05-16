@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import { createPortal } from "react-dom";
 import styled, { keyframes } from "styled-components";
 import Hls from "hls.js";
 import { CircularProgress } from "@mui/material";
@@ -606,7 +605,6 @@ const MenuOverlay = styled.div`
   right: 8px;
   left: auto;
   top: auto;
-  pointer-events: auto;
   background: rgba(20, 20, 20, 0.98);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
@@ -617,11 +615,20 @@ const MenuOverlay = styled.div`
   max-height: 340px;
   overflow-y: auto;
   z-index: 500;
-  animation: ${fadeInScale} 0.2s ease;
   transform-origin: bottom right;
   touch-action: manipulation;
   -webkit-user-select: none;
   user-select: none;
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  visibility: ${({ $visible }) => ($visible ? "visible" : "hidden")};
+  pointer-events: ${({ $visible }) => ($visible ? "auto" : "none")};
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+
+  ${({ $visible }) =>
+    $visible &&
+    `
+    animation: ${fadeInScale} 0.2s ease;
+  `}
 
   /* Firefox scrollbar */
   scrollbar-width: thin;
@@ -1067,6 +1074,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   // UI state
   const [showControls, setShowControls] = useState(true);
+  const showControlsRef = useRef(true);
+  useEffect(() => {
+    showControlsRef.current = showControls;
+  }, [showControls]);
   const [loading, setLoading] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -1082,10 +1093,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   // Menu state
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuView, setMenuView] = useState("main"); // main, speed, quality
-
-  useEffect(() => {
-    menuOpenRef.current = menuOpen;
-  }, [menuOpen]);
 
   // Feedback animation
   const [feedbackIcon, setFeedbackIcon] = useState(null);
@@ -1130,6 +1137,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const menuButtonRef = useRef(null);
   const menuPanelRef = useRef(null);
   const menuOpenRef = useRef(false);
+  const userInteractingWithControlsRef = useRef(false);
   const clickTimeoutRef = useRef(null);
   const progressRafRef = useRef(null);
   const lastProgressSyncRef = useRef(0);
@@ -1489,21 +1497,44 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     [handleTouchStageTap]
   );
 
+  const clearStageClickTimer = useCallback(() => {
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+      clickTimeoutRef.current = null;
+    }
+  }, []);
+
+  const markControlsInteraction = useCallback(() => {
+    userInteractingWithControlsRef.current = true;
+    window.setTimeout(() => {
+      userInteractingWithControlsRef.current = false;
+    }, 2500);
+  }, []);
+
   const handleControlPointerDown = useCallback(
     (e) => {
-      if (isSettingsMenuTarget(e.target)) return;
+      if (isSettingsMenuTarget(e.target)) {
+        markControlsInteraction();
+        clearStageClickTimer();
+        return;
+      }
       if (!isControlTarget(e.target)) return;
+      markControlsInteraction();
+      clearStageClickTimer();
       if (isTouchLikePointer(e) || isCoarsePointerDevice()) {
         bumpControlsActivity();
       }
     },
-    [bumpControlsActivity]
+    [bumpControlsActivity, clearStageClickTimer, markControlsInteraction]
   );
 
   const handleStagePointerUp = useCallback(
     (e) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
-      if (isControlTarget(e.target) || isSettingsMenuTarget(e.target)) return;
+      if (isControlTarget(e.target) || isSettingsMenuTarget(e.target)) {
+        clearStageClickTimer();
+        return;
+      }
 
       if (clickTimeoutRef.current) {
         clearTimeout(clickTimeoutRef.current);
@@ -1513,8 +1544,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
       clickTimeoutRef.current = setTimeout(() => {
         clickTimeoutRef.current = null;
+        if (menuOpenRef.current) return;
+
         const hit = document.elementFromPoint(e.clientX, e.clientY);
-        if (isControlTarget(hit)) return;
+        if (isControlTarget(hit) || isSettingsMenuTarget(hit)) return;
 
         if (isTouchLikePointer(e)) {
           handleTouchStageTap();
@@ -1525,7 +1558,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         handlePlayPause();
       }, 250);
     },
-    [bumpControlsActivity, handlePlayPause, handleTouchStageTap]
+    [bumpControlsActivity, handlePlayPause, handleTouchStageTap, clearStageClickTimer]
   );
 
   const handleStageDoublePointerUp = useCallback((e) => {
@@ -1561,38 +1594,40 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   }, [seeking, maybeCountView]);
 
   /* ========== Settings Menu ========== */
-  const closeSettingsMenu = useCallback(() => {
-    menuOpenRef.current = false;
-    setMenuOpen(false);
-    setMenuView("main");
-    scheduleControlsHide();
-  }, [scheduleControlsHide]);
-
-  const openSettingsMenu = useCallback(() => {
-    menuOpenRef.current = true;
-    clearTimeout(hideTimeout.current);
-    bufferingRef.current = false;
-    if (loadingTimerRef.current) {
-      clearTimeout(loadingTimerRef.current);
-      loadingTimerRef.current = null;
-    }
-    setLoading(false);
-    setShowControls(true);
-    setMenuView("main");
-    setMenuOpen(true);
-  }, []);
-
   const handleSettingsClick = useCallback(
     (e) => {
       e.stopPropagation();
-      if (menuOpenRef.current) {
-        closeSettingsMenu();
-      } else {
-        openSettingsMenu();
+      clearStageClickTimer();
+      markControlsInteraction();
+      clearTimeout(hideTimeout.current);
+      bufferingRef.current = false;
+      if (loadingTimerRef.current) {
+        clearTimeout(loadingTimerRef.current);
+        loadingTimerRef.current = null;
       }
+      setLoading(false);
+      setShowControls(true);
+      setMenuOpen((open) => !open);
     },
-    [closeSettingsMenu, openSettingsMenu]
+    [clearStageClickTimer, markControlsInteraction]
   );
+
+  useEffect(() => {
+    menuOpenRef.current = menuOpen;
+    if (menuOpen) {
+      clearTimeout(hideTimeout.current);
+      setShowControls(true);
+      setLoading(false);
+      bufferingRef.current = false;
+      if (loadingTimerRef.current) {
+        clearTimeout(loadingTimerRef.current);
+        loadingTimerRef.current = null;
+      }
+    } else {
+      setMenuView("main");
+      scheduleControlsHide();
+    }
+  }, [menuOpen, scheduleControlsHide]);
 
   /* ========== Firefox HLS playback recovery ========== */
   // En Firefox, cuando ReactPlayer pasa playing={true} con HLS, el primer
@@ -2208,11 +2243,23 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
             }}
             onWaiting={() => {
               bufferingRef.current = true;
-              if (menuOpenRef.current) return;
+              if (
+                menuOpenRef.current ||
+                userInteractingWithControlsRef.current ||
+                showControlsRef.current
+              ) {
+                return;
+              }
               if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
               loadingTimerRef.current = setTimeout(() => {
-                if (bufferingRef.current && !menuOpenRef.current) setLoading(true);
-              }, 300);
+                if (
+                  bufferingRef.current &&
+                  !menuOpenRef.current &&
+                  !userInteractingWithControlsRef.current
+                ) {
+                  setLoading(true);
+                }
+              }, 800);
             }}
             onCanPlay={() => {
               bufferingRef.current = false;
@@ -2463,9 +2510,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                 {/* Settings */}
                 <ControlBtn
                   ref={menuButtonRef}
-                  {...controlProps}
                   data-settings-trigger
                   type="button"
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+                    clearStageClickTimer();
+                    markControlsInteraction();
+                  }}
                   onClick={handleSettingsClick}
                   title={t("settings")}
                   aria-expanded={menuOpen}
@@ -2490,22 +2541,18 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           </BottomControls>
         </ControlsWrapper>
 
-        {/* Menú de ajustes (portal dentro del player, por encima del spinner) */}
-        {menuOpen &&
-          playerContainerRef.current &&
-          createPortal(
-            <MenuOverlay
-              ref={menuPanelRef}
-              data-player-menu
-              role="menu"
-              onMouseDown={(e) => e.stopPropagation()}
-              onTouchStart={(e) => e.stopPropagation()}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {renderMenuContent()}
-            </MenuOverlay>,
-            playerContainerRef.current
-          )}
+        {/* Menú de ajustes: siempre montado, visible con $visible (evita fallos de portal/condicional) */}
+        <MenuOverlay
+          ref={menuPanelRef}
+          data-player-menu
+          role="menu"
+          $visible={menuOpen}
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {renderMenuContent()}
+        </MenuOverlay>
       </PlayerWrapper>
       </div>
     </VideoWrapper>
