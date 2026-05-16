@@ -824,7 +824,7 @@ const heightToDisplayLabel = (height, allowedQualityStrings) => {
     return /p$/i.test(best.raw) ? best.raw : `${best.n}p`;
   }
 
-  const ladder = [2160, 1440, 1080, 720, 480, 360, 240];
+  const ladder = [2160, 1440, 1080, 720, 480, 360];
   let pick = ladder[0];
   let pickDist = Math.abs(h - pick);
   for (const step of ladder) {
@@ -872,7 +872,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   // ── Calidades disponibles dinámicamente desde el video ─────────────────────
   // El backend guarda en currentVideo.qualities las calidades reales generadas
-  // (ej: ["480p", "360p", "240p"] para un video de baja resolución)
+  // (ej: ["480p", "360p"] para un video de baja resolución)
   const availableQualities = useMemo(() => {
     const quals = currentVideo?.qualities;
     if (quals && Array.isArray(quals) && quals.length > 0) {
@@ -1045,7 +1045,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     // Estrategia 3: Buscar por width (para perfiles definidos por width)
     if (levelIndex < 0 && !isNaN(targetValue)) {
       // Mapeo de nombre de perfil a width esperado
-      const widthMap = { "1080p": 1920, "720p": 1280, "480p": 854, "360p": 640, "240p": 426 };
+      const widthMap = { "1080p": 1920, "720p": 1280, "480p": 854, "360p": 640 };
       const targetWidth = widthMap[profileName];
       if (targetWidth) {
         levelIndex = hls.levels.findIndex((level) => level.width === targetWidth);
@@ -1752,8 +1752,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                     setHlsLevels(hls.levels || []);
 
                     // ── Prioridad de calidad al inicio ──────────────────────────
-                    // Por default: intentar 480p, si no existe 360p, si no 240p,
-                    // si no, la más baja disponible. Además, capear ABR a 480p
+                    // Por default: intentar 480p, si no existe 360p; si no,
+                    // la más baja disponible. Además, capear ABR a 480p
                     // al inicio para evitar 720/1080 en usuarios promedio.
                     const levels = hls.levels || [];
                     if (levels.length > 0) {
@@ -1772,12 +1772,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
                       const chosen =
                         pick(480) ||
                         pick(360) ||
-                        pick(240) ||
                         (byHeightAsc.length > 0 ? byHeightAsc[0] : null);
 
                       if (chosen && typeof chosen.idx === "number") {
                         // Cap máximo a 480 (o a lo elegido si no hay 480).
-                        // ABR puede bajar a 240 si hay buffer/throughput bajo.
+                        // ABR puede bajar a niveles más bajos si hay buffer/throughput bajo.
                         hls.autoLevelCapping = chosen.height >= 480 ? chosen.idx : chosen.idx;
                         hls.currentLevel = chosen.idx;
                         const qh = resolveLevelDisplayHeight(chosen, qualitiesRef.current);

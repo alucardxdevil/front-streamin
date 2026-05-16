@@ -349,13 +349,13 @@ export const Upload = ({ setOpen }) => {
   const getStatusMessage = () => {
     switch (state) {
       case "uploading":
-        return t("uploadingToCloud") || "Subiendo archivo a la nube...";
+        return t("Uploading To Cloud") || "Subiendo archivo a la nube...";
       case "enqueuing":
-        return t("preparingTranscode") || "Preparando transcodificación...";
+        return t("Preparing Transcode") || "Preparando transcodificación...";
       case "processing":
-        return t("transcodingHLS") || "Transcodificando a HLS (múltiples calidades)...";
+        return t("TranscodingHLS") || "Transcodificando a HLS (múltiples calidades)...";
       case "ready":
-        return t("videoReady") || "¡Video listo para reproducir!";
+        return t("Video Ready") || "¡Video listo para reproducir!";
       case "error":
         return null; // Se muestra en ErrorText
       default:

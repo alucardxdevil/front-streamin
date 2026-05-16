@@ -2,7 +2,7 @@
  * Utilidad para construir URLs del proxy de streaming
  *
  * En producción (Cloudflare Pages), el frontend está en un dominio diferente
- * al backend (http://89.167.94.4), por lo que se deben usar URLs absolutas.
+ * al backend (http://ip_servidor), por lo que se deben usar URLs absolutas.
  *
  * En desarrollo, el proxy de CRA (configurado en package.json) redirige
  * solicitudes de /api/* a http://localhost:5000, por lo que se usan rutas relativas.
@@ -12,7 +12,7 @@
  */
 
 // URL base del backend según el entorno
-// En producción: http://89.167.94.4
+// En producción: http://ip_servidor
 // En desarrollo: vacío (usa proxy de CRA con rutas relativas)
 const BACKEND_URL =
   process.env.NODE_ENV === 'production'

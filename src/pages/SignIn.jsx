@@ -419,7 +419,11 @@ const SignIn = () => {
     dispatch(loginStart());
     try {
       const res = await axios.post("/auth/signin", { email, password });
-      dispatch(loginSuccess(res.data));
+      const { accessToken, ...user } = res.data || {};
+      if (accessToken) {
+        localStorage.setItem("token", accessToken);
+      }
+      dispatch(loginSuccess(user));
       navigate("/");
     } catch (err) {
       setError("Invalid email or password.");
@@ -438,7 +442,11 @@ const SignIn = () => {
         email: result.user.email,
         img: result.user.photoURL,
       });
-      dispatch(loginSuccess(res.data));
+      const { accessToken, ...user } = res.data || {};
+      if (accessToken) {
+        localStorage.setItem("token", accessToken);
+      }
+      dispatch(loginSuccess(user));
       navigate("/");
     } catch (err) {
       setError("Failed to sign in with Google.");

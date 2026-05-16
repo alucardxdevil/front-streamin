@@ -1,5 +1,10 @@
+import { localePatches } from './localePatches.js'
+
 const translations = {
   es: {
+    // General
+    support: "Soporte",
+    contact: "Contacto",
     // Navbar
     search: "Buscar",
     login: "INICIAR SESIÓN",
@@ -198,7 +203,7 @@ const translations = {
     securityPrivacy: "Seguridad y privacidad",
     securityPrivacyDesc: "Protección de datos, reportes y bloqueos.",
     monetization: "Monetización",
-    monetizationDesc: "Cómo ganar dinero, requisitos y pagos.",
+    monetizationDesc: "Proximamente disponible.",
     generalSettings: "Configuración general",
     generalSettingsDesc: "Notificaciones, idioma, tema y preferencias.",
 
@@ -246,13 +251,13 @@ const translations = {
     contactUs: "Contáctanos",
     acceptTerms: "Aceptación de los Términos",
     acceptTermsContent: "Al acceder y utilizar stream-in, aceptas estos Términos y Condiciones en su totalidad. Si no estás de acuerdo con alguna parte, te pedimos que no utilices la plataforma.",
-    acceptTermsHighlight: "📌 El uso continuado de stream-in después de cualquier modificación constituye tu aceptación de los términos actualizados.",
+    acceptTermsHighlight: "El uso continuado de stream-in después de cualquier modificación constituye tu aceptación de los términos actualizados.",
     serviceDescription: "Descripción del Servicio",
     serviceDescContent: "stream-in es una plataforma de streaming que permite a los usuarios:",
-    serviceDescItem1: "Subir, compartir y descubrir contenido de audio (podcasts, música, etc.)",
+    serviceDescItem1: "Subir, compartir y descubrir contenido de video, audio (podcasts, música, etc.)",
     serviceDescItem2: "Crear y personalizar perfiles de creador",
     serviceDescItem3: "Interactuar con otros usuarios y creadores",
-    serviceDescItem4: "Acceder a herramientas de monetización para creadores elegibles",
+    serviceDescItem4: "Acceder a herramientas de monetización para creadores elegibles cuando este disponible",
     serviceDescFooter: "Nos reservamos el derecho de modificar, suspender o descontinuar cualquier aspecto del servicio en cualquier momento, con o sin previo aviso.",
     userAccounts: "Cuentas de Usuario",
     userAccountsContent: "Para utilizar ciertas funciones de stream-in, necesitarás crear una cuenta. Al hacerlo, te comprometes a:",
@@ -260,14 +265,14 @@ const translations = {
     userAccountsItem2: "Mantener la seguridad de tu contraseña y credenciales",
     userAccountsItem3: "Ser responsable de toda actividad bajo tu cuenta",
     userAccountsItem4: "Notificarnos inmediatamente sobre cualquier uso no autorizado",
-    userAccountsHighlight: "⚠️ Nos reservamos el derecho de suspender o eliminar cuentas que violen estos términos o que permanezcan inactivas por períodos prolongados.",
+    userAccountsHighlight: "Nos reservamos el derecho de suspender o eliminar cuentas que violen estos términos o que permanezcan inactivas por períodos prolongados.",
     contentIP: "Contenido y Propiedad Intelectual",
     contentIPContent: "Tú conservas los derechos sobre el contenido que subes a stream-in. Sin embargo, al publicar contenido, nos otorgas una licencia mundial, no exclusiva, libre de regalías para usar, reproducir, modificar, distribuir y mostrar dicho contenido dentro de la plataforma.",
     contentIPCommit: "Te comprometes a que tu contenido:",
     contentIPItem1: "Es original o tienes los derechos necesarios para compartirlo",
     contentIPItem2: "No infringe derechos de autor, marcas registradas u otros derechos de terceros",
     contentIPItem3: "No contiene material difamatorio, obsceno o ilegal",
-    contentIPHighlight: "🎵 Si subes música o audio que no es tuyo, asegúrate de contar con las licencias correspondientes. stream-in no se hace responsable por infracciones de derechos de autor cometidas por usuarios.",
+    contentIPHighlight: "Si subes música o audio que no es tuyo, asegúrate de contar con las licencias correspondientes. stream-in no se hace responsable por infracciones de derechos de autor cometidas por usuarios.",
     prohibitedConduct: "Conducta Prohibida",
     prohibitedConductContent: "Para mantener stream-in como un espacio seguro y respetuoso, está prohibido:",
     prohibitedItem1: "Subir contenido que promueva odio, violencia o discriminación",
@@ -284,7 +289,7 @@ const translations = {
     monetizationItem2: "Los pagos se procesan según el calendario establecido",
     monetizationItem3: "stream-in se reserva el derecho de modificar las tasas de monetización",
     monetizationItem4: "Los creadores son responsables de sus obligaciones fiscales",
-    monetizationHighlight: "💰 Los detalles específicos de monetización se encuentran en el Acuerdo de Creador, que complementa estos términos generales.",
+    monetizationHighlight: "Los detalles específicos de monetización se encuentran en el Acuerdo de Creador, que complementa estos términos generales.",
     privacyData: "Privacidad y Protección de Datos",
     privacyContent: "Tu privacidad es importante para nosotros. Recopilamos y procesamos datos personales de acuerdo con nuestra Política de Privacidad, que incluye:",
     privacyItem1: "Información de registro (nombre, email, etc.)",
@@ -297,7 +302,7 @@ const translations = {
     liabilityItem1: "No garantizamos que el servicio sea ininterrumpido, seguro o libre de errores",
     liabilityItem2: "No somos responsables por pérdidas indirectas, incidentales o consecuentes",
     liabilityItem3: "Nuestra responsabilidad total no excederá el monto que hayas pagado a stream-in en los últimos 12 meses",
-    liabilityHighlight: "🛡️ Esta limitación aplica en la máxima medida permitida por la legislación aplicable en tu jurisdicción.",
+    liabilityHighlight: "Esta limitación aplica en la máxima medida permitida por la legislación aplicable en tu jurisdicción.",
     indemnification: "Indemnización",
     indemnificationContent: "Aceptas indemnizar y mantener indemne a stream-in, sus directores, empleados y afiliados de cualquier reclamación, daño, pérdida o gasto (incluyendo honorarios legales) que surja de:",
     indemnificationItem1: "Tu uso de la plataforma",
@@ -312,8 +317,8 @@ const translations = {
     termsModFooter: "Te recomendamos revisar estos términos regularmente para estar al tanto de cualquier cambio.",
     contactDisputes: "Contacto y Resolución de Disputas",
     contactDisputesContent: "Si tienes preguntas sobre estos términos o necesitas reportar un problema, puedes contactarnos a través de:",
-    contactDisputesHighlight: "⚖️ Cualquier disputa se resolverá primero mediante negociación de buena fe. Si no se alcanza un acuerdo, se someterá a arbitraje vinculante según las leyes aplicables de la jurisdicción correspondiente.",
-    termsFooter: "© 2025 stream-in. Todos los derechos reservados. Si tienes dudas sobre estos términos, no dudes en",
+    contactDisputesHighlight: "Cualquier disputa se resolverá primero mediante negociación de buena fe. Si no se alcanza un acuerdo, se someterá a arbitraje vinculante según las leyes aplicables de la jurisdicción correspondiente.",
+    termsFooter: "© 2025 stream-in Todos los derechos reservados. Si tienes dudas sobre estos términos, no dudes en",
     contactUsLink: "contactarnos",
 
     // Advertise page
@@ -422,14 +427,14 @@ const translations = {
     termsSubtitleUs: "En stream-in nos importa que entiendas tus derechos y responsabilidades. Hemos escrito estos términos de la forma más clara posible.",
     lastUpdatedUs: "Última actualización: Enero 2025",
 
-    usAboutPageTitle: "Sobre stream-in.com",
+    usAboutPageTitle: "Sobre stream-in",
     usAboutPageSubtitle:
-      "stream-in.com es una plataforma nueva de streaming en fase beta. Aquí explicamos nuestra visión, cómo pensamos la experiencia de quienes ven y crean contenido, y qué límites defendemos.",
+      "stream-in es una plataforma nueva de streaming en fase beta. Aquí explicamos nuestra visión, cómo pensamos la experiencia de quienes ven y crean contenido, y qué límites defendemos.",
     usAboutPageBetaLine: "Versión beta · Abril 2026",
 
-    usSecWhatTitle: "Qué es stream-in.com",
+    usSecWhatTitle: "Qué es stream-in",
     usSecWhatP1:
-      "stream-in.com nace como una alternativa de streaming con las ideas recientes: menos muros arbitrarios sobre lo que se puede decir, y más foco en que la herramienta sirva de verdad a la audiencia y a quien produce contenido.",
+      "stream-in nace como una alternativa de streaming con las ideas recientes: menos muros arbitrarios sobre lo que se puede decir, y más foco en que la herramienta sirva de verdad a la audiencia y a quien produce contenido.",
     usSecWhatP2:
       "Estamos en fase beta: construimos con calma, escuchamos feedback y vamos sumando funciones a medida que la plataforma crece.",
     usSecWhatHighlight:
@@ -445,7 +450,7 @@ const translations = {
     usSecExperienceP1:
       "No queremos una plataforma atascada de anuncios ni un feed que parezca un tablero de intereses ajenos a lo que viniste a ver. Sí queremos un negocio sostenible y que los creadores ganen por su contenido, así que la publicidad puede existir cuando ayuda a sostener la plataforma. El punto es el equilibrio: anuncios relevantes y respetuosos, sin ahogar tu experiencia.",
     usSecExperienceP2:
-      "stream-in.com está diseñada para crecer junto con los anunciantes (no en contra): una experiencia segura para marcas y centrada en el usuario, donde la promoción apoya el ecosistema sin convertirse en el producto principal.",
+      "stream-in está diseñada para crecer junto con los anunciantes (no en contra): una experiencia segura para marcas y centrada en el usuario, donde la promoción apoya el ecosistema sin convertirse en el producto principal.",
 
     usSecMoneyTitle: "Monetización para creadores, cuando el proyecto lo permita",
     usSecMoneyP1:
@@ -461,7 +466,7 @@ const translations = {
 
     usSecLimitsTitle: "Límites claros: lo que no tiene cabida",
     usSecLimitsP1:
-      "Defendemos la libertad de expresión y rechazamos la censura desmedida, pero eso no convierte a stream-in.com en un espacio sin reglas. Estamos en contra de todo contenido que busque dañar, explotar o discriminar.",
+      "Defendemos la libertad de expresión y rechazamos la censura desmedida, pero eso no convierte a stream-in en un espacio sin reglas. Estamos en contra de todo contenido que busque dañar, explotar o discriminar.",
     usSecLimitsIntroList: "No está permitido subir ni promover, entre otras cosas:",
     usSecLimitsItemThreat: "Amenazas o incitación a dañar a personas o colectivos.",
     usSecLimitsItemViolence: "Violencia explícita gratuita o contenido cuyo fin principal sea el morbo sangriento.",
@@ -476,7 +481,7 @@ const translations = {
       "Para consultas generales, propuestas o reportes relacionados con la plataforma, puedes escribirnos. Valoramos el diálogo directo con usuarios y creadores.",
 
     usAboutFooter:
-      "© 2026 stream-in.com — Plataforma en beta. Gracias por formar parte de este arranque.",
+      "© 2026 stream-in — Plataforma en beta. Gracias por formar parte de este arranque.",
 
     // Edit Video
     editVideo: "Editar video",
@@ -503,7 +508,7 @@ const translations = {
     imageMax10Mb: "Imagen máximo 10 MB",
     videoMax800Mb: "Video máximo 800 MB",
     uploadBetaLimitsHint:
-      "Beta stream-in.com: hasta 800 MB por vídeo y 10 MB por miniatura.",
+      "Beta stream-in: hasta 800 MB por vídeo y 10 MB por miniatura.",
     waitForUpload: "Espera a que terminen de subir",
     errorSaving: "Error al guardar",
     thumbnailImage: "Imagen de miniatura",
@@ -813,6 +818,10 @@ const translations = {
   },
 
   en: {
+    // General
+    support: "Support",
+    contact: "Contact",
+    
     // Navbar
     search: "Search",
     login: "LOGIN",
@@ -1036,7 +1045,7 @@ const translations = {
     securityPrivacy: "Security & privacy",
     securityPrivacyDesc: "Data protection, reports and blocks.",
     monetization: "Monetization",
-    monetizationDesc: "How to earn money, requirements and payments.",
+    monetizationDesc: "Coming soon.",
     generalSettings: "General settings",
     generalSettingsDesc: "Notifications, language, theme and preferences.",
 
@@ -1084,10 +1093,10 @@ const translations = {
     contactUs: "Contact us",
     acceptTerms: "Acceptance of Terms",
     acceptTermsContent: "By accessing and using streamn, you accept these Terms and Conditions in their entirety. If you disagree with any part, we ask that you do not use the platform.",
-    acceptTermsHighlight: "📌 Continued use of streamn after any modification constitutes your acceptance of the updated terms.",
+    acceptTermsHighlight: "Continued use of streamn after any modification constitutes your acceptance of the updated terms.",
     serviceDescription: "Service Description",
     serviceDescContent: "streamn is a streaming platform that allows users to:",
-    serviceDescItem1: "Upload, share and discover audio content (podcasts, music, etc.)",
+    serviceDescItem1: "Upload, share and discover video, audio content (podcasts, music, etc.)",
     serviceDescItem2: "Create and customize creator profiles",
     serviceDescItem3: "Interact with other users and creators",
     serviceDescItem4: "Access monetization tools for eligible creators",
@@ -1260,14 +1269,14 @@ const translations = {
     termsSubtitleUs: "At stream-in we care about you understanding your rights and responsibilities. We have written these terms as clearly as possible.",
     lastUpdatedUs: "Last updated: January 2025",
 
-    usAboutPageTitle: "About stream-in.com",
+    usAboutPageTitle: "About stream-in",
     usAboutPageSubtitle:
-      "stream-in.com is a new streaming platform in beta. Here we share our vision, how we think about the experience for viewers and creators, and the boundaries we stand by.",
+      "stream-in is a new streaming platform in beta. Here we share our vision, how we think about the experience for viewers and creators, and the boundaries we stand by.",
     usAboutPageBetaLine: "Beta release · April 2026",
 
-    usSecWhatTitle: "What is stream-in.com?",
+    usSecWhatTitle: "What is stream-in?",
     usSecWhatP1:
-      "stream-in.com is built as a streaming alternative with a modern take: fewer arbitrary walls around what can be said, and more focus on the product actually serving audiences and people who make content.",
+      "stream-in is built as a streaming alternative with a modern take: fewer arbitrary walls around what can be said, and more focus on the product actually serving audiences and people who make content.",
     usSecWhatP2:
       "We are in beta: we ship thoughtfully, listen to feedback, and add features as the platform grows.",
     usSecWhatHighlight:
@@ -1283,7 +1292,7 @@ const translations = {
     usSecExperienceP1:
       "We do not want a site clogged with ads or a feed that feels like a billboard for interests unrelated to why you came. We do want a sustainable business—and we want creators to earn from what they publish—so advertising can exist when it supports the platform. The point is balance: ads should be relevant, respectful, and never drown out what you came to watch.",
     usSecExperienceP2:
-      "stream-in.com is built to grow with advertisers (not against them): a brand-safe, user-first experience where promotion supports the ecosystem instead of becoming the main product.",
+      "stream-in is built to grow with advertisers (not against them): a brand-safe, user-first experience where promotion supports the ecosystem instead of becoming the main product.",
 
     usSecMoneyTitle: "Creator monetization when the project can support it",
     usSecMoneyP1:
@@ -1299,7 +1308,7 @@ const translations = {
 
     usSecLimitsTitle: "Clear limits: what does not belong",
     usSecLimitsP1:
-      "We support freedom of expression and reject over-censorship, but stream-in.com is not a rule-free zone. We oppose content meant to harm, exploit, or discriminate.",
+      "We support freedom of expression and reject over-censorship, but stream-in is not a rule-free zone. We oppose content meant to harm, exploit, or discriminate.",
     usSecLimitsIntroList: "Uploading or promoting the following is not allowed, including but not limited to:",
     usSecLimitsItemThreat: "Threats or incitement to harm people or groups.",
     usSecLimitsItemViolence: "Gratuitous explicit violence or content whose main purpose is graphic shock.",
@@ -1314,7 +1323,7 @@ const translations = {
       "For general questions, ideas, or platform-related reports, you can reach out. We value direct dialogue with viewers and creators.",
 
     usAboutFooter:
-      "© 2026 stream-in.com — Beta platform. Thank you for being part of this launch.",
+      "© 2026 stream-in — Beta platform. Thank you for being part of this launch.",
 
     // Edit Video
     editVideo: "Edit video",
@@ -1341,7 +1350,7 @@ const translations = {
     imageMax10Mb: "Image maximum 10 MB",
     videoMax800Mb: "Video maximum 800 MB",
     uploadBetaLimitsHint:
-      "stream-in.com beta: up to 800 MB per video and 10 MB per thumbnail.",
+      "stream-in beta: up to 800 MB per video and 10 MB per thumbnail.",
     waitForUpload: "Wait for upload to complete",
     errorSaving: "Error saving",
     thumbnailImage: "Thumbnail image",
@@ -1502,6 +1511,13 @@ const translations = {
     
     // Trends page
     trendingNow: "Trending Now",
+    TopTenWorld: "Global Top 10",
+    TopTenCountry: "National Top 10",
+    TopTenChannel: "Top 10 by channel",
+    MostViewed: "Top 10 most viewed this year",
+    MostLiked: "Top 10 most liked",
+    MostDisliked: "Top 10 most disliked",
+    nodataAvaliable: "No data available yet, please wait...",
     serverError: "Could not load information. Please verify that the server is running.",
     noDataAvailable: "No data available",
     followers: "followers",
@@ -1611,6 +1627,10 @@ const translations = {
   },
 
   pt: {
+    //General
+    support: "Médio",
+    contact: "Contato",
+
     // Navbar
     search: "Pesquisar",
     login: "ENTRAR",
@@ -1753,7 +1773,7 @@ const translations = {
     securityPrivacy: "Segurança e privacidade",
     securityPrivacyDesc: "Proteção de dados, denúncias e bloqueios.",
     monetization: "Monetização",
-    monetizationDesc: "Como ganhar dinheiro, requisitos e pagamentos.",
+    monetizationDesc: "Em breve disponível.",
     generalSettings: "Configurações gerais",
     generalSettingsDesc: "Notificações, idioma, tema e preferências.",
 
@@ -2094,15 +2114,15 @@ const translations = {
     playlistVideos: "Videos da playlist",
     nowPlaying: "Reproduzindo agora",
 
-    // Us / About stream-in.com (Beta)
-    usAboutPageTitle: "Sobre stream-in.com",
+    // Us / About stream-in (Beta)
+    usAboutPageTitle: "Sobre stream-in",
     usAboutPageSubtitle:
-      "stream-in.com é uma nova plataforma de streaming em fase beta. Aqui compartilhamos nossa visão, como pensamos a experiência de quem assiste e de quem cria, e quais limites defendemos.",
+      "stream-in é uma nova plataforma de streaming em fase beta. Aqui compartilhamos nossa visão, como pensamos a experiência de quem assiste e de quem cria, e quais limites defendemos.",
     usAboutPageBetaLine: "Versão beta · Abril 2026",
 
-    usSecWhatTitle: "O que é stream-in.com?",
+    usSecWhatTitle: "O que é stream-in?",
     usSecWhatP1:
-      "stream-in.com nasce como uma alternativa de streaming com uma ideia atual: menos barreiras arbitrárias sobre o que pode ser dito e mais foco em a ferramenta realmente servir ao público e a quem cria conteúdo.",
+      "stream-in nasce como uma alternativa de streaming com uma ideia atual: menos barreiras arbitrárias sobre o que pode ser dito e mais foco em a ferramenta realmente servir ao público e a quem cria conteúdo.",
     usSecWhatP2:
       "Estamos em beta: evoluímos com cuidado, ouvimos feedback e adicionamos recursos conforme a plataforma cresce.",
     usSecWhatHighlight:
@@ -2118,7 +2138,7 @@ const translations = {
     usSecExperienceP1:
       "Não queremos um site entupido de anúncios nem um feed que pareça um outdoor de interesses alheios ao que você veio ver. Queremos ser sustentáveis e que criadores ganhem com o que publicam, então anúncios podem existir quando ajudam a manter a plataforma. O ponto é equilíbrio: publicidade relevante e respeitosa, sem sufocar a experiência.",
     usSecExperienceP2:
-      "stream-in.com foi pensada para crescer com anunciantes (não contra eles): um ambiente seguro para marcas e, ao mesmo tempo, centrado no usuário, onde a promoção apoia o ecossistema em vez de virar o produto principal.",
+      "stream-in foi pensada para crescer com anunciantes (não contra eles): um ambiente seguro para marcas e, ao mesmo tempo, centrado no usuário, onde a promoção apoia o ecossistema em vez de virar o produto principal.",
 
     usSecMoneyTitle: "Monetização para criadores, quando for viável",
     usSecMoneyP1:
@@ -2134,7 +2154,7 @@ const translations = {
 
     usSecLimitsTitle: "Limites claros: o que não tem espaço",
     usSecLimitsP1:
-      "Defendemos a liberdade de expressão e rejeitamos censura excessiva, mas stream-in.com não é uma zona sem regras. Somos contra conteúdo feito para ferir, explorar ou discriminar.",
+      "Defendemos a liberdade de expressão e rejeitamos censura excessiva, mas stream-in não é uma zona sem regras. Somos contra conteúdo feito para ferir, explorar ou discriminar.",
     usSecLimitsIntroList:
       "Não é permitido enviar ou promover, entre outras coisas:",
     usSecLimitsItemThreat: "Ameaças ou incitação a ferir pessoas ou grupos.",
@@ -2153,10 +2173,14 @@ const translations = {
       "Para dúvidas gerais, ideias ou relatos relacionados à plataforma, fale com a gente. Valorizamos o diálogo direto com público e criadores.",
 
     usAboutFooter:
-      "© 2026 stream-in.com — Plataforma em beta. Obrigado por fazer parte deste começo.",
+      "© 2026 stream-in — Plataforma em beta. Obrigado por fazer parte deste começo.",
   },
 
   de: {
+    //General
+    support: "Medium",
+    contact: "Kontakt",
+
     // Navbar
     search: "Suchen",
     login: "ANMELDEN",
@@ -2299,7 +2323,7 @@ const translations = {
     securityPrivacy: "Sicherheit & Datenschutz",
     securityPrivacyDesc: "Datenschutz, Meldungen und Sperren.",
     monetization: "Monetarisierung",
-    monetizationDesc: "Wie man Geld verdient, Anforderungen und Auszahlungen.",
+    monetizationDesc: "Bald verfügbar.",
     generalSettings: "Allgemeine Einstellungen",
     generalSettingsDesc: "Benachrichtigungen, Sprache, Design und Präferenzen.",
 
@@ -2640,15 +2664,15 @@ const translations = {
     playlistVideos: "Playlist-Videos",
     nowPlaying: "Wird gerade abgespielt",
 
-    // Us / About stream-in.com (Beta)
-    usAboutPageTitle: "Über stream-in.com",
+    // Us / About stream-in (Beta)
+    usAboutPageTitle: "Über stream-in",
     usAboutPageSubtitle:
-      "stream-in.com ist eine neue Streaming-Plattform in der Beta-Phase. Hier teilen wir unsere Vision, wie wir die Erfahrung für Zuschauer und Creator denken, und welche Grenzen wir klar ziehen.",
+      "stream-in ist eine neue Streaming-Plattform in der Beta-Phase. Hier teilen wir unsere Vision, wie wir die Erfahrung für Zuschauer und Creator denken, und welche Grenzen wir klar ziehen.",
     usAboutPageBetaLine: "Beta-Version · April 2026",
 
-    usSecWhatTitle: "Was ist stream-in.com?",
+    usSecWhatTitle: "Was ist stream-in?",
     usSecWhatP1:
-      "stream-in.com entsteht als Streaming-Alternative mit einem modernen Ansatz: weniger willkürliche Schranken dafür, was gesagt werden darf, und mehr Fokus darauf, dass das Produkt wirklich Publikum und Creator unterstützt.",
+      "stream-in entsteht als Streaming-Alternative mit einem modernen Ansatz: weniger willkürliche Schranken dafür, was gesagt werden darf, und mehr Fokus darauf, dass das Produkt wirklich Publikum und Creator unterstützt.",
     usSecWhatP2:
       "Wir sind in der Beta: Wir entwickeln bedacht, hören auf Feedback und erweitern Funktionen, während die Plattform wächst.",
     usSecWhatHighlight:
@@ -2664,7 +2688,7 @@ const translations = {
     usSecExperienceP1:
       "Wir wollen keine Plattform, die mit Werbung vollgestopft ist oder deren Feed wie eine Litfaßsäule für fremde Interessen wirkt. Wir wollen wirtschaftlich nachhaltig sein – und Creator sollen mit ihren Inhalten verdienen können –, daher kann Werbung existieren, wenn sie die Plattform trägt. Entscheidend ist das Gleichgewicht: relevant, respektvoll und niemals dominierend.",
     usSecExperienceP2:
-      "stream-in.com soll mit Werbekunden wachsen (nicht gegen sie): ein markensicheres, nutzerorientiertes Erlebnis, in dem Werbung das Ökosystem unterstützt statt zum Hauptprodukt zu werden.",
+      "stream-in soll mit Werbekunden wachsen (nicht gegen sie): ein markensicheres, nutzerorientiertes Erlebnis, in dem Werbung das Ökosystem unterstützt statt zum Hauptprodukt zu werden.",
 
     usSecMoneyTitle: "Monetarisierung für Creator, wenn es tragfähig ist",
     usSecMoneyP1:
@@ -2680,7 +2704,7 @@ const translations = {
 
     usSecLimitsTitle: "Klare Grenzen: Was nicht dazugehört",
     usSecLimitsP1:
-      "Wir unterstützen Meinungsfreiheit und lehnen Überzensur ab, aber stream-in.com ist kein regel-freier Raum. Wir lehnen Inhalte ab, die schaden, ausbeuten oder diskriminieren sollen.",
+      "Wir unterstützen Meinungsfreiheit und lehnen Überzensur ab, aber stream-in ist kein regel-freier Raum. Wir lehnen Inhalte ab, die schaden, ausbeuten oder diskriminieren sollen.",
     usSecLimitsIntroList:
       "Das Hochladen oder Bewerben ist nicht erlaubt (u. a.):",
     usSecLimitsItemThreat: "Drohungen oder Aufrufe, Menschen oder Gruppen zu schaden.",
@@ -2699,10 +2723,14 @@ const translations = {
       "Für allgemeine Fragen, Ideen oder Meldungen zur Plattform kannst du uns schreiben. Wir schätzen den direkten Austausch mit Zuschauern und Creatorn.",
 
     usAboutFooter:
-      "© 2026 stream-in.com — Beta-Plattform. Danke, dass du von Anfang an dabei bist.",
+      "© 2026 stream-in — Beta-Plattform. Danke, dass du von Anfang an dabei bist.",
   },
 
   ru: {
+    //General
+    support: "середина",
+    contact: "контакт",
+
     // Navbar
     search: "Поиск",
     login: "ВОЙТИ",
@@ -2889,7 +2917,7 @@ const translations = {
     securityPrivacy: "Безопасность и конфиденциальность",
     securityPrivacyDesc: "Защита данных, жалобы и блокировки.",
     monetization: "Монетизация",
-    monetizationDesc: "Как зарабатывать, требования и выплаты.",
+    monetizationDesc: "В скором времени будет доступно.",
     generalSettings: "Общие настройки",
     generalSettingsDesc: "Уведомления, язык, тема и предпочтения.",
 
@@ -3033,14 +3061,14 @@ const translations = {
     termsSubtitleUs: "В stream-in нам важно, чтобы вы понимали свои права и обязанности.",
     lastUpdatedUs: "Последнее обновление: Январь 2025",
 
-    usAboutPageTitle: "О stream-in.com",
+    usAboutPageTitle: "О stream-in",
     usAboutPageSubtitle:
-      "stream-in.com — новая стриминговая платформа в бета‑стадии. Здесь мы описываем нашу идею, как мы думаем об опыте зрителей и авторов, и какие границы считаем важными.",
+      "stream-in — новая стриминговая платформа в бета‑стадии. Здесь мы описываем нашу идею, как мы думаем об опыте зрителей и авторов, и какие границы считаем важными.",
     usAboutPageBetaLine: "Бета‑версия · Апрель 2026",
 
-    usSecWhatTitle: "Что такое stream-in.com?",
+    usSecWhatTitle: "Что такое stream-in?",
     usSecWhatP1:
-      "stream-in.com создаётся как альтернатива для стриминга с современным подходом: меньше произвольных запретов на высказывания и больше фокуса на том, чтобы продукт реально служил зрителям и создателям контента.",
+      "stream-in создаётся как альтернатива для стриминга с современным подходом: меньше произвольных запретов на высказывания и больше фокуса на том, чтобы продукт реально служил зрителям и создателям контента.",
     usSecWhatP2:
       "Мы в бете: развиваемся аккуратно, слушаем обратную связь и добавляем функции по мере роста платформы.",
     usSecWhatHighlight:
@@ -3056,7 +3084,7 @@ const translations = {
     usSecExperienceP1:
       "Мы не хотим платформу, забитую рекламой, или ленту, которая ощущается как билборд чужих интересов. Мы хотим быть устойчивым бизнесом — и хотим, чтобы авторы зарабатывали на своём контенте — поэтому реклама может быть, когда она поддерживает платформу. Главное — баланс: релевантно, уважительно и без того, чтобы реклама перекрывала то, ради чего вы пришли.",
     usSecExperienceP2:
-      "stream-in.com строится так, чтобы расти вместе с рекламодателями: «brand‑safe» и ориентировано на пользователя — где продвижение поддерживает экосистему, а не становится главным продуктом.",
+      "stream-in строится так, чтобы расти вместе с рекламодателями: «brand‑safe» и ориентировано на пользователя — где продвижение поддерживает экосистему, а не становится главным продуктом.",
 
     usSecMoneyTitle: "Монетизация для авторов, когда это станет возможно",
     usSecMoneyP1:
@@ -3072,7 +3100,7 @@ const translations = {
 
     usSecLimitsTitle: "Чёткие границы: чему здесь не место",
     usSecLimitsP1:
-      "Мы поддерживаем свободу выражения и против чрезмерной цензуры, но stream-in.com — не зона без правил. Мы против контента, который направлен на вред, эксплуатацию или дискриминацию.",
+      "Мы поддерживаем свободу выражения и против чрезмерной цензуры, но stream-in — не зона без правил. Мы против контента, который направлен на вред, эксплуатацию или дискриминацию.",
     usSecLimitsIntroList:
       "Запрещено загружать или продвигать, включая (но не ограничиваясь):",
     usSecLimitsItemThreat:
@@ -3092,7 +3120,7 @@ const translations = {
       "По общим вопросам, идеям или сообщениям о проблемах на платформе — пишите нам. Мы ценим прямой диалог со зрителями и авторами.",
 
     usAboutFooter:
-      "© 2026 stream-in.com — Платформа в бета‑стадии. Спасибо, что вы с нами с самого начала.",
+      "© 2026 stream-in — Платформа в бета‑стадии. Спасибо, что вы с нами с самого начала.",
 
     // Edit Video
     editVideo: "Редактировать видео",
@@ -3119,7 +3147,7 @@ const translations = {
     imageMax10Mb: "Изображение макс. 10 МБ",
     videoMax800Mb: "Видео макс. 800 МБ",
     uploadBetaLimitsHint:
-      "Бета stream-in.com: до 800 МБ на видео и 10 МБ на превью.",
+      "Бета stream-in: до 800 МБ на видео и 10 МБ на превью.",
     waitForUpload: "Дождитесь окончания загрузки",
     errorSaving: "Ошибка при сохранении",
     thumbnailImage: "Изображение миниатюры",
@@ -3394,6 +3422,10 @@ const translations = {
   },
 
   zh: {
+    // General
+    support: "中等的",
+    contact: "接触",
+
     // Navbar (导航栏)
     search: "搜索",
     login: "登录",
@@ -3579,7 +3611,7 @@ const translations = {
     securityPrivacy: "安全与隐私",
     securityPrivacyDesc: "数据保护、举报和屏蔽。",
     monetization: "创作者激励",
-    monetizationDesc: "如何获利、要求和结算。",
+    monetizationDesc: "即将推出。",
     generalSettings: "通用设置",
     generalSettingsDesc: "通知、语言、主题和偏好。",
 
@@ -3723,14 +3755,14 @@ const translations = {
     termsSubtitleUs: "在 stream-in，我们希望您了解您的权利和责任。",
     lastUpdatedUs: "最后更新：2025年1月",
 
-    usAboutPageTitle: "关于 stream-in.com",
+    usAboutPageTitle: "关于 stream-in",
     usAboutPageSubtitle:
-      "stream-in.com 是一个处于 Beta 阶段的新流媒体平台。在这里我们介绍愿景、如何兼顾观众与创作者体验，以及我们坚持的边界与底线。",
+      "stream-in 是一个处于 Beta 阶段的新流媒体平台。在这里我们介绍愿景、如何兼顾观众与创作者体验，以及我们坚持的边界与底线。",
     usAboutPageBetaLine: "Beta 版本 · 2026 年 4 月",
 
-    usSecWhatTitle: "什么是 stream-in.com？",
+    usSecWhatTitle: "什么是 stream-in？",
     usSecWhatP1:
-      "stream-in.com 作为一种流媒体新选择诞生：减少不透明、过度的限制，把重心放在真正服务观众与内容创作者的产品体验上。",
+      "stream-in 作为一种流媒体新选择诞生：减少不透明、过度的限制，把重心放在真正服务观众与内容创作者的产品体验上。",
     usSecWhatP2:
       "我们仍在 Beta：稳步迭代、倾听反馈，并随着平台成长不断完善功能。",
     usSecWhatHighlight:
@@ -3746,7 +3778,7 @@ const translations = {
     usSecExperienceP1:
       "我们不希望平台被广告塞满，也不希望信息流像无关利益的广告牌。我们需要可持续经营，也希望创作者能通过内容获得收益，因此在支持平台的前提下可以有广告。关键是平衡：广告要相关、克制、尊重用户，不应淹没你想看的内容。",
     usSecExperienceP2:
-      "stream-in.com 也希望与广告主共同成长：在保证品牌安全的同时坚持用户优先，让推广支持生态，而不是把“投放”变成平台的主产品。",
+      "stream-in 也希望与广告主共同成长：在保证品牌安全的同时坚持用户优先，让推广支持生态，而不是把“投放”变成平台的主产品。",
 
     usSecMoneyTitle: "创作者变现：在平台具备条件时推出",
     usSecMoneyP1:
@@ -3762,7 +3794,7 @@ const translations = {
 
     usSecLimitsTitle: "明确底线：哪些内容不允许",
     usSecLimitsP1:
-      "我们支持表达自由、反对过度审查，但 stream-in.com 不是无规则地带。我们反对任何旨在伤害、剥削或歧视的内容。",
+      "我们支持表达自由、反对过度审查，但 stream-in 不是无规则地带。我们反对任何旨在伤害、剥削或歧视的内容。",
     usSecLimitsIntroList: "禁止上传或传播（包括但不限于）：",
     usSecLimitsItemThreat: "威胁或煽动对个人/群体实施伤害。",
     usSecLimitsItemViolence: "纯粹以血腥冲击为目的的露骨暴力内容。",
@@ -3777,7 +3809,7 @@ const translations = {
       "如有一般问题、建议或平台相关举报，欢迎联系我们。我们重视与观众和创作者的直接沟通。",
 
     usAboutFooter:
-      "© 2026 stream-in.com — Beta 平台。感谢你参与这一段起步。",
+      "© 2026 stream-in — Beta 平台。感谢你参与这一段起步。",
 
     // Edit Video (编辑视频)
     editVideo: "编辑视频",
@@ -3804,7 +3836,7 @@ const translations = {
     imageMax10Mb: "图片最大 10 MB",
     videoMax800Mb: "视频最大 800 MB",
     uploadBetaLimitsHint:
-      "stream-in.com 测试版：单视频最大 800 MB，缩略图最大 10 MB。",
+      "stream-in 测试版：单视频最大 800 MB，缩略图最大 10 MB。",
     waitForUpload: "请等待上传完成",
     errorSaving: "保存出错",
     thumbnailImage: "视频封面",
@@ -4075,6 +4107,10 @@ const translations = {
   },
 
   jp: {
+    //General
+    support: "中くらい",
+    contact: "接触",
+
     // Navbar (ナビゲーションバー)
     search: "検索",
     login: "ログイン",
@@ -4261,7 +4297,7 @@ const translations = {
     securityPrivacy: "セキュリティとプライバシー",
     securityPrivacyDesc: "データ保護、報告、ブロック機能。",
     monetization: "収益化",
-    monetizationDesc: "収益を得る方法、要件、支払いについて。",
+    monetizationDesc: "もうすぐ利用可能。",
     generalSettings: "一般設定",
     generalSettingsDesc: "通知、言語、テーマ、設定変更。",
 
@@ -4401,14 +4437,14 @@ const translations = {
     termsSubtitleUs: "stream-in では、ユーザーの権利と責任を明確にすることを重視しています。",
     lastUpdatedUs: "最終更新：2025年1月",
 
-    usAboutPageTitle: "stream-in.com について",
+    usAboutPageTitle: "stream-in について",
     usAboutPageSubtitle:
-      "stream-in.com はベータ版として始まった新しいストリーミング・プラットフォームです。私たちのビジョン、視聴者とクリエイター双方の体験の考え方、そして守るべき境界線を説明します。",
+      "stream-in はベータ版として始まった新しいストリーミング・プラットフォームです。私たちのビジョン、視聴者とクリエイター双方の体験の考え方、そして守るべき境界線を説明します。",
     usAboutPageBetaLine: "ベータ版 · 2026年4月",
 
-    usSecWhatTitle: "stream-in.com とは？",
+    usSecWhatTitle: "stream-in とは？",
     usSecWhatP1:
-      "stream-in.com は、発言を不透明に縛る過度な制限を減らし、視聴者とクリエイターのための体験を第一に設計したストリーミングの新しい選択肢です。",
+      "stream-in は、発言を不透明に縛る過度な制限を減らし、視聴者とクリエイターのための体験を第一に設計したストリーミングの新しい選択肢です。",
     usSecWhatP2:
       "現在はベータ版です。慎重に改善を重ね、フィードバックを聞きながら機能を追加していきます。",
     usSecWhatHighlight:
@@ -4424,7 +4460,7 @@ const translations = {
     usSecExperienceP1:
       "広告だらけのサイトや、無関係な利害の看板のようなフィードにはしたくありません。一方で、プラットフォームの継続とクリエイターの収益のために、広告が支えになる場面はあります。要点はバランスで、広告は関連性があり、節度があり、見たいコンテンツを圧倒しないことです。",
     usSecExperienceP2:
-      "stream-in.com は広告主とも共に成長したいと考えています。ブランドセーフでユーザーファーストな体験の中で、広告がエコシステムを支え、主役にならない設計を目指します。",
+      "stream-in は広告主とも共に成長したいと考えています。ブランドセーフでユーザーファーストな体験の中で、広告がエコシステムを支え、主役にならない設計を目指します。",
 
     usSecMoneyTitle: "収益化は、持続可能になった段階で",
     usSecMoneyP1:
@@ -4440,7 +4476,7 @@ const translations = {
 
     usSecLimitsTitle: "明確な線引き：許容しないもの",
     usSecLimitsP1:
-      "私たちは表現の自由を尊重し、過度な検閲に反対しますが、stream-in.com は無秩序な場所ではありません。害を与える、搾取する、差別する目的のコンテンツには反対します。",
+      "私たちは表現の自由を尊重し、過度な検閲に反対しますが、stream-in は無秩序な場所ではありません。害を与える、搾取する、差別する目的のコンテンツには反対します。",
     usSecLimitsIntroList: "以下のアップロード／拡散は禁止です（例）：",
     usSecLimitsItemThreat: "個人または集団への脅迫、危害の扇動。",
     usSecLimitsItemViolence:
@@ -4457,7 +4493,7 @@ const translations = {
       "一般的な質問、提案、プラットフォームに関する報告はご連絡ください。視聴者とクリエイターの直接的な対話を大切にしています。",
 
     usAboutFooter:
-      "© 2026 stream-in.com — ベータ版プラットフォーム。立ち上げに参加してくれてありがとうございます。",
+      "© 2026 stream-in — ベータ版プラットフォーム。立ち上げに参加してくれてありがとうございます。",
 
     // Edit Video (動画編集)
     editVideo: "動画の編集",
@@ -4484,7 +4520,7 @@ const translations = {
     imageMax10Mb: "画像最大 10 MB",
     videoMax800Mb: "動画最大 800 MB",
     uploadBetaLimitsHint:
-      "stream-in.com ベータ：動画は最大 800 MB、サムネイルは最大 10 MB。",
+      "stream-in ベータ：動画は最大 800 MB、サムネイルは最大 10 MB。",
     waitForUpload: "アップロード完了をお待ちください",
     errorSaving: "保存エラー",
     thumbnailImage: "サムネイル画像",
@@ -4749,6 +4785,10 @@ const translations = {
   },
 
   fr: {
+    // General
+    support: "Moyen",
+    contact: "Contact",
+
     // Navbar (Barre de navigation)
     search: "Rechercher",
     login: "Se connecter",
@@ -4935,7 +4975,7 @@ const translations = {
     securityPrivacy: "Sécurité et confidentialité",
     securityPrivacyDesc: "Protection des données, signalements et blocages.",
     monetization: "Monétisation",
-    monetizationDesc: "Comment gagner de l'argent, critères et paiements.",
+    monetizationDesc: "Bientôt disponible.",
     generalSettings: "Paramètres généraux",
     generalSettingsDesc: "Notifications, langue, thèmes et préférences.",
 
@@ -5010,7 +5050,7 @@ const translations = {
     imageMax10Mb: "Image max 10 Mo",
     videoMax800Mb: "Vidéo max 800 Mo",
     uploadBetaLimitsHint:
-      "Bêta stream-in.com : jusqu'à 800 Mo par vidéo et 10 Mo pour la miniature.",
+      "Bêta stream-in : jusqu'à 800 Mo par vidéo et 10 Mo pour la miniature.",
     waitForUpload: "Veuillez attendre la fin de l'upload",
     errorSaving: "Erreur lors de l'enregistrement",
     thumbnailImage: "Image de miniature",
@@ -5216,15 +5256,15 @@ const translations = {
     playlistVideos: "Videos de la playlist",
     nowPlaying: "En cours de lecture",
 
-    // Us / About stream-in.com (Beta)
-    usAboutPageTitle: "À propos de stream-in.com",
+    // Us / About stream-in (Beta)
+    usAboutPageTitle: "À propos de stream-in",
     usAboutPageSubtitle:
-      "stream-in.com est une nouvelle plateforme de streaming en phase bêta. Ici, nous partageons notre vision, notre approche pour l’expérience des spectateurs et des créateurs, ainsi que les limites que nous défendons.",
+      "stream-in est une nouvelle plateforme de streaming en phase bêta. Ici, nous partageons notre vision, notre approche pour l’expérience des spectateurs et des créateurs, ainsi que les limites que nous défendons.",
     usAboutPageBetaLine: "Version bêta · Avril 2026",
 
-    usSecWhatTitle: "Qu’est-ce que stream-in.com ?",
+    usSecWhatTitle: "Qu’est-ce que stream-in ?",
     usSecWhatP1:
-      "stream-in.com est une alternative de streaming avec une idée simple : moins de barrières arbitraires sur ce qui peut être dit, et davantage de focus sur un produit qui sert réellement le public et les créateurs.",
+      "stream-in est une alternative de streaming avec une idée simple : moins de barrières arbitraires sur ce qui peut être dit, et davantage de focus sur un produit qui sert réellement le public et les créateurs.",
     usSecWhatP2:
       "Nous sommes en bêta : nous avançons avec soin, écoutons les retours et ajoutons des fonctionnalités au fil de la croissance.",
     usSecWhatHighlight:
@@ -5240,7 +5280,7 @@ const translations = {
     usSecExperienceP1:
       "Nous ne voulons pas d’un site saturé de pubs ni d’un fil qui ressemble à un panneau publicitaire d’intérêts sans rapport. Nous voulons être rentables et permettre aux créateurs de gagner grâce à leur contenu, donc la publicité peut exister lorsqu’elle soutient la plateforme. L’essentiel, c’est l’équilibre : pertinente, respectueuse, et jamais au point d’étouffer ce que vous êtes venu regarder.",
     usSecExperienceP2:
-      "stream-in.com est pensée pour grandir avec les annonceurs (pas contre eux) : une expérience « brand-safe » et centrée utilisateur, où la promotion soutient l’écosystème sans devenir le produit principal.",
+      "stream-in est pensée pour grandir avec les annonceurs (pas contre eux) : une expérience « brand-safe » et centrée utilisateur, où la promotion soutient l’écosystème sans devenir le produit principal.",
 
     usSecMoneyTitle: "Monétisation des créateurs quand ce sera viable",
     usSecMoneyP1:
@@ -5256,7 +5296,7 @@ const translations = {
 
     usSecLimitsTitle: "Limites claires : ce qui n’a pas sa place",
     usSecLimitsP1:
-      "Nous soutenons la liberté d’expression et refusons la censure excessive, mais stream-in.com n’est pas une zone sans règles. Nous refusons tout contenu visant à nuire, exploiter ou discriminer.",
+      "Nous soutenons la liberté d’expression et refusons la censure excessive, mais stream-in n’est pas une zone sans règles. Nous refusons tout contenu visant à nuire, exploiter ou discriminer.",
     usSecLimitsIntroList:
       "Il est interdit de publier ou de promouvoir, notamment :",
     usSecLimitsItemThreat: "Menaces ou incitation à nuire à des personnes ou groupes.",
@@ -5275,10 +5315,14 @@ const translations = {
       "Pour toute question générale, idée ou signalement lié à la plateforme, contactez-nous. Nous valorisons le dialogue direct avec les spectateurs et les créateurs.",
 
     usAboutFooter:
-      "© 2026 stream-in.com — Plateforme en bêta. Merci de faire partie du lancement.",
+      "© 2026 stream-in — Plateforme en bêta. Merci de faire partie du lancement.",
   },
 
   hi: {
+    // General
+    support: "मध्यम",
+    contact: "संपर्क",
+
     // Navbar (नेविगेशन बार)
     search: "खोजें",
     login: "लॉगिन",
@@ -5465,7 +5509,7 @@ const translations = {
     securityPrivacy: "सुरक्षा और गोपनीयता",
     securityPrivacyDesc: "डेटा सुरक्षा, रिपोर्टिंग और ब्लॉकिंग।",
     monetization: "मुद्रीकरण (कमाई)",
-    monetizationDesc: "पैसे कैसे कमाएं, आवश्यकताएं और भुगतान।",
+    monetizationDesc: "जल्द ही उपलब्ध होगा।",
     generalSettings: "सामान्य सेटिंग्स",
     generalSettingsDesc: "सूचनाएं, भाषा, थीम और प्राथमिकताएं।",
 
@@ -5535,7 +5579,7 @@ const translations = {
     imageMax10Mb: "छवि अधिकतम 10 MB",
     videoMax800Mb: "वीडियो अधिकतम 800 MB",
     uploadBetaLimitsHint:
-      "stream-in.com बीटा: प्रति वीडियो 800 MB तक, थंबनेल 10 MB तक।",
+      "stream-in बीटा: प्रति वीडियो 800 MB तक, थंबनेल 10 MB तक।",
     waitForUpload: "कृपया अपलोड समाप्त होने की प्रतीक्षा करें",
     errorSaving: "सहेजने में त्रुटि",
     thumbnailImage: "थंबनेल छवि",
@@ -5741,15 +5785,15 @@ const translations = {
     playlistVideos: "प्लेलिस्ट वीडियो",
     nowPlaying: "अभी चल रहा है",
 
-    // Us / About stream-in.com (Beta)
-    usAboutPageTitle: "stream-in.com के बारे में",
+    // Us / About stream-in (Beta)
+    usAboutPageTitle: "stream-in के बारे में",
     usAboutPageSubtitle:
-      "stream-in.com एक नई स्ट्रीमिंग प्लेटफ़ॉर्म है जो बीटा चरण में है। यहाँ हम अपना विज़न, दर्शकों और क्रिएटर्स के अनुभव को लेकर हमारा दृष्टिकोण, और जिन सीमाओं पर हम स्पष्ट हैं, साझा करते हैं।",
+      "stream-in एक नई स्ट्रीमिंग प्लेटफ़ॉर्म है जो बीटा चरण में है। यहाँ हम अपना विज़न, दर्शकों और क्रिएटर्स के अनुभव को लेकर हमारा दृष्टिकोण, और जिन सीमाओं पर हम स्पष्ट हैं, साझा करते हैं।",
     usAboutPageBetaLine: "बीटा रिलीज़ · अप्रैल 2026",
 
-    usSecWhatTitle: "stream-in.com क्या है?",
+    usSecWhatTitle: "stream-in क्या है?",
     usSecWhatP1:
-      "stream-in.com एक स्ट्रीमिंग विकल्प के रूप में बना है—जहाँ अभिव्यक्ति पर अनावश्यक/मनमानी रोक कम हो और असली फोकस दर्शकों व कंटेंट क्रिएटर्स के लिए बेहतर अनुभव पर हो।",
+      "stream-in एक स्ट्रीमिंग विकल्प के रूप में बना है—जहाँ अभिव्यक्ति पर अनावश्यक/मनमानी रोक कम हो और असली फोकस दर्शकों व कंटेंट क्रिएटर्स के लिए बेहतर अनुभव पर हो।",
     usSecWhatP2:
       "हम बीटा में हैं: सोच-समझकर सुधार करते हैं, फीडबैक सुनते हैं, और प्लेटफ़ॉर्म के बढ़ने के साथ फीचर्स जोड़ते हैं।",
     usSecWhatHighlight:
@@ -5765,7 +5809,7 @@ const translations = {
     usSecExperienceP1:
       "हम नहीं चाहते कि प्लेटफ़ॉर्म विज्ञापनों से भरा हो या फ़ीड किसी बिलबोर्ड जैसा लगे। हम टिकाऊ बिज़नेस बनना चाहते हैं और क्रिएटर्स को उनके कंटेंट से कमाई करने देना चाहते हैं, इसलिए प्लेटफ़ॉर्म को सपोर्ट करने के लिए विज्ञापन हो सकते हैं। मुद्दा संतुलन है: विज्ञापन प्रासंगिक और सम्मानजनक हों, और आपका देखने का अनुभव दबे नहीं।",
     usSecExperienceP2:
-      "stream-in.com को विज्ञापनदाताओं के साथ (उनके खिलाफ नहीं) बढ़ने के लिए बनाया गया है: brand-safe और user-first अनुभव, जहाँ प्रमोशन इकोसिस्टम को सपोर्ट करे—मुख्य उत्पाद न बन जाए।",
+      "stream-in को विज्ञापनदाताओं के साथ (उनके खिलाफ नहीं) बढ़ने के लिए बनाया गया है: brand-safe और user-first अनुभव, जहाँ प्रमोशन इकोसिस्टम को सपोर्ट करे—मुख्य उत्पाद न बन जाए।",
 
     usSecMoneyTitle: "क्रिएटर मॉनेटाइज़ेशन—जब प्लेटफ़ॉर्म सक्षम हो",
     usSecMoneyP1:
@@ -5781,7 +5825,7 @@ const translations = {
 
     usSecLimitsTitle: "स्पष्ट सीमाएँ: क्या स्वीकार नहीं",
     usSecLimitsP1:
-      "हम अभिव्यक्ति की स्वतंत्रता का समर्थन करते हैं और अति-सेंसरशिप के खिलाफ हैं, लेकिन stream-in.com बिना नियम का क्षेत्र नहीं है। हम नुकसान पहुँचाने, शोषण करने या भेदभाव करने वाले कंटेंट के खिलाफ हैं।",
+      "हम अभिव्यक्ति की स्वतंत्रता का समर्थन करते हैं और अति-सेंसरशिप के खिलाफ हैं, लेकिन stream-in बिना नियम का क्षेत्र नहीं है। हम नुकसान पहुँचाने, शोषण करने या भेदभाव करने वाले कंटेंट के खिलाफ हैं।",
     usSecLimitsIntroList:
       "इन चीज़ों को अपलोड/प्रमोट करना मना है (उदाहरण सहित):",
     usSecLimitsItemThreat: "धमकियाँ या लोगों/समूहों को नुकसान पहुँचाने के लिए उकसाना।",
@@ -5800,10 +5844,14 @@ const translations = {
       "सामान्य सवाल, सुझाव या प्लेटफ़ॉर्म से जुड़े रिपोर्ट के लिए आप हमसे संपर्क कर सकते हैं। हम दर्शकों और क्रिएटर्स के साथ सीधे संवाद को महत्व देते हैं।",
 
     usAboutFooter:
-      "© 2026 stream-in.com — बीटा प्लेटफ़ॉर्म। इस शुरुआत का हिस्सा बनने के लिए धन्यवाद।",
+      "© 2026 stream-in — बीटा प्लेटफ़ॉर्म। इस शुरुआत का हिस्सा बनने के लिए धन्यवाद।",
   },
 
   ar: {
+    // General
+    support: "واسطة",
+    contact: "اتصال",
+
     // Navbar (شريط التنقل)
     search: "بحث",
     login: "تسجيل الدخول",
@@ -5811,7 +5859,7 @@ const translations = {
     lightTheme: "الوضع الفاتح",
     sunsetTheme: "غروب الشمس",
     betaBannerMessage:
-      "Stream-In ما زال في النسخة التجريبية. إذا أردت دعم استمرارية المنصة، يمكنك التبرع أو المساهمة.",
+      "stream-in ما زال في النسخة التجريبية. إذا أردت دعم استمرارية المنصة، يمكنك التبرع أو المساهمة.",
     betaBannerDonate: "ادعم المشروع",
 
     // Sidebar (الشريط الجانبي)
@@ -5990,7 +6038,7 @@ const translations = {
     securityPrivacy: "الأمن والخصوصية",
     securityPrivacyDesc: "حماية البيانات، الإبلاغ والحظر.",
     monetization: "تحقيق الأرباح",
-    monetizationDesc: "كيفية الربح، المتطلبات والمدفوعات.",
+    monetizationDesc: "برمجيات قريباً.",
     generalSettings: "الإعدادات العامة",
     generalSettingsDesc: "الإشعارات، اللغة، السمات والتفضيلات.",
 
@@ -6060,7 +6108,7 @@ const translations = {
     imageMax10Mb: "الحد الأقصى 10 ميجابايت للصورة",
     videoMax800Mb: "الحد الأقصى 800 ميجابايت للفيديو",
     uploadBetaLimitsHint:
-      "نسخة بيتا stream-in.com: حتى 800 ميجابايت للفيديو و10 ميجابايت للصورة المصغرة.",
+      "نسخة بيتا stream-in: حتى 800 ميجابايت للفيديو و10 ميجابايت للصورة المصغرة.",
     waitForUpload: "يرجى الانتظار حتى ينتهي الرفع",
     errorSaving: "خطأ أثناء الحفظ",
     thumbnailImage: "صورة الفيديو",
@@ -6266,15 +6314,15 @@ const translations = {
     playlistVideos: "فيديوهات قائمة التشغيل",
     nowPlaying: "يتم التشغيل الآن",
 
-    // Us / About stream-in.com (Beta)
-    usAboutPageTitle: "حول stream-in.com",
+    // Us / About stream-in (Beta)
+    usAboutPageTitle: "حول stream-in",
     usAboutPageSubtitle:
-      "stream-in.com منصة بث جديدة في مرحلة البيتا. نشارك هنا رؤيتنا وكيف نفكر بتجربة المشاهدين وصُنّاع المحتوى، وما هي الحدود التي نتمسك بها بوضوح.",
+      "stream-in منصة بث جديدة في مرحلة البيتا. نشارك هنا رؤيتنا وكيف نفكر بتجربة المشاهدين وصُنّاع المحتوى، وما هي الحدود التي نتمسك بها بوضوح.",
     usAboutPageBetaLine: "إصدار بيتا · أبريل 2026",
 
-    usSecWhatTitle: "ما هو stream-in.com؟",
+    usSecWhatTitle: "ما هو stream-in؟",
     usSecWhatP1:
-      "stream-in.com بُني كخيار بث بديل بفكرة حديثة: تقليل القيود التعسفية على ما يمكن قوله، وزيادة التركيز على خدمة الجمهور وصُنّاع المحتوى فعلياً.",
+      "stream-in بُني كخيار بث بديل بفكرة حديثة: تقليل القيود التعسفية على ما يمكن قوله، وزيادة التركيز على خدمة الجمهور وصُنّاع المحتوى فعلياً.",
     usSecWhatP2:
       "نحن في مرحلة البيتا: نطوّر بعناية، نستمع للملاحظات، ونضيف الميزات مع نمو المنصة.",
     usSecWhatHighlight:
@@ -6290,7 +6338,7 @@ const translations = {
     usSecExperienceP1:
       "لا نريد منصة ممتلئة بالإعلانات أو موجزاً يبدو كلوحة إعلانية لمصالح لا علاقة لها بما جئت لمشاهدته. نريد أن نكون مشروعاً مستداماً وأن يحصل صُنّاع المحتوى على أرباح من أعمالهم، لذلك قد توجد إعلانات عندما تدعم المنصة. الفكرة هي التوازن: إعلانات ذات صلة ومحترمة دون أن تطغى على التجربة.",
     usSecExperienceP2:
-      "stream-in.com مصممة للنمو مع المعلنين (لا ضدهم): بيئة آمنة للعلامات التجارية وتجربة تضع المستخدم أولاً، حيث يدعم الإعلان النظام البيئي بدل أن يصبح المنتج الأساسي.",
+      "stream-in مصممة للنمو مع المعلنين (لا ضدهم): بيئة آمنة للعلامات التجارية وتجربة تضع المستخدم أولاً، حيث يدعم الإعلان النظام البيئي بدل أن يصبح المنتج الأساسي.",
 
     usSecMoneyTitle: "تحقيق الدخل للمبدعين عندما تصبح المنصة قادرة",
     usSecMoneyP1:
@@ -6306,7 +6354,7 @@ const translations = {
 
     usSecLimitsTitle: "حدود واضحة: ما لا مكان له",
     usSecLimitsP1:
-      "نحن مع حرية التعبير وضد الرقابة المفرطة، لكن stream-in.com ليست مساحة بلا قواعد. نحن ضد أي محتوى يهدف إلى الإيذاء أو الاستغلال أو التمييز.",
+      "نحن مع حرية التعبير وضد الرقابة المفرطة، لكن stream-in ليست مساحة بلا قواعد. نحن ضد أي محتوى يهدف إلى الإيذاء أو الاستغلال أو التمييز.",
     usSecLimitsIntroList:
       "يُمنع رفع أو الترويج لما يلي (ومن ذلك على سبيل المثال):",
     usSecLimitsItemThreat: "التهديدات أو التحريض على إيذاء أشخاص أو مجموعات.",
@@ -6325,10 +6373,14 @@ const translations = {
       "للأسئلة العامة أو الأفكار أو البلاغات المتعلقة بالمنصة، يمكنك التواصل معنا. نحن نقدر الحوار المباشر مع المشاهدين والمبدعين.",
 
     usAboutFooter:
-      "© 2026 stream-in.com — منصة في مرحلة البيتا. شكراً لكونك جزءاً من هذه البداية.",
+      "© 2026 stream-in — منصة في مرحلة البيتا. شكراً لكونك جزءاً من هذه البداية.",
   },
 
   it: {
+    // General
+    support: "Medio",
+    contact: "Contatto",
+
     // Navbar (Barra di navigazione)
     search: "Cerca",
     login: "Accedi",
@@ -6515,8 +6567,7 @@ const translations = {
     securityPrivacy: "Sicurezza e privacy",
     securityPrivacyDesc: "Protezione dati, segnalazioni e blocchi.",
     monetization: "Monetizzazione",
-    monetizationDesc: "Come guadagnare, requisiti e pagamenti.",
-    generalSettings: "Impostazioni generali",
+    monetizationDesc: "Em breve disponível.",
     generalSettingsDesc: "Notifiche, lingua, temi e preferenze.",
 
     // Help FAQ
@@ -6589,7 +6640,7 @@ const translations = {
     imageMax10Mb: "Immagine max 10 MB",
     videoMax800Mb: "Video max 800 MB",
     uploadBetaLimitsHint:
-      "Beta stream-in.com: fino a 800 MB per video e 10 MB per la miniatura.",
+      "Beta stream-in: fino a 800 MB per video e 10 MB per la miniatura.",
     waitForUpload: "Attendi la fine del caricamento",
     errorSaving: "Errore durante il salvataggio",
     thumbnailImage: "Immagine miniatura",
@@ -6791,15 +6842,15 @@ const translations = {
     playlistVideos: "Video della playlist",
     nowPlaying: "In riproduzione",
 
-    // Us / About stream-in.com (Beta)
-    usAboutPageTitle: "Informazioni su stream-in.com",
+    // Us / About stream-in (Beta)
+    usAboutPageTitle: "Informazioni su stream-in",
     usAboutPageSubtitle:
-      "stream-in.com è una nuova piattaforma di streaming in fase beta. Qui condividiamo la nostra visione, come pensiamo all’esperienza di spettatori e creator, e quali limiti difendiamo.",
+      "stream-in è una nuova piattaforma di streaming in fase beta. Qui condividiamo la nostra visione, come pensiamo all’esperienza di spettatori e creator, e quali limiti difendiamo.",
     usAboutPageBetaLine: "Versione beta · Aprile 2026",
 
-    usSecWhatTitle: "Cos’è stream-in.com?",
+    usSecWhatTitle: "Cos’è stream-in?",
     usSecWhatP1:
-      "stream-in.com nasce come alternativa di streaming con un’idea moderna: meno barriere arbitrarie su ciò che si può dire e più focus su un prodotto che serva davvero il pubblico e chi crea contenuti.",
+      "stream-in nasce come alternativa di streaming con un’idea moderna: meno barriere arbitrarie su ciò che si può dire e più focus su un prodotto che serva davvero il pubblico e chi crea contenuti.",
     usSecWhatP2:
       "Siamo in beta: rilasciamo con cura, ascoltiamo i feedback e aggiungiamo funzionalità man mano che la piattaforma cresce.",
     usSecWhatHighlight:
@@ -6815,7 +6866,7 @@ const translations = {
     usSecExperienceP1:
       "Non vogliamo un sito pieno di annunci o un feed che sembri un cartellone di interessi estranei a ciò per cui sei qui. Vogliamo un business sostenibile e vogliamo che i creator guadagnino dai loro contenuti, quindi la pubblicità può esistere quando sostiene la piattaforma. Il punto è il bilanciamento: annunci pertinenti e rispettosi che non soffochino l’esperienza.",
     usSecExperienceP2:
-      "stream-in.com è progettata per crescere insieme agli inserzionisti (non contro di loro): un’esperienza brand-safe e user-first, dove la promozione supporta l’ecosistema invece di diventare il prodotto principale.",
+      "stream-in è progettata per crescere insieme agli inserzionisti (non contro di loro): un’esperienza brand-safe e user-first, dove la promozione supporta l’ecosistema invece di diventare il prodotto principale.",
 
     usSecMoneyTitle: "Monetizzazione per i creator quando sarà sostenibile",
     usSecMoneyP1:
@@ -6831,7 +6882,7 @@ const translations = {
 
     usSecLimitsTitle: "Limiti chiari: cosa non è ammesso",
     usSecLimitsP1:
-      "Sosteniamo la libertà di espressione e rifiutiamo l’eccesso di censura, ma stream-in.com non è una zona senza regole. Siamo contrari a contenuti pensati per nuocere, sfruttare o discriminare.",
+      "Sosteniamo la libertà di espressione e rifiutiamo l’eccesso di censura, ma stream-in non è una zona senza regole. Siamo contrari a contenuti pensati per nuocere, sfruttare o discriminare.",
     usSecLimitsIntroList:
       "È vietato caricare o promuovere (tra le altre cose):",
     usSecLimitsItemThreat: "Minacce o istigazione a fare del male a persone o gruppi.",
@@ -6850,10 +6901,15 @@ const translations = {
       "Per domande generali, idee o segnalazioni legate alla piattaforma, contattaci. Valorizziamo il dialogo diretto con spettatori e creator.",
 
     usAboutFooter:
-      "© 2026 stream-in.com — Piattaforma in beta. Grazie per far parte di questo inizio.",
+      "© 2026 stream-in — Piattaforma in beta. Grazie per far parte di questo inizio.",
   },
 
   ko: {
+
+    // General
+    support: "중간",
+    contact: "연락하다",
+
     // Navbar (네비게이션 바)
     search: "검색",
     login: "로그인",
@@ -7040,7 +7096,7 @@ const translations = {
     securityPrivacy: "보안 및 개인정보 보호",
     securityPrivacyDesc: "데이터 보호, 신고 및 차단.",
     monetization: "수익 창출",
-    monetizationDesc: "수익 창출 방법, 요건 및 지급.",
+    monetizationDesc: "추후 출시 예정.",
     generalSettings: "일반 설정",
     generalSettingsDesc: "알림, 언어, 테마 및 환경설정.",
 
@@ -7110,7 +7166,7 @@ const translations = {
     imageMax10Mb: "이미지 최대 10MB",
     videoMax800Mb: "동영상 최대 800MB",
     uploadBetaLimitsHint:
-      "stream-in.com 베타: 동영상 최대 800MB, 썸네일 최대 10MB.",
+      "stream-in 베타: 동영상 최대 800MB, 썸네일 최대 10MB.",
     waitForUpload: "업로드가 완료될 때까지 기다려 주세요",
     errorSaving: "저장 중 오류 발생",
     thumbnailImage: "썸네일 이미지",
@@ -7316,15 +7372,15 @@ const translations = {
     playlistVideos: "재생목록 영상",
     nowPlaying: "현재 재생 중",
 
-    // Us / About stream-in.com (Beta)
-    usAboutPageTitle: "stream-in.com 소개",
+    // Us / About stream-in (Beta)
+    usAboutPageTitle: "stream-in 소개",
     usAboutPageSubtitle:
-      "stream-in.com은 베타 단계의 새로운 스트리밍 플랫폼입니다. 여기에서 우리의 비전, 시청자와 크리에이터 경험에 대한 방향, 그리고 우리가 지키는 명확한 기준을 소개합니다.",
+      "stream-in은 베타 단계의 새로운 스트리밍 플랫폼입니다. 여기에서 우리의 비전, 시청자와 크리에이터 경험에 대한 방향, 그리고 우리가 지키는 명확한 기준을 소개합니다.",
     usAboutPageBetaLine: "베타 버전 · 2026년 4월",
 
-    usSecWhatTitle: "stream-in.com은 무엇인가요?",
+    usSecWhatTitle: "stream-in은 무엇인가요?",
     usSecWhatP1:
-      "stream-in.com은 최신 관점의 스트리밍 대안입니다. 말할 수 있는 것에 대한 과도하고 임의적인 장벽을 줄이고, 시청자와 콘텐츠 크리에이터에게 실제로 도움이 되는 제품 경험에 집중합니다.",
+      "stream-in은 최신 관점의 스트리밍 대안입니다. 말할 수 있는 것에 대한 과도하고 임의적인 장벽을 줄이고, 시청자와 콘텐츠 크리에이터에게 실제로 도움이 되는 제품 경험에 집중합니다.",
     usSecWhatP2:
       "현재는 베타입니다. 신중하게 개선하고 피드백을 듣으며, 플랫폼이 성장하는 만큼 기능을 더해 갑니다.",
     usSecWhatHighlight:
@@ -7340,7 +7396,7 @@ const translations = {
     usSecExperienceP1:
       "우리는 광고로 가득 찬 플랫폼이나, 피드가 ‘관심 없는 이해관계의 광고판’처럼 보이길 원치 않습니다. 동시에 플랫폼도 지속 가능해야 하고, 크리에이터도 자신의 콘텐츠로 수익을 얻을 수 있어야 합니다. 그래서 광고는 플랫폼을 유지하는 범위에서 존재할 수 있습니다. 핵심은 균형입니다: 관련성 있고 절제된 광고, 그리고 시청 경험을 압도하지 않는 광고.",
     usSecExperienceP2:
-      "stream-in.com은 광고주와도 함께 성장하도록 설계되었습니다(대립이 아니라). 브랜드 세이프하고 사용자 중심의 경험 속에서, 프로모션이 생태계를 지원하되 ‘플랫폼의 본질’이 되지 않게 합니다.",
+      "stream-in은 광고주와도 함께 성장하도록 설계되었습니다(대립이 아니라). 브랜드 세이프하고 사용자 중심의 경험 속에서, 프로모션이 생태계를 지원하되 ‘플랫폼의 본질’이 되지 않게 합니다.",
 
     usSecMoneyTitle: "크리에이터 수익화: 가능한 시점에",
     usSecMoneyP1:
@@ -7356,7 +7412,7 @@ const translations = {
 
     usSecLimitsTitle: "명확한 한계: 허용되지 않는 콘텐츠",
     usSecLimitsP1:
-      "우리는 표현의 자유를 지지하고 과도한 검열에 반대하지만, stream-in.com은 규칙 없는 공간이 아닙니다. 해를 끼치거나, 착취하거나, 차별하려는 콘텐츠에는 반대합니다.",
+      "우리는 표현의 자유를 지지하고 과도한 검열에 반대하지만, stream-in은 규칙 없는 공간이 아닙니다. 해를 끼치거나, 착취하거나, 차별하려는 콘텐츠에는 반대합니다.",
     usSecLimitsIntroList: "다음과 같은 업로드/홍보는 금지됩니다(예시):",
     usSecLimitsItemThreat: "개인 또는 집단에 대한 위협, 위해를 선동하는 내용.",
     usSecLimitsItemViolence:
@@ -7374,8 +7430,15 @@ const translations = {
       "일반 문의, 제안, 플랫폼 관련 신고는 연락해 주세요. 시청자와 크리에이터와의 직접적인 소통을 중요하게 생각합니다.",
 
     usAboutFooter:
-      "© 2026 stream-in.com — 베타 플랫폼. 이 시작에 함께해 주셔서 감사합니다.",
+      "© 2026 stream-in — 베타 플랫폼. 이 시작에 함께해 주셔서 감사합니다.",
   },
-};
+}
 
-export default translations;
+// Completar claves faltantes por idioma (referencia: es)
+for (const [lang, patch] of Object.entries(localePatches)) {
+  if (translations[lang] && patch) {
+    Object.assign(translations[lang], patch)
+  }
+}
+
+export default translations

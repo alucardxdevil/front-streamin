@@ -473,7 +473,11 @@ const Register = () => {
         email: result.user.email,
         img: result.user.photoURL,
       });
-      dispatch(loginSuccess(res.data));
+      const { accessToken, ...user } = res.data || {};
+      if (accessToken) {
+        localStorage.setItem("token", accessToken);
+      }
+      dispatch(loginSuccess(user));
       navigate("/");
     } catch (err) {
       setError("Failed to sign up with Google.");

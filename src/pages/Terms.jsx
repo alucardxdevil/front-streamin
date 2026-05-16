@@ -377,15 +377,15 @@ const Terms = () => {
           <Paragraph>{t("contactDisputesContent")}</Paragraph>
           <BulletList>
             <BulletItem>
-              📧 Soporte:{" "}
+              {t("support")}:{" "}
               <ContactLink href="mailto:support@stream-in.com">
                 support@stream-in.com
               </ContactLink>
             </BulletItem>
             <BulletItem>
-              ⚖️ Legal:{" "}
-              <ContactLink href="mailto:legal@stream-in.com">
-                legal@stream-in.com
+              {t("contact")}:{" "}
+              <ContactLink href="mailto:contact@stream-in.com">
+                contact@stream-in.com
               </ContactLink>
             </BulletItem>
           </BulletList>

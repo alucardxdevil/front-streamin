@@ -2,7 +2,7 @@
  * Configuración global de Axios para producción en Cloudflare Pages
  *
  * En producción, el frontend está en Cloudflare Pages y el backend
- * en http://89.167.94.4. Todas las llamadas a la API deben apuntar
+ * en http://ip_servidor. Todas las llamadas a la API deben apuntar
  * a esa IP con el prefijo /api.
  *
  * En desarrollo, se usa el proxy de CRA (configurado en package.json)
@@ -13,7 +13,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 // URL base del backend según el entorno
-// En producción: http://89.167.94.4/api
+// En producción: http://ip_servidor/api
 // En desarrollo: /api (el proxy de CRA lo redirige a localhost:5000)
 const API_BASE_URL =
   process.env.NODE_ENV === 'production'
