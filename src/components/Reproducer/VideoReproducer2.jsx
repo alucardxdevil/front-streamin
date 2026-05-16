@@ -537,9 +537,18 @@ const VolumeContainer = styled.div`
     margin-left: 4px;
   }
 
-  @media (max-width: 600px) {
-    &:hover .volume-slider-wrap {
+  /* Mobile / coarse pointer: barra siempre visible (sin hover) */
+  @media (hover: none), (pointer: coarse), (max-width: 768px) {
+    .volume-slider-wrap {
       width: 60px;
+      opacity: 1;
+      margin-left: 4px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .volume-slider-wrap {
+      width: 48px;
     }
   }
 `;
@@ -557,12 +566,24 @@ const VolumeSliderWrap = styled.div`
 const VolumeSliderTrack = styled.div`
   position: relative;
   width: 100%;
+  min-width: 40px;
   height: 4px;
   background: rgba(255, 255, 255, 0.25);
   border-radius: 2px;
   cursor: pointer;
   pointer-events: auto;
   touch-action: none;
+
+  @media (max-width: 768px) {
+    height: 6px;
+  }
+
+  /* Hitbox vertical más amplio para dedos sin afectar al rect del track */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -12px 0;
+  }
 `;
 
 const VolumeSliderFill = styled.div`
@@ -612,7 +633,10 @@ const MenuOverlay = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.85);
   min-width: 220px;
-  max-height: 340px;
+  /* Nunca exceder el ancho ni el alto del reproductor */
+  max-width: calc(100% - 16px);
+  width: max-content;
+  max-height: calc(100% - 80px);
   overflow-y: auto;
   z-index: 500;
   transform-origin: bottom right;
@@ -644,18 +668,21 @@ const MenuOverlay = styled.div`
   }
 
   @media (max-width: 768px) {
-    min-width: 200px;
+    min-width: 0;
+    width: calc(100% - 12px);
+    max-width: calc(100% - 12px);
     right: 6px;
     bottom: 48px;
-    max-height: min(280px, 55dvh);
+    max-height: calc(100% - 70px);
     font-size: 13px;
   }
 
   @media (max-width: 480px) {
-    min-width: 180px;
+    width: calc(100% - 8px);
+    max-width: calc(100% - 8px);
     right: 4px;
     bottom: 44px;
-    max-height: min(240px, 50dvh);
+    max-height: calc(100% - 60px);
   }
 `;
 
@@ -1063,8 +1090,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   // Core state
   const [playing, setPlaying] = useState(true);
   const [muted, setMuted] = useState(false);
-  const [volume, setVolume] = useState(0.5);
-  const [prevVolume, setPrevVolume] = useState(0.5);
+  const [volume, setVolume] = useState(1);
+  const [prevVolume, setPrevVolume] = useState(1);
   const [played, setPlayed] = useState(0);
   const [loaded, setLoaded] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -1293,8 +1320,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     const track = volumeTrackRef.current;
     if (!track) return;
     const rect = track.getBoundingClientRect();
-    const x = Math.max(0, Math.min(getPointerClientX(e) - rect.left, rect.width));
-    const newVol = x / rect.width;
+    if (!rect.width || rect.width <= 0) return;
+    const rawX = getPointerClientX(e) - rect.left;
+    const x = Math.max(0, Math.min(rawX, rect.width));
+    let newVol = x / rect.width;
+    if (!Number.isFinite(newVol)) return;
+    newVol = Math.max(0, Math.min(1, newVol));
     setVolume(newVol);
     setMuted(newVol === 0);
     if (newVol > 0) setPrevVolume(newVol);
@@ -1833,10 +1864,19 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     if (!video) return;
 
     // Sincronizar muted
-    video.muted = muted;
+    video.muted = !!muted;
 
-    // Sincronizar volume
-    video.volume = volume;
+    // Sincronizar volume (clamp y validar para evitar RangeError → pantalla negra)
+    const safeVolume = Number.isFinite(volume)
+      ? Math.max(0, Math.min(1, volume))
+      : 1;
+    if (video.volume !== safeVolume) {
+      try {
+        video.volume = safeVolume;
+      } catch (_) {
+        /* algunos navegadores tiran si el video aún no está listo */
+      }
+    }
 
     // Sincronizar playbackRate
     video.playbackRate = playbackRate;
