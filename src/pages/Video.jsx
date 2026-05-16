@@ -118,10 +118,7 @@ const VideoWrapper = styled.div`
   }
 
   @media (max-width: 768px) and (orientation: landscape) {
-    height: min(
-      calc(56.25vw + 14px),
-      calc(100dvh - 56px - var(--beta-notice-height, 0px) + 14px)
-    );
+    height: calc(100dvh - 56px - var(--beta-notice-height, 0px) + 14px);
     border-radius: 0;
     margin-bottom: 8px;
     position: relative;

@@ -78,10 +78,8 @@ const VideoWrapper = styled.div`
   }
 
   @media (max-width: 768px) and (orientation: landscape) {
-    height: min(
-      56.25vw,
-      calc(100dvh - var(--player-top-offset, 56px))
-    );
+    height: calc(100dvh - var(--player-top-offset, 56px));
+    max-height: calc(100dvh - var(--player-top-offset, 56px));
   }
 `;
 
@@ -133,17 +131,42 @@ const PlayerWrapper = styled.div`
     width: 100%;
     border-radius: 0;
     padding-top: 0;
-    height: min(
-      56.25vw,
-      calc(100dvh - var(--player-top-offset, 56px) - var(--beta-notice-height, 0px))
-    );
-    max-height: calc(100dvh - var(--player-top-offset, 56px) - var(--beta-notice-height, 0px));
+    height: 100%;
+    max-height: none;
   }
 
   @media (max-width: 768px) {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     max-height: calc(100dvh - var(--player-top-offset, 56px) - var(--beta-notice-height, 0px));
+  }
+
+  /* Pantalla completa: ocupar viewport real (sin padding 16:9 ni límites móviles) */
+  ${({ $fullscreen }) =>
+    $fullscreen &&
+    `
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    max-width: 100vw !important;
+    max-height: 100dvh !important;
+    padding-top: 0 !important;
+    border-radius: 0 !important;
+    transform: none !important;
+    box-shadow: none !important;
+  `}
+
+  &:fullscreen,
+  &:-webkit-full-screen {
+    width: 100vw;
+    height: 100dvh;
+    max-width: 100vw;
+    max-height: 100dvh;
+    padding-top: 0 !important;
+    border-radius: 0;
+    transform: none;
+    box-shadow: none;
   }
 `;
 
@@ -317,8 +340,14 @@ const BottomControls = styled.div`
   pointer-events: none;
 
   @media (max-width: 768px) {
-    padding: 0 8px 8px;
+    padding: 0 8px max(8px, env(safe-area-inset-bottom, 0px));
   }
+
+  ${({ $fullscreen }) =>
+    $fullscreen &&
+    `
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  `}
 `;
 
 /* ===== Timeline / Progress Bar ===== */
@@ -855,6 +884,11 @@ const isCoarsePointerDevice = () =>
     window.matchMedia("(pointer: coarse)").matches ||
     "ontouchstart" in window);
 
+const isTouchLikePointer = (e) =>
+  e.pointerType === "touch" ||
+  e.pointerType === "pen" ||
+  (e.pointerType !== "mouse" && isCoarsePointerDevice());
+
 /** Marca controles interactivos para no propagar tap al overlay de play/pause */
 const controlProps = { "data-player-control": "" };
 
@@ -1377,12 +1411,25 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     }
   }, [menuOpen]);
 
+  /** Móvil/tablet: un toque solo muestra u oculta controles (no play/pause). */
+  const toggleTouchControls = useCallback(() => {
+    setShowControls((prev) => {
+      if (prev) {
+        if (!menuOpen) clearTimeout(hideTimeout.current);
+        return false;
+      }
+      clearTimeout(hideTimeout.current);
+      hideTimeout.current = setTimeout(() => {
+        if (!menuOpen) setShowControls(false);
+      }, 3000);
+      return true;
+    });
+  }, [menuOpen]);
+
   const handleStagePointerUp = useCallback(
     (e) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
       if (isControlTarget(e.target)) return;
-
-      bumpControlsActivity();
 
       if (clickTimeoutRef.current) {
         clearTimeout(clickTimeoutRef.current);
@@ -1393,16 +1440,23 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
       clickTimeoutRef.current = setTimeout(() => {
         clickTimeoutRef.current = null;
         const hit = document.elementFromPoint(e.clientX, e.clientY);
-        if (!isControlTarget(hit)) {
-          handlePlayPause();
+        if (isControlTarget(hit)) return;
+
+        if (isTouchLikePointer(e)) {
+          toggleTouchControls();
+          return;
         }
+
+        bumpControlsActivity();
+        handlePlayPause();
       }, 250);
     },
-    [bumpControlsActivity, handlePlayPause]
+    [bumpControlsActivity, handlePlayPause, toggleTouchControls]
   );
 
   const handleStageDoublePointerUp = useCallback((e) => {
     if (isControlTarget(e.target)) return;
+    if (isTouchLikePointer(e)) return;
     if (clickTimeoutRef.current) {
       clearTimeout(clickTimeoutRef.current);
       clickTimeoutRef.current = null;
@@ -1972,14 +2026,14 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         El IntersectionObserver observa este elemento para detectar
         cuándo el player sale del viewport (solo desktop).
       */}
-      <div ref={playerWrapperRef} style={{ width: "100%", position: "relative" }}>
+      <div ref={playerWrapperRef} style={{ width: "100%", height: "100%", position: "relative" }}>
         <PlayerWrapper
           ref={playerContainerRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          onTouchStart={bumpControlsActivity}
           $showControls={showControls}
           $sticky={isStickyActive}
+          $fullscreen={isFullscreen}
         >
           {/* Botón para cerrar el mini-player (solo desktop) */}
           <StickyCloseBtn
@@ -2206,7 +2260,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           </CenterControls>
 
           {/* Bottom controls */}
-          <BottomControls onClick={(e) => e.stopPropagation()}>
+          <BottomControls $fullscreen={isFullscreen} onClick={(e) => e.stopPropagation()}>
             {/* Timeline: se oculta en mini-player */}
             <MiniTimelineContainer $sticky={isStickyActive}>
               <TimelineContainer
