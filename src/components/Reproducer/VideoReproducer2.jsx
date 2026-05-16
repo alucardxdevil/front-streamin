@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import Hls from "hls.js";
 import { CircularProgress } from "@mui/material";
 import useStreamSession from "../../hooks/useStreamSession";
@@ -623,12 +623,12 @@ const MenuOverlay = styled.div`
   visibility: ${({ $visible }) => ($visible ? "visible" : "hidden")};
   pointer-events: ${({ $visible }) => ($visible ? "auto" : "none")};
   transition: opacity 0.15s ease, visibility 0.15s ease;
-
-  ${({ $visible }) =>
-    $visible &&
-    `
-    animation: ${fadeInScale} 0.2s ease;
-  `}
+  animation: ${({ $visible }) =>
+    $visible
+      ? css`
+          ${fadeInScale} 0.2s ease
+        `
+      : "none"};
 
   /* Firefox scrollbar */
   scrollbar-width: thin;
