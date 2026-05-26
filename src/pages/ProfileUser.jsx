@@ -9,7 +9,7 @@ import NotFound from './PageNotFOund';
 import { FaTwitter, FaInstagram, FaFacebook, FaGlobe, FaSearchPlus } from 'react-icons/fa';
 import { useLanguage } from '../utils/LanguageContext';
 import SEOProfileWrapper from '../components/seo/SEOProfileWrapper';
-import { normalizeProfileSlug } from '../utils/profilePaths';
+import { normalizeProfileSlug, isPublicProfileHandle } from '../utils/profilePaths';
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
@@ -435,8 +435,9 @@ export const ProfileUser = () => {
   const [videoCount, setVideoCount] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo } = useSelector((state) => state.video);
-  const { slug: rawSlug } = useParams();
-  const path = normalizeProfileSlug(rawSlug);
+  const { handle } = useParams();
+  const path = normalizeProfileSlug(handle);
+  const isProfileRoute = isPublicProfileHandle(handle);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [notFound, setNotFound] = useState(false);
@@ -463,6 +464,8 @@ export const ProfileUser = () => {
   };
 
   useEffect(() => {
+    if (!isProfileRoute || !path) return;
+
     const fetchData = async () => {
       try {
         const channelRes = await axios.get(`/users/find/${path}`);
@@ -496,8 +499,9 @@ export const ProfileUser = () => {
       }
     };
     fetchData();
-  }, [path, currentUser?._id, navigate]);
+  }, [path, isProfileRoute, currentUser?._id, navigate]);
 
+  if (!isProfileRoute || !path) return <NotFound />;
   if (notFound) return <NotFound />;
 
   if (!channel) return null;

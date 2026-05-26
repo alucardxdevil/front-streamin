@@ -132,7 +132,12 @@ function App() {
                       <Route path="help" element={<Help />} />
                       <Route path="advertise" element={<Advertise />} />
                       <Route path="settings" element={<Settings themeMode={themeMode} setThemeMode={setThemeMode} />} />
-                      <Route path="@:slug" element={<ProfileUser />} />
+                      {/*
+                        Perfil público: /@slug
+                        React Router v6 no soporta segmentos parciales (@:slug) en rutas
+                        anidadas; el segmento completo va en :handle (ej. "@caricaturas-old").
+                      */}
+                      <Route path=":handle" element={<ProfileUser />} />
                       <Route path="profileUser/:slug" element={<LegacyProfileRedirect />} />
                       <Route path="video">
                         <Route path=":id" element={<Video />} />

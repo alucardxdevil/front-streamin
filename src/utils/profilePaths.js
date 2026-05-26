@@ -12,6 +12,11 @@ export function getProfileSlug(user) {
   return user.slug || user._id || '';
 }
 
+/** Segmento de URL de perfil público (ej. "@caricaturas-old"). */
+export function isPublicProfileHandle(handle) {
+  return typeof handle === 'string' && handle.startsWith('@') && handle.length > 1;
+}
+
 /**
  * @param {string|{ slug?: string, _id?: string }} userOrSlug
  * @param {{ absolute?: boolean, siteUrl?: string }} [options]
