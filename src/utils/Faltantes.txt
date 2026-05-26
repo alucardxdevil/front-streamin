@@ -1,3 +1,0 @@
-! Mostar todos los trends.
-* Agregar la clasificación de los videos. Arreglar el cuadro de dialogo.
-* Arreglar el botón de follow, si estan activos no mostrar el boton de follow si es su mismo canal.

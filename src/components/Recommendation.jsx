@@ -1,31 +1,28 @@
-import axios from 'axios';
+import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
-import styled, { keyframes } from 'styled-components';
-import Card from './Card';
-import { useLanguage } from "../utils/LanguageContext";
+import styled, { keyframes } from 'styled-components'
+import Card from './Card'
+import { useLanguage } from '../utils/LanguageContext'
+import { uniqueRecommendations } from '../utils/recommendationVideos'
 
 const Container = styled.div`
   flex: 1.5;
   display: flex;
   flex-direction: column;
-  /* La altura total disponible = viewport - navbar (60px) */
   height: calc(100vh - 60px);
   overflow: hidden;
-`;
+`
 
-/* Área scrollable que contiene las cards de recomendación */
 const ScrollableCards = styled.div`
   flex: 1;
   overflow-y: auto;
   padding-right: 8px;
   padding-bottom: 10px;
-  min-height: 0; /* necesario para que flex + overflow funcione correctamente */
+  min-height: 0;
 
-  /* Firefox scrollbar */
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => theme.text} ${({ theme }) => theme.soft};
 
-  /* Chrome/Edge/Safari scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -43,7 +40,7 @@ const ScrollableCards = styled.div`
   @media (max-width: 768px) {
     padding-right: 0;
   }
-`;
+`
 
 const CardsList = styled.div`
   display: flex;
@@ -54,25 +51,24 @@ const CardsList = styled.div`
   @media (max-width: 768px) {
     gap: 16px;
   }
-`;
+`
 
 const Hr = styled.hr`
   margin: 6px 0px;
   border: 0.5px solid ${({ theme }) => theme.soft};
-`;
+`
 
 const Loading = styled.div`
   color: ${({ theme }) => theme.text};
   text-align: center;
   padding: 10px;
   font-size: 14px;
-`;
+`
 
-/* ===== Espacio reservado para publicidad ===== */
 const shimmer = keyframes`
   0% { background-position: -400px 0; }
   100% { background-position: 400px 0; }
-`;
+`
 
 const AdPlaceholder = styled.div`
   width: 100%;
@@ -97,7 +93,6 @@ const AdPlaceholder = styled.div`
   position: relative;
   overflow: hidden;
 
-  /* Efecto shimmer sutil para indicar que es un espacio dinámico */
   &::after {
     content: '';
     position: absolute;
@@ -122,7 +117,7 @@ const AdPlaceholder = styled.div`
     min-height: 160px;
     border-radius: 10px;
   }
-`;
+`
 
 const AdLabel = styled.span`
   font-size: 11px;
@@ -132,108 +127,114 @@ const AdLabel = styled.span`
   color: ${({ theme }) => theme.textSoft};
   opacity: 0.5;
   user-select: none;
-`;
+`
 
 const AdIcon = styled.div`
   font-size: 28px;
   opacity: 0.2;
   user-select: none;
-`;
+`
 
-export const Recommendation = ({tags, currentPlayingVideoId}) => {
-    const [videos, setVideos] = useState([]);
-    const [page, setPage] = useState(0);
-    const [loading, setLoading] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
-    const observer = useRef();
-    const lastCardRef = useRef();
-    const { t } = useLanguage();
+const ITEMS_PER_PAGE = 10
 
-    const itemsPerPage = 10;
+export const Recommendation = ({ tags, currentPlayingVideoId }) => {
+  const [videos, setVideos] = useState([])
+  const [page, setPage] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const observer = useRef()
+  const poolRef = useRef([])
+  const { t } = useLanguage()
 
-    const fetchVideos = async (currentPage) => {
-        if (!tags) return;
-        setLoading(true);
-        try {
-            const res = await axios.get(`/videos/tags?tags=${tags}`);
-            const filteredVideos = res.data.filter(video => video._id !== currentPlayingVideoId);
-            
-            const startIndex = currentPage * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const videosToLoad = filteredVideos.slice(startIndex, endIndex);
+  useEffect(() => {
+    let cancelled = false
 
-            if (currentPage === 0) {
-                setVideos(videosToLoad);
-            } else {
-                setVideos(prev => [...prev, ...videosToLoad]);
-            }
+    const loadPool = async () => {
+      if (!tags || (Array.isArray(tags) && tags.length === 0)) {
+        poolRef.current = []
+        setVideos([])
+        setPage(0)
+        setHasMore(false)
+        return
+      }
 
-            setHasMore(endIndex < filteredVideos.length);
-        } catch (error) {
-            console.error("Error fetching related videos:", error);
-        } finally {
-            setLoading(false);
+      setLoading(true)
+      setPage(0)
+
+      try {
+        const tagQuery = Array.isArray(tags) ? tags.join(',') : tags
+        const res = await axios.get(`/videos/tags?tags=${tagQuery}`)
+        if (cancelled) return
+
+        poolRef.current = uniqueRecommendations(res.data, currentPlayingVideoId)
+        const firstPage = poolRef.current.slice(0, ITEMS_PER_PAGE)
+        setVideos(firstPage)
+        setHasMore(poolRef.current.length > firstPage.length)
+      } catch (error) {
+        if (!cancelled) {
+          console.error('Error fetching related videos:', error)
+          poolRef.current = []
+          setVideos([])
+          setHasMore(false)
         }
-    };
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
 
-    useEffect(() => {
-        setVideos([]);
-        setPage(0);
-        setHasMore(true);
-        fetchVideos(0);
-    }, [tags, currentPlayingVideoId]);
+    loadPool()
+    return () => {
+      cancelled = true
+    }
+  }, [tags, currentPlayingVideoId])
 
-    const lastCardElement = (node) => {
-        if (loading) return;
-        if (observer.current) observer.current.disconnect();
-        observer.current = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting && hasMore) {
-                setPage(prev => prev + 1);
-            }
-        });
-        if (node) observer.current.observe(node);
-    };
+  useEffect(() => {
+    if (page === 0) return
 
-    useEffect(() => {
-        if (page > 0) {
-            fetchVideos(page);
-        }
-    }, [page]);
+    const end = (page + 1) * ITEMS_PER_PAGE
+    const nextSlice = poolRef.current.slice(0, end)
+    setVideos(nextSlice)
+    setHasMore(end < poolRef.current.length)
+  }, [page])
 
-    return (
-        <Container>
-            {/* Espacio reservado para publicidad — se reemplazará con el componente de anuncio */}
-            <AdPlaceholder>
-                <AdIcon>📢</AdIcon>
-                <AdLabel>{t("adLabel")}</AdLabel>
-            </AdPlaceholder>
+  const lastCardElement = (node) => {
+    if (loading) return
+    if (observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage((prev) => prev + 1)
+      }
+    })
+    if (node) observer.current.observe(node)
+  }
 
-            {/* Las cards de recomendación hacen scroll independientemente del ad */}
-            <ScrollableCards>
-                <h3 style={{ color: "white", justifyContent: "center", display: "flex" }}>
-                    {t("relatedVideos")}
-                </h3>
-                <Hr />
-                <CardsList>
-                  {videos.map((video, index) => {
-                      if (videos.length === index + 1) {
-                          return (
-                              <div ref={lastCardElement} key={video._id}>
-                                  <Card type={"sm"} video={video} />
-                              </div>
-                          );
-                      } else {
-                          return (
-                              <div key={video._id}>
-                                  <Card type={"sm"} video={video} />
-                              </div>
-                          );
-                      }
-                  })}
-                </CardsList>
-                {loading && <Loading>{t("loadingMoreVideos")}</Loading>}
-                {!hasMore && !loading && <Loading>{t("noMoreRelatedVideos")}</Loading>}
-            </ScrollableCards>
-        </Container>
-    );
+  return (
+    <Container>
+      <AdPlaceholder>
+        <AdIcon>📢</AdIcon>
+        <AdLabel>{t('adLabel')}</AdLabel>
+      </AdPlaceholder>
+
+      <ScrollableCards>
+        <h3 style={{ color: 'white', justifyContent: 'center', display: 'flex' }}>
+          {t('relatedVideos')}
+        </h3>
+        <Hr />
+        <CardsList>
+          {videos.map((video, index) => {
+            const isLast = videos.length === index + 1
+            return (
+              <div ref={isLast ? lastCardElement : null} key={video._id}>
+                <Card type="sm" video={video} />
+              </div>
+            )
+          })}
+        </CardsList>
+        {loading && <Loading>{t('loadingMoreVideos')}</Loading>}
+        {!hasMore && !loading && videos.length > 0 && (
+          <Loading>{t('noMoreRelatedVideos')}</Loading>
+        )}
+      </ScrollableCards>
+    </Container>
+  )
 }

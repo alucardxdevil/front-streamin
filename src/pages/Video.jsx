@@ -522,7 +522,6 @@ const Video = () => {
   const { t, language } = useLanguage();
 
   const [channel, setChannel] = useState({});
-  const [currentPlayingVideoId, setCurrentPlayingVideoId] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loadingVideo, setLoadingVideo] = useState(true);
   const [nonCriticalReady, setNonCriticalReady] = useState(false);
@@ -554,9 +553,8 @@ const Video = () => {
       try {
         const videoRes = await axios.get(`/videos/find/${path}`);
         dispatch(fetchSuccess(videoRes.data));
-        setCurrentPlayingVideoId(videoRes.data._id);
 
-        // Cargar el canal en segundo plano (no debe bloquear el arranque del player)
+        // Cargar el canal en segundo plano
         axios
           .get(`/users/find/${videoRes.data.userId}`)
           .then((channelRes) => setChannel(channelRes.data))
@@ -758,7 +756,7 @@ const Video = () => {
       <Side>
         {nonCriticalReady && (
           <Suspense fallback={null}>
-            <RecommendationRandom currentPlayingVideoId={currentPlayingVideoId} />
+            <RecommendationRandom currentPlayingVideoId={currentVideo?._id} />
           </Suspense>
         )}
       </Side>
@@ -892,7 +890,7 @@ const Video = () => {
           <Suspense fallback={null}>
             <Recommendation
               tags={currentVideo?.tags}
-              currentPlayingVideoId={currentPlayingVideoId}
+              currentPlayingVideoId={currentVideo?._id}
             />
           </Suspense>
         )}

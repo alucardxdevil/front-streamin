@@ -469,7 +469,7 @@ const Register = () => {
     dispatch(loginStart());
     try {
       const result = await signInWithPopup(auth, provider);
-      const idToken = await result.user.getIdToken();
+      const idToken = await result.user.getIdToken(true);
       const res = await axios.post("/auth/google", {
         ...buildGoogleAuthPayload(result.user),
         idToken,
