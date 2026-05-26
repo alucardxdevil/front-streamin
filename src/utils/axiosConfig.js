@@ -1,20 +1,13 @@
 /**
  * Configuración global de Axios para producción en Cloudflare Pages
  *
- * En producción, el frontend está en Cloudflare Pages y el backend
- * en http://ip_servidor. Todas las llamadas a la API deben apuntar
- * a esa IP con el prefijo /api.
- *
- * En desarrollo, se usa el proxy de CRA (configurado en package.json)
- * que redirige /api/* a http://localhost:5000.
+ * Producción: Cloudflare Pages (stream-in.com) → API VPS Hetzner (api.stream-in.com)
+ * Auth: cookie httpOnly + protección CSRF double-submit
  */
 
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { getCsrfToken, readCsrfFromCookie, refreshCsrf, setCsrfToken } from './csrf'
 
-// URL base del backend según el entorno
-// En producción: REACT_APP_API_URL es obligatorio (sin IP hardcodeada)
-// En desarrollo: /api (el proxy de CRA lo redirige a localhost:5000)
 const API_BASE_URL =
   process.env.NODE_ENV === 'production'
     ? `${process.env.REACT_APP_API_URL}/api`
@@ -24,63 +17,96 @@ if (process.env.NODE_ENV === 'production' && !process.env.REACT_APP_API_URL) {
   console.error('[Security] REACT_APP_API_URL no está definido en producción')
 }
 
-// Configurar baseURL global de axios
 axios.defaults.baseURL = API_BASE_URL
-
-// Configurar withCredentials globalmente para enviar cookies de sesión
-// NOTA: En producción (HTTPS → HTTP), las cookies pueden ser bloqueadas por el navegador.
-// Si el backend tiene SSL (HTTPS), esto funcionará correctamente.
-// Si el backend es HTTP, considera usar tokens JWT en headers en lugar de cookies.
 axios.defaults.withCredentials = true
 
-// Interceptor de request: adjuntar token de autenticación si existe
-// Solo se aplica a peticiones al backend (no a B2 ni servicios externos)
-axios.interceptors.request.use(
-  (config) => {
-    const url = config.url || ''
-    const isBackendRequest =
-      url.startsWith('/') ||
-      url.includes('89.167.94.4') ||
-      url.includes('api.stream-in.com') ||
-      url.includes('localhost')
+const MUTATING_METHODS = new Set(['post', 'put', 'patch', 'delete'])
 
-    if (isBackendRequest) {
-      // Autenticación vía cookie httpOnly (withCredentials) — no usar localStorage
-      // El Bearer header solo se añade si ya viene en la petición (p.ej. app móvil)
-    }
+function isBackendRequest(config) {
+  const url = config.url || ''
+  const base = config.baseURL || axios.defaults.baseURL || ''
+  const full = url.startsWith('http') ? url : `${base}${url}`
+
+  if (full.includes('backblazeb2.com') || full.includes('amazonaws.com')) {
+    return false
+  }
+
+  return (
+    url.startsWith('/') ||
+    full.includes('api.stream-in.com') ||
+    full.includes('localhost') ||
+    (process.env.REACT_APP_API_URL && full.includes(process.env.REACT_APP_API_URL))
+  )
+}
+
+function attachCsrfHeaders(config) {
+  const method = (config.method || 'get').toLowerCase()
+  if (!MUTATING_METHODS.has(method) || !isBackendRequest(config)) {
     return config
-  },
+  }
+
+  config.headers = config.headers || {}
+  config.headers['X-Requested-With'] = 'XMLHttpRequest'
+
+  const token = getCsrfToken() || readCsrfFromCookie()
+  if (token) {
+    config.headers['X-CSRF-Token'] = token
+  }
+
+  return config
+}
+
+axios.interceptors.request.use(
+  (config) => attachCsrfHeaders(config),
   (error) => Promise.reject(error)
 )
 
-// Interceptor de response: manejar errores globales
 axios.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  (response) => {
+    if (response.data?.csrfToken) {
+      setCsrfToken(response.data.csrfToken)
+    }
+    return response
+  },
+  async (error) => {
+    const config = error.config
     const status = error.response?.status
+    const code = error.response?.data?.code
     const message = error.response?.data?.message || ''
-    const url = error.config?.url || ''
+    const url = config?.url || ''
+
+    if (
+      status === 403 &&
+      code === 'CSRF_INVALID' &&
+      config &&
+      !config._csrfRetried
+    ) {
+      config._csrfRetried = true
+      await refreshCsrf()
+      attachCsrfHeaders(config)
+      return axios(config)
+    }
+
     const isStreamEndpoint = url.includes('/stream/')
-    
-    // Manejar errores de autenticación
-    if (status === 401 || status === 403) {
-      // No limpiar tokens para streaming (usan tokens diferentes)
+
+    if ((status === 401 || status === 403) && code !== 'CSRF_INVALID') {
       if (!isStreamEndpoint) {
         localStorage.removeItem('user')
         sessionStorage.removeItem('user')
-        
-        // Verificar si es cuenta eliminada
-        if (message.includes('deleted') || message.includes('eliminated') || message.includes('Account has been deleted')) {
+
+        if (
+          message.includes('deleted') ||
+          message.includes('eliminated') ||
+          message.includes('Account has been deleted')
+        ) {
           alert('Your account has been deleted. You will be redirected to the login page.')
           window.location.href = '/signin'
-        } else {
-          // Redireccionar al login solo si no es el endpoint de login
-          if (!url.includes('/auth/')) {
-            window.location.href = '/signin'
-          }
+        } else if (!url.includes('/auth/')) {
+          window.location.href = '/signin'
         }
       }
     }
+
     return Promise.reject(error)
   }
 )
