@@ -1,23 +1,17 @@
 /**
- * Configuración global de Axios para producción en Cloudflare Pages
- *
- * Producción: Cloudflare Pages (stream-in.com) → API VPS Hetzner (api.stream-in.com)
+ * Configuración global de Axios — Cloudflare Pages → VPS Hetzner
  * Auth: cookie httpOnly + protección CSRF double-submit
  */
 
 import axios from 'axios'
 import { getCsrfToken, readCsrfFromCookie, refreshCsrf, setCsrfToken } from './csrf'
+import { API_BASE, API_URL, isProd } from './env'
 
-const API_BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? `${process.env.REACT_APP_API_URL}/api`
-    : '/api'
-
-if (process.env.NODE_ENV === 'production' && !process.env.REACT_APP_API_URL) {
-  console.error('[Security] REACT_APP_API_URL no está definido en producción')
+if (isProd && !import.meta.env.VITE_API_URL) {
+  console.error('[Security] VITE_API_URL no está definido en producción')
 }
 
-axios.defaults.baseURL = API_BASE_URL
+axios.defaults.baseURL = API_BASE
 axios.defaults.withCredentials = true
 
 const MUTATING_METHODS = new Set(['post', 'put', 'patch', 'delete'])
@@ -35,7 +29,7 @@ function isBackendRequest(config) {
     url.startsWith('/') ||
     full.includes('api.stream-in.com') ||
     full.includes('localhost') ||
-    (process.env.REACT_APP_API_URL && full.includes(process.env.REACT_APP_API_URL))
+    (API_URL && full.includes(API_URL))
   )
 }
 

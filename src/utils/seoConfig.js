@@ -1,12 +1,8 @@
 /**
  * Configuración centralizada de SEO para stream-in.
- *
- * Todas las URLs base, nombres de sitio y valores por defecto
- * se definen aquí para evitar duplicación en los componentes SEO.
  */
 
-const SITE_URL = process.env.REACT_APP_SITE_URL || 'https://stream-in.com';
-const API_URL  = process.env.REACT_APP_API_URL  || 'https://api.stream-in.com';
+import { SITE_URL, API_URL } from './env'
 
 const seoConfig = {
   siteName: 'stream-in',

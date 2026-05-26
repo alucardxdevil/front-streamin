@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { BiPlayCircle, BiTrash, BiEdit, BiArrowBack } from "react-icons/bi";
 import { MdPlaylistAdd, MdDeleteForever, MdErrorOutline } from "react-icons/md";
 import { FaPlay, FaClock, FaVideo } from "react-icons/fa";
-import { formats } from "./Video";
+import { formats } from "../utils/formatDuration";
 import ShareModalPlaylist from "../components/ModalSharePlaylist";
 
 // Animaciones

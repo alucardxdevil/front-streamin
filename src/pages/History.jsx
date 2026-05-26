@@ -8,7 +8,7 @@ import { MdPlaylistAdd, MdVideoLibrary } from "react-icons/md";
 import { FcClock } from "react-icons/fc";
 import { FaPlus, FaList } from "react-icons/fa";
 import { RiPlayList2Fill } from "react-icons/ri";
-import { formats } from "./Video";
+import { formats } from "../utils/formatDuration";
 
 const Container = styled.div`
   display: flex;

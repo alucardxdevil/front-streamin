@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { BiPlayCircle, BiHeart, BiArrowBack } from "react-icons/bi";
 import { FaPlay, FaClock, FaVideo, FaHeart } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { formats } from "./Video";
+import { formats } from "../utils/formatDuration";
 import { useLanguage } from "../utils/LanguageContext";
 
 // Animaciones

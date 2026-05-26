@@ -1,7 +1,8 @@
 {
   "name": "video_app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
+  "type": "module",
   "packageManager": "npm@10.9.2",
   "engines": {
     "node": ">=18.0.0",
@@ -10,13 +11,9 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
-    "@ffmpeg/ffmpeg": "^0.12.10",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.8.6",
     "@reduxjs/toolkit": "^1.9.2",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.1.1",
-    "@testing-library/user-event": "^13.5.0",
     "axios": "^1.9.0",
     "firebase": "^11.6.0",
     "hls.js": "^1.6.2",
@@ -30,46 +27,21 @@
     "react-player": "^2.12.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "^5.0.1",
     "redux-persist": "^6.0.0",
     "screenfull": "^6.0.2",
-    "stream-in": "file:..",
     "styled-components": "^5.3.5",
-    "timeago.js": "^4.0.2",
-    "web-vitals": "^2.1.4"
+    "timeago.js": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.4.1",
+    "vite": "^6.3.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "build:prod": "react-scripts build",
-    "test": "react-scripts test --watchAll=false",
-    "eject": "react-scripts eject",
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "build:prod": "vite build",
+    "preview": "vite preview",
     "ci": "npm install && npm run build"
-  },
-  "proxy": "http://localhost:5000",
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "rules": {
-      "no-unused-vars": "warn",
-      "no-dupe-keys": "warn",
-      "no-empty-pattern": "warn",
-      "import/no-anonymous-default-export": "warn",
-      "react-hooks/exhaustive-deps": "warn"
-    }
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }

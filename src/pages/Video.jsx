@@ -241,18 +241,6 @@ const ExactDate = styled.span`
   opacity: 0.6;
 `;
 
-/* ================= FORMATS (NO TOCAR) ================= */
-
-export const formats = (seconds) => {
-  if (isNaN(seconds)) return "00:00";
-  const date = new Date(seconds * 1000);
-  const hh = date.getUTCHours();
-  const mm = date.getUTCMinutes();
-  const ss = date.getUTCSeconds().toString().padStart(2, "0");
-  if (hh) return `${hh}:${mm.toString().padStart(2, "0")}:${ss}`;
-  return `${mm}:${ss}`;
-};
-
 const LoadingWrapper = styled.div`
   display: flex;
   justify-content: center;

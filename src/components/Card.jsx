@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { formats } from "../pages/Video";
+import { formats } from '../utils/formatDuration';
 import defaultProfile from '../img/profileUser.png';
 import { useLanguage } from "../utils/LanguageContext";
 import { formatTimeago } from "../utils/timeago";

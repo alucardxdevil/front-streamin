@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/logo-pest.png" />
+    <link rel="icon" href="/logo-pest.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="google" content="notranslate" />
 
@@ -16,7 +16,6 @@
           var base = langs[i].split('-')[0].toLowerCase();
           if (supported.indexOf(base) !== -1) { detected = base; break; }
         }
-        // Respetar elección manual del usuario
         var manual = localStorage.getItem('languageManuallySet');
         if (manual === 'true') {
           var saved = localStorage.getItem('language');
@@ -43,7 +42,7 @@
       property="og:description"
       content="stream-in is the platform for uploading, sharing, and discovering videos from independent creators. Explore trends, follow your favorite creators, and enjoy high-quality content."
     />
-    <meta property="og:image" content="%PUBLIC_URL%/logo-pest.png" />
+    <meta property="og:image" content="https://stream-in.com/logo-pest.png" />
     <meta property="og:url" content="https://stream-in.com" />
     <meta property="og:locale" content="es_MX" />
 
@@ -55,7 +54,7 @@
       name="twitter:description"
       content="stream-in is the platform for uploading, sharing, and discovering videos from independent creators. Explore trends, follow your favorite creators, and enjoy high-quality content."
     />
-    <meta name="twitter:image" content="%PUBLIC_URL%/logo-pest.png" />
+    <meta name="twitter:image" content="https://stream-in.com/logo-pest.png" />
 
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -78,5 +77,7 @@
     <!-- Google Adsense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7445263311603329"
      crossorigin="anonymous"></script>
+
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -98,7 +98,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BiSkipNext, BiSkipPrevious, BiArrowBack } from "react-icons/bi";
 import { MdPlaylistAdd, MdErrorOutline, MdDeleteForever } from "react-icons/md";
 import { FaPlay } from "react-icons/fa";
-import { formats } from "./Video";
+import { formats } from "../utils/formatDuration";
 import VideoReproducer from "../components/Reproducer/VideoReproducer2";
 import ShareModalPlaylist from "../components/ModalSharePlaylist";
 import { useDispatch, useSelector } from "react-redux";

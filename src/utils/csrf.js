@@ -3,14 +3,10 @@
  * Usa fetch (no axios) para evitar dependencia circular con axiosConfig.
  */
 
+import { API_BASE } from './env'
+
 let csrfToken = null
 let initPromise = null
-
-function getApiBase() {
-  return process.env.NODE_ENV === 'production'
-    ? `${process.env.REACT_APP_API_URL}/api`
-    : '/api'
-}
 
 export function readCsrfFromCookie() {
   if (typeof document === 'undefined') return null
@@ -27,7 +23,7 @@ export async function initCsrf() {
 
   initPromise = (async () => {
     try {
-      const res = await fetch(`${getApiBase()}/auth/csrf`, {
+      const res = await fetch(`${API_BASE}/auth/csrf`, {
         credentials: 'include',
         headers: { Accept: 'application/json' },
       })

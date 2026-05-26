@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { format } from "timeago.js";
-import { formats } from "../pages/Video";
+import { formats } from "../utils/formatDuration";
 import { FiEdit3, FiTrash2 } from "react-icons/fi";
 import { DeleteAlert } from "./DeleteAlert";
 import defaultProfile from "../img/profileUser.png";
