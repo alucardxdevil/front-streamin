@@ -127,16 +127,16 @@ const HLSPlayer = ({
     video._startFixed = false
 
     // Verificar soporte nativo (Safari/iOS)
-    // Preferir hls.js cuando está disponible (mejor control de calidad y compatibilidad).
+    // Preferir hls.js cuando est disponible (mejor control de calidad y compatibilidad).
     // Solo usar HLS nativo en Safari/iOS donde hls.js no funciona (no soporta MSE).
     if (!Hls.isSupported() && video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Safari soporta HLS nativamente (sin MSE, hls.js no funciona)
-      // PROTECCIÓN: Adjuntar token de sesión como query param para Safari
-      // (Safari no soporta xhrSetup de hls.js)
-      const safeUrl = sessionToken
-        ? `${url}${url.includes('?') ? '&' : '?'}_st=${encodeURIComponent(sessionToken)}`
-        : url
-      video.src = safeUrl
+      // Safari soporta HLS nativamente (sin MSE, hls.js no funciona).
+      // PROTECCIN: el token de sesin viaja por cookie HttpOnly
+      // `stream_session` (Domain=.stream-in.com). El atributo
+      // crossOrigin="use-credentials" del <video> (ms abajo) le indica
+      // a Safari que adjunte cookies en las peticiones de media. As la
+      // URL es idntica entre usuarios y Cloudflare puede cachearla.
+      video.src = url
 
       // Escuchar múltiples eventos para garantizar que el spinner se oculte
       const hideLoading = () => setIsLoading(false)
@@ -176,9 +176,6 @@ const HLSPlayer = ({
       return
     }
 
-    // Capturar el token actual en el closure para inyectarlo en cada solicitud
-    const currentSessionToken = sessionToken
-
     const hls = new Hls({
       // Configuración optimizada para streaming VOD
       enableWorker: true,                    // Usar Web Worker para parsing
@@ -203,15 +200,14 @@ const HLSPlayer = ({
       manifestLoadingMaxRetry: 3,
       levelLoadingMaxRetry: 3,
       fragLoadingRetryDelay: 1000,
-      // PROTECCIÓN: Inyectar token de sesión SOLO si la URL no lo tiene ya.
-      // El servidor ahora incluye _st como query param en TODAS las URLs
-      // reescritas del .m3u8 (tanto playlists como segmentos .ts).
-      // Esto evita que Firefox necesite preflight CORS en cada petición,
-      // que era la causa principal del retraso en la carga de segmentos iniciales.
-      xhrSetup: (xhr, url) => {
-        if (currentSessionToken && url && !url.includes('_st=')) {
-          xhr.setRequestHeader('X-Session-Token', currentSessionToken)
-        }
+      // PROTECCIN: el token de sesin viaja como cookie HttpOnly
+      // `stream_session` (Domain=.stream-in.com). Slo necesitamos enviar
+      // credenciales en cada XHR (GET simple, sin headers custom = sin
+      // preflight CORS). As todas las URLs son idnticas entre usuarios
+      // y Cloudflare puede cachearlas y compartirlas, mejorando el HIT
+      // ratio en el edge sin necesitar plan Enterprise.
+      xhrSetup: (xhr) => {
+        xhr.withCredentials = true
       },
     })
 
@@ -493,14 +489,19 @@ const HLSPlayer = ({
         )}
 
         {/* preload="metadata" permite que Firefox prepare el pipeline de media.
-            "none" causaba que Firefox rechazara play() con DOMException. */}
+            "none" causaba que Firefox rechazara play() con DOMException.
+            crossOrigin="use-credentials" hace que el <video> enve la cookie
+            `stream_session` en las peticiones de media (necesario para Safari
+            que usa HLS nativo). El servidor responde con
+            Access-Control-Allow-Credentials: true y un Origin especfico,
+            lo cual ya est configurado en server/index.js. */}
         <video
           ref={videoRef}
           poster={poster}
           controls
           style={isStickyActive ? styles.videoSticky : styles.video}
           playsInline
-          crossOrigin="anonymous"
+          crossOrigin="use-credentials"
           preload="metadata"
         />
 
