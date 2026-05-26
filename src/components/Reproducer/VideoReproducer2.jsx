@@ -1142,11 +1142,15 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const [currentPlayingQuality, setCurrentPlayingQuality] = useState("");
 
   // UI state
-  const [showControls, setShowControls] = useState(true);
-  const showControlsRef = useRef(true);
+  const [showControls, setShowControls] = useState(() => !isCoarsePointerDevice());
+  const [touchControlsArmed, setTouchControlsArmed] = useState(false);
+  const showControlsRef = useRef(!isCoarsePointerDevice());
   useEffect(() => {
     showControlsRef.current = showControls;
   }, [showControls]);
+  useEffect(() => {
+    touchControlsArmedRef.current = touchControlsArmed;
+  }, [touchControlsArmed]);
   const [loading, setLoading] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -1208,6 +1212,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const menuOpenRef = useRef(false);
   const userInteractingWithControlsRef = useRef(false);
   const clickTimeoutRef = useRef(null);
+  const controlsShellRef = useRef(null);
+  const touchControlsArmedRef = useRef(false);
+  const touchPendingRevealRef = useRef(false);
+  const touchPendingActionTargetRef = useRef(null);
   const progressRafRef = useRef(null);
   const lastProgressSyncRef = useRef(0);
   const videoReadyRef = useRef(false); // Track if video has been initially loaded
@@ -1415,18 +1423,14 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   }, []);
 
   const handleTimelinePointerDown = useCallback((e) => {
-    if (isCoarsePointerDevice() && !showControlsRef.current && !menuOpenRef.current) {
+    if (
+      isCoarsePointerDevice() &&
+      !touchControlsArmedRef.current &&
+      !menuOpenRef.current &&
+      !videoEnded
+    ) {
       e.preventDefault();
       e.stopPropagation();
-      const now = Date.now();
-      if (now - lastTouchTapRef.current >= TOUCH_CONTROLS_TAP_DEBOUNCE_MS) {
-        lastTouchTapRef.current = now;
-        setShowControls(true);
-        clearTimeout(hideTimeout.current);
-        hideTimeout.current = setTimeout(() => {
-          if (!menuOpenRef.current) setShowControls(false);
-        }, getControlsHideDelayMs());
-      }
       return;
     }
     if (!duration || duration <= 0) return;
@@ -1547,6 +1551,140 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     scheduleControlsHide();
   }, [scheduleControlsHide]);
 
+  const disarmTouchControls = useCallback(() => {
+    touchControlsArmedRef.current = false;
+    setTouchControlsArmed(false);
+  }, []);
+
+  const armTouchControls = useCallback(() => {
+    touchControlsArmedRef.current = true;
+    setTouchControlsArmed(true);
+  }, []);
+
+  const revealTouchControlsOnly = useCallback(() => {
+    const now = Date.now();
+    if (now - lastTouchTapRef.current < TOUCH_CONTROLS_TAP_DEBOUNCE_MS) return;
+    lastTouchTapRef.current = now;
+    setShowControls(true);
+    disarmTouchControls();
+    scheduleControlsHide();
+  }, [disarmTouchControls, scheduleControlsHide]);
+
+  const resolveTouchControlTarget = useCallback((clientX, clientY) => {
+    const shell = controlsShellRef.current;
+    if (!shell) return null;
+    const prev = shell.style.pointerEvents;
+    shell.style.pointerEvents = "auto";
+    const hit = document.elementFromPoint(clientX, clientY);
+    shell.style.pointerEvents = prev || "none";
+    if (!hit) return null;
+    if (isControlTarget(hit) || isSettingsMenuTarget(hit)) {
+      return hit.closest("[data-player-control], [data-settings-trigger]") || hit;
+    }
+    return null;
+  }, []);
+
+  /** Móvil: 1.er toque revela controles; 2.º toque permite interactuar */
+  const handleMobilePointerDownCapture = useCallback(
+    (e) => {
+      if (!isTouchLikePointer(e) || !isCoarsePointerDevice()) return;
+      if (menuOpenRef.current || videoEnded) return;
+
+      if (!showControlsRef.current) {
+        touchPendingRevealRef.current = true;
+        touchPendingActionTargetRef.current = null;
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
+      if (!touchControlsArmedRef.current) {
+        touchPendingRevealRef.current = false;
+        touchPendingActionTargetRef.current = resolveTouchControlTarget(
+          e.clientX,
+          e.clientY
+        );
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+    [videoEnded, resolveTouchControlTarget]
+  );
+
+  const handleMobilePointerUpCapture = useCallback(
+    (e) => {
+      if (!isTouchLikePointer(e) || !isCoarsePointerDevice()) return;
+      if (menuOpenRef.current) return;
+
+      if (touchPendingRevealRef.current) {
+        touchPendingRevealRef.current = false;
+        revealTouchControlsOnly();
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
+      if (showControlsRef.current && !touchControlsArmedRef.current) {
+        armTouchControls();
+        scheduleControlsHide();
+        const target = touchPendingActionTargetRef.current;
+        touchPendingActionTargetRef.current = null;
+        e.preventDefault();
+        e.stopPropagation();
+        if (target?.isConnected) {
+          const { clientX, clientY } = e;
+          window.requestAnimationFrame(() => {
+            const timeline = timelineRef.current;
+            if (timeline && (timeline === target || timeline.contains(target))) {
+              if (duration > 0) {
+                const rect = timeline.getBoundingClientRect();
+                const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+                const fraction = x / rect.width;
+                setPlayed(fraction);
+                playerRef.current?.seekTo(fraction * duration);
+                if (videoEnded && fraction < 0.999) {
+                  setVideoEnded(false);
+                  setPlaying(true);
+                }
+              }
+              return;
+            }
+            target.click();
+          });
+        }
+        return;
+      }
+
+      if (
+        showControlsRef.current &&
+        touchControlsArmedRef.current &&
+        !isControlTarget(e.target) &&
+        !isSettingsMenuTarget(e.target)
+      ) {
+        scheduleControlsHide();
+      }
+    },
+    [armTouchControls, revealTouchControlsOnly, scheduleControlsHide, duration, videoEnded]
+  );
+
+  useEffect(() => {
+    if (!isCoarsePointerDevice()) return;
+    if (!showControls) disarmTouchControls();
+  }, [showControls, disarmTouchControls]);
+
+  useEffect(() => {
+    if (!isCoarsePointerDevice()) return;
+    if (menuOpen || videoEnded) armTouchControls();
+  }, [menuOpen, videoEnded, armTouchControls]);
+
+  useEffect(() => {
+    if (!isCoarsePointerDevice()) return;
+    setShowControls(false);
+    disarmTouchControls();
+    touchPendingRevealRef.current = false;
+    touchPendingActionTargetRef.current = null;
+  }, [currentVideo?._id, disarmTouchControls]);
+
   const handleMouseMove = useCallback(() => {
     if (isCoarsePointerDevice()) return;
     bumpControlsActivity();
@@ -1560,46 +1698,17 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     }
   }, [menuOpen]);
 
-  /**
-   * Móvil/tablet: toque muestra controles y reinicia el temporizador (no pausa).
-   * Si ya están visibles, solo extiende los 2.5 s (evita ocultar por doble evento táctil).
-   */
-  const handleTouchStageTap = useCallback(() => {
-    const now = Date.now();
-    if (now - lastTouchTapRef.current < TOUCH_CONTROLS_TAP_DEBOUNCE_MS) return;
-    lastTouchTapRef.current = now;
-
-    setShowControls(true);
-    scheduleControlsHide();
-  }, [scheduleControlsHide]);
-
-  /** Móvil: primer toque en el video solo revela controles (sin play/seek/etc.) */
-  const handleMobileRevealPointerDown = useCallback((e) => {
-    if (!isTouchLikePointer(e) || !isCoarsePointerDevice()) return;
-    if (showControlsRef.current || menuOpenRef.current) return;
-    e.preventDefault();
-  }, []);
-
-  const handleMobileRevealPointerUp = useCallback(
-    (e) => {
-      if (!isTouchLikePointer(e) || !isCoarsePointerDevice()) return;
-      if (showControlsRef.current || menuOpenRef.current) return;
-      e.preventDefault();
-      e.stopPropagation();
-      handleTouchStageTap();
-    },
-    [handleTouchStageTap]
-  );
-
-  /** Toque en zona libre del reproductor (video, gradiente, duración, etc.) */
+  /** Toque en zona libre del reproductor (solo desktop o móvil ya armado) */
   const handleControlsChromePointerUp = useCallback(
     (e) => {
       if (!isTouchLikePointer(e)) return;
+      if (isCoarsePointerDevice() && !touchControlsArmedRef.current) return;
       if (isControlTarget(e.target) || isSettingsMenuTarget(e.target)) return;
       e.stopPropagation();
-      handleTouchStageTap();
+      setShowControls(true);
+      scheduleControlsHide();
     },
-    [handleTouchStageTap]
+    [scheduleControlsHide]
   );
 
   const clearStageClickTimer = useCallback(() => {
@@ -1618,6 +1727,16 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   const handleControlPointerDown = useCallback(
     (e) => {
+      if (
+        isCoarsePointerDevice() &&
+        !touchControlsArmedRef.current &&
+        !menuOpenRef.current &&
+        !videoEnded
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
       if (isCoarsePointerDevice() && !showControlsRef.current && !menuOpenRef.current) {
         e.preventDefault();
         e.stopPropagation();
@@ -1635,15 +1754,13 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         bumpControlsActivity();
       }
     },
-    [bumpControlsActivity, clearStageClickTimer, markControlsInteraction]
+    [bumpControlsActivity, clearStageClickTimer, markControlsInteraction, videoEnded]
   );
 
   const handleStagePointerUp = useCallback(
     (e) => {
+      if (isCoarsePointerDevice()) return;
       if (e.pointerType === "mouse" && e.button !== 0) return;
-      if (isCoarsePointerDevice() && !showControlsRef.current && !menuOpenRef.current) {
-        return;
-      }
       if (isControlTarget(e.target) || isSettingsMenuTarget(e.target)) {
         clearStageClickTimer();
         return;
@@ -1662,16 +1779,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         const hit = document.elementFromPoint(e.clientX, e.clientY);
         if (isControlTarget(hit) || isSettingsMenuTarget(hit)) return;
 
-        if (isTouchLikePointer(e)) {
-          handleTouchStageTap();
-          return;
-        }
-
         bumpControlsActivity();
         handlePlayPause();
       }, 250);
     },
-    [bumpControlsActivity, handlePlayPause, handleTouchStageTap, clearStageClickTimer]
+    [bumpControlsActivity, handlePlayPause, clearStageClickTimer]
   );
 
   const handleStageDoublePointerUp = useCallback((e) => {
@@ -2257,7 +2369,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   };
 
   /* ============= RENDER ============= */
-  const controlsTouchEnabled = showControls || videoEnded || menuOpen;
+  const controlsTouchEnabled =
+    !isCoarsePointerDevice() ||
+    menuOpen ||
+    videoEnded ||
+    (showControls && touchControlsArmed);
   const overlayPassThrough = isCoarsePointerDevice() && controlsTouchEnabled;
   const hidePlayerCursor =
     !isCoarsePointerDevice() && !showControls && !videoEnded && !menuOpen;
@@ -2274,6 +2390,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           ref={playerContainerRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
+          onPointerDownCapture={handleMobilePointerDownCapture}
+          onPointerUpCapture={handleMobilePointerUpCapture}
           onPointerUp={handleStagePointerUp}
           $hideCursor={hidePlayerCursor}
           $sticky={isStickyActive}
@@ -2428,8 +2546,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         {/* Clickable overlay for play/pause and fullscreen */}
         <ClickOverlay
           $passThrough={overlayPassThrough}
-          onPointerDown={handleMobileRevealPointerDown}
-          onPointerUp={handleMobileRevealPointerUp}
           onDoubleClick={handleStageDoublePointerUp}
         />
 
@@ -2470,6 +2586,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           $show={showControls || videoEnded}
         >
           <ControlsInteractiveShell
+            ref={controlsShellRef}
             $touchEnabled={controlsTouchEnabled}
             onPointerUpCapture={handleControlsChromePointerUp}
             onPointerDownCapture={handleControlPointerDown}

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import Card from "../components/Card";
-import { VideoCardGrid, VideoCardSkeleton } from "../components/VideoCardGrid";
+import { HomeVideoCardGrid, VideoCardSkeleton } from "../components/VideoCardGrid";
 import { useLanguage } from "../utils/LanguageContext";
 import { FaPlay, FaRandom, FaRedo, FaBullhorn, FaHeart } from "react-icons/fa";
 import { getTopTagsForYou } from "../utils/watchTagPreferences";
@@ -936,7 +936,7 @@ const Home = ({ type }) => {
         </ForYouEmptyBox>
       )}
 
-      <VideoCardGrid>
+      <HomeVideoCardGrid>
         {!(feedMode === "forYou" && forYouPlaceholder) &&
           buildGridItems(videos, t)}
 
@@ -967,7 +967,7 @@ const Home = ({ type }) => {
             <FaRedo /> {t("loadMore")}
           </LoadMoreButton>
         )}
-      </VideoCardGrid>
+      </HomeVideoCardGrid>
     </PageContainer>
   );
 };

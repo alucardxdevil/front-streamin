@@ -29,6 +29,22 @@ export const VideoCardGrid = styled.div`
   }
 `;
 
+/** Grid más amplio solo para Home */
+export const HomeVideoCardGrid = styled(VideoCardGrid)`
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 18px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  @media (max-width: 420px) {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+`;
+
 /** Lista vertical: recomendaciones en sidebar */
 export const VideoCardList = styled.div`
   display: flex;

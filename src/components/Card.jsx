@@ -114,7 +114,7 @@ const Badge = styled.span`
 const InfoDuration = styled(Badge)`
   bottom: 6px;
   right: 6px;
-  background: rgba(0, 0, 0, 0.78);
+  background: rgba(228, 60, 98, 0.7);
 `;
 
 const InfoClassification = styled(Badge)`
