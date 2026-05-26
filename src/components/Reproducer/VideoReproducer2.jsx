@@ -251,7 +251,11 @@ const ControlsWrapper = styled.div`
   z-index: 25;
 `;
 
-/** En móvil: capa interactiva desactivada hasta que el usuario muestre los controles con un toque */
+/**
+ * En móvil: shell desactivada hasta que el usuario muestre los controles con
+ * un toque. Usamos `pointer-events: none` + atributo `inert` (en JSX) para
+ * que ningún hijo (aunque tenga pointer-events: auto) reciba toques o clicks.
+ */
 const ControlsInteractiveShell = styled.div`
   position: absolute;
   inset: 0;
@@ -260,8 +264,21 @@ const ControlsInteractiveShell = styled.div`
   justify-content: space-between;
   pointer-events: ${({ $touchEnabled }) => ($touchEnabled ? "auto" : "none")};
 
+  ${({ $touchEnabled }) =>
+    !$touchEnabled &&
+    css`
+      &,
+      & * {
+        pointer-events: none !important;
+      }
+    `}
+
   @media (min-width: 769px) {
-    pointer-events: auto;
+    pointer-events: auto !important;
+
+    & * {
+      pointer-events: auto;
+    }
   }
 `;
 
@@ -1178,11 +1195,15 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const playerRef = useRef({
     seekTo: function(seconds) {
       var video = videoElRef.current;
-      if (video && seconds && !isNaN(seconds)) {
-        var maxTime = video.duration;
-        if (maxTime && !isNaN(maxTime)) {
-          video.currentTime = Math.max(0, Math.min(seconds, maxTime));
-        }
+      if (!video) return;
+      if (typeof seconds !== "number" || !isFinite(seconds)) return;
+      var maxTime = video.duration;
+      var target = seconds < 0 ? 0 : seconds;
+      if (maxTime && !isNaN(maxTime) && target > maxTime) target = maxTime;
+      try {
+        video.currentTime = target;
+      } catch (_) {
+        /* readyState muy bajo */
       }
     },
     getCurrentTime: function() {
@@ -1214,8 +1235,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const clickTimeoutRef = useRef(null);
   const controlsShellRef = useRef(null);
   const touchControlsArmedRef = useRef(false);
-  const touchPendingRevealRef = useRef(false);
-  const touchPendingActionTargetRef = useRef(null);
   const progressRafRef = useRef(null);
   const lastProgressSyncRef = useRef(0);
   const videoReadyRef = useRef(false); // Track if video has been initially loaded
@@ -1335,16 +1354,34 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   /* ========== Play/Pause ========== */
   const handlePlayPause = useCallback(() => {
+    const video = videoElRef.current;
     if (videoEnded) {
-      playerRef.current?.seekTo(0);
+      if (video) {
+        try { video.currentTime = 0; } catch (_) { /* noop */ }
+        const p = video.play();
+        if (p && typeof p.catch === "function") p.catch(() => {});
+      }
       setVideoEnded(false);
       setPlaying(true);
       showFeedback("play");
-    } else {
+      return;
+    }
+    if (!video) {
       setPlaying((p) => {
         showFeedback(p ? "pause" : "play");
         return !p;
       });
+      return;
+    }
+    if (video.paused) {
+      const p = video.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+      setPlaying(true);
+      showFeedback("play");
+    } else {
+      video.pause();
+      setPlaying(false);
+      showFeedback("pause");
     }
   }, [videoEnded, showFeedback]);
 
@@ -1570,102 +1607,69 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     scheduleControlsHide();
   }, [disarmTouchControls, scheduleControlsHide]);
 
-  const resolveTouchControlTarget = useCallback((clientX, clientY) => {
-    const shell = controlsShellRef.current;
-    if (!shell) return null;
-    const prev = shell.style.pointerEvents;
-    shell.style.pointerEvents = "auto";
-    const hit = document.elementFromPoint(clientX, clientY);
-    shell.style.pointerEvents = prev || "none";
-    if (!hit) return null;
-    if (isControlTarget(hit) || isSettingsMenuTarget(hit)) {
-      return hit.closest("[data-player-control], [data-settings-trigger]") || hit;
+  /**
+   * Móvil: 1.er toque revela controles; 2.º toque arma la interacción.
+   * Trabajamos en `pointerup` para que el flujo sea predecible: en `pointerdown`
+   * solo bloqueamos el comportamiento por defecto cuando los controles no
+   * deberían recibir interacción.
+   */
+  const handleMobilePointerDownCapture = useCallback((e) => {
+    if (!isTouchLikePointer(e) || !isCoarsePointerDevice()) return;
+    if (menuOpenRef.current || videoEnded) return;
+    // Si los controles aún no están armados, evitamos selecciones / scroll raros.
+    if (!touchControlsArmedRef.current) {
+      if (e.cancelable) e.preventDefault();
     }
-    return null;
-  }, []);
-
-  /** Móvil: 1.er toque revela controles; 2.º toque permite interactuar */
-  const handleMobilePointerDownCapture = useCallback(
-    (e) => {
-      if (!isTouchLikePointer(e) || !isCoarsePointerDevice()) return;
-      if (menuOpenRef.current || videoEnded) return;
-
-      if (!showControlsRef.current) {
-        touchPendingRevealRef.current = true;
-        touchPendingActionTargetRef.current = null;
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-
-      if (!touchControlsArmedRef.current) {
-        touchPendingRevealRef.current = false;
-        touchPendingActionTargetRef.current = resolveTouchControlTarget(
-          e.clientX,
-          e.clientY
-        );
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    },
-    [videoEnded, resolveTouchControlTarget]
-  );
+  }, [videoEnded]);
 
   const handleMobilePointerUpCapture = useCallback(
     (e) => {
       if (!isTouchLikePointer(e) || !isCoarsePointerDevice()) return;
       if (menuOpenRef.current) return;
 
-      if (touchPendingRevealRef.current) {
-        touchPendingRevealRef.current = false;
-        revealTouchControlsOnly();
+      // Estado 1: controles ocultos → revelar (sin acción).
+      if (!showControlsRef.current) {
         e.preventDefault();
         e.stopPropagation();
+        revealTouchControlsOnly();
         return;
       }
 
-      if (showControlsRef.current && !touchControlsArmedRef.current) {
+      // Estado 2: visibles pero no armados → habilitar interacción (sin acción).
+      if (!touchControlsArmedRef.current) {
+        e.preventDefault();
+        e.stopPropagation();
         armTouchControls();
         scheduleControlsHide();
-        const target = touchPendingActionTargetRef.current;
-        touchPendingActionTargetRef.current = null;
-        e.preventDefault();
-        e.stopPropagation();
-        if (target?.isConnected) {
-          const { clientX, clientY } = e;
-          window.requestAnimationFrame(() => {
-            const timeline = timelineRef.current;
-            if (timeline && (timeline === target || timeline.contains(target))) {
-              if (duration > 0) {
-                const rect = timeline.getBoundingClientRect();
-                const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-                const fraction = x / rect.width;
-                setPlayed(fraction);
-                playerRef.current?.seekTo(fraction * duration);
-                if (videoEnded && fraction < 0.999) {
-                  setVideoEnded(false);
-                  setPlaying(true);
-                }
-              }
-              return;
-            }
-            target.click();
-          });
-        }
         return;
       }
 
+      // Estado 3: armados → cualquier toque que no caiga en un control
+      // simplemente reinicia el temporizador de ocultamiento.
       if (
-        showControlsRef.current &&
-        touchControlsArmedRef.current &&
         !isControlTarget(e.target) &&
         !isSettingsMenuTarget(e.target)
       ) {
         scheduleControlsHide();
       }
     },
-    [armTouchControls, revealTouchControlsOnly, scheduleControlsHide, duration, videoEnded]
+    [armTouchControls, revealTouchControlsOnly, scheduleControlsHide]
   );
+
+  /**
+   * Bloquea cualquier `click` sintético (incluyendo los que React dispara
+   * sobre botones internos) cuando los controles aún no están armados.
+   * Necesario porque `preventDefault` en pointer events no cancela `click`
+   * en navegadores móviles.
+   */
+  const handleMobileClickCapture = useCallback((e) => {
+    if (!isCoarsePointerDevice()) return;
+    if (menuOpenRef.current || videoEnded) return;
+    if (!touchControlsArmedRef.current) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, [videoEnded]);
 
   useEffect(() => {
     if (!isCoarsePointerDevice()) return;
@@ -1681,8 +1685,6 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     if (!isCoarsePointerDevice()) return;
     setShowControls(false);
     disarmTouchControls();
-    touchPendingRevealRef.current = false;
-    touchPendingActionTargetRef.current = null;
   }, [currentVideo?._id, disarmTouchControls]);
 
   const handleMouseMove = useCallback(() => {
@@ -2392,6 +2394,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           onMouseLeave={handleMouseLeave}
           onPointerDownCapture={handleMobilePointerDownCapture}
           onPointerUpCapture={handleMobilePointerUpCapture}
+          onClickCapture={handleMobileClickCapture}
           onPointerUp={handleStagePointerUp}
           $hideCursor={hidePlayerCursor}
           $sticky={isStickyActive}
@@ -2588,6 +2591,8 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           <ControlsInteractiveShell
             ref={controlsShellRef}
             $touchEnabled={controlsTouchEnabled}
+            {...(!controlsTouchEnabled ? { inert: "" } : {})}
+            aria-hidden={!controlsTouchEnabled ? true : undefined}
             onPointerUpCapture={handleControlsChromePointerUp}
             onPointerDownCapture={handleControlPointerDown}
           >
