@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import Card from './Card'
+import { VideoCardList } from './VideoCardGrid'
 import { useLanguage } from '../utils/LanguageContext'
 import { uniqueRecommendations } from '../utils/recommendationVideos'
 
@@ -42,15 +43,8 @@ const ScrollableCards = styled.div`
   }
 `
 
-const CardsList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+const CardsList = styled(VideoCardList)`
   margin-top: 10px;
-
-  @media (max-width: 768px) {
-    gap: 16px;
-  }
 `
 
 const Hr = styled.hr`
@@ -225,7 +219,7 @@ export const Recommendation = ({ tags, currentPlayingVideoId }) => {
             const isLast = videos.length === index + 1
             return (
               <div ref={isLast ? lastCardElement : null} key={video._id}>
-                <Card type="sm" video={video} />
+                <Card video={video} />
               </div>
             )
           })}

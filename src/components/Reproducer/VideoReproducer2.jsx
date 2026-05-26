@@ -93,8 +93,17 @@ const PlayerWrapper = styled.div`
   overflow: ${({ $menuOpen }) => ($menuOpen ? "visible" : "hidden")};
   box-shadow: 0 6px 30px rgba(0, 0, 0, 0.7);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: ${({ $showControls }) => ($showControls ? "auto" : "none")};
+  cursor: ${({ $hideCursor }) => ($hideCursor ? "none" : "auto")};
   user-select: none;
+
+  ${({ $hideCursor }) =>
+    $hideCursor &&
+    css`
+      &,
+      & * {
+        cursor: none !important;
+      }
+    `}
 
   &:hover {
     transform: scale(1.002);
@@ -102,7 +111,7 @@ const PlayerWrapper = styled.div`
 
   /* ── Desktop: mini-player flotante en esquina inferior derecha ── */
   @media (min-width: 769px) {
-    ${({ $sticky }) => $sticky && `
+    ${({ $sticky, $hideCursor }) => $sticky && `
       position: fixed;
       bottom: 16px;
       right: 16px;
@@ -113,7 +122,7 @@ const PlayerWrapper = styled.div`
       border-radius: 12px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.08);
       transform: none;
-      cursor: pointer;
+      cursor: ${$hideCursor ? "none" : "pointer"};
       overflow: hidden;
     `}
   }
@@ -237,10 +246,23 @@ const ControlsWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   opacity: ${({ $show }) => ($show ? 1 : 0)};
-  /* El contenedor no captura toques: solo los hijos interactivos (data-player-control) */
   pointer-events: none;
   transition: opacity 0.35s ease;
   z-index: 25;
+`;
+
+/** En móvil: capa interactiva desactivada hasta que el usuario muestre los controles con un toque */
+const ControlsInteractiveShell = styled.div`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: ${({ $touchEnabled }) => ($touchEnabled ? "auto" : "none")};
+
+  @media (min-width: 769px) {
+    pointer-events: auto;
+  }
 `;
 
 /* ===== Play/Pause Feedback Animation ===== */
@@ -922,10 +944,11 @@ const ClickOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 4;
+  z-index: 5;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  pointer-events: ${({ $passThrough }) => ($passThrough ? "none" : "auto")};
 `;
 
 /* ===== Loading Spinner ===== */
@@ -1392,6 +1415,20 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   }, []);
 
   const handleTimelinePointerDown = useCallback((e) => {
+    if (isCoarsePointerDevice() && !showControlsRef.current && !menuOpenRef.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      const now = Date.now();
+      if (now - lastTouchTapRef.current >= TOUCH_CONTROLS_TAP_DEBOUNCE_MS) {
+        lastTouchTapRef.current = now;
+        setShowControls(true);
+        clearTimeout(hideTimeout.current);
+        hideTimeout.current = setTimeout(() => {
+          if (!menuOpenRef.current) setShowControls(false);
+        }, getControlsHideDelayMs());
+      }
+      return;
+    }
     if (!duration || duration <= 0) return;
     e.preventDefault();
     e.stopPropagation();
@@ -1536,6 +1573,24 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
     scheduleControlsHide();
   }, [scheduleControlsHide]);
 
+  /** Móvil: primer toque en el video solo revela controles (sin play/seek/etc.) */
+  const handleMobileRevealPointerDown = useCallback((e) => {
+    if (!isTouchLikePointer(e) || !isCoarsePointerDevice()) return;
+    if (showControlsRef.current || menuOpenRef.current) return;
+    e.preventDefault();
+  }, []);
+
+  const handleMobileRevealPointerUp = useCallback(
+    (e) => {
+      if (!isTouchLikePointer(e) || !isCoarsePointerDevice()) return;
+      if (showControlsRef.current || menuOpenRef.current) return;
+      e.preventDefault();
+      e.stopPropagation();
+      handleTouchStageTap();
+    },
+    [handleTouchStageTap]
+  );
+
   /** Toque en zona libre del reproductor (video, gradiente, duración, etc.) */
   const handleControlsChromePointerUp = useCallback(
     (e) => {
@@ -1563,6 +1618,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   const handleControlPointerDown = useCallback(
     (e) => {
+      if (isCoarsePointerDevice() && !showControlsRef.current && !menuOpenRef.current) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
       if (isSettingsMenuTarget(e.target)) {
         markControlsInteraction();
         clearStageClickTimer();
@@ -1581,6 +1641,9 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   const handleStagePointerUp = useCallback(
     (e) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (isCoarsePointerDevice() && !showControlsRef.current && !menuOpenRef.current) {
+        return;
+      }
       if (isControlTarget(e.target) || isSettingsMenuTarget(e.target)) {
         clearStageClickTimer();
         return;
@@ -2194,6 +2257,11 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
   };
 
   /* ============= RENDER ============= */
+  const controlsTouchEnabled = showControls || videoEnded || menuOpen;
+  const overlayPassThrough = isCoarsePointerDevice() && controlsTouchEnabled;
+  const hidePlayerCursor =
+    !isCoarsePointerDevice() && !showControls && !videoEnded && !menuOpen;
+
   return (
     <VideoWrapper>
       {/*
@@ -2207,7 +2275,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           onPointerUp={handleStagePointerUp}
-          $showControls={showControls}
+          $hideCursor={hidePlayerCursor}
           $sticky={isStickyActive}
           $fullscreen={isFullscreen}
           $menuOpen={menuOpen}
@@ -2358,7 +2426,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         )}
 
         {/* Clickable overlay for play/pause and fullscreen */}
-        <ClickOverlay onDoubleClick={handleStageDoublePointerUp} />
+        <ClickOverlay
+          $passThrough={overlayPassThrough}
+          onPointerDown={handleMobileRevealPointerDown}
+          onPointerUp={handleMobileRevealPointerUp}
+          onDoubleClick={handleStageDoublePointerUp}
+        />
 
         {/* Loading spinner */}
         {loading && !menuOpen && (
@@ -2395,9 +2468,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
         {/* ===== CONTROLS ===== */}
         <ControlsWrapper
           $show={showControls || videoEnded}
-          onPointerUpCapture={handleControlsChromePointerUp}
-          onPointerDownCapture={handleControlPointerDown}
         >
+          <ControlsInteractiveShell
+            $touchEnabled={controlsTouchEnabled}
+            onPointerUpCapture={handleControlsChromePointerUp}
+            onPointerDownCapture={handleControlPointerDown}
+          >
           {/* Top bar: se oculta en mini-player */}
           <TopBar $sticky={isStickyActive}>
             <VideoTitle>{currentVideo?.title}</VideoTitle>
@@ -2594,6 +2670,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
               </SettingsMenuRoot>
             </ControlRow>
           </BottomControls>
+          </ControlsInteractiveShell>
         </ControlsWrapper>
 
         {/* Menú de ajustes: siempre montado, visible con $visible (evita fallos de portal/condicional) */}

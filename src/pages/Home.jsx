@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import Card from "../components/Card";
+import { VideoCardGrid, VideoCardSkeleton } from "../components/VideoCardGrid";
 import { useLanguage } from "../utils/LanguageContext";
 import { FaPlay, FaRandom, FaRedo, FaBullhorn, FaHeart } from "react-icons/fa";
 import { getTopTagsForYou } from "../utils/watchTagPreferences";
@@ -306,36 +307,6 @@ const HeaderWrapper = styled.div`
   }
 `;
 
-// Grid de videos
-const VideoGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-  animation: ${fadeIn} 0.6s ease-out;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px;
-  }
-  
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-// Loading skeleton
-const SkeletonCard = styled.div`
-  background: linear-gradient(90deg, 
-    ${({ theme }) => theme.soft} 25%, 
-    ${({ theme }) => theme.bgLighter} 50%, 
-    ${({ theme }) => theme.soft} 75%
-  );
-  background-size: 200% 100%;
-  animation: ${shimmer} 1.5s infinite;
-  border-radius: 16px;
-  height: 260px;
-`;
-
 // Mensaje de error
 const ErrorMessage = styled.div`
   text-align: center;
@@ -440,42 +411,37 @@ const LoadMoreButton = styled.button`
 
 const AdCardContainer = styled.div`
   width: 100%;
-  margin-bottom: 5px;
-  border-radius: 16px;
-  background: linear-gradient(
-    145deg,
-    ${({ theme }) => theme.bgLighter} 0%,
-    ${({ theme }) => theme.soft} 100%
-  );
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  background: ${({ theme }) => theme.bgLighter};
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   position: relative;
-  border: 1px dashed ${({ theme }) => theme.textSoft};
-  opacity: 0.9;
-  animation: ${fadeIn} 0.6s ease-out;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  opacity: 0.95;
 
   &:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(11, 103, 220, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
     opacity: 1;
-    border-color: rgba(11, 103, 220, 0.4);
+    border-color: rgba(11, 103, 220, 0.35);
   }
 
   @media (max-width: 768px) {
-    border-radius: 12px;
+    border-radius: 10px;
+
     &:hover {
-      transform: translateY(-4px) scale(1.01);
+      transform: none;
     }
   }
 `;
 
 const AdCardImageArea = styled.div`
   width: 100%;
-  height: 160px;
+  aspect-ratio: 16 / 9;
   background: linear-gradient(
     135deg,
     rgba(11, 103, 220, 0.08) 0%,
@@ -536,8 +502,8 @@ const AdCardBadge = styled.span`
 
 const AdCardDetails = styled.div`
   display: flex;
-  gap: 14px;
-  padding: 16px;
+  gap: 8px;
+  padding: 8px 10px 10px;
   flex: 1;
 `;
 
@@ -550,12 +516,12 @@ const AdCardTexts = styled.div`
 `;
 
 const AdCardTitle = styled.h3`
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: 600;
   color: ${({ theme }) => theme.textSoft};
-  opacity: 0.7;
-  line-height: 1.4;
-  min-height: 42px;
+  opacity: 0.85;
+  line-height: 1.35;
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -970,14 +936,14 @@ const Home = ({ type }) => {
         </ForYouEmptyBox>
       )}
 
-      <VideoGrid>
+      <VideoCardGrid>
         {!(feedMode === "forYou" && forYouPlaceholder) &&
           buildGridItems(videos, t)}
 
         {loading && !(feedMode === "forYou" && forYouPlaceholder) && (
           <>
             {Array(4).fill(0).map((_, i) => (
-              <SkeletonCard key={`skeleton-${i}`} />
+              <VideoCardSkeleton key={`skeleton-${i}`} />
             ))}
             <LoadingMessage>
               <FaPlay /> {t("loading")}
@@ -1001,7 +967,7 @@ const Home = ({ type }) => {
             <FaRedo /> {t("loadMore")}
           </LoadMoreButton>
         )}
-      </VideoGrid>
+      </VideoCardGrid>
     </PageContainer>
   );
 };

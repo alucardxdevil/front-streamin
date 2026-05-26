@@ -6,16 +6,16 @@ import {
   FaGlobeAmericas, 
   FaHeart, 
   FaStar, 
-  FaPlay, 
   FaUsers,
   FaClock,
-  FaEye,
   FaArrowRight,
   FaBullhorn
 } from "react-icons/fa";
 import { MdCampaign } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
+import Card from "../components/Card";
+import { VideoCardGrid, VideoCardSkeleton } from "../components/VideoCardGrid";
 import { useLanguage } from "../utils/LanguageContext";
 import { getPublicProfilePath } from "../utils/profilePaths";
 import defaultProfile from '../img/profileUser.png';
@@ -317,170 +317,6 @@ const ViewAllLink = styled(Link)`
   }
 `;
 
-// Grid de videos
-const TrendList = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px;
-  }
-  
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-// Tarjeta de video mejorada
-const TrendCard = styled(Link)`
-  background: linear-gradient(145deg, 
-    ${({ theme }) => theme.bgLighter} 0%, 
-    ${({ theme }) => theme.soft} 100%
-  );
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  cursor: pointer;
-  text-decoration: none;
-  position: relative;
-
-  &:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(255, 62, 108, 0.2);
-  }
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 16px;
-    border: 2px solid transparent;
-    transition: border-color 0.3s ease;
-  }
-  
-  &:hover::after {
-    border-color: rgba(255, 62, 108, 0.3);
-  }
-`;
-
-const ThumbnailContainer = styled.div`
-  position: relative;
-  width: 100%;
-  height: 160px;
-  overflow: hidden;
-`;
-
-const Thumbnail = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-  
-  ${TrendCard}:hover & {
-    transform: scale(1.1);
-  }
-`;
-
-const PlayOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  
-  svg {
-    font-size: 48px;
-    color: white;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-  }
-  
-  ${TrendCard}:hover & {
-    opacity: 1;
-  }
-`;
-
-const RankBadge = styled.div`
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: linear-gradient(135deg, #ff3e6c 0%, #ff6b8a 100%);
-  color: white;
-  font-size: 14px;
-  font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(255, 62, 108, 0.4);
-`;
-
-const DurationBadge = styled.div`
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 6px;
-`;
-
-const TrendInfo = styled.div`
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const TrendTitle = styled.h3`
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 600;
-  font-size: 15px;
-  color: ${({ theme }) => theme.text};
-  line-height: 1.4;
-  min-height: 42px;
-`;
-
-const TrendStats = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  color: ${({ theme }) => theme.textSoft};
-  flex-wrap: wrap;
-  gap: 8px;
-`;
-
-const StatItem = styled.span`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  
-  svg {
-    font-size: 14px;
-  }
-`;
-
-const LikesDislikes = styled.div`
-  display: flex;
-  gap: 12px;
-`;
-
 // Sección de perfiles seguidos
 const ProfilesSection = styled.div`
   margin-bottom: 48px;
@@ -571,20 +407,21 @@ const ProfileFollowers = styled.span`
   }
 `;
 
-// Loading skeleton
-const SkeletonCard = styled.div`
-  background: linear-gradient(90deg, 
-    ${({ theme }) => theme.soft} 25%, 
-    ${({ theme }) => theme.bgLighter} 50%, 
+const ProfileSkeleton = styled.div`
+  min-width: 140px;
+  height: 160px;
+  border-radius: 20px;
+  background: linear-gradient(90deg,
+    ${({ theme }) => theme.soft} 25%,
+    ${({ theme }) => theme.bgLighter} 50%,
     ${({ theme }) => theme.soft} 75%
   );
   background-size: 200% 100%;
   animation: ${shimmer} 1.5s infinite;
-  border-radius: 16px;
-  height: 260px;
 `;
 
 const NoDataMessage = styled.div`
+  grid-column: 1 / -1;
   text-align: center;
   padding: 40px;
   color: ${({ theme }) => theme.textSoft};
@@ -654,45 +491,14 @@ function Trends({ }) {
     fetchTrends();
   }, []);
 
-  const formatDuration = (seconds) => {
-    if (!seconds) return "0:00";
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
   const renderTrends = (data, showRank = true) =>
     data.length > 0 ? (
       data.map((video, i) => (
-        <TrendCard to={`/video/${video?._id}`} key={video?._id || i}>
-          <ThumbnailContainer>
-            <Thumbnail
-              src={video?.imgUrl || "/img/default-thumbnail.jpg"}
-              alt={video?.title}
-            />
-            <PlayOverlay>
-              <FaPlay />
-            </PlayOverlay>
-            {showRank && <RankBadge>#{i + 1}</RankBadge>}
-            <DurationBadge>{formatDuration(video?.duration)}</DurationBadge>
-          </ThumbnailContainer>
-          <TrendInfo>
-            <TrendTitle title={video?.title}>{video?.title}</TrendTitle>
-            <TrendStats>
-              <StatItem>
-                <FaEye /> {video?.views?.toLocaleString() || 0}
-              </StatItem>
-              <LikesDislikes>
-                <StatItem style={{ color: "#0b67dc" }}>
-                  <BiSolidLike /> {video?.likes?.length || 0}
-                </StatItem>
-                <StatItem style={{ color: "#f87171" }}>
-                  <BiSolidDislike /> {video?.dislikes?.length || 0}
-                </StatItem>
-              </LikesDislikes>
-            </TrendStats>
-          </TrendInfo>
-        </TrendCard>
+        <Card
+          key={video?._id || i}
+          video={video}
+          rank={showRank ? i + 1 : undefined}
+        />
       ))
     ) : (
       <NoDataMessage>{t("noDataAvailable")}</NoDataMessage>
@@ -719,29 +525,7 @@ function Trends({ }) {
   const renderRecentVideos = () =>
     recentVideos.length > 0 ? (
       recentVideos.map((video, i) => (
-        <TrendCard to={`/video/${video?._id}`} key={video?._id || i}>
-          <ThumbnailContainer>
-            <Thumbnail
-              src={video?.imgUrl || "/img/default-thumbnail.jpg"}
-              alt={video?.title}
-            />
-            <PlayOverlay>
-              <FaPlay />
-            </PlayOverlay>
-            <DurationBadge>{formatDuration(video?.duration)}</DurationBadge>
-          </ThumbnailContainer>
-          <TrendInfo>
-            <TrendTitle title={video?.title}>{video?.title}</TrendTitle>
-            <TrendStats>
-              <StatItem>
-                <FaClock /> {t("recent")}
-              </StatItem>
-              <StatItem>
-                <FaEye /> {video?.views?.toLocaleString() || 0}
-              </StatItem>
-            </TrendStats>
-          </TrendInfo>
-        </TrendCard>
+        <Card key={video?._id || i} video={video} />
       ))
     ) : (
       <NoDataMessage>{t("noRecentVideos")}</NoDataMessage>
@@ -787,12 +571,7 @@ function Trends({ }) {
           {loading
             ? Array(5)
                 .fill(0)
-                .map((_, i) => (
-                  <SkeletonCard
-                    key={i}
-                    style={{ minWidth: "140px", height: "160px" }}
-                  />
-                ))
+                .map((_, i) => <ProfileSkeleton key={i} />)
             : renderProfiles()}
         </ProfilesScroll>
       </Section>
@@ -804,13 +583,13 @@ function Trends({ }) {
             <FaClock /> {t("mostRecentVideos")}
           </SectionTitle>
         </SectionHeader>
-        <TrendList>
+        <VideoCardGrid>
           {loading
             ? Array(4)
                 .fill(0)
-                .map((_, i) => <SkeletonCard key={i} />)
+                .map((_, i) => <VideoCardSkeleton key={i} />)
             : renderRecentVideos()}
-        </TrendList>
+        </VideoCardGrid>
       </Section>
 
       {/* Top Ten World */}
@@ -820,13 +599,13 @@ function Trends({ }) {
             <FaStar /> {t("topTenMonthly")}
           </SectionTitle>
         </SectionHeader>
-        <TrendList>
+        <VideoCardGrid>
           {loading
             ? Array(10)
                 .fill(0)
-                .map((_, i) => <SkeletonCard key={i} />)
+                .map((_, i) => <VideoCardSkeleton key={i} />)
             : renderTrends(worldTrends)}
-        </TrendList>
+        </VideoCardGrid>
       </Section>
 
       {/* Most Liked */}
@@ -836,13 +615,13 @@ function Trends({ }) {
             <BiSolidLike /> {t("MostLiked")}
           </SectionTitle>
         </SectionHeader>
-        <TrendList>
+        <VideoCardGrid>
           {loading
             ? Array(10)
                 .fill(0)
-                .map((_, i) => <SkeletonCard key={i} />)
+                .map((_, i) => <VideoCardSkeleton key={i} />)
             : renderTrends(mostLiked)}
-        </TrendList>
+        </VideoCardGrid>
       </Section>
 
       {/* Most Disliked */}
@@ -852,13 +631,13 @@ function Trends({ }) {
             <BiSolidDislike /> {t("MostDisliked")}
           </SectionTitle>
         </SectionHeader>
-        <TrendList>
+        <VideoCardGrid>
           {loading
             ? Array(10)
                 .fill(0)
-                .map((_, i) => <SkeletonCard key={i} />)
+                .map((_, i) => <VideoCardSkeleton key={i} />)
             : renderTrends(mostDisliked)}
-        </TrendList>
+        </VideoCardGrid>
       </Section>
     </PageContainer>
   );
