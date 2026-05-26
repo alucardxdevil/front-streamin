@@ -2,6 +2,9 @@
 # Los archivos estáticos en public/ (robots.txt, logo-pest.png, etc.)
 # se sirven automáticamente ANTES de estas reglas.
 
+# Perfiles legacy → formato universal @slug (301 para SEO)
+/profileUser/:slug  /@:slug  301
+
 # SPA catch-all: Todas las rutas no-estáticas sirven index.html
 # Nota: El Cloudflare Pages Function (functions/[[path]].js) se ejecuta
 # ANTES de estas reglas y maneja crawlers + 404 dinámicos.

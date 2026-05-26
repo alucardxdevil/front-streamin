@@ -17,6 +17,7 @@ import { MdCampaign } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
 import { useLanguage } from "../utils/LanguageContext";
+import { getPublicProfilePath } from "../utils/profilePaths";
 import defaultProfile from '../img/profileUser.png';
 
 // Animaciones
@@ -700,7 +701,7 @@ function Trends({ }) {
   const renderProfiles = () =>
     topFollowedUsers.length > 0 ? (
       topFollowedUsers.map((user, i) => (
-        <ProfileCard to={`/profileUser/${user?.slug || user?._id}`} key={user?._id || i}>
+        <ProfileCard to={getPublicProfilePath(user)} key={user?._id || i}>
           <ProfileAvatar 
             src={user?.img || defaultProfile} 
             alt={user?.name} 

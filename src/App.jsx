@@ -5,7 +5,8 @@ import BetaNoticeBar from "./components/BetaNoticeBar";
 import BackButton from "./components/BackButton";
 import PageLoader from "./components/PageLoader";
 import { darkTheme, lightTheme, sunsetTheme, cyberpunkTheme, sunriseTheme, vintageTheme } from "./utils/Theme";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
+import { getPublicProfilePath } from "./utils/profilePaths";
 import Home from "./pages/Home";
 import { LanguageProvider } from "./utils/LanguageContext";
 import SEOHead from "./components/seo/SEOHead";
@@ -74,6 +75,11 @@ const Wrapper = styled.div`
   overflow-x: hidden;
 `;
 
+function LegacyProfileRedirect() {
+  const { slug } = useParams();
+  return <Navigate to={getPublicProfilePath(slug)} replace />;
+}
+
 const themes = {
   dark: darkTheme,
   light: lightTheme,
@@ -126,9 +132,8 @@ function App() {
                       <Route path="help" element={<Help />} />
                       <Route path="advertise" element={<Advertise />} />
                       <Route path="settings" element={<Settings themeMode={themeMode} setThemeMode={setThemeMode} />} />
-                      <Route path="profileUser">
-                        <Route path=":slug" element={<ProfileUser />} />
-                      </Route>
+                      <Route path="@:slug" element={<ProfileUser />} />
+                      <Route path="profileUser/:slug" element={<LegacyProfileRedirect />} />
                       <Route path="video">
                         <Route path=":id" element={<Video />} />
                       </Route>

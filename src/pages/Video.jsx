@@ -9,6 +9,7 @@ import { follows } from "../redux/userSlice";
 import { formatTimeago } from "../utils/timeago";
 import { useLanguage } from "../utils/LanguageContext";
 import { recordWatchTags } from "../utils/watchTagPreferences";
+import { getPublicProfilePath } from "../utils/profilePaths";
 import axios from "axios";
 import VideoReproducer2 from "../components/Reproducer/VideoReproducer2";
 import defaultProfile from "../img/profileUser.png";
@@ -541,7 +542,7 @@ const Video = () => {
   const hasLiked = currentUser?._id ? likes.includes(currentUser._id) : false;
   const hasDisliked = currentUser?._id ? dislikes.includes(currentUser._id) : false;
   const isOwnChannel = Boolean(currentUser?._id && channel?._id && currentUser._id === channel._id);
-  const channelProfilePath = isOwnChannel ? "/profile" : `/profileUser/${channel.slug || channel._id}`;
+  const channelProfilePath = isOwnChannel ? "/profile" : getPublicProfilePath(channel);
 
   const openLoginModal = () => setShowLoginModal(true);
   const closeLoginModal = () => setShowLoginModal(false);

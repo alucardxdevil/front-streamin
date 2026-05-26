@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import seoConfig from '../../utils/seoConfig';
+import { getPublicProfilePath } from '../../utils/profilePaths';
 
 /**
  * SEOVideoWrapper — Inyecta metadatos SEO específicos para páginas de video.
@@ -31,11 +32,9 @@ const SEOVideoWrapper = ({ video, channel }) => {
     ? new Date(video.createdAt).toISOString()
     : new Date().toISOString();
   const channelName = channel?.name || 'Creator';
-  const channelUrl = channel?.slug
-    ? `${seoConfig.siteUrl}/profileUser/${channel.slug}`
-    : channel?._id
-      ? `${seoConfig.siteUrl}/profileUser/${channel._id}`
-      : seoConfig.siteUrl;
+  const channelUrl = channel
+    ? getPublicProfilePath(channel, { absolute: true, siteUrl: seoConfig.siteUrl })
+    : seoConfig.siteUrl;
 
   // Duración en formato ISO 8601 (PT#M#S)
   const durationISO = video.duration

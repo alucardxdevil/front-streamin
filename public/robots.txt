@@ -8,6 +8,7 @@ Allow: /
 
 # ── Rutas públicas (permitir explícitamente) ────────────────────────────────
 # Estas reglas más específicas tienen PRIORIDAD sobre las Disallow más cortas
+Allow: /@
 Allow: /profileUser/
 Allow: /video/
 Allow: /videosProfile/

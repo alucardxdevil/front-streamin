@@ -6,6 +6,7 @@ import { BiArrowBack, BiUser } from "react-icons/bi";
 import { FaUsers, FaUserFriends } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useLanguage } from "../utils/LanguageContext";
+import { getPublicProfilePath } from "../utils/profilePaths";
 
 // Animaciones
 const fadeIn = keyframes`
@@ -415,7 +416,7 @@ const Following = () => {
   }, [currentUser]);
 
   const handleUserClick = (user) => {
-    navigate(`/profileUser/${user.slug || user._id}`);
+    navigate(getPublicProfilePath(user));
   };
 
   const handleUnfollow = async (e, userId) => {

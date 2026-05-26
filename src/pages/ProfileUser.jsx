@@ -9,6 +9,7 @@ import NotFound from './PageNotFOund';
 import { FaTwitter, FaInstagram, FaFacebook, FaGlobe, FaSearchPlus } from 'react-icons/fa';
 import { useLanguage } from '../utils/LanguageContext';
 import SEOProfileWrapper from '../components/seo/SEOProfileWrapper';
+import { normalizeProfileSlug } from '../utils/profilePaths';
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
@@ -434,8 +435,8 @@ export const ProfileUser = () => {
   const [videoCount, setVideoCount] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo } = useSelector((state) => state.video);
-  const { slug } = useParams();
-  const path = slug;
+  const { slug: rawSlug } = useParams();
+  const path = normalizeProfileSlug(rawSlug);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [notFound, setNotFound] = useState(false);

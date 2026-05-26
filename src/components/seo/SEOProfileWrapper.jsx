@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import seoConfig from '../../utils/seoConfig';
+import { getPublicProfilePath } from '../../utils/profilePaths';
 
 /**
  * SEOProfileWrapper — Inyecta metadatos SEO para páginas de perfil de usuario.
@@ -24,9 +25,10 @@ const SEOProfileWrapper = ({ user, videoCount }) => {
     ? user.description.substring(0, 150)
     : `Profile of ${name} on ${seoConfig.siteName}. ${user.follows || 0} followers.`;
   const profileImage = user.img || seoConfig.defaultImage;
-  const profileUrl = user.slug
-    ? `${seoConfig.siteUrl}/profileUser/${user.slug}`
-    : `${seoConfig.siteUrl}/profileUser/${user._id}`;
+  const profileUrl = getPublicProfilePath(user, {
+    absolute: true,
+    siteUrl: seoConfig.siteUrl,
+  });
 
   // ── JSON-LD: Person (Schema.org) ───────────────────────────────────────────
   const jsonLd = {

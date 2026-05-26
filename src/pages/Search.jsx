@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { follows } from '../redux/userSlice';
 import { FaTimes } from "react-icons/fa";
 import { useLanguage } from "../utils/LanguageContext";
+import { getPublicProfilePath } from "../utils/profilePaths";
 
 // Animaciones
 const fadeIn = keyframes`
@@ -837,7 +838,7 @@ export const Search = () => {
                   {users.map((u, index) => (
                     (() => {
                       const isOwnProfile = Boolean(currentUser?._id && currentUser._id === u._id);
-                      const userProfilePath = isOwnProfile ? "/profile" : `/profileUser/${u.slug || u._id}`;
+                      const userProfilePath = isOwnProfile ? "/profile" : getPublicProfilePath(u);
                       return (
                     <UserCardCarousel 
                       key={u._id} 

@@ -83,7 +83,8 @@ const VALID_ROUTE_PATTERNS = [
   /^\/help$/,                                // Ayuda
   /^\/advertise$/,                           // Anunciate
   /^\/settings$/,                            // Configuración
-  /^\/profileUser\/[^/]+$/,                  // Perfil de usuario
+  /^\/@[^/]+$/,                              // Perfil de usuario (@slug)
+  /^\/profileUser\/[^/]+$/,                  // Legacy: redirige a /@slug
   /^\/video\/[a-f0-9]{24}$/i,               // Video (MongoDB ObjectId)
   /^\/history\/[^/]+$/,                      // Historial
   /^\/playlist\/[^/]+\/[^/]+$/,             // Detalle de playlist
@@ -103,8 +104,10 @@ function getOgEndpoint(pathname) {
     return `${API_BASE}/api/og/video/${videoMatch[1]}`;
   }
 
-  // /profileUser/:slug → /api/og/profile/:slug
-  const profileMatch = pathname.match(/^\/profileUser\/([^/]+)$/);
+  // /@slug o /profileUser/:slug (legacy) → /api/og/profile/:slug
+  const profileMatch =
+    pathname.match(/^\/@([^/]+)$/) ||
+    pathname.match(/^\/profileUser\/([^/]+)$/);
   if (profileMatch) {
     return `${API_BASE}/api/og/profile/${encodeURIComponent(profileMatch[1])}`;
   }

@@ -6,6 +6,7 @@ import { formats } from '../utils/formatDuration';
 import defaultProfile from '../img/profileUser.png';
 import { formatTimeago } from "../utils/timeago";
 import { useLanguage } from "../utils/LanguageContext";
+import { getPublicProfilePath } from "../utils/profilePaths";
 
 const Container = styled.div`
   display: flex;
@@ -168,7 +169,7 @@ const CardFollowed = ({ video }) => {
       </Link>
       
       <Content>
-        <Link to={`/profileUser/${channel.slug || channel._id}`}>
+        <Link to={getPublicProfilePath(channel)}>
           <ChannelAvatar 
             src={channel.img || defaultProfile} 
             alt={channel.name}
@@ -180,7 +181,7 @@ const CardFollowed = ({ video }) => {
             <Title title={video.title}>{video.title}</Title>
           </Link>
           
-          <Link to={`/profileUser/${channel.slug || channel._id}`} style={{ textDecoration: 'none' }}>
+          <Link to={getPublicProfilePath(channel)} style={{ textDecoration: 'none' }}>
             <ChannelName>{channel.name}</ChannelName>
           </Link>
           

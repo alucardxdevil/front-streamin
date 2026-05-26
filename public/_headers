@@ -23,6 +23,10 @@
   Vary: User-Agent
   Cache-Control: public, max-age=0, must-revalidate
 
+/@/*
+  Vary: User-Agent
+  Cache-Control: public, max-age=0, must-revalidate
+
 /profileUser/*
   Vary: User-Agent
   Cache-Control: public, max-age=0, must-revalidate
