@@ -402,9 +402,7 @@ const Following = () => {
       
       try {
         setLoading(true);
-        const res = await axios.get(`/users/following/${currentUser._id}`, {
-          headers: { Authorization: `Bearer ${currentUser.accessToken}` }
-        });
+        const res = await axios.get(`/users/following/${currentUser._id}`);
         setUsers(res.data || []);
       } catch (err) {
         console.error("Error fetching following users:", err);
@@ -425,9 +423,7 @@ const Following = () => {
     if (!currentUser) return;
     
     try {
-      await axios.put(`/users/unfol/${userId}`, {}, {
-        headers: { Authorization: `Bearer ${currentUser.accessToken}` }
-      });
+      await axios.put(`/users/unfol/${userId}`, {});
       
       // Actualizar la lista removiendo el usuario
       setUsers(prev => prev.filter(user => user._id !== userId));

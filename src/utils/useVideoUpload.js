@@ -48,11 +48,8 @@ const useVideoUpload = () => {
   const pollingRef = useRef(null)
   const abortControllerRef = useRef(null)
 
-  // ── Obtener token de autenticación ─────────────────────────────────────────
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token')
-    return token ? { Authorization: `Bearer ${token}` } : {}
-  }
+  // Autenticación vía cookie httpOnly (axios.defaults.withCredentials)
+  const getAuthHeaders = () => ({})
 
   // ── Paso 1: Subir imagen de miniatura ──────────────────────────────────────
   const uploadThumbnail = async (imageFile) => {

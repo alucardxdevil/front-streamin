@@ -13,6 +13,7 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import LogoImg from "../img/logo.png";
 import { useLanguage } from "../utils/LanguageContext";
+import { buildGoogleAuthPayload, getAuthErrorMessage } from "../utils/authHelpers";
 
 /* ============= Animations ============= */
 const fadeIn = keyframes`
@@ -419,14 +420,11 @@ const SignIn = () => {
     dispatch(loginStart());
     try {
       const res = await axios.post("/auth/signin", { email, password });
-      const { accessToken, ...user } = res.data || {};
-      if (accessToken) {
-        localStorage.setItem("token", accessToken);
-      }
+      const { accessToken: _token, ...user } = res.data || {};
       dispatch(loginSuccess(user));
       navigate("/");
     } catch (err) {
-      setError("Invalid email or password.");
+      setError(getAuthErrorMessage(err, "Invalid email or password."));
       dispatch(loginFailure());
     } finally {
       setLoading(false);
@@ -437,19 +435,16 @@ const SignIn = () => {
     dispatch(loginStart());
     try {
       const result = await signInWithPopup(auth, provider);
+      const idToken = await result.user.getIdToken();
       const res = await axios.post("/auth/google", {
-        name: result.user.displayName,
-        email: result.user.email,
-        img: result.user.photoURL,
+        ...buildGoogleAuthPayload(result.user),
+        idToken,
       });
-      const { accessToken, ...user } = res.data || {};
-      if (accessToken) {
-        localStorage.setItem("token", accessToken);
-      }
+      const { accessToken: _token, ...user } = res.data || {};
       dispatch(loginSuccess(user));
       navigate("/");
     } catch (err) {
-      setError("Failed to sign in with Google.");
+      setError(getAuthErrorMessage(err, "Failed to sign in with Google."));
       dispatch(loginFailure());
     }
   };

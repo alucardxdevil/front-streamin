@@ -399,8 +399,7 @@ const HomeOne = ({ type }) => {
     const fetchVideos = async () => {
       try {
         setLoading(true);
-        const headers = currentUser ? { Authorization: `Bearer ${currentUser.accessToken}` } : {};
-        const videosRes = await axios.get(`/videos/${type}`, { headers });
+        const videosRes = await axios.get(`/videos/${type}`);
         setVideos(videosRes.data || []);
       } catch (err) {
         console.error("Error fetching videos:", err);
@@ -424,9 +423,7 @@ const HomeOne = ({ type }) => {
     
     try {
       // Obtener la playlist de favoritos del usuario
-      const playlistRes = await axios.get(`/users/playlists/${currentUser._id}`, {
-        headers: { Authorization: `Bearer ${currentUser.accessToken}` }
-      });
+      const playlistRes = await axios.get(`/users/playlists/${currentUser._id}`);
       
       // Buscar la playlist de favoritos en la respuesta
       const playlists = playlistRes.data.playlists || [];
@@ -440,8 +437,6 @@ const HomeOne = ({ type }) => {
           userId: currentUser._id,
           name: 'My Favorites videos',
           videoIds: videos.map(v => v._id)
-        }, {
-          headers: { Authorization: `Bearer ${currentUser.accessToken}` }
         });
         
         if (response.data.playlist) {

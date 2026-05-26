@@ -354,10 +354,7 @@ export const UploadProfile = ({ setOpen }) => {
       });
       
       if (res.status === 200) {
-        const { accessToken, ...user } = res.data || {};
-        if (accessToken) {
-          localStorage.setItem("token", accessToken);
-        }
+        const { accessToken: _token, ...user } = res.data || {};
         // Actualizar el usuario en Redux con los nuevos datos
         dispatch(loginSuccess(user));
         setSuccess(t("profileUpdated") || "Profile updated successfully!");

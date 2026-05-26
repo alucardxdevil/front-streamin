@@ -13,12 +13,16 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 // URL base del backend según el entorno
-// En producción: http://ip_servidor/api
+// En producción: REACT_APP_API_URL es obligatorio (sin IP hardcodeada)
 // En desarrollo: /api (el proxy de CRA lo redirige a localhost:5000)
 const API_BASE_URL =
   process.env.NODE_ENV === 'production'
-    ? `${process.env.REACT_APP_API_URL || 'http://89.167.94.4'}/api`
+    ? `${process.env.REACT_APP_API_URL}/api`
     : '/api'
+
+if (process.env.NODE_ENV === 'production' && !process.env.REACT_APP_API_URL) {
+  console.error('[Security] REACT_APP_API_URL no está definido en producción')
+}
 
 // Configurar baseURL global de axios
 axios.defaults.baseURL = API_BASE_URL
@@ -41,11 +45,8 @@ axios.interceptors.request.use(
       url.includes('localhost')
 
     if (isBackendRequest) {
-      const token =
-        localStorage.getItem('token') || sessionStorage.getItem('token')
-      if (token && !config.headers['Authorization']) {
-        config.headers['Authorization'] = `Bearer ${token}`
-      }
+      // Autenticación vía cookie httpOnly (withCredentials) — no usar localStorage
+      // El Bearer header solo se añade si ya viene en la petición (p.ej. app móvil)
     }
     return config
   },
@@ -65,8 +66,6 @@ axios.interceptors.response.use(
     if (status === 401 || status === 403) {
       // No limpiar tokens para streaming (usan tokens diferentes)
       if (!isStreamEndpoint) {
-        localStorage.removeItem('token')
-        sessionStorage.removeItem('token')
         localStorage.removeItem('user')
         sessionStorage.removeItem('user')
         

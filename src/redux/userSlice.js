@@ -25,10 +25,7 @@ export const userSlice = createSlice({
             state.currentUser = null
             state.loading = false
             state.error = false
-            state.token = null
-            localStorage.removeItem('token')
-            sessionStorage.removeItem('token')
-            document.cookie = 'token.access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax';
         },
         follows: (state, action) => {
             if (state.currentUser.followsProfile.includes(action.payload)) {
