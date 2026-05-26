@@ -218,12 +218,20 @@ const HLSPlayer = ({
     hls.loadSource(url)
     hls.attachMedia(video)
 
+    // Firefox MSE NO compensa el PTS offset de los segmentos .ts (a diferencia
+    // de Chromium/Safari), así que solo en Firefox forzamos seek a 0. En el
+    // resto de navegadores este seek invalida el startFragPrefetch=true que
+    // hls.js ya tenía en buffer, costando ~200–500 ms de latencia inicial.
+    const isFirefox = typeof navigator !== 'undefined' &&
+      /firefox/i.test(navigator.userAgent || '')
+
     hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
       setIsLoading(false)
       setAvailableLevels(data.levels)
 
-      // Forzar seek a 0 para evitar PTS offset de segmentos .ts
-      video.currentTime = 0
+      if (isFirefox) {
+        video.currentTime = 0
+      }
 
       if (autoPlay) {
         // En Firefox, intentar play() mutado primero para evitar bloqueo de autoplay.
@@ -261,9 +269,9 @@ const HLSPlayer = ({
     const handleCanPlay = () => setIsLoading(false)
     const handlePlaying = () => {
       setIsLoading(false)
-      // Corrección de inicio: si es la primera vez que el video entra en
-      // estado "playing" y currentTime saltó adelante, corregir a 0.
-      if (!video._startFixed) {
+      // Corrección de inicio SOLO en Firefox: Chromium/Safari MSE compensan
+      // el PTS offset internamente y un seek aquí solo cuesta latencia.
+      if (isFirefox && !video._startFixed) {
         video._startFixed = true
         if (video.currentTime > 1.5) {
           video.currentTime = 0
