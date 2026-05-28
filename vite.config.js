@@ -23,6 +23,14 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
+            // Cada locale ya se separa por import dinámico (import.meta.glob),
+            // pero lo forzamos explícitamente para que el nombre del chunk sea
+            // estable y nunca se mezcle con el código de la app.
+            if (id.includes('/src/i18n/locales/')) {
+              const match = id.match(/locales\/([a-z]{2})\.js$/)
+              if (match) return `locale-${match[1]}`
+            }
+
             if (!id.includes('node_modules')) return
 
             if (id.includes('firebase')) return 'firebase'

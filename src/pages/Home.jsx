@@ -807,7 +807,13 @@ const Home = ({ type }) => {
   };
 
   useEffect(() => {
-    const handleScroll = () => {
+    // Throttle con requestAnimationFrame: el evento scroll dispara decenas de
+    // veces por segundo; colapsamos a un cálculo por frame para evitar layout
+    // thrash y bajar el uso de CPU en mobile.
+    let ticking = false;
+
+    const evaluate = () => {
+      ticking = false;
       if (
         window.innerHeight + window.scrollY <
         document.body.scrollHeight - 100
@@ -822,7 +828,13 @@ const Home = ({ type }) => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(evaluate);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [hasMore, loading, feedMode, forYouPlaceholder]);
 

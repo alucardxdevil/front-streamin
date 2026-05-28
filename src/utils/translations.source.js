@@ -1,4 +1,4 @@
-import { localePatches } from './localePatches.js'
+import { localePatches } from './localePatches.source.js'
 
 const translations = {
   es: {

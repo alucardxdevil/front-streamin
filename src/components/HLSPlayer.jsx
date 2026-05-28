@@ -10,8 +10,10 @@
  * PROTECCIÓN DE VIDEO:
  *  - Las URLs de B2 NUNCA se exponen al cliente
  *  - Todo el contenido se sirve a través del proxy backend (/api/stream/*)
- *  - El token de sesión anónimo se adjunta automáticamente a cada solicitud
- *  - hls.js usa xhrSetup para inyectar el header X-Session-Token en cada fragmento
+ *  - El token de sesión viaja como cookie HttpOnly `stream_session`
+ *  - hls.js usa xhrSetup con withCredentials=true para enviar la cookie en cada
+ *    fragmento (GET simple, sin headers custom → sin preflight CORS y URLs
+ *    idénticas entre usuarios para que Cloudflare comparta el cache)
  *
  * Props:
  *  - videoId:      string  — ID del video en MongoDB
