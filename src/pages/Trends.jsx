@@ -82,9 +82,8 @@ const HeaderSection = styled.div`
     ${({ theme }) => theme.soft} 50%,
     ${({ theme }) => theme.bgLighter} 100%
   );
-  border-radius: 24px;
+  border-radius: 24px 24px 0 0;
   padding: 40px;
-  margin-bottom: 40px;
   position: relative;
   overflow: hidden;
   
@@ -105,8 +104,7 @@ const HeaderSection = styled.div`
   
   @media (max-width: 768px) {
     padding: 24px;
-    border-radius: 16px;
-    margin-bottom: 24px;
+    border-radius: 16px 16px 0 0;
   }
 `;
 
@@ -162,7 +160,7 @@ const SecondaryAdBanner = styled.div`
   width: 100%;
   height: 100px;
   margin-top: 0;
-  margin-bottom: 40px;
+  margin-bottom: 0;
   border-radius: 0 0 24px 24px;
   background: linear-gradient(
     90deg,
@@ -197,7 +195,6 @@ const SecondaryAdBanner = styled.div`
 
   @media (max-width: 768px) {
     height: 72px;
-    margin-bottom: 24px;
     border-radius: 0 0 16px 16px;
     gap: 8px;
   }
