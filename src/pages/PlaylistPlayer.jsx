@@ -603,7 +603,7 @@ const skipToNearestPlayable = (videos, index) => {
 // ============================================================================
 
 export const PlaylistPlayerPage = () => {
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userId, playlistId } = useParams();
@@ -877,15 +877,6 @@ export const PlaylistPlayerPage = () => {
   // HELPERS
   // =========================================================================
 
-  const formatDate = (date) => {
-    const d = new Date(date);
-    return d.toLocaleDateString(language, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   // Can navigate previous?
   const canGoPrev =
     playlist?.videos && findNextAvailableIndex(playlist.videos, currentIndex - 1, -1) >= 0;
@@ -969,12 +960,14 @@ export const PlaylistPlayerPage = () => {
                 {t("playlistReadOnly")}
               </ReadOnlyBadge>
             )}
-            <ShareModalPlaylist
-              playlistId={playlistId}
-              playlistName={playlist.name}
-              videoCount={0}
-              userId={userId}
-            />
+            {!isFavoritesPlaylist && (
+              <ShareModalPlaylist
+                playlistId={playlistId}
+                playlistName={playlist.name}
+                videoCount={0}
+                userId={userId}
+              />
+            )}
           </div>
         </TopBar>
         <EmptyState role="status">
@@ -1007,21 +1000,23 @@ export const PlaylistPlayerPage = () => {
               {t("playlistReadOnly")}
             </ReadOnlyBadge>
           )}
-          <ShareModalPlaylist
-            playlistId={playlistId}
-            playlistName={playlist.name}
-            videoCount={availableCount}
-            userId={userId}
-          />
+          {!isFavoritesPlaylist && (
+            <ShareModalPlaylist
+              playlistId={playlistId}
+              playlistName={playlist.name}
+              videoCount={availableCount}
+              userId={userId}
+            />
+          )}
         </div>
       </TopBar>
 
-      <AdBanner aria-label="Publicidad">
+      <AdBanner aria-label={t("adLabel")}>
         <div>
-          <strong>Publicidad</strong>
-          <p>Promociona tu canal o tu producto aqui.</p>
+          <strong>{t("adLabel")}</strong>
+          <p>{t("adBannerText")}</p>
         </div>
-        <button type="button">Ver oferta</button>
+        <button type="button">{t("advertise")}</button>
       </AdBanner>
 
       <PlayerContainer>
@@ -1032,9 +1027,6 @@ export const PlaylistPlayerPage = () => {
           <VideoInfoSection>
             <VideoTitle>{currentVideoItem?.videoTitle}</VideoTitle>
             <VideoMeta>
-              <span>
-                {formatDate(currentVideoItem?.addedAt || playlist.updatedAt)}
-              </span>
               <span>
                 {currentIndex + 1} / {playlist.videos.length}
               </span>

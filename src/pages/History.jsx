@@ -956,7 +956,6 @@ export const HistoryPage = () => {
                     <PlaylistInfo>
                       <PlaylistTitle>{playlist.name}</PlaylistTitle>
                       <PlaylistMeta>
-                        <div>{formatDate(playlist.createdAt)}</div>
                         <div>{playlist.videos.length} {t("videos")}</div>
                       </PlaylistMeta>
                     </PlaylistInfo>

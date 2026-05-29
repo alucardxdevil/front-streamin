@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { BiPlayCircle, BiTrash, BiEdit, BiArrowBack } from "react-icons/bi";
 import { MdPlaylistAdd, MdDeleteForever, MdErrorOutline } from "react-icons/md";
-import { FaPlay, FaClock, FaVideo } from "react-icons/fa";
+import { FaPlay, FaVideo } from "react-icons/fa";
 import { formats } from "../utils/formatDuration";
 import ShareModalPlaylist from "../components/ModalSharePlaylist";
 
@@ -448,7 +448,7 @@ const isVideoDeleted = (videoItem) => {
 };
 
 export const PlaylistDetailPage = () => {
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const { userId, playlistId } = useParams();
   const { currentUser } = useSelector((state) => state.user);
@@ -524,15 +524,6 @@ export const PlaylistDetailPage = () => {
     }
   };
 
-  const formatDate = (date) => {
-    const d = new Date(date);
-    return d.toLocaleDateString(language, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
   const formatDuration = (duration) => {
     if (!duration) return '';
     if (typeof duration === 'number' || !isNaN(duration)) {
@@ -592,10 +583,6 @@ export const PlaylistDetailPage = () => {
             <FaVideo aria-hidden="true" />
             {availableCount} / {playlist.videos?.length || 0} {t("videos")}
           </MetaItem>
-          <MetaItem>
-            <FaClock aria-hidden="true" />
-            {t("created")}: {formatDate(playlist.createdAt)}
-          </MetaItem>
           {!canEdit && (
             <ReadOnlyBadge aria-label={t("playlistReadOnly")}>
               {t("playlistReadOnly")}
@@ -621,12 +608,14 @@ export const PlaylistDetailPage = () => {
             <FaPlay aria-hidden="true" />
             {t("playAll")}
           </Button>
-          <ShareModalPlaylist 
-            playlistId={playlistId}
-            playlistName={playlist.name}
-            videoCount={availableCount}
-            userId={userId}
-          />
+          {!isFavoritesPlaylist && (
+            <ShareModalPlaylist 
+              playlistId={playlistId}
+              playlistName={playlist.name}
+              videoCount={availableCount}
+              userId={userId}
+            />
+          )}
         </ActionButtons>
       </HeaderSection>
 
@@ -733,12 +722,6 @@ export const PlaylistDetailPage = () => {
 
                 <VideoInfo>
                   <VideoTitle>{videoItem.videoTitle}</VideoTitle>
-                  <VideoMeta>
-                    <span>
-                      {t("added")}:{" "}
-                      {formatDate(videoItem.addedAt || playlist.updatedAt)}
-                    </span>
-                  </VideoMeta>
                   <VideoActions>
                     <ActionButton
                       onClick={(e) => {
