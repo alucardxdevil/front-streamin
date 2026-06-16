@@ -1,47 +1,33 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import seoConfig from '../../utils/seoConfig';
+import seoConfig, { interpolateSeo } from '../../utils/seoConfig';
 import { getPublicProfilePath } from '../../utils/profilePaths';
+import { useLanguage } from '../../utils/LanguageContext';
 
-/**
- * SEOVideoWrapper — Inyecta metadatos SEO específicos para páginas de video.
- *
- * Incluye:
- *  • <title> dinámico con el nombre del video
- *  • Meta description con los primeros 150 caracteres de la descripción
- *  • Open Graph (og:video, og:image, og:title, etc.)
- *  • Twitter Cards (player card)
- *  • JSON-LD con esquema VideoObject de Schema.org
- *
- * @param {Object} video   — Objeto del video (currentVideo del store).
- * @param {Object} channel — Objeto del canal/usuario creador.
- */
 const SEOVideoWrapper = ({ video, channel }) => {
+  const { t } = useLanguage();
   if (!video) return null;
 
-  // ── Valores derivados ──────────────────────────────────────────────────────
   const title = video.title || 'Video';
   const fullTitle = `${title} | ${seoConfig.siteName}`;
   const description = video.description
     ? video.description.substring(0, 150)
-    : `Watch "${title}" on ${seoConfig.siteName}`;
+    : interpolateSeo(t('seoVideoDescription'), { title });
   const thumbnailUrl = video.imgUrl || seoConfig.defaultImage;
   const videoPageUrl = `${seoConfig.siteUrl}/video/${video._id}`;
   const embedUrl = video.hlsMasterUrl || video.videoUrl || '';
   const uploadDate = video.createdAt
     ? new Date(video.createdAt).toISOString()
     : new Date().toISOString();
-  const channelName = channel?.name || 'Creator';
+  const channelName = channel?.name || t('seoCreatorLabel');
   const channelUrl = channel
     ? getPublicProfilePath(channel, { absolute: true, siteUrl: seoConfig.siteUrl })
     : seoConfig.siteUrl;
 
-  // Duración en formato ISO 8601 (PT#M#S)
   const durationISO = video.duration
     ? `PT${Math.floor(video.duration / 60)}M${Math.floor(video.duration % 60)}S`
     : undefined;
 
-  // ── JSON-LD: VideoObject (Schema.org) ──────────────────────────────────────
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
@@ -65,6 +51,7 @@ const SEOVideoWrapper = ({ video, channel }) => {
     publisher: {
       '@type': 'Organization',
       name: seoConfig.siteName,
+      url: seoConfig.siteUrl,
       logo: {
         '@type': 'ImageObject',
         url: seoConfig.defaultImage,
@@ -76,12 +63,10 @@ const SEOVideoWrapper = ({ video, channel }) => {
 
   return (
     <Helmet>
-      {/* ── Básicos ─────────────────────────────────────────────── */}
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={videoPageUrl} />
 
-      {/* ── Open Graph ──────────────────────────────────────────── */}
       <meta property="og:site_name" content={seoConfig.siteName} />
       <meta property="og:type" content="video.other" />
       <meta property="og:title" content={fullTitle} />
@@ -94,7 +79,6 @@ const SEOVideoWrapper = ({ video, channel }) => {
       {embedUrl && <meta property="og:video" content={embedUrl} />}
       {embedUrl && <meta property="og:video:type" content="application/x-mpegURL" />}
 
-      {/* ── Twitter Cards ───────────────────────────────────────── */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content={seoConfig.twitterHandle} />
       <meta name="twitter:title" content={fullTitle} />
@@ -102,10 +86,7 @@ const SEOVideoWrapper = ({ video, channel }) => {
       <meta name="twitter:image" content={thumbnailUrl} />
       <meta name="twitter:image:alt" content={title} />
 
-      {/* ── JSON-LD: Datos Estructurados ────────────────────────── */}
-      <script type="application/ld+json">
-        {JSON.stringify(jsonLd)}
-      </script>
+      <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
     </Helmet>
   );
 };

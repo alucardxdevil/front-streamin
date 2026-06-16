@@ -1,5 +1,5 @@
 # teleprt — robots.txt
-# Última actualización: 2026-04-05
+# Última actualización: 2026-06-15
 
 User-agent: *
 

@@ -1,20 +1,10 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import seoConfig from '../../utils/seoConfig';
+import seoConfig, { buildWebsiteJsonLd } from '../../utils/seoConfig';
+import { useLanguage } from '../../utils/LanguageContext';
 
 /**
- * SEOHead — Componente base de metadatos para cualquier página.
- *
- * Inyecta <title>, meta description, canonical, Open Graph y Twitter Cards.
- * Cada página puede sobreescribir los valores por defecto pasando props.
- *
- * @param {string}  title       — Título de la página (se concatena con el siteName).
- * @param {string}  description — Meta description (máx. ~160 caracteres).
- * @param {string}  canonical   — URL canónica de la página.
- * @param {string}  image       — URL de la imagen para Open Graph / Twitter.
- * @param {string}  type        — og:type (website, article, video.other, profile).
- * @param {boolean} noIndex     — Si true, agrega robots noindex.
- * @param {React.ReactNode} children — Etiquetas <meta> adicionales.
+ * SEOHead — Metadatos base para cualquier página de teleprt.
  */
 const SEOHead = ({
   title,
@@ -23,40 +13,51 @@ const SEOHead = ({
   image,
   type = 'website',
   noIndex = false,
+  includeWebsiteSchema = false,
   children,
 }) => {
+  const { t } = useLanguage();
+
   const fullTitle = title
     ? `${title} | ${seoConfig.siteName}`
-    : seoConfig.defaultTitle;
+    : t('seoDefaultTitle');
 
-  const metaDescription = description || seoConfig.defaultDescription;
+  const metaDescription = description || t('seoDefaultDescription');
   const metaImage = image || seoConfig.defaultImage;
   const metaCanonical = canonical || seoConfig.siteUrl;
+  const keywords = t('seoKeywords');
 
   return (
     <Helmet>
-      {/* ── Básicos ─────────────────────────────────────────────── */}
       <title>{fullTitle}</title>
       <meta name="description" content={metaDescription} />
+      <meta name="keywords" content={keywords} />
       <link rel="canonical" href={metaCanonical} />
+      <meta name="theme-color" content={seoConfig.themeColor} />
 
       {noIndex && <meta name="robots" content="noindex, nofollow" />}
 
-      {/* ── Open Graph ──────────────────────────────────────────── */}
       <meta property="og:site_name" content={seoConfig.siteName} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={metaDescription} />
       <meta property="og:image" content={metaImage} />
+      <meta property="og:image:alt" content={`${seoConfig.siteName} logo`} />
       <meta property="og:url" content={metaCanonical} />
       <meta property="og:type" content={type} />
       <meta property="og:locale" content={seoConfig.locale} />
 
-      {/* ── Twitter Cards ───────────────────────────────────────── */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content={seoConfig.twitterHandle} />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={metaImage} />
+      <meta name="twitter:image:alt" content={`${seoConfig.siteName} logo`} />
+
+      {includeWebsiteSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(buildWebsiteJsonLd(metaCanonical))}
+        </script>
+      )}
 
       {children}
     </Helmet>

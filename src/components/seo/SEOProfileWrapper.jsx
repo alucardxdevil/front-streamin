@@ -1,48 +1,38 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import seoConfig from '../../utils/seoConfig';
+import seoConfig, { interpolateSeo } from '../../utils/seoConfig';
 import { getPublicProfilePath } from '../../utils/profilePaths';
+import { useLanguage } from '../../utils/LanguageContext';
 
-/**
- * SEOProfileWrapper — Inyecta metadatos SEO para páginas de perfil de usuario.
- *
- * Incluye:
- *  • <title> dinámico con el nombre del usuario
- *  • Meta description con la bio del usuario
- *  • Open Graph (profile)
- *  • Twitter Cards
- *  • JSON-LD con esquema Person de Schema.org
- *
- * @param {Object} user       — Objeto del usuario/canal.
- * @param {number} videoCount — Cantidad de videos del usuario (opcional).
- */
 const SEOProfileWrapper = ({ user, videoCount }) => {
+  const { t } = useLanguage();
   if (!user) return null;
 
   const name = user.name || 'User';
   const fullTitle = `${name} | ${seoConfig.siteName}`;
-  const description = user.description
-    ? user.description.substring(0, 150)
-    : `Profile of ${name} on ${seoConfig.siteName}. ${user.follows || 0} followers.`;
+  const followers = user.follows || 0;
+  const bio = user.description || user.descriptionAccount;
+  const description = bio
+    ? bio.substring(0, 150)
+    : interpolateSeo(t('seoProfileDescriptionNoBio'), { name, followers });
   const profileImage = user.img || seoConfig.defaultImage;
   const profileUrl = getPublicProfilePath(user, {
     absolute: true,
     siteUrl: seoConfig.siteUrl,
   });
 
-  // ── JSON-LD: Person (Schema.org) ───────────────────────────────────────────
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name,
     url: profileUrl,
     image: profileImage,
-    description: user.description || `Content creator on ${seoConfig.siteName}`,
-    ...(user.follows && {
+    description: user.description || user.descriptionAccount || t('seoCreatorOnTeleprt'),
+    ...(followers && {
       interactionStatistic: {
         '@type': 'InteractionCounter',
         interactionType: { '@type': 'FollowAction' },
-        userInteractionCount: user.follows,
+        userInteractionCount: followers,
       },
     }),
     sameAs: [
@@ -55,12 +45,10 @@ const SEOProfileWrapper = ({ user, videoCount }) => {
 
   return (
     <Helmet>
-      {/* ── Básicos ─────────────────────────────────────────────── */}
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={profileUrl} />
 
-      {/* ── Open Graph ──────────────────────────────────────────── */}
       <meta property="og:site_name" content={seoConfig.siteName} />
       <meta property="og:type" content="profile" />
       <meta property="og:title" content={fullTitle} />
@@ -70,17 +58,13 @@ const SEOProfileWrapper = ({ user, videoCount }) => {
       <meta property="og:locale" content={seoConfig.locale} />
       <meta property="profile:username" content={user.slug || user.name} />
 
-      {/* ── Twitter Cards ───────────────────────────────────────── */}
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:site" content={seoConfig.twitterHandle} />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={profileImage} />
 
-      {/* ── JSON-LD: Datos Estructurados ────────────────────────── */}
-      <script type="application/ld+json">
-        {JSON.stringify(jsonLd)}
-      </script>
+      <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
     </Helmet>
   );
 };

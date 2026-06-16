@@ -103,6 +103,7 @@ import VideoReproducer from "../components/Reproducer/VideoReproducer2";
 import ShareModalPlaylist from "../components/ModalSharePlaylist";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSuccess } from "../redux/videoSlice";
+import SEOHead from "../components/seo/SEOHead";
 
 // ============================================================================
 // STYLED COMPONENTS
@@ -791,21 +792,12 @@ export const PlaylistPlayerPage = () => {
     };
   }, [playlist, currentIndex, dispatch]);
 
-  // =========================================================================
-  // DOCUMENT TITLE
-  // =========================================================================
-
-  useEffect(() => {
-    const item = playlist?.videos?.[currentIndex];
-    if (item?.videoTitle && !isVideoDeleted(item)) {
-      document.title = `${item.videoTitle} | teleprt`;
-    } else if (playlist?.name) {
-      document.title = `${playlist.name} | teleprt`;
-    }
-    return () => {
-      document.title = "teleprt";
-    };
-  }, [playlist, currentIndex]);
+  // Título SEO dinámico (playlist / video actual)
+  const currentItem = playlist?.videos?.[currentIndex];
+  const seoTitle =
+    currentItem?.videoTitle && !isVideoDeleted(currentItem)
+      ? currentItem.videoTitle
+      : playlist?.name || t("seoPlaylistTitle");
 
   // =========================================================================
   // NAVIGATION
@@ -985,6 +977,7 @@ export const PlaylistPlayerPage = () => {
 
   return (
     <PageContainer>
+      <SEOHead title={seoTitle} description={playlist?.description || t("seoDefaultDescription")} />
       <TopBar>
         <BackButton
           onClick={() => navigate(-1)}

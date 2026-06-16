@@ -21,6 +21,9 @@
 const API_BASE = 'https://api.teleprt.com';
 const SITE_URL = 'https://teleprt.com';
 const SITE_NAME = 'teleprt';
+const SEO_DEFAULT_TITLE = 'teleprt — Watch, share and create videos';
+const SEO_DEFAULT_DESCRIPTION =
+  'teleprt is the beta video platform to upload, share and discover content from independent creators. Explore trends at teleprt.com.';
 
 // User-Agent patterns de crawlers conocidos
 const CRAWLER_PATTERNS = [
@@ -123,10 +126,11 @@ function build404Html(pathname) {
 <head>
   <meta charset="utf-8" />
   <title>Page Not Found | ${SITE_NAME}</title>
-  <meta name="description" content="The page you are looking for does not exist on ${SITE_NAME}." />
+  <meta name="description" content="The page you are looking for does not exist on ${SITE_NAME} (teleprt.com)." />
   <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:site_name" content="${SITE_NAME}" />
   <meta property="og:title" content="Page Not Found | ${SITE_NAME}" />
-  <meta property="og:description" content="The page you are looking for does not exist." />
+  <meta property="og:description" content="The page you are looking for does not exist on teleprt." />
   <meta property="og:image" content="${SITE_URL}/logo-icon.png" />
   <meta property="og:url" content="${SITE_URL}" />
   <link rel="canonical" href="${SITE_URL}" />

@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="google" content="notranslate" />
 
-    <!-- Detectar idioma del navegador y aplicar al atributo lang del HTML -->
     <script>
       (function() {
         var supported = ['es','en','pt','de','ru','zh','fr','hi','ar'];
@@ -26,37 +25,41 @@
     </script>
 
     <!-- SEO: Meta tags base (react-helmet-async los sobreescribe dinámicamente) -->
-    <title>teleprt — Share and discover videos</title>
+    <title>teleprt — Watch, share and create videos</title>
     <meta
       name="description"
-      content="teleprt is the platform for uploading, sharing, and discovering videos from independent creators. Explore trends, follow your favorite creators, and enjoy high-quality content."
+      content="teleprt is the beta video platform to upload, share and discover content from independent creators. Explore trends at teleprt.com."
+    />
+    <meta
+      name="keywords"
+      content="teleprt, teleprt.com, videos, creators, streaming, video platform"
     />
     <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#0d0d0d" />
     <link rel="canonical" href="https://teleprt.com" />
 
-    <!-- Open Graph (fallback estático para crawlers que no ejecutan JS) -->
     <meta property="og:site_name" content="teleprt" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="teleprt — Share and discover videos" />
+    <meta property="og:title" content="teleprt — Watch, share and create videos" />
     <meta
       property="og:description"
-      content="teleprt is the platform for uploading, sharing, and discovering videos from independent creators. Explore trends, follow your favorite creators, and enjoy high-quality content."
+      content="teleprt is the beta video platform to upload, share and discover content from independent creators. Explore trends at teleprt.com."
     />
     <meta property="og:image" content="https://teleprt.com/logo-icon.png" />
+    <meta property="og:image:alt" content="teleprt logo" />
     <meta property="og:url" content="https://teleprt.com" />
-    <meta property="og:locale" content="es_MX" />
+    <meta property="og:locale" content="en_US" />
 
-    <!-- Twitter Cards (fallback estático) -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@teleprt" />
-    <meta name="twitter:title" content="teleprt — Share and discover videos" />
+    <meta name="twitter:title" content="teleprt — Watch, share and create videos" />
     <meta
       name="twitter:description"
-      content="teleprt is the platform for uploading, sharing, and discovering videos from independent creators. Explore trends, follow your favorite creators, and enjoy high-quality content."
+      content="teleprt is the beta video platform to upload, share and discover content from independent creators. Explore trends at teleprt.com."
     />
     <meta name="twitter:image" content="https://teleprt.com/logo-icon.png" />
+    <meta name="twitter:image:alt" content="teleprt logo" />
 
-    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -73,8 +76,7 @@
     </noscript>
   </head>
   <body>
-    <noscript>teleprt is the platform for uploading, sharing, and discovering videos from independent creators. Explore trends,
-    follow your favorite creators, and enjoy high-quality content.</noscript>
+    <noscript>teleprt is the beta video platform to upload, share and discover content from independent creators. Explore trends at teleprt.com.</noscript>
     <div id="root"></div>
 
     <script type="module" src="/src/main.jsx"></script>

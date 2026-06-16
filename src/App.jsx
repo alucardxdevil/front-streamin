@@ -9,7 +9,7 @@ import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-
 import { getPublicProfilePath } from "./utils/profilePaths";
 import Home from "./pages/Home";
 import { LanguageProvider } from "./utils/LanguageContext";
-import SEOHead from "./components/seo/SEOHead";
+import RouteSEO from "./components/seo/RouteSEO";
 
 const lazyNamed = (factory, name) =>
   lazy(() => factory().then((m) => ({ default: m[name] })));
@@ -108,7 +108,7 @@ function App() {
               <Navbar themeMode={themeMode} setThemeMode={setThemeMode} />
               <BetaNoticeBar donationUrl="https://ko-fi.com/teleprt" />
               <BackButton />
-              <SEOHead />
+              <RouteSEO />
               <Wrapper>
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
