@@ -37,6 +37,9 @@
     "vite": "^6.3.5"
   },
   "scripts": {
+    "predev": "node scripts/copy-seo-brand.js",
+    "prebuild": "node scripts/copy-seo-brand.js",
+    "prebuild:prod": "node scripts/copy-seo-brand.js",
     "dev": "vite",
     "start": "vite",
     "build": "vite build",

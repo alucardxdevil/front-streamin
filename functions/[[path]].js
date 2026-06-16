@@ -16,14 +16,17 @@
  * - "Rastreada: actualmente sin indexar" para contenido dinámico
  */
 
-// ── Configuración ──────────────────────────────────────────────────────────────
+// ── Configuración (fuente única: shared/seoBrand.js) ────────────────────────────
 
-const API_BASE = 'https://api.teleprt.com';
-const SITE_URL = 'https://teleprt.com';
-const SITE_NAME = 'teleprt';
-const SEO_DEFAULT_TITLE = 'teleprt — Watch, share and create videos';
-const SEO_DEFAULT_DESCRIPTION =
-  'teleprt is the beta video platform to upload, share and discover content from independent creators. Explore trends at teleprt.com.';
+import {
+  BRAND_NAME,
+  SEO_DEFAULT_TITLE,
+  SEO_DEFAULT_DESCRIPTION,
+} from './seoBrand.js';
+
+const API_BASE = 'https://api.teleprt.com'
+const SITE_URL = 'https://teleprt.com'
+const SITE_NAME = BRAND_NAME
 
 // User-Agent patterns de crawlers conocidos
 const CRAWLER_PATTERNS = [

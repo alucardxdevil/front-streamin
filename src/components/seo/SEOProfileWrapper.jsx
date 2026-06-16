@@ -14,7 +14,7 @@ const SEOProfileWrapper = ({ user, videoCount }) => {
   const bio = user.description || user.descriptionAccount;
   const description = bio
     ? bio.substring(0, 150)
-    : interpolateSeo(t('seoProfileDescriptionNoBio'), { name, followers });
+    : interpolateSeo(t('seoProfileDescription'), { name, followers });
   const profileImage = user.img || seoConfig.defaultImage;
   const profileUrl = getPublicProfilePath(user, {
     absolute: true,

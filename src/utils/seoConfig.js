@@ -3,25 +3,29 @@
  */
 
 import { SITE_URL, API_URL } from './env'
-
-export const BRAND_NAME = 'teleprt'
-export const BRAND_DOMAIN = 'teleprt.com'
-export const TWITTER_HANDLE = '@teleprt'
+import {
+  BRAND_NAME,
+  BRAND_DOMAIN,
+  TWITTER_HANDLE,
+  SEO_DEFAULT_TITLE,
+  SEO_DEFAULT_DESCRIPTION,
+  SEO_DEFAULT_KEYWORDS,
+} from '../../../shared/seoBrand.js'
 
 const seoConfig = {
   siteName: BRAND_NAME,
   siteUrl: SITE_URL,
   apiUrl: API_URL,
-  defaultTitle: 'teleprt — Watch, share and create videos',
-  defaultDescription:
-    'teleprt is the beta video platform to upload, share and discover content from independent creators. Explore trends at teleprt.com.',
-  defaultKeywords:
-    'teleprt, teleprt.com, videos, creators, streaming, video platform',
+  defaultTitle: SEO_DEFAULT_TITLE,
+  defaultDescription: SEO_DEFAULT_DESCRIPTION,
+  defaultKeywords: SEO_DEFAULT_KEYWORDS,
   defaultImage: `${SITE_URL}/logo-icon.png`,
   twitterHandle: TWITTER_HANDLE,
   locale: 'en_US',
   themeColor: '#0d0d0d',
 }
+
+export { BRAND_NAME, BRAND_DOMAIN, TWITTER_HANDLE }
 
 /** Sustituye ${var} en plantillas i18n de SEO */
 export function interpolateSeo(template, vars = {}) {
