@@ -12,7 +12,7 @@ const translations = {
     lightTheme: "Claro",
     sunsetTheme: "Atardecer",
     betaBannerMessage:
-      "stream-in está en versión beta. Si quieres apoyar el mantenimiento de la plataforma, puedes hacer una donación o contribución.",
+      "teleprt está en versión beta. Si quieres apoyar el mantenimiento de la plataforma, puedes hacer una donación o contribución.",
     betaBannerDonate: "Apoyar proyecto",
 
     // Sidebar
@@ -35,7 +35,7 @@ const translations = {
     settings: "Configuración",
     report: "Reportar",
     help: "Ayuda",
-    bestOf: "LO MEJOR DE stream-in",
+    bestOf: "LO MEJOR DE teleprt",
     signInPrompt: "Inicia sesión para dar like, comentar y suscribirte.",
     signIn: "INICIAR SESIÓN",
 
@@ -112,7 +112,7 @@ const translations = {
 
     //Sigin
     signinTitle: "Bienvenido de nuevo",
-    signinSubtitle: "Inicia sesión en tu cuenta de stream-in",
+    signinSubtitle: "Inicia sesión en tu cuenta de teleprt",
     emailSignin: "Correo electrónico",
     passwordSignin: "Contraseña",
     signInButton: "Iniciar sesión",
@@ -123,7 +123,7 @@ const translations = {
     googleTitle: "Acceso rápido",
     googleSubtitle: "Inicia sesión instantáneamente con tu cuenta de Google",
     signInWithGoogle: "Continuar con Google",
-    areYouNew: "¿Eres nuevo en stream-in?",
+    areYouNew: "¿Eres nuevo en teleprt?",
     createAccountSignin: "Crea una cuenta",
     resetPassword: "Restablecer contraseña",
     resetPasswordSubtitle: "Ingresa el correo electrónico asociado a tu cuenta y te enviaremos un enlace para restablecer tu contraseña.",
@@ -146,7 +146,7 @@ const translations = {
 
     //Register
     registerTitle: "Crear Cuenta",
-    subtitleRegister: "Únete a la comunidad de stream-in",
+    subtitleRegister: "Únete a la comunidad de teleprt",
     userName: "Nombre de usuario",
     emailRegister: "Correo electrónico",
     passwordRegister: "Contraseña",
@@ -186,7 +186,7 @@ const translations = {
 
     // Help
     helpCenter: "Centro de Ayuda",
-    helpSubtitle: "Encuentra respuestas a tus preguntas, guías de uso y todo lo que necesitas para aprovechar stream-in al máximo.",
+    helpSubtitle: "Encuentra respuestas a tus preguntas, guías de uso y todo lo que necesitas para aprovechar teleprt al máximo.",
     searchHelp: "Buscar en el centro de ayuda...",
     helpCategories: "Categorías de ayuda",
     faq: "Preguntas frecuentes",
@@ -208,7 +208,7 @@ const translations = {
     generalSettingsDesc: "Notificaciones, idioma, tema y preferencias.",
 
     // Help FAQ
-    faq1Q: "¿Cómo creo una cuenta en stream-in?",
+    faq1Q: "¿Cómo creo una cuenta en teleprt?",
     faq1A: 'Haz clic en el botón "Registrarse" en la esquina superior derecha. Completa el formulario con tu nombre, correo electrónico y contraseña. Recibirás un correo de confirmación para activar tu cuenta.',
     faq2Q: "¿Cómo subo un video a la plataforma?",
     faq2A: 'Una vez que hayas iniciado sesión, haz clic en el ícono de subir (flecha hacia arriba) en la barra de navegación. Selecciona tu archivo de video, agrega un título, descripción y miniatura, y haz clic en "Publicar".',
@@ -223,7 +223,7 @@ const translations = {
     faq7Q: "¿Cómo puedo recuperar mi contraseña?",
     faq7A: 'En la pantalla de inicio de sesión, haz clic en "¿Olvidaste tu contraseña?". Ingresa tu correo electrónico registrado y te enviaremos un enlace para restablecer tu contraseña.',
     faq8Q: "¿Hay una aplicación móvil disponible?",
-    faq8A: "Estamos trabajando en la versión móvil de stream-in para Android e iOS. ¡Pronto estará disponible! Mientras tanto, puedes acceder desde el navegador de tu dispositivo móvil.",
+    faq8A: "Estamos trabajando en la versión móvil de teleprt para Android e iOS. ¡Pronto estará disponible! Mientras tanto, puedes acceder desde el navegador de tu dispositivo móvil.",
 
     // Help Quick Links
     techSupport: "Soporte técnico",
@@ -238,7 +238,7 @@ const translations = {
 
     // Us (Terms)
     termsTitle: "Términos y Condiciones",
-    termsSubtitle: "En stream-in nos importa que entiendas tus derechos y responsabilidades. Hemos escrito estos términos de la forma más clara posible.",
+    termsSubtitle: "En teleprt nos importa que entiendas tus derechos y responsabilidades. Hemos escrito estos términos de la forma más clara posible.",
     lastUpdated: "Última actualización: Enero 2025",
     // Terms page specific
     termsAndConditions: "Términos y Condiciones",
@@ -250,44 +250,44 @@ const translations = {
     haveQuestions: "¿Tienes preguntas?",
     contactUs: "Contáctanos",
     acceptTerms: "Aceptación de los Términos",
-    acceptTermsContent: "Al acceder y utilizar stream-in, aceptas estos Términos y Condiciones en su totalidad. Si no estás de acuerdo con alguna parte, te pedimos que no utilices la plataforma.",
-    acceptTermsHighlight: "El uso continuado de stream-in después de cualquier modificación constituye tu aceptación de los términos actualizados.",
+    acceptTermsContent: "Al acceder y utilizar teleprt, aceptas estos Términos y Condiciones en su totalidad. Si no estás de acuerdo con alguna parte, te pedimos que no utilices la plataforma.",
+    acceptTermsHighlight: "El uso continuado de teleprt después de cualquier modificación constituye tu aceptación de los términos actualizados.",
     serviceDescription: "Descripción del Servicio",
-    serviceDescContent: "stream-in es una plataforma de streaming que permite a los usuarios:",
+    serviceDescContent: "teleprt es una plataforma de streaming que permite a los usuarios:",
     serviceDescItem1: "Subir, compartir y descubrir contenido de video, audio (podcasts, música, etc.)",
     serviceDescItem2: "Crear y personalizar perfiles de creador",
     serviceDescItem3: "Interactuar con otros usuarios y creadores",
     serviceDescItem4: "Acceder a herramientas de monetización para creadores elegibles cuando este disponible",
     serviceDescFooter: "Nos reservamos el derecho de modificar, suspender o descontinuar cualquier aspecto del servicio en cualquier momento, con o sin previo aviso.",
     userAccounts: "Cuentas de Usuario",
-    userAccountsContent: "Para utilizar ciertas funciones de stream-in, necesitarás crear una cuenta. Al hacerlo, te comprometes a:",
+    userAccountsContent: "Para utilizar ciertas funciones de teleprt, necesitarás crear una cuenta. Al hacerlo, te comprometes a:",
     userAccountsItem1: "Proporcionar información veraz y actualizada",
     userAccountsItem2: "Mantener la seguridad de tu contraseña y credenciales",
     userAccountsItem3: "Ser responsable de toda actividad bajo tu cuenta",
     userAccountsItem4: "Notificarnos inmediatamente sobre cualquier uso no autorizado",
     userAccountsHighlight: "Nos reservamos el derecho de suspender o eliminar cuentas que violen estos términos o que permanezcan inactivas por períodos prolongados.",
     contentIP: "Contenido y Propiedad Intelectual",
-    contentIPContent: "Tú conservas los derechos sobre el contenido que subes a stream-in. Sin embargo, al publicar contenido, nos otorgas una licencia mundial, no exclusiva, libre de regalías para usar, reproducir, modificar, distribuir y mostrar dicho contenido dentro de la plataforma.",
+    contentIPContent: "Tú conservas los derechos sobre el contenido que subes a teleprt. Sin embargo, al publicar contenido, nos otorgas una licencia mundial, no exclusiva, libre de regalías para usar, reproducir, modificar, distribuir y mostrar dicho contenido dentro de la plataforma.",
     contentIPCommit: "Te comprometes a que tu contenido:",
     contentIPItem1: "Es original o tienes los derechos necesarios para compartirlo",
     contentIPItem2: "No infringe derechos de autor, marcas registradas u otros derechos de terceros",
     contentIPItem3: "No contiene material difamatorio, obsceno o ilegal",
-    contentIPHighlight: "Si subes música o audio que no es tuyo, asegúrate de contar con las licencias correspondientes. stream-in no se hace responsable por infracciones de derechos de autor cometidas por usuarios.",
+    contentIPHighlight: "Si subes música o audio que no es tuyo, asegúrate de contar con las licencias correspondientes. teleprt no se hace responsable por infracciones de derechos de autor cometidas por usuarios.",
     prohibitedConduct: "Conducta Prohibida",
-    prohibitedConductContent: "Para mantener stream-in como un espacio seguro y respetuoso, está prohibido:",
+    prohibitedConductContent: "Para mantener teleprt como un espacio seguro y respetuoso, está prohibido:",
     prohibitedItem1: "Subir contenido que promueva odio, violencia o discriminación",
     prohibitedItem2: "Acosar, intimidar o amenazar a otros usuarios",
     prohibitedItem3: "Usar la plataforma para actividades ilegales o fraudulentas",
-    prohibitedItem4: "Intentar hackear, descompilar o interferir con los sistemas de stream-in",
+    prohibitedItem4: "Intentar hackear, descompilar o interferir con los sistemas de teleprt",
     prohibitedItem5: "Crear múltiples cuentas para evadir restricciones",
     prohibitedItem6: "Distribuir spam, malware o contenido engañoso",
     prohibitedItem7: "Suplantar la identidad de otra persona o entidad",
     prohibitedFooter: "Las violaciones pueden resultar en la suspensión o eliminación permanente de tu cuenta, sin previo aviso.",
     monetizationPayments: "Monetización y Pagos",
-    monetizationContent: "stream-in ofrece opciones de monetización para creadores elegibles. Los términos específicos incluyen:",
+    monetizationContent: "teleprt ofrece opciones de monetización para creadores elegibles. Los términos específicos incluyen:",
     monetizationItem1: "Los ingresos se calculan según las métricas de la plataforma",
     monetizationItem2: "Los pagos se procesan según el calendario establecido",
-    monetizationItem3: "stream-in se reserva el derecho de modificar las tasas de monetización",
+    monetizationItem3: "teleprt se reserva el derecho de modificar las tasas de monetización",
     monetizationItem4: "Los creadores son responsables de sus obligaciones fiscales",
     monetizationHighlight: "Los detalles específicos de monetización se encuentran en el Acuerdo de Creador, que complementa estos términos generales.",
     privacyData: "Privacidad y Protección de Datos",
@@ -298,17 +298,17 @@ const translations = {
     privacyItem4: "Cookies y tecnologías similares",
     privacyFooter: "Implementamos medidas de seguridad técnicas y organizativas para proteger tu información. Sin embargo, ningún sistema es 100% seguro y no podemos garantizar la seguridad absoluta de tus datos.",
     liability: "Limitación de Responsabilidad",
-    liabilityContent: 'stream-in se proporciona "tal cual" y "según disponibilidad". En la máxima medida permitida por la ley:',
+    liabilityContent: 'teleprt se proporciona "tal cual" y "según disponibilidad". En la máxima medida permitida por la ley:',
     liabilityItem1: "No garantizamos que el servicio sea ininterrumpido, seguro o libre de errores",
     liabilityItem2: "No somos responsables por pérdidas indirectas, incidentales o consecuentes",
-    liabilityItem3: "Nuestra responsabilidad total no excederá el monto que hayas pagado a stream-in en los últimos 12 meses",
+    liabilityItem3: "Nuestra responsabilidad total no excederá el monto que hayas pagado a teleprt en los últimos 12 meses",
     liabilityHighlight: "Esta limitación aplica en la máxima medida permitida por la legislación aplicable en tu jurisdicción.",
     indemnification: "Indemnización",
-    indemnificationContent: "Aceptas indemnizar y mantener indemne a stream-in, sus directores, empleados y afiliados de cualquier reclamación, daño, pérdida o gasto (incluyendo honorarios legales) que surja de:",
+    indemnificationContent: "Aceptas indemnizar y mantener indemne a teleprt, sus directores, empleados y afiliados de cualquier reclamación, daño, pérdida o gasto (incluyendo honorarios legales) que surja de:",
     indemnificationItem1: "Tu uso de la plataforma",
     indemnificationItem2: "Tu violación de estos términos",
     indemnificationItem3: "Tu violación de derechos de terceros",
-    indemnificationItem4: "El contenido que publiques en stream-in",
+    indemnificationItem4: "El contenido que publiques en teleprt",
     termsModifications: "Modificaciones a los Términos",
     termsModContent: "Podemos actualizar estos términos periódicamente. Cuando lo hagamos:",
     termsModItem1: 'Publicaremos la versión actualizada en esta página',
@@ -318,12 +318,12 @@ const translations = {
     contactDisputes: "Contacto y Resolución de Disputas",
     contactDisputesContent: "Si tienes preguntas sobre estos términos o necesitas reportar un problema, puedes contactarnos a través de:",
     contactDisputesHighlight: "Cualquier disputa se resolverá primero mediante negociación de buena fe. Si no se alcanza un acuerdo, se someterá a arbitraje vinculante según las leyes aplicables de la jurisdicción correspondiente.",
-    termsFooter: "© 2025 stream-in Todos los derechos reservados. Si tienes dudas sobre estos términos, no dudes en",
+    termsFooter: "© 2025 teleprt Todos los derechos reservados. Si tienes dudas sobre estos términos, no dudes en",
     contactUsLink: "contactarnos",
 
     // Advertise page
     advertise: "Anúnciate con nosotros",
-    advertiseTitle: "Publicidad en stream-in",
+    advertiseTitle: "Publicidad en teleprt",
     advertisePageHeroTitle: "Anuncia tu negocio en Stream-In",
     advertisePageHeroSubtitle:
       "Aprovecha nuestras tarifas de lanzamiento para mostrar tu marca a usuarios en todos los idiomas de la plataforma. Llega a nuevas audiencias con formatos accesibles y de alto impacto.",
@@ -331,7 +331,7 @@ const translations = {
     advertiseStatMonthlyViews: "Vistas mensuales",
     advertiseStatRetentionRate: "Tasa de retención",
     advertiseStatAvailability: "Disponibilidad",
-    advertiseWhySectionTitle: "¿Por qué publicidad en stream-in?",
+    advertiseWhySectionTitle: "¿Por qué publicidad en teleprt?",
     advertiseFeatExposureTitle: "Gran exposición",
     advertiseFeatExposureDesc:
       "Tu anuncio llega a una audiencia activa y comprometida. Los usuarios vienen a buscar entretenimiento.",
@@ -424,17 +424,17 @@ const translations = {
     termsModificationsUs: "Modificaciones a los Términos",
     contactAndDisputes: "Contacto y Resolución de Disputas",
     termsTitleUs: "Términos y Condiciones",
-    termsSubtitleUs: "En stream-in nos importa que entiendas tus derechos y responsabilidades. Hemos escrito estos términos de la forma más clara posible.",
+    termsSubtitleUs: "En teleprt nos importa que entiendas tus derechos y responsabilidades. Hemos escrito estos términos de la forma más clara posible.",
     lastUpdatedUs: "Última actualización: Enero 2025",
 
-    usAboutPageTitle: "Sobre stream-in",
+    usAboutPageTitle: "Sobre teleprt",
     usAboutPageSubtitle:
-      "stream-in es una plataforma nueva de streaming en fase beta. Aquí explicamos nuestra visión, cómo pensamos la experiencia de quienes ven y crean contenido, y qué límites defendemos.",
+      "teleprt es una plataforma nueva de streaming en fase beta. Aquí explicamos nuestra visión, cómo pensamos la experiencia de quienes ven y crean contenido, y qué límites defendemos.",
     usAboutPageBetaLine: "Versión beta · Abril 2026",
 
-    usSecWhatTitle: "Qué es stream-in",
+    usSecWhatTitle: "Qué es teleprt",
     usSecWhatP1:
-      "stream-in nace como una alternativa de streaming con las ideas recientes: menos muros arbitrarios sobre lo que se puede decir, y más foco en que la herramienta sirva de verdad a la audiencia y a quien produce contenido.",
+      "teleprt nace como una alternativa de streaming con las ideas recientes: menos muros arbitrarios sobre lo que se puede decir, y más foco en que la herramienta sirva de verdad a la audiencia y a quien produce contenido.",
     usSecWhatP2:
       "Estamos en fase beta: construimos con calma, escuchamos feedback y vamos sumando funciones a medida que la plataforma crece.",
     usSecWhatHighlight:
@@ -450,7 +450,7 @@ const translations = {
     usSecExperienceP1:
       "No queremos una plataforma atascada de anuncios ni un feed que parezca un tablero de intereses ajenos a lo que viniste a ver. Sí queremos un negocio sostenible y que los creadores ganen por su contenido, así que la publicidad puede existir cuando ayuda a sostener la plataforma. El punto es el equilibrio: anuncios relevantes y respetuosos, sin ahogar tu experiencia.",
     usSecExperienceP2:
-      "stream-in está diseñada para crecer junto con los anunciantes (no en contra): una experiencia segura para marcas y centrada en el usuario, donde la promoción apoya el ecosistema sin convertirse en el producto principal.",
+      "teleprt está diseñada para crecer junto con los anunciantes (no en contra): una experiencia segura para marcas y centrada en el usuario, donde la promoción apoya el ecosistema sin convertirse en el producto principal.",
 
     usSecMoneyTitle: "Monetización para creadores, cuando el proyecto lo permita",
     usSecMoneyP1:
@@ -466,7 +466,7 @@ const translations = {
 
     usSecLimitsTitle: "Límites claros: lo que no tiene cabida",
     usSecLimitsP1:
-      "Defendemos la libertad de expresión y rechazamos la censura desmedida, pero eso no convierte a stream-in en un espacio sin reglas. Estamos en contra de todo contenido que busque dañar, explotar o discriminar.",
+      "Defendemos la libertad de expresión y rechazamos la censura desmedida, pero eso no convierte a teleprt en un espacio sin reglas. Estamos en contra de todo contenido que busque dañar, explotar o discriminar.",
     usSecLimitsIntroList: "No está permitido subir ni promover, entre otras cosas:",
     usSecLimitsItemThreat: "Amenazas o incitación a dañar a personas o colectivos.",
     usSecLimitsItemViolence: "Violencia explícita gratuita o contenido cuyo fin principal sea el morbo sangriento.",
@@ -481,7 +481,7 @@ const translations = {
       "Para consultas generales, propuestas o reportes relacionados con la plataforma, puedes escribirnos. Valoramos el diálogo directo con usuarios y creadores.",
 
     usAboutFooter:
-      "© 2026 stream-in — Plataforma en beta. Gracias por formar parte de este arranque.",
+      "© 2026 teleprt — Plataforma en beta. Gracias por formar parte de este arranque.",
 
     // Edit Video
     editVideo: "Editar video",
@@ -508,7 +508,7 @@ const translations = {
     imageMax10Mb: "Imagen máximo 10 MB",
     videoMax800Mb: "Video máximo 800 MB",
     uploadBetaLimitsHint:
-      "Beta stream-in: hasta 800 MB por vídeo y 10 MB por miniatura.",
+      "Beta teleprt: hasta 800 MB por vídeo y 10 MB por miniatura.",
     waitForUpload: "Espera a que terminen de subir",
     errorSaving: "Error al guardar",
     thumbnailImage: "Imagen de miniatura",
@@ -610,7 +610,7 @@ const translations = {
 
     // Settings
     settingsTitle: "Configuración",
-    settingsSubtitle: "Personaliza tu experiencia en stream-in",
+    settingsSubtitle: "Personaliza tu experiencia en teleprt",
     appearance: "Apariencia",
     appearanceDesc: "Elige el tema visual de la plataforma",
     dark: "Oscuro",
@@ -704,7 +704,7 @@ const translations = {
     linkCopied: "Enlace copiado al portapapeles",
     close: "Cerrar",
     sharePlaylist: "Compartir Playlist",
-    sharePlaylistText: "¡Mira esta playlist \"${playlistName}\" con ${videoCount} videos en stream-in!",
+    sharePlaylistText: "¡Mira esta playlist \"${playlistName}\" con ${videoCount} videos en teleprt!",
 
     // Comments
     addComment: "Añadir un comentario...",
@@ -760,7 +760,7 @@ const translations = {
     noProfilesAvailable: "No hay perfiles disponibles",
     recent: "Reciente",
     noRecentVideos: "No hay videos recientes",
-    discoverPopular: "Descubre lo más popular en stream-in",
+    discoverPopular: "Descubre lo más popular en teleprt",
     errorLoadingData: "Error al cargar datos",
     mostFollowedProfiles: "Perfiles más seguidos",
     mostRecentVideos: "Videos más recientes",
@@ -829,7 +829,7 @@ const translations = {
     lightTheme: "Light",
     sunsetTheme: "Sunset",
     betaBannerMessage:
-      "stream-in is in beta. If you want to support platform maintenance, you can make a donation or contribution.",
+      "teleprt is in beta. If you want to support platform maintenance, you can make a donation or contribution.",
     betaBannerDonate: "Support project",
 
     // Sidebar
@@ -852,7 +852,7 @@ const translations = {
     settings: "Settings",
     report: "Report",
     help: "Help",
-    bestOf: "BEST OF stream-in",
+    bestOf: "BEST OF teleprt",
     signInPrompt: "Sign in to like videos, comment, and subscribe.",
     signIn: "SIGN IN",
 
@@ -954,7 +954,7 @@ const translations = {
 
     // Signin
     signinTitle: "Welcome back",
-    signinSubtitle: "Sign in to your stream-in account",
+    signinSubtitle: "Sign in to your teleprt account",
     emailSignin: "Email",
     passwordSignin: "Password",
     signInButton: "Sign In",
@@ -965,7 +965,7 @@ const translations = {
     googleTitle: "Quick access",
     googleSubtitle: "Sign in instantly with your Google account",
     signInWithGoogle: "Continue with Google",
-    areYouNew: "New to stream-in?",
+    areYouNew: "New to teleprt?",
     createAccountSignin: "Create an account",
     resetPassword: "Reset password",
     resetPasswordSubtitle: "Enter the email associated with your account and we'll send you a link to reset your password.",
@@ -988,7 +988,7 @@ const translations = {
 
     // Register
     registerTitle: "Create Account",
-    subtitleRegister: "Join the stream-in community",
+    subtitleRegister: "Join the teleprt community",
     userName: "Username",
     emailRegister: "Email",
     passwordRegister: "Password",
@@ -1028,7 +1028,7 @@ const translations = {
 
     // Help
     helpCenter: "Help Center",
-    helpSubtitle: "Find answers to your questions, usage guides, and everything you need to get the most out of stream-in.",
+    helpSubtitle: "Find answers to your questions, usage guides, and everything you need to get the most out of teleprt.",
     searchHelp: "Search the help center...",
     helpCategories: "Help categories",
     faq: "Frequently asked questions",
@@ -1050,7 +1050,7 @@ const translations = {
     generalSettingsDesc: "Notifications, language, theme and preferences.",
 
     // Help FAQ
-    faq1Q: "How do I create an account on stream-in?",
+    faq1Q: "How do I create an account on teleprt?",
     faq1A: 'Click the "Register" button in the top right corner. Fill out the form with your name, email and password. You will receive a confirmation email to activate your account.',
     faq2Q: "How do I upload a video to the platform?",
     faq2A: 'Once you are logged in, click the upload icon (arrow up) in the navigation bar. Select your video file, add a title, description and thumbnail, and click "Publish".',
@@ -1065,7 +1065,7 @@ const translations = {
     faq7Q: "How can I recover my password?",
     faq7A: 'On the login screen, click "Forgot your password?". Enter your registered email and we will send you a link to reset your password.',
     faq8Q: "Is a mobile app available?",
-    faq8A: "We are working on the mobile version of stream-in for Android and iOS. It will be available soon! In the meantime, you can access it from your mobile device's browser.",
+    faq8A: "We are working on the mobile version of teleprt for Android and iOS. It will be available soon! In the meantime, you can access it from your mobile device's browser.",
 
     // Help Quick Links
     techSupport: "Technical support",
@@ -1080,7 +1080,7 @@ const translations = {
 
     // Us (Terms)
     termsTitle: "Terms and Conditions",
-    termsSubtitle: "At stream-in we are that you understand your rights and responsibilities. We have written these terms as clearly as possible.",
+    termsSubtitle: "At teleprt we are that you understand your rights and responsibilities. We have written these terms as clearly as possible.",
     lastUpdated: "Last updated: January 2025",
     // Terms page specific
     termsAndConditions: "Terms and Conditions",
@@ -1092,44 +1092,44 @@ const translations = {
     haveQuestions: "Have questions?",
     contactUs: "Contact us",
     acceptTerms: "Acceptance of Terms",
-    acceptTermsContent: "By accessing and using streamn, you accept these Terms and Conditions in their entirety. If you disagree with any part, we ask that you do not use the platform.",
-    acceptTermsHighlight: "Continued use of streamn after any modification constitutes your acceptance of the updated terms.",
+    acceptTermsContent: "By accessing and using teleprt, you accept these Terms and Conditions in their entirety. If you disagree with any part, we ask that you do not use the platform.",
+    acceptTermsHighlight: "Continued use of teleprt after any modification constitutes your acceptance of the updated terms.",
     serviceDescription: "Service Description",
-    serviceDescContent: "streamn is a streaming platform that allows users to:",
+    serviceDescContent: "teleprt is a streaming platform that allows users to:",
     serviceDescItem1: "Upload, share and discover video, audio content (podcasts, music, etc.)",
     serviceDescItem2: "Create and customize creator profiles",
     serviceDescItem3: "Interact with other users and creators",
     serviceDescItem4: "Access monetization tools for eligible creators",
     serviceDescFooter: "We reserve the right to modify, suspend or discontinue any aspect of the service at any time, with or without prior notice.",
     userAccounts: "User Accounts",
-    userAccountsContent: "To use certain features of stream-in, you will need to create an account. By doing so, you agree to:",
+    userAccountsContent: "To use certain features of teleprt, you will need to create an account. By doing so, you agree to:",
     userAccountsItem1: "Provide truthful and up-to-date information",
     userAccountsItem2: "Maintain the security of your password and credentials",
     userAccountsItem3: "Be responsible for all activity under your account",
     userAccountsItem4: "Notify us immediately of any unauthorized use",
     userAccountsHighlight: "⚠️ We reserve the right to suspend or delete accounts that violate these terms or remain inactive for extended periods.",
     contentIP: "Content and Intellectual Property",
-    contentIPContent: "You retain the rights to the content you upload to stream-in. However, by publishing content, you grant us a worldwide, non-exclusive, royalty-free license to use, reproduce, modify, distribute and display such content within the platform.",
+    contentIPContent: "You retain the rights to the content you upload to teleprt. However, by publishing content, you grant us a worldwide, non-exclusive, royalty-free license to use, reproduce, modify, distribute and display such content within the platform.",
     contentIPCommit: "You agree that your content:",
     contentIPItem1: "Is original or you have the necessary rights to share it",
     contentIPItem2: "Does not infringe copyrights, trademarks or other third-party rights",
     contentIPItem3: "Does not contain defamatory, obscene or illegal material",
-    contentIPHighlight: "🎵 If you upload music or audio that is not yours, make sure you have the corresponding licenses. stream-in is not responsible for copyright infringements committed by users.",
+    contentIPHighlight: "🎵 If you upload music or audio that is not yours, make sure you have the corresponding licenses. teleprt is not responsible for copyright infringements committed by users.",
     prohibitedConduct: "Prohibited Conduct",
-    prohibitedConductContent: "To keep stream-in a safe and respectful space, the following is prohibited:",
+    prohibitedConductContent: "To keep teleprt a safe and respectful space, the following is prohibited:",
     prohibitedItem1: "Uploading content that promotes hate, violence or discrimination",
     prohibitedItem2: "Harassing, intimidating or threatening other users",
     prohibitedItem3: "Using the platform for illegal or fraudulent activities",
-    prohibitedItem4: "Attempting to hack, decompile or interfere with stream-in's systems",
+    prohibitedItem4: "Attempting to hack, decompile or interfere with teleprt's systems",
     prohibitedItem5: "Creating multiple accounts to evade restrictions",
     prohibitedItem6: "Distributing spam, malware or misleading content",
     prohibitedItem7: "Impersonating another person or entity",
     prohibitedFooter: "Violations may result in the suspension or permanent deletion of your account, without prior notice.",
     monetizationPayments: "Monetization and Payments",
-    monetizationContent: "stream-in offers monetization options for eligible creators. Specific terms include:",
+    monetizationContent: "teleprt offers monetization options for eligible creators. Specific terms include:",
     monetizationItem1: "Revenue is calculated based on platform metrics",
     monetizationItem2: "Payments are processed according to the established schedule",
-    monetizationItem3: "stream-in reserves the right to modify monetization rates",
+    monetizationItem3: "teleprt reserves the right to modify monetization rates",
     monetizationItem4: "Creators are responsible for their tax obligations",
     monetizationHighlight: "💰 Specific monetization details can be found in the Creator Agreement, which supplements these general terms.",
     privacyData: "Privacy and Data Protection",
@@ -1140,17 +1140,17 @@ const translations = {
     privacyItem4: "Cookies and similar technologies",
     privacyFooter: "We implement technical and organizational security measures to protect your information. However, no system is 100% secure and we cannot guarantee the absolute security of your data.",
     liability: "Limitation of Liability",
-    liabilityContent: 'stream-in is provided "as is" and "as available". To the maximum extent permitted by law:',
+    liabilityContent: 'teleprt is provided "as is" and "as available". To the maximum extent permitted by law:',
     liabilityItem1: "We do not guarantee that the service will be uninterrupted, secure or error-free",
     liabilityItem2: "We are not responsible for indirect, incidental or consequential losses",
-    liabilityItem3: "Our total liability shall not exceed the amount you have paid to stream-in in the last 12 months",
+    liabilityItem3: "Our total liability shall not exceed the amount you have paid to teleprt in the last 12 months",
     liabilityHighlight: "🛡️ This limitation applies to the maximum extent permitted by applicable law in your jurisdiction.",
     indemnification: "Indemnification",
-    indemnificationContent: "You agree to indemnify and hold harmless stream-in, its directors, employees and affiliates from any claim, damage, loss or expense (including legal fees) arising from:",
+    indemnificationContent: "You agree to indemnify and hold harmless teleprt, its directors, employees and affiliates from any claim, damage, loss or expense (including legal fees) arising from:",
     indemnificationItem1: "Your use of the platform",
     indemnificationItem2: "Your violation of these terms",
     indemnificationItem3: "Your violation of third-party rights",
-    indemnificationItem4: "The content you publish on stream-in",
+    indemnificationItem4: "The content you publish on teleprt",
     termsModifications: "Modifications to Terms",
     termsModContent: "We may update these terms periodically. When we do:",
     termsModItem1: "We will post the updated version on this page",
@@ -1160,26 +1160,26 @@ const translations = {
     contactDisputes: "Contact and Dispute Resolution",
     contactDisputesContent: "If you have questions about these terms or need to report a problem, you can contact us through:",
     contactDisputesHighlight: "⚖️ Any dispute will first be resolved through good faith negotiation. If no agreement is reached, it will be submitted to binding arbitration under the applicable laws of the corresponding jurisdiction.",
-    termsFooter: "© 2025 stream-in. All rights reserved. If you have questions about these terms, feel free to",
+    termsFooter: "© 2025 teleprt. All rights reserved. If you have questions about these terms, feel free to",
     contactUsLink: "contact us",
 
     // Advertise page
     advertise: "Advertise with us",
-    advertiseTitle: "Advertising on stream-in",
-    advertisePageHeroTitle: "Advertise your business on stream-in",
+    advertiseTitle: "Advertising on teleprt",
+    advertisePageHeroTitle: "Advertise your business on teleprt",
     advertisePageHeroSubtitle:
       "Take advantage of our launch pricing to show your brand to users across all platform languages. Reach new audiences with affordable, high-impact ad formats.",
     advertiseStatUniqueUsers: "Unique users",
     advertiseStatMonthlyViews: "Monthly views",
     advertiseStatRetentionRate: "Retention rate",
     advertiseStatAvailability: "Availability",
-    advertiseWhySectionTitle: "Why advertise on stream-in?",
+    advertiseWhySectionTitle: "Why advertise on teleprt?",
     advertiseFeatExposureTitle: "Broad reach",
     advertiseFeatExposureDesc:
       "Your ad reaches an active, engaged audience—users come here for entertainment.",
     advertiseFeatAudienceTitle: "Diverse audience",
     advertiseFeatAudienceDesc:
-      "Wide demographic reach in a multilingual community: connect with users across all languages available on stream-in.",
+      "Wide demographic reach in a multilingual community: connect with users across all languages available on teleprt.",
     advertiseFeatVideoTitle: "Video ads",
     advertiseFeatVideoDesc:
       "Run static ads, banners, GIFs, and pre-roll video ads right before a video starts.",
@@ -1215,7 +1215,7 @@ const translations = {
     advertisePlanEntF6: "Basic creative adjustments included",
     advertiseCtaSubscribe: "Subscribe",
     advertiseFaqTitle: "Frequently asked questions",
-    advertiseFaq1Q: "How does advertising on stream-in work?",
+    advertiseFaq1Q: "How does advertising on teleprt work?",
     advertiseFaq1A:
       "We place your ad in the available spots across the platform and help you choose the format that best fits your goals. At this stage we offer simple packages with estimated reach and launch pricing.",
     advertiseFaq2Q: "What ad formats do you accept?",
@@ -1266,17 +1266,17 @@ const translations = {
     termsModificationsUs: "Terms Modifications",
     contactAndDisputes: "Contact and Dispute Resolution",
     termsTitleUs: "Terms and Conditions",
-    termsSubtitleUs: "At stream-in we care about you understanding your rights and responsibilities. We have written these terms as clearly as possible.",
+    termsSubtitleUs: "At teleprt we care about you understanding your rights and responsibilities. We have written these terms as clearly as possible.",
     lastUpdatedUs: "Last updated: January 2025",
 
-    usAboutPageTitle: "About stream-in",
+    usAboutPageTitle: "About teleprt",
     usAboutPageSubtitle:
-      "stream-in is a new streaming platform in beta. Here we share our vision, how we think about the experience for viewers and creators, and the boundaries we stand by.",
+      "teleprt is a new streaming platform in beta. Here we share our vision, how we think about the experience for viewers and creators, and the boundaries we stand by.",
     usAboutPageBetaLine: "Beta release · April 2026",
 
-    usSecWhatTitle: "What is stream-in?",
+    usSecWhatTitle: "What is teleprt?",
     usSecWhatP1:
-      "stream-in is built as a streaming alternative with a modern take: fewer arbitrary walls around what can be said, and more focus on the product actually serving audiences and people who make content.",
+      "teleprt is built as a streaming alternative with a modern take: fewer arbitrary walls around what can be said, and more focus on the product actually serving audiences and people who make content.",
     usSecWhatP2:
       "We are in beta: we ship thoughtfully, listen to feedback, and add features as the platform grows.",
     usSecWhatHighlight:
@@ -1292,7 +1292,7 @@ const translations = {
     usSecExperienceP1:
       "We do not want a site clogged with ads or a feed that feels like a billboard for interests unrelated to why you came. We do want a sustainable business—and we want creators to earn from what they publish—so advertising can exist when it supports the platform. The point is balance: ads should be relevant, respectful, and never drown out what you came to watch.",
     usSecExperienceP2:
-      "stream-in is built to grow with advertisers (not against them): a brand-safe, user-first experience where promotion supports the ecosystem instead of becoming the main product.",
+      "teleprt is built to grow with advertisers (not against them): a brand-safe, user-first experience where promotion supports the ecosystem instead of becoming the main product.",
 
     usSecMoneyTitle: "Creator monetization when the project can support it",
     usSecMoneyP1:
@@ -1308,7 +1308,7 @@ const translations = {
 
     usSecLimitsTitle: "Clear limits: what does not belong",
     usSecLimitsP1:
-      "We support freedom of expression and reject over-censorship, but stream-in is not a rule-free zone. We oppose content meant to harm, exploit, or discriminate.",
+      "We support freedom of expression and reject over-censorship, but teleprt is not a rule-free zone. We oppose content meant to harm, exploit, or discriminate.",
     usSecLimitsIntroList: "Uploading or promoting the following is not allowed, including but not limited to:",
     usSecLimitsItemThreat: "Threats or incitement to harm people or groups.",
     usSecLimitsItemViolence: "Gratuitous explicit violence or content whose main purpose is graphic shock.",
@@ -1323,7 +1323,7 @@ const translations = {
       "For general questions, ideas, or platform-related reports, you can reach out. We value direct dialogue with viewers and creators.",
 
     usAboutFooter:
-      "© 2026 stream-in — Beta platform. Thank you for being part of this launch.",
+      "© 2026 teleprt — Beta platform. Thank you for being part of this launch.",
 
     // Edit Video
     editVideo: "Edit video",
@@ -1350,7 +1350,7 @@ const translations = {
     imageMax10Mb: "Image maximum 10 MB",
     videoMax800Mb: "Video maximum 800 MB",
     uploadBetaLimitsHint:
-      "stream-in beta: up to 800 MB per video and 10 MB per thumbnail.",
+      "teleprt beta: up to 800 MB per video and 10 MB per thumbnail.",
     waitForUpload: "Wait for upload to complete",
     errorSaving: "Error saving",
     thumbnailImage: "Thumbnail image",
@@ -1453,7 +1453,7 @@ const translations = {
 
     // Settings
     settingsTitle: "Settings",
-    settingsSubtitle: "Customize your stream-in experience",
+    settingsSubtitle: "Customize your teleprt experience",
     appearance: "Appearance",
     appearanceDesc: "Choose the visual theme of the platform",
     dark: "Dark",
@@ -1524,7 +1524,7 @@ const translations = {
     noProfilesAvailable: "No profiles available",
     recent: "Recent",
     noRecentVideos: "No recent videos",
-    discoverPopular: "Discover what's most popular on stream-in",
+    discoverPopular: "Discover what's most popular on teleprt",
     errorLoadingData: "Error loading data",
     mostFollowedProfiles: "Most followed profiles",
     mostRecentVideos: "Most recent videos",
@@ -1586,7 +1586,7 @@ const translations = {
     linkCopied: "Link copied to clipboard",
     close: "Close",
     sharePlaylist: "Share Playlist",
-    sharePlaylistText: "Check out this playlist \"${playlistName}\" with ${videoCount} videos on stream-in!",
+    sharePlaylistText: "Check out this playlist \"${playlistName}\" with ${videoCount} videos on teleprt!",
 
     // Comments
     addComment: "Add a comment...",
@@ -1638,7 +1638,7 @@ const translations = {
     lightTheme: "Claro",
     sunsetTheme: "Pôr do sol",
     betaBannerMessage:
-      "A stream-in está em versão beta. Se quiser apoiar a manutenção da plataforma, você pode fazer uma doação ou contribuição.",
+      "A teleprt está em versão beta. Se quiser apoiar a manutenção da plataforma, você pode fazer uma doação ou contribuição.",
     betaBannerDonate: "Apoiar projeto",
 
     // Sidebar
@@ -1661,7 +1661,7 @@ const translations = {
     settings: "Configurações",
     report: "Denunciar",
     help: "Ajuda",
-    bestOf: "O MELHOR DO stream-in",
+    bestOf: "O MELHOR DO teleprt",
     signInPrompt: "Faça login para curtir vídeos, comentar e se inscrever.",
     signIn: "ENTRAR",
 
@@ -1692,7 +1692,7 @@ const translations = {
 
     // Signin
     signinTitle: "Bem-vindo de volta",
-    signinSubtitle: "Faça login na sua conta stream-in",
+    signinSubtitle: "Faça login na sua conta teleprt",
     emailSignin: "E-mail",
     passwordSignin: "Senha",
     signInButton: "Entrar",
@@ -1703,7 +1703,7 @@ const translations = {
     googleTitle: "Acesso rápido",
     googleSubtitle: "Entre instantaneamente com sua conta do Google",
     signInWithGoogle: "Continuar com o Google",
-    areYouNew: "Novo no stream-in?",
+    areYouNew: "Novo no teleprt?",
     createAccountSignin: "Criar uma conta",
     resetPassword: "Redefinir senha",
     resetPasswordSubtitle: "Digite o e-mail associado à sua conta e enviaremos um link para redefinir sua senha.",
@@ -1716,7 +1716,7 @@ const translations = {
 
     // Register
     registerTitle: "Criar Conta",
-    subtitleRegister: "Junte-se à comunidade stream-in",
+    subtitleRegister: "Junte-se à comunidade teleprt",
     userName: "Nome de usuário",
     emailRegister: "E-mail",
     passwordRegister: "Senha",
@@ -1756,7 +1756,7 @@ const translations = {
 
     // Help
     helpCenter: "Central de Ajuda",
-    helpSubtitle: "Encontre respostas para suas perguntas, guias de uso e tudo o que você precisa para aproveitar o stream-in ao máximo.",
+    helpSubtitle: "Encontre respostas para suas perguntas, guias de uso e tudo o que você precisa para aproveitar o teleprt ao máximo.",
     searchHelp: "Pesquisar na central de ajuda...",
     helpCategories: "Categorias de ajuda",
     faq: "Perguntas frequentes",
@@ -1778,7 +1778,7 @@ const translations = {
     generalSettingsDesc: "Notificações, idioma, tema e preferências.",
 
     // Help FAQ
-    faq1Q: "Como crio uma conta no stream-in?",
+    faq1Q: "Como crio uma conta no teleprt?",
     faq1A: 'Clique no botão "Registrar" no canto superior direito. Preencha o formulário com seu nome, e-mail e senha. Você receberá um e-mail de confirmação para ativar sua conta.',
     faq2Q: "Como envio um vídeo para a plataforma?",
     faq2A: 'Depois de fazer login, clique no ícone de upload (seta para cima) na barra de navegação. Selecione seu arquivo de vídeo, adicione um título, descrição e miniatura, e clique em "Publicar".',
@@ -1793,7 +1793,7 @@ const translations = {
     faq7Q: "Como posso recuperar minha senha?",
     faq7A: 'Na tela de login, clique em "Esqueceu sua senha?". Digite seu e-mail registrado e enviaremos um link para redefinir sua senha.',
     faq8Q: "Existe um aplicativo móvel disponível?",
-    faq8A: "Estamos trabalhando na versão móvel do stream-in para Android e iOS. Em breve estará disponível! Enquanto isso, você pode acessar pelo navegador do seu dispositivo móvel.",
+    faq8A: "Estamos trabalhando na versão móvel do teleprt para Android e iOS. Em breve estará disponível! Enquanto isso, você pode acessar pelo navegador do seu dispositivo móvel.",
 
     // Help Quick Links
     techSupport: "Suporte técnico",
@@ -1808,47 +1808,47 @@ const translations = {
 
     // Us (Terms)
     termsTitle: "Termos e Condições",
-    termsSubtitle: "No stream-in nos importamos que você entenda seus direitos e responsabilidades. Escrevemos estes termos da forma mais clara possível.",
+    termsSubtitle: "No teleprt nos importamos que você entenda seus direitos e responsabilidades. Escrevemos estes termos da forma mais clara possível.",
     lastUpdated: "Última atualização: Janeiro 2025",
     acceptTerms: "Aceitação dos Termos",
-    acceptTermsContent: "Ao acessar e utilizar o stream-in, você aceita estes Termos e Condições em sua totalidade. Se não concordar com alguma parte, pedimos que não utilize a plataforma.",
-    acceptTermsHighlight: "📌 O uso continuado do stream-in após qualquer modificação constitui sua aceitação dos termos atualizados.",
+    acceptTermsContent: "Ao acessar e utilizar o teleprt, você aceita estes Termos e Condições em sua totalidade. Se não concordar com alguma parte, pedimos que não utilize a plataforma.",
+    acceptTermsHighlight: "📌 O uso continuado do teleprt após qualquer modificação constitui sua aceitação dos termos atualizados.",
     serviceDescription: "Descrição do Serviço",
-    serviceDescContent: "stream-in é uma plataforma de streaming que permite aos usuários:",
+    serviceDescContent: "teleprt é uma plataforma de streaming que permite aos usuários:",
     serviceDescItem1: "Enviar, compartilhar e descobrir conteúdo de áudio (podcasts, música, etc.)",
     serviceDescItem2: "Criar e personalizar perfis de criador",
     serviceDescItem3: "Interagir com outros usuários e criadores",
     serviceDescItem4: "Acessar ferramentas de monetização para criadores elegíveis",
     serviceDescFooter: "Reservamo-nos o direito de modificar, suspender ou descontinuar qualquer aspecto do serviço a qualquer momento, com ou sem aviso prévio.",
     userAccounts: "Contas de Usuário",
-    userAccountsContent: "Para utilizar certas funções do stream-in, você precisará criar uma conta. Ao fazê-lo, você se compromete a:",
+    userAccountsContent: "Para utilizar certas funções do teleprt, você precisará criar uma conta. Ao fazê-lo, você se compromete a:",
     userAccountsItem1: "Fornecer informações verdadeiras e atualizadas",
     userAccountsItem2: "Manter a segurança de sua senha e credenciais",
     userAccountsItem3: "Ser responsável por toda atividade em sua conta",
     userAccountsItem4: "Nos notificar imediatamente sobre qualquer uso não autorizado",
     userAccountsHighlight: "⚠️ Reservamo-nos o direito de suspender ou excluir contas que violem estes termos ou que permaneçam inativas por períodos prolongados.",
     contentIP: "Conteúdo e Propriedade Intelectual",
-    contentIPContent: "Você mantém os direitos sobre o conteúdo que envia ao stream-in. No entanto, ao publicar conteúdo, você nos concede uma licença mundial, não exclusiva, livre de royalties para usar, reproduzir, modificar, distribuir e exibir tal conteúdo dentro da plataforma.",
+    contentIPContent: "Você mantém os direitos sobre o conteúdo que envia ao teleprt. No entanto, ao publicar conteúdo, você nos concede uma licença mundial, não exclusiva, livre de royalties para usar, reproduzir, modificar, distribuir e exibir tal conteúdo dentro da plataforma.",
     contentIPCommit: "Você se compromete que seu conteúdo:",
     contentIPItem1: "É original ou você tem os direitos necessários para compartilhá-lo",
     contentIPItem2: "Não infringe direitos autorais, marcas registradas ou outros direitos de terceiros",
     contentIPItem3: "Não contém material difamatório, obsceno ou ilegal",
-    contentIPHighlight: "🎵 Se você enviar música ou áudio que não é seu, certifique-se de ter as licenças correspondentes. O stream-in não se responsabiliza por infrações de direitos autorais cometidas por usuários.",
+    contentIPHighlight: "🎵 Se você enviar música ou áudio que não é seu, certifique-se de ter as licenças correspondentes. O teleprt não se responsabiliza por infrações de direitos autorais cometidas por usuários.",
     prohibitedConduct: "Conduta Proibida",
-    prohibitedConductContent: "Para manter o stream-in como um espaço seguro e respeitoso, é proibido:",
+    prohibitedConductContent: "Para manter o teleprt como um espaço seguro e respeitoso, é proibido:",
     prohibitedItem1: "Enviar conteúdo que promova ódio, violência ou discriminação",
     prohibitedItem2: "Assediar, intimidar ou ameaçar outros usuários",
     prohibitedItem3: "Usar a plataforma para atividades ilegais ou fraudulentas",
-    prohibitedItem4: "Tentar hackear, descompilar ou interferir nos sistemas do stream-in",
+    prohibitedItem4: "Tentar hackear, descompilar ou interferir nos sistemas do teleprt",
     prohibitedItem5: "Criar múltiplas contas para evadir restrições",
     prohibitedItem6: "Distribuir spam, malware ou conteúdo enganoso",
     prohibitedItem7: "Se passar por outra pessoa ou entidade",
     prohibitedFooter: "As violações podem resultar na suspensão ou exclusão permanente de sua conta, sem aviso prévio.",
     monetizationPayments: "Monetização e Pagamentos",
-    monetizationContent: "O stream-in oferece opções de monetização para criadores elegíveis. Os termos específicos incluem:",
+    monetizationContent: "O teleprt oferece opções de monetização para criadores elegíveis. Os termos específicos incluem:",
     monetizationItem1: "As receitas são calculadas com base nas métricas da plataforma",
     monetizationItem2: "Os pagamentos são processados de acordo com o calendário estabelecido",
-    monetizationItem3: "O stream-in reserva-se o direito de modificar as taxas de monetização",
+    monetizationItem3: "O teleprt reserva-se o direito de modificar as taxas de monetização",
     monetizationItem4: "Os criadores são responsáveis por suas obrigações fiscais",
     monetizationHighlight: "💰 Os detalhes específicos de monetização encontram-se no Acordo do Criador, que complementa estes termos gerais.",
     privacyData: "Privacidade e Proteção de Dados",
@@ -1859,17 +1859,17 @@ const translations = {
     privacyItem4: "Cookies e tecnologias similares",
     privacyFooter: "Implementamos medidas de segurança técnicas e organizacionais para proteger suas informações. No entanto, nenhum sistema é 100% seguro e não podemos garantir a segurança absoluta de seus dados.",
     liability: "Limitação de Responsabilidade",
-    liabilityContent: 'O stream-in é fornecido "como está" e "conforme disponibilidade". Na máxima extensão permitida por lei:',
+    liabilityContent: 'O teleprt é fornecido "como está" e "conforme disponibilidade". Na máxima extensão permitida por lei:',
     liabilityItem1: "Não garantimos que o serviço seja ininterrupto, seguro ou livre de erros",
     liabilityItem2: "Não somos responsáveis por perdas indiretas, incidentais ou consequentes",
-    liabilityItem3: "Nossa responsabilidade total não excederá o valor que você pagou ao stream-in nos últimos 12 meses",
+    liabilityItem3: "Nossa responsabilidade total não excederá o valor que você pagou ao teleprt nos últimos 12 meses",
     liabilityHighlight: "🛡️ Esta limitação se aplica na máxima extensão permitida pela legislação aplicável em sua jurisdição.",
     indemnification: "Indenização",
-    indemnificationContent: "Você concorda em indenizar e manter indene o stream-in, seus diretores, funcionários e afiliados de qualquer reclamação, dano, perda ou despesa (incluindo honorários legais) decorrente de:",
+    indemnificationContent: "Você concorda em indenizar e manter indene o teleprt, seus diretores, funcionários e afiliados de qualquer reclamação, dano, perda ou despesa (incluindo honorários legais) decorrente de:",
     indemnificationItem1: "Seu uso da plataforma",
     indemnificationItem2: "Sua violação destes termos",
     indemnificationItem3: "Sua violação de direitos de terceiros",
-    indemnificationItem4: "O conteúdo que você publicar no stream-in",
+    indemnificationItem4: "O conteúdo que você publicar no teleprt",
     termsModifications: "Modificações nos Termos",
     termsModContent: "Podemos atualizar estes termos periodicamente. Quando o fizermos:",
     termsModItem1: "Publicaremos a versão atualizada nesta página",
@@ -1879,7 +1879,7 @@ const translations = {
     contactDisputes: "Contato e Resolução de Disputas",
     contactDisputesContent: "Se você tiver perguntas sobre estes termos ou precisar reportar um problema, pode nos contatar através de:",
     contactDisputesHighlight: "⚖️ Qualquer disputa será resolvida primeiro por negociação de boa fé. Se não for alcançado um acordo, será submetida a arbitragem vinculante de acordo com as leis aplicáveis da jurisdição correspondente.",
-    termsFooter: "© 2025 stream-in. Todos os direitos reservados. Se tiver dúvidas sobre estes termos, não hesite em",
+    termsFooter: "© 2025 teleprt. Todos os direitos reservados. Se tiver dúvidas sobre estes termos, não hesite em",
     contactUsLink: "nos contatar",
 
     // Video page
@@ -1952,7 +1952,7 @@ const translations = {
 
     // Settings
     settingsTitle: "Configurações",
-    settingsSubtitle: "Personalize sua experiência no stream-in",
+    settingsSubtitle: "Personalize sua experiência no teleprt",
     appearance: "Aparência",
     appearanceDesc: "Escolha o tema visual da plataforma",
     dark: "Escuro",
@@ -2015,7 +2015,7 @@ const translations = {
     noProfilesAvailable: "Não há perfis disponíveis",
     recent: "Recente",
     noRecentVideos: "Não há vídeos recentes",
-    discoverPopular: "Descubra o que é mais popular no stream-in",
+    discoverPopular: "Descubra o que é mais popular no teleprt",
     errorLoadingData: "Erro ao carregar dados",
     mostFollowedProfiles: "Perfis mais seguidos",
     mostRecentVideos: "Vídeos mais recentes",
@@ -2066,7 +2066,7 @@ const translations = {
     linkCopied: "Enlace copiado para a área de transferência",
     close: "Fechar",
     sharePlaylist: "Compartilhar Playlist",
-    sharePlaylistText: "Confira esta playlist \"${playlistName}\" com ${videoCount} vídeos no stream-in!",
+    sharePlaylistText: "Confira esta playlist \"${playlistName}\" com ${videoCount} vídeos no teleprt!",
 
     // Recommendation
     relatedVideos: "Vídeos Relacionados",
@@ -2114,15 +2114,15 @@ const translations = {
     playlistVideos: "Videos da playlist",
     nowPlaying: "Reproduzindo agora",
 
-    // Us / About stream-in (Beta)
-    usAboutPageTitle: "Sobre stream-in",
+    // Us / About teleprt (Beta)
+    usAboutPageTitle: "Sobre teleprt",
     usAboutPageSubtitle:
-      "stream-in é uma nova plataforma de streaming em fase beta. Aqui compartilhamos nossa visão, como pensamos a experiência de quem assiste e de quem cria, e quais limites defendemos.",
+      "teleprt é uma nova plataforma de streaming em fase beta. Aqui compartilhamos nossa visão, como pensamos a experiência de quem assiste e de quem cria, e quais limites defendemos.",
     usAboutPageBetaLine: "Versão beta · Abril 2026",
 
-    usSecWhatTitle: "O que é stream-in?",
+    usSecWhatTitle: "O que é teleprt?",
     usSecWhatP1:
-      "stream-in nasce como uma alternativa de streaming com uma ideia atual: menos barreiras arbitrárias sobre o que pode ser dito e mais foco em a ferramenta realmente servir ao público e a quem cria conteúdo.",
+      "teleprt nasce como uma alternativa de streaming com uma ideia atual: menos barreiras arbitrárias sobre o que pode ser dito e mais foco em a ferramenta realmente servir ao público e a quem cria conteúdo.",
     usSecWhatP2:
       "Estamos em beta: evoluímos com cuidado, ouvimos feedback e adicionamos recursos conforme a plataforma cresce.",
     usSecWhatHighlight:
@@ -2138,7 +2138,7 @@ const translations = {
     usSecExperienceP1:
       "Não queremos um site entupido de anúncios nem um feed que pareça um outdoor de interesses alheios ao que você veio ver. Queremos ser sustentáveis e que criadores ganhem com o que publicam, então anúncios podem existir quando ajudam a manter a plataforma. O ponto é equilíbrio: publicidade relevante e respeitosa, sem sufocar a experiência.",
     usSecExperienceP2:
-      "stream-in foi pensada para crescer com anunciantes (não contra eles): um ambiente seguro para marcas e, ao mesmo tempo, centrado no usuário, onde a promoção apoia o ecossistema em vez de virar o produto principal.",
+      "teleprt foi pensada para crescer com anunciantes (não contra eles): um ambiente seguro para marcas e, ao mesmo tempo, centrado no usuário, onde a promoção apoia o ecossistema em vez de virar o produto principal.",
 
     usSecMoneyTitle: "Monetização para criadores, quando for viável",
     usSecMoneyP1:
@@ -2154,7 +2154,7 @@ const translations = {
 
     usSecLimitsTitle: "Limites claros: o que não tem espaço",
     usSecLimitsP1:
-      "Defendemos a liberdade de expressão e rejeitamos censura excessiva, mas stream-in não é uma zona sem regras. Somos contra conteúdo feito para ferir, explorar ou discriminar.",
+      "Defendemos a liberdade de expressão e rejeitamos censura excessiva, mas teleprt não é uma zona sem regras. Somos contra conteúdo feito para ferir, explorar ou discriminar.",
     usSecLimitsIntroList:
       "Não é permitido enviar ou promover, entre outras coisas:",
     usSecLimitsItemThreat: "Ameaças ou incitação a ferir pessoas ou grupos.",
@@ -2173,7 +2173,7 @@ const translations = {
       "Para dúvidas gerais, ideias ou relatos relacionados à plataforma, fale com a gente. Valorizamos o diálogo direto com público e criadores.",
 
     usAboutFooter:
-      "© 2026 stream-in — Plataforma em beta. Obrigado por fazer parte deste começo.",
+      "© 2026 teleprt — Plataforma em beta. Obrigado por fazer parte deste começo.",
   },
 
   de: {
@@ -2188,7 +2188,7 @@ const translations = {
     lightTheme: "Hell",
     sunsetTheme: "Sonnenuntergang",
     betaBannerMessage:
-      "stream-in befindet sich in der Beta-Version. Wenn du die Wartung der Plattform unterstützen möchtest, kannst du eine Spende oder einen Beitrag leisten.",
+      "teleprt befindet sich in der Beta-Version. Wenn du die Wartung der Plattform unterstützen möchtest, kannst du eine Spende oder einen Beitrag leisten.",
     betaBannerDonate: "Projekt unterstützen",
 
     // Sidebar
@@ -2211,7 +2211,7 @@ const translations = {
     settings: "Einstellungen",
     report: "Melden",
     help: "Hilfe",
-    bestOf: "BEST OF stream-in",
+    bestOf: "BEST OF teleprt",
     signInPrompt: "Melde dich an, um Videos zu liken, zu kommentieren und zu abonnieren.",
     signIn: "ANMELDEN",
 
@@ -2242,7 +2242,7 @@ const translations = {
 
     // Signin
     signinTitle: "Willkommen zurück",
-    signinSubtitle: "Melde dich bei deinem stream-in Konto an",
+    signinSubtitle: "Melde dich bei deinem teleprt Konto an",
     emailSignin: "E-Mail",
     passwordSignin: "Passwort",
     signInButton: "Anmelden",
@@ -2253,7 +2253,7 @@ const translations = {
     googleTitle: "Schnellzugang",
     googleSubtitle: "Melde dich sofort mit deinem Google-Konto an",
     signInWithGoogle: "Mit Google fortfahren",
-    areYouNew: "Neu bei stream-in?",
+    areYouNew: "Neu bei teleprt?",
     createAccountSignin: "Konto erstellen",
     resetPassword: "Passwort zurücksetzen",
     resetPasswordSubtitle: "Gib die mit deinem Konto verknüpfte E-Mail-Adresse ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.",
@@ -2266,7 +2266,7 @@ const translations = {
 
     // Register
     registerTitle: "Konto erstellen",
-    subtitleRegister: "Werde Teil der stream-in Community",
+    subtitleRegister: "Werde Teil der teleprt Community",
     userName: "Benutzername",
     emailRegister: "E-Mail",
     passwordRegister: "Passwort",
@@ -2306,7 +2306,7 @@ const translations = {
 
     // Help
     helpCenter: "Hilfe-Center",
-    helpSubtitle: "Finde Antworten auf deine Fragen, Anleitungen und alles, was du brauchst, um das Beste aus stream-in herauszuholen.",
+    helpSubtitle: "Finde Antworten auf deine Fragen, Anleitungen und alles, was du brauchst, um das Beste aus teleprt herauszuholen.",
     searchHelp: "Im Hilfe-Center suchen...",
     helpCategories: "Hilfekategorien",
     faq: "Häufig gestellte Fragen",
@@ -2328,7 +2328,7 @@ const translations = {
     generalSettingsDesc: "Benachrichtigungen, Sprache, Design und Präferenzen.",
 
     // Help FAQ
-    faq1Q: "Wie erstelle ich ein Konto bei stream-in?",
+    faq1Q: "Wie erstelle ich ein Konto bei teleprt?",
     faq1A: 'Klicke oben rechts auf die Schaltfläche "Registrieren". Fülle das Formular mit deinem Namen, deiner E-Mail und deinem Passwort aus. Du erhältst eine Bestätigungs-E-Mail zur Aktivierung deines Kontos.',
     faq2Q: "Wie lade ich ein Video auf die Plattform hoch?",
     faq2A: 'Sobald du angemeldet bist, klicke auf das Upload-Symbol (Pfeil nach oben) in der Navigationsleiste. Wähle deine Videodatei aus, füge Titel, Beschreibung und Vorschaubild hinzu und klicke auf "Veröffentlichen".',
@@ -2343,7 +2343,7 @@ const translations = {
     faq7Q: "Wie kann ich mein Passwort zurücksetzen?",
     faq7A: 'Klicke auf dem Anmeldebildschirm auf "Passwort vergessen?". Gib deine registrierte E-Mail-Adresse ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.',
     faq8Q: "Gibt es eine mobile App?",
-    faq8A: "Wir arbeiten an einer mobilen Version von stream-in für Android und iOS. Sie wird bald verfügbar sein! In der Zwischenzeit kannst du über den Browser deines Mobilgeräts darauf zugreifen.",
+    faq8A: "Wir arbeiten an einer mobilen Version von teleprt für Android und iOS. Sie wird bald verfügbar sein! In der Zwischenzeit kannst du über den Browser deines Mobilgeräts darauf zugreifen.",
 
     // Help Quick Links
     techSupport: "Technischer Support",
@@ -2358,47 +2358,47 @@ const translations = {
 
     // Us (Terms)
     termsTitle: "Allgemeine Geschäftsbedingungen",
-    termsSubtitle: "Bei stream-in ist es uns wichtig, dass du deine Rechte und Pflichten verstehst. Wir haben diese Bedingungen so klar wie möglich formuliert.",
+    termsSubtitle: "Bei teleprt ist es uns wichtig, dass du deine Rechte und Pflichten verstehst. Wir haben diese Bedingungen so klar wie möglich formuliert.",
     lastUpdated: "Zuletzt aktualisiert: Januar 2025",
     acceptTerms: "Annahme der Bedingungen",
-    acceptTermsContent: "Durch den Zugriff auf und die Nutzung von stream-in akzeptierst du diese Allgemeinen Geschäftsbedingungen in vollem Umfang. Wenn du mit einem Teil nicht einverstanden bist, nutze die Plattform bitte nicht.",
-    acceptTermsHighlight: "📌 Die fortgesetzte Nutzung von stream-in nach Änderungen gilt als Zustimmung zu den aktualisierten Bedingungen.",
+    acceptTermsContent: "Durch den Zugriff auf und die Nutzung von teleprt akzeptierst du diese Allgemeinen Geschäftsbedingungen in vollem Umfang. Wenn du mit einem Teil nicht einverstanden bist, nutze die Plattform bitte nicht.",
+    acceptTermsHighlight: "📌 Die fortgesetzte Nutzung von teleprt nach Änderungen gilt als Zustimmung zu den aktualisierten Bedingungen.",
     serviceDescription: "Beschreibung des Dienstes",
-    serviceDescContent: "stream-in ist eine stream-ing-Plattform, die es Nutzern ermöglicht:",
+    serviceDescContent: "teleprt ist eine teleprtg-Plattform, die es Nutzern ermöglicht:",
     serviceDescItem1: "Audioinhalte (Podcasts, Musik usw.) hochzuladen, zu teilen und zu entdecken",
     serviceDescItem2: "Erstellerprofile zu erstellen und anzupassen",
     serviceDescItem3: "Mit anderen Nutzern und Erstellern zu interagieren",
     serviceDescItem4: "Auf Monetarisierungstools für berechtigte Ersteller zuzugreifen",
     serviceDescFooter: "Wir behalten uns das Recht vor, jeden Aspekt des Dienstes jederzeit mit oder ohne Vorankündigung zu ändern, auszusetzen oder einzustellen.",
     userAccounts: "Benutzerkonten",
-    userAccountsContent: "Um bestimmte Funktionen von stream-in zu nutzen, musst du ein Konto erstellen. Dabei erklärst du dich einverstanden:",
+    userAccountsContent: "Um bestimmte Funktionen von teleprt zu nutzen, musst du ein Konto erstellen. Dabei erklärst du dich einverstanden:",
     userAccountsItem1: "Wahrheitsgemäße und aktuelle Informationen bereitzustellen",
     userAccountsItem2: "Die Sicherheit deines Passworts und deiner Zugangsdaten zu wahren",
     userAccountsItem3: "Für alle Aktivitäten unter deinem Konto verantwortlich zu sein",
     userAccountsItem4: "Uns unverzüglich über jede unbefugte Nutzung zu informieren",
     userAccountsHighlight: "⚠️ Wir behalten uns das Recht vor, Konten zu sperren oder zu löschen, die gegen diese Bedingungen verstoßen oder längere Zeit inaktiv sind.",
     contentIP: "Inhalte und geistiges Eigentum",
-    contentIPContent: "Du behältst die Rechte an den Inhalten, die du auf stream-in hochlädst. Durch die Veröffentlichung gewährst du uns jedoch eine weltweite, nicht-exklusive, lizenzgebührenfreie Lizenz zur Nutzung, Vervielfältigung, Änderung, Verbreitung und Anzeige dieser Inhalte innerhalb der Plattform.",
+    contentIPContent: "Du behältst die Rechte an den Inhalten, die du auf teleprt hochlädst. Durch die Veröffentlichung gewährst du uns jedoch eine weltweite, nicht-exklusive, lizenzgebührenfreie Lizenz zur Nutzung, Vervielfältigung, Änderung, Verbreitung und Anzeige dieser Inhalte innerhalb der Plattform.",
     contentIPCommit: "Du erklärst, dass deine Inhalte:",
     contentIPItem1: "Original sind oder du die notwendigen Rechte zur Weitergabe besitzt",
     contentIPItem2: "Keine Urheberrechte, Marken oder andere Rechte Dritter verletzen",
     contentIPItem3: "Kein diffamierendes, obszönes oder illegales Material enthalten",
-    contentIPHighlight: "🎵 Wenn du Musik oder Audio hochlädst, die nicht dir gehört, stelle sicher, dass du die entsprechenden Lizenzen besitzt. stream-in haftet nicht für Urheberrechtsverletzungen durch Nutzer.",
+    contentIPHighlight: "🎵 Wenn du Musik oder Audio hochlädst, die nicht dir gehört, stelle sicher, dass du die entsprechenden Lizenzen besitzt. teleprt haftet nicht für Urheberrechtsverletzungen durch Nutzer.",
     prohibitedConduct: "Verbotenes Verhalten",
-    prohibitedConductContent: "Um stream-in zu einem sicheren und respektvollen Ort zu machen, ist Folgendes untersagt:",
+    prohibitedConductContent: "Um teleprt zu einem sicheren und respektvollen Ort zu machen, ist Folgendes untersagt:",
     prohibitedItem1: "Inhalte hochladen, die Hass, Gewalt oder Diskriminierung fördern",
     prohibitedItem2: "Andere Nutzer belästigen, einschüchtern oder bedrohen",
     prohibitedItem3: "Die Plattform für illegale oder betrügerische Aktivitäten nutzen",
-    prohibitedItem4: "Versuchen, die Systeme von stream-in zu hacken, zu dekompilieren oder zu stören",
+    prohibitedItem4: "Versuchen, die Systeme von teleprt zu hacken, zu dekompilieren oder zu stören",
     prohibitedItem5: "Mehrere Konten erstellen, um Einschränkungen zu umgehen",
     prohibitedItem6: "Spam, Malware oder irreführende Inhalte verbreiten",
     prohibitedItem7: "Sich als andere Person oder Organisation ausgeben",
     prohibitedFooter: "Verstöße können zur Sperrung oder dauerhaften Löschung deines Kontos ohne Vorankündigung führen.",
     monetizationPayments: "Monetarisierung und Zahlungen",
-    monetizationContent: "stream-in bietet Monetarisierungsoptionen für berechtigte Ersteller. Spezifische Bedingungen umfassen:",
+    monetizationContent: "teleprt bietet Monetarisierungsoptionen für berechtigte Ersteller. Spezifische Bedingungen umfassen:",
     monetizationItem1: "Einnahmen werden auf Grundlage von Plattformmetriken berechnet",
     monetizationItem2: "Zahlungen erfolgen gemäß dem festgelegten Zeitplan",
-    monetizationItem3: "stream-in behält sich das Recht vor, Monetarisierungsraten zu ändern",
+    monetizationItem3: "teleprt behält sich das Recht vor, Monetarisierungsraten zu ändern",
     monetizationItem4: "Ersteller sind für ihre steuerlichen Verpflichtungen verantwortlich",
     monetizationHighlight: "💰 Spezifische Details zur Monetarisierung findest du in der Erstellervereinbarung, die diese Bedingungen ergänzt.",
     privacyData: "Datenschutz und Datensicherheit",
@@ -2409,17 +2409,17 @@ const translations = {
     privacyItem4: "Cookies und ähnliche Technologien",
     privacyFooter: "Wir setzen technische und organisatorische Sicherheitsmaßnahmen ein, um deine Informationen zu schützen. Dennoch ist kein System zu 100 % sicher und wir können keine absolute Sicherheit garantieren.",
     liability: "Haftungsbeschränkung",
-    liabilityContent: 'stream-in wird "wie besehen" und "wie verfügbar" bereitgestellt. Im gesetzlich zulässigen Umfang:',
+    liabilityContent: 'teleprt wird "wie besehen" und "wie verfügbar" bereitgestellt. Im gesetzlich zulässigen Umfang:',
     liabilityItem1: "Garantieren wir nicht, dass der Dienst unterbrechungsfrei, sicher oder fehlerfrei ist",
     liabilityItem2: "Haften wir nicht für indirekte, zufällige oder Folgeschäden",
-    liabilityItem3: "Ist unsere Gesamthaftung auf den Betrag begrenzt, den du in den letzten 12 Monaten an stream-in gezahlt hast",
+    liabilityItem3: "Ist unsere Gesamthaftung auf den Betrag begrenzt, den du in den letzten 12 Monaten an teleprt gezahlt hast",
     liabilityHighlight: "🛡️ Diese Beschränkung gilt im maximal zulässigen Umfang gemäß den geltenden Gesetzen deiner Gerichtsbarkeit.",
     indemnification: "Freistellung",
-    indemnificationContent: "Du erklärst dich damit einverstanden, stream-in, seine Direktoren, Mitarbeiter und Partner von allen Ansprüchen, Schäden, Verlusten oder Kosten (einschließlich Anwaltsgebühren) freizustellen, die entstehen aus:",
+    indemnificationContent: "Du erklärst dich damit einverstanden, teleprt, seine Direktoren, Mitarbeiter und Partner von allen Ansprüchen, Schäden, Verlusten oder Kosten (einschließlich Anwaltsgebühren) freizustellen, die entstehen aus:",
     indemnificationItem1: "Deiner Nutzung der Plattform",
     indemnificationItem2: "Deinem Verstoß gegen diese Bedingungen",
     indemnificationItem3: "Der Verletzung von Rechten Dritter",
-    indemnificationItem4: "Den von dir auf stream-in veröffentlichten Inhalten",
+    indemnificationItem4: "Den von dir auf teleprt veröffentlichten Inhalten",
     termsModifications: "Änderungen der Bedingungen",
     termsModContent: "Wir können diese Bedingungen regelmäßig aktualisieren. In diesem Fall:",
     termsModItem1: "Veröffentlichen wir die aktualisierte Version auf dieser Seite",
@@ -2429,7 +2429,7 @@ const translations = {
     contactDisputes: "Kontakt und Streitbeilegung",
     contactDisputesContent: "Wenn du Fragen zu diesen Bedingungen hast oder ein Problem melden möchtest, kannst du uns kontaktieren über:",
     contactDisputesHighlight: "⚖️ Streitigkeiten werden zunächst durch Verhandlungen in gutem Glauben beigelegt. Wird keine Einigung erzielt, erfolgt ein verbindliches Schiedsverfahren nach den geltenden Gesetzen der zuständigen Gerichtsbarkeit.",
-    termsFooter: "© 2025 stream-in. Alle Rechte vorbehalten. Wenn du Fragen zu diesen Bedingungen hast, kannst du uns gerne",
+    termsFooter: "© 2025 teleprt. Alle Rechte vorbehalten. Wenn du Fragen zu diesen Bedingungen hast, kannst du uns gerne",
     contactUsLink: "kontaktieren",
 
     // Video page
@@ -2502,7 +2502,7 @@ const translations = {
 
     // Settings
     settingsTitle: "Einstellungen",
-    settingsSubtitle: "Passe dein stream-in-Erlebnis an",
+    settingsSubtitle: "Passe dein teleprt-Erlebnis an",
     appearance: "Darstellung",
     appearanceDesc: "Wähle das visuelle Design der Plattform",
     dark: "Dunkel",
@@ -2565,7 +2565,7 @@ const translations = {
     noProfilesAvailable: "Keine Profile verfügbar",
     recent: "Kürzlich",
     noRecentVideos: "Keine aktuellen Videos",
-    discoverPopular: "Entdecke, was bei stream-in am beliebtesten ist",
+    discoverPopular: "Entdecke, was bei teleprt am beliebtesten ist",
     errorLoadingData: "Fehler beim Laden der Daten",
     mostFollowedProfiles: "Meistabonnierte Profile",
     mostRecentVideos: "Neueste Videos",
@@ -2616,7 +2616,7 @@ const translations = {
     linkCopied: "Link in Zwischenablage kopiert",
     close: "Schließen",
     sharePlaylist: "Playlist teilen",
-    sharePlaylistText: "Schau dir diese Playlist \"${playlistName}\" mit ${videoCount} Videos auf stream-in an!",
+    sharePlaylistText: "Schau dir diese Playlist \"${playlistName}\" mit ${videoCount} Videos auf teleprt an!",
 
     // Delete Alert
     deleteVideoTitle: "Video löschen?",
@@ -2664,15 +2664,15 @@ const translations = {
     playlistVideos: "Playlist-Videos",
     nowPlaying: "Wird gerade abgespielt",
 
-    // Us / About stream-in (Beta)
-    usAboutPageTitle: "Über stream-in",
+    // Us / About teleprt (Beta)
+    usAboutPageTitle: "Über teleprt",
     usAboutPageSubtitle:
-      "stream-in ist eine neue Streaming-Plattform in der Beta-Phase. Hier teilen wir unsere Vision, wie wir die Erfahrung für Zuschauer und Creator denken, und welche Grenzen wir klar ziehen.",
+      "teleprt ist eine neue Streaming-Plattform in der Beta-Phase. Hier teilen wir unsere Vision, wie wir die Erfahrung für Zuschauer und Creator denken, und welche Grenzen wir klar ziehen.",
     usAboutPageBetaLine: "Beta-Version · April 2026",
 
-    usSecWhatTitle: "Was ist stream-in?",
+    usSecWhatTitle: "Was ist teleprt?",
     usSecWhatP1:
-      "stream-in entsteht als Streaming-Alternative mit einem modernen Ansatz: weniger willkürliche Schranken dafür, was gesagt werden darf, und mehr Fokus darauf, dass das Produkt wirklich Publikum und Creator unterstützt.",
+      "teleprt entsteht als Streaming-Alternative mit einem modernen Ansatz: weniger willkürliche Schranken dafür, was gesagt werden darf, und mehr Fokus darauf, dass das Produkt wirklich Publikum und Creator unterstützt.",
     usSecWhatP2:
       "Wir sind in der Beta: Wir entwickeln bedacht, hören auf Feedback und erweitern Funktionen, während die Plattform wächst.",
     usSecWhatHighlight:
@@ -2688,7 +2688,7 @@ const translations = {
     usSecExperienceP1:
       "Wir wollen keine Plattform, die mit Werbung vollgestopft ist oder deren Feed wie eine Litfaßsäule für fremde Interessen wirkt. Wir wollen wirtschaftlich nachhaltig sein – und Creator sollen mit ihren Inhalten verdienen können –, daher kann Werbung existieren, wenn sie die Plattform trägt. Entscheidend ist das Gleichgewicht: relevant, respektvoll und niemals dominierend.",
     usSecExperienceP2:
-      "stream-in soll mit Werbekunden wachsen (nicht gegen sie): ein markensicheres, nutzerorientiertes Erlebnis, in dem Werbung das Ökosystem unterstützt statt zum Hauptprodukt zu werden.",
+      "teleprt soll mit Werbekunden wachsen (nicht gegen sie): ein markensicheres, nutzerorientiertes Erlebnis, in dem Werbung das Ökosystem unterstützt statt zum Hauptprodukt zu werden.",
 
     usSecMoneyTitle: "Monetarisierung für Creator, wenn es tragfähig ist",
     usSecMoneyP1:
@@ -2704,7 +2704,7 @@ const translations = {
 
     usSecLimitsTitle: "Klare Grenzen: Was nicht dazugehört",
     usSecLimitsP1:
-      "Wir unterstützen Meinungsfreiheit und lehnen Überzensur ab, aber stream-in ist kein regel-freier Raum. Wir lehnen Inhalte ab, die schaden, ausbeuten oder diskriminieren sollen.",
+      "Wir unterstützen Meinungsfreiheit und lehnen Überzensur ab, aber teleprt ist kein regel-freier Raum. Wir lehnen Inhalte ab, die schaden, ausbeuten oder diskriminieren sollen.",
     usSecLimitsIntroList:
       "Das Hochladen oder Bewerben ist nicht erlaubt (u. a.):",
     usSecLimitsItemThreat: "Drohungen oder Aufrufe, Menschen oder Gruppen zu schaden.",
@@ -2723,7 +2723,7 @@ const translations = {
       "Für allgemeine Fragen, Ideen oder Meldungen zur Plattform kannst du uns schreiben. Wir schätzen den direkten Austausch mit Zuschauern und Creatorn.",
 
     usAboutFooter:
-      "© 2026 stream-in — Beta-Plattform. Danke, dass du von Anfang an dabei bist.",
+      "© 2026 teleprt — Beta-Plattform. Danke, dass du von Anfang an dabei bist.",
   },
 
   ru: {
@@ -2738,7 +2738,7 @@ const translations = {
     lightTheme: "Светлая",
     sunsetTheme: "Закат",
     betaBannerMessage:
-      "stream-in находится в бета-версии. Если вы хотите поддержать развитие и поддержку платформы, вы можете сделать пожертвование или внести вклад.",
+      "teleprt находится в бета-версии. Если вы хотите поддержать развитие и поддержку платформы, вы можете сделать пожертвование или внести вклад.",
     betaBannerDonate: "Поддержать проект",
 
     // Sidebar
@@ -2761,7 +2761,7 @@ const translations = {
     settings: "Настройки",
     report: "Пожаловаться",
     help: "Помощь",
-    bestOf: "ЛУЧШЕЕ В stream-in",
+    bestOf: "ЛУЧШЕЕ В teleprt",
     signInPrompt: "Войдите, чтобы ставить лайки, комментировать и подписываться.",
     signIn: "ВОЙТИ",
 
@@ -2836,7 +2836,7 @@ const translations = {
 
     // Sigin
     signinTitle: "С возвращением",
-    signinSubtitle: "Войдите в свой аккаунт stream-in",
+    signinSubtitle: "Войдите в свой аккаунт teleprt",
     emailSignin: "Электронная почта",
     passwordSignin: "Пароль",
     signInButton: "Войти",
@@ -2847,7 +2847,7 @@ const translations = {
     googleTitle: "Быстрый вход",
     googleSubtitle: "Мгновенный вход через аккаунт Google",
     signInWithGoogle: "Продолжить через Google",
-    areYouNew: "Впервые в stream-in?",
+    areYouNew: "Впервые в teleprt?",
     createAccountSignin: "Создать аккаунт",
     resetPassword: "Сброс пароля",
     resetPasswordSubtitle: "Введите адрес электронной почты, связанный с вашим аккаунтом, и мы отправим вам ссылку для сброса пароля.",
@@ -2860,7 +2860,7 @@ const translations = {
 
     // Register
     registerTitle: "Создать аккаунт",
-    subtitleRegister: "Присоединяйтесь к сообществу stream-in",
+    subtitleRegister: "Присоединяйтесь к сообществу teleprt",
     userName: "Имя пользователя",
     emailRegister: "Электронная почта",
     passwordRegister: "Пароль",
@@ -2900,7 +2900,7 @@ const translations = {
 
     // Help
     helpCenter: "Центр помощи",
-    helpSubtitle: "Найдите ответы на вопросы, руководства и всё необходимое, чтобы использовать stream-in по максимуму.",
+    helpSubtitle: "Найдите ответы на вопросы, руководства и всё необходимое, чтобы использовать teleprt по максимуму.",
     searchHelp: "Поиск в центре помощи...",
     helpCategories: "Категории помощи",
     faq: "Часто задаваемые вопросы",
@@ -2922,7 +2922,7 @@ const translations = {
     generalSettingsDesc: "Уведомления, язык, тема и предпочтения.",
 
     // Help FAQ
-    faq1Q: "Как создать аккаунт в stream-in?",
+    faq1Q: "Как создать аккаунт в teleprt?",
     faq1A: 'Нажмите кнопку "Зарегистрироваться" в правом верхнем углу. Заполните форму. Вы получите письмо для подтверждения активации аккаунта.',
     faq2Q: "Как загрузить видео на платформу?",
     faq2A: 'После входа в систему нажмите на иконку загрузки (стрелка вверх) в навигационной панели. Выберите файл, добавьте название, описание и нажмите "Опубликовать".',
@@ -2952,7 +2952,7 @@ const translations = {
 
     // Us (Terms)
     termsTitle: "Условия использования",
-    termsSubtitle: "В stream-in нам важно, чтобы вы понимали свои права и обязанности. Мы написали эти условия максимально просто.",
+    termsSubtitle: "В teleprt нам важно, чтобы вы понимали свои права и обязанности. Мы написали эти условия максимально просто.",
     lastUpdated: "Последнее обновление: Январь 2025",
     termsAndConditions: "Условия и положения",
     termsPageSubtitle: "Внимательно прочтите эти условия, чтобы понимать правила использования платформы",
@@ -2962,10 +2962,10 @@ const translations = {
     propertyOf: "собственность",
     haveQuestions: "Есть вопросы?",
     acceptTerms: "Принятие условий",
-    acceptTermsContent: "Используя stream-in, вы полностью принимаете данные Условия. Если вы не согласны, просим вас не использовать платформу.",
+    acceptTermsContent: "Используя teleprt, вы полностью принимаете данные Условия. Если вы не согласны, просим вас не использовать платформу.",
     acceptTermsHighlight: "📌 Продолжение использования после изменений означает ваше согласие с новой редакцией.",
     serviceDescription: "Описание сервиса",
-    serviceDescContent: "stream-in — это платформа, которая позволяет пользователям:",
+    serviceDescContent: "teleprt — это платформа, которая позволяет пользователям:",
     serviceDescItem1: "Загружать, делиться и открывать аудиоконтент (подкасты, музыку и др.)",
     serviceDescItem2: "Создавать и настраивать профили авторов",
     serviceDescItem3: "Взаимодействовать с другими пользователями",
@@ -2990,7 +2990,7 @@ const translations = {
     prohibitedItem1: "Загружать контент, призывающий к насилию или дискриминации",
     prohibitedItem2: "Преследовать или угрожать пользователям",
     prohibitedItem3: "Использовать платформу для мошенничества",
-    prohibitedItem4: "Пытаться взломать системы stream-in",
+    prohibitedItem4: "Пытаться взломать системы teleprt",
     prohibitedItem5: "Создавать мультиаккаунты для обхода банов",
     prohibitedItem6: "Распространять спам или вирусы",
     prohibitedItem7: "Выдавать себя за другое лицо",
@@ -3016,7 +3016,7 @@ const translations = {
     liabilityItem3: "Общая ответственность ограничена суммой, выплаченной вами за 12 месяцев",
     liabilityHighlight: "🛡️ Это ограничение применяется в максимально разрешенной законом степени.",
     indemnification: "Возмещение ущерба",
-    indemnificationContent: "Вы соглашаетесь оградить stream-in от претензий, возникших из-за вашего использования платформы или нарушения условий.",
+    indemnificationContent: "Вы соглашаетесь оградить teleprt от претензий, возникших из-за вашего использования платформы или нарушения условий.",
     indemnificationItem1: "Использование платформы",
     indemnificationItem2: "Нарушение условий",
     indemnificationItem3: "Нарушение прав третьих лиц",
@@ -3030,7 +3030,7 @@ const translations = {
     contactDisputes: "Контакты и споры",
     contactDisputesContent: "Свяжитесь с нами для решения вопросов.",
     contactDisputesHighlight: "⚖️ Споры решаются путем переговоров или через обязательный арбитраж.",
-    termsFooter: "© 2025 stream-in. Все права защищены. Если есть вопросы,",
+    termsFooter: "© 2025 teleprt. Все права защищены. Если есть вопросы,",
     contactUsLink: "свяжитесь с нами",
 
     // Terms Page Sections
@@ -3058,17 +3058,17 @@ const translations = {
     termsModificationsUs: "Изменения условий",
     contactAndDisputes: "Контакты и споры",
     termsTitleUs: "Условия использования",
-    termsSubtitleUs: "В stream-in нам важно, чтобы вы понимали свои права и обязанности.",
+    termsSubtitleUs: "В teleprt нам важно, чтобы вы понимали свои права и обязанности.",
     lastUpdatedUs: "Последнее обновление: Январь 2025",
 
-    usAboutPageTitle: "О stream-in",
+    usAboutPageTitle: "О teleprt",
     usAboutPageSubtitle:
-      "stream-in — новая стриминговая платформа в бета‑стадии. Здесь мы описываем нашу идею, как мы думаем об опыте зрителей и авторов, и какие границы считаем важными.",
+      "teleprt — новая стриминговая платформа в бета‑стадии. Здесь мы описываем нашу идею, как мы думаем об опыте зрителей и авторов, и какие границы считаем важными.",
     usAboutPageBetaLine: "Бета‑версия · Апрель 2026",
 
-    usSecWhatTitle: "Что такое stream-in?",
+    usSecWhatTitle: "Что такое teleprt?",
     usSecWhatP1:
-      "stream-in создаётся как альтернатива для стриминга с современным подходом: меньше произвольных запретов на высказывания и больше фокуса на том, чтобы продукт реально служил зрителям и создателям контента.",
+      "teleprt создаётся как альтернатива для стриминга с современным подходом: меньше произвольных запретов на высказывания и больше фокуса на том, чтобы продукт реально служил зрителям и создателям контента.",
     usSecWhatP2:
       "Мы в бете: развиваемся аккуратно, слушаем обратную связь и добавляем функции по мере роста платформы.",
     usSecWhatHighlight:
@@ -3084,7 +3084,7 @@ const translations = {
     usSecExperienceP1:
       "Мы не хотим платформу, забитую рекламой, или ленту, которая ощущается как билборд чужих интересов. Мы хотим быть устойчивым бизнесом — и хотим, чтобы авторы зарабатывали на своём контенте — поэтому реклама может быть, когда она поддерживает платформу. Главное — баланс: релевантно, уважительно и без того, чтобы реклама перекрывала то, ради чего вы пришли.",
     usSecExperienceP2:
-      "stream-in строится так, чтобы расти вместе с рекламодателями: «brand‑safe» и ориентировано на пользователя — где продвижение поддерживает экосистему, а не становится главным продуктом.",
+      "teleprt строится так, чтобы расти вместе с рекламодателями: «brand‑safe» и ориентировано на пользователя — где продвижение поддерживает экосистему, а не становится главным продуктом.",
 
     usSecMoneyTitle: "Монетизация для авторов, когда это станет возможно",
     usSecMoneyP1:
@@ -3100,7 +3100,7 @@ const translations = {
 
     usSecLimitsTitle: "Чёткие границы: чему здесь не место",
     usSecLimitsP1:
-      "Мы поддерживаем свободу выражения и против чрезмерной цензуры, но stream-in — не зона без правил. Мы против контента, который направлен на вред, эксплуатацию или дискриминацию.",
+      "Мы поддерживаем свободу выражения и против чрезмерной цензуры, но teleprt — не зона без правил. Мы против контента, который направлен на вред, эксплуатацию или дискриминацию.",
     usSecLimitsIntroList:
       "Запрещено загружать или продвигать, включая (но не ограничиваясь):",
     usSecLimitsItemThreat:
@@ -3120,7 +3120,7 @@ const translations = {
       "По общим вопросам, идеям или сообщениям о проблемах на платформе — пишите нам. Мы ценим прямой диалог со зрителями и авторами.",
 
     usAboutFooter:
-      "© 2026 stream-in — Платформа в бета‑стадии. Спасибо, что вы с нами с самого начала.",
+      "© 2026 teleprt — Платформа в бета‑стадии. Спасибо, что вы с нами с самого начала.",
 
     // Edit Video
     editVideo: "Редактировать видео",
@@ -3147,7 +3147,7 @@ const translations = {
     imageMax10Mb: "Изображение макс. 10 МБ",
     videoMax800Mb: "Видео макс. 800 МБ",
     uploadBetaLimitsHint:
-      "Бета stream-in: до 800 МБ на видео и 10 МБ на превью.",
+      "Бета teleprt: до 800 МБ на видео и 10 МБ на превью.",
     waitForUpload: "Дождитесь окончания загрузки",
     errorSaving: "Ошибка при сохранении",
     thumbnailImage: "Изображение миниатюры",
@@ -3240,7 +3240,7 @@ const translations = {
 
     // Settings
     settingsTitle: "Настройки",
-    settingsSubtitle: "Настройте stream-in под себя",
+    settingsSubtitle: "Настройте teleprt под себя",
     appearance: "Внешний вид",
     appearanceDesc: "Выберите визуальную тему платформы",
     dark: "Темная",
@@ -3320,7 +3320,7 @@ const translations = {
     linkCopied: "Ссылка скопирована в буфер обмена",
     close: "Закрыть",
     sharePlaylist: "Поделиться плейлистом",
-    sharePlaylistText: "Посмотри этот плейлист \"${playlistName}\" с ${videoCount} видео на stream-in!",
+    sharePlaylistText: "Посмотри этот плейлист \"${playlistName}\" с ${videoCount} видео на teleprt!",
 
     // Comments
     addComment: "Оставить комментарий...",
@@ -3370,7 +3370,7 @@ const translations = {
     noProfilesAvailable: "Нет доступных профилей",
     recent: "Недавние",
     noRecentVideos: "Нет недавних видео",
-    discoverPopular: "Узнайте, что популярно на stream-in",
+    discoverPopular: "Узнайте, что популярно на teleprt",
     errorLoadingData: "Ошибка загрузки данных",
     mostFollowedProfiles: "Самые популярные профили",
     mostRecentVideos: "Самые свежие видео",
@@ -3433,7 +3433,7 @@ const translations = {
     lightTheme: "浅色模式",
     sunsetTheme: "日落",
     betaBannerMessage:
-      "stream-in 当前为测试版。如果你想支持平台维护，可以进行捐赠或其他形式的支持。",
+      "teleprt 当前为测试版。如果你想支持平台维护，可以进行捐赠或其他形式的支持。",
     betaBannerDonate: "支持项目",
 
     // Sidebar (侧边栏)
@@ -3456,7 +3456,7 @@ const translations = {
     settings: "设置",
     report: "举报",
     help: "帮助",
-    bestOf: "stream-in 精选",
+    bestOf: "teleprt 精选",
     signInPrompt: "登录后即可点赞、评论和订阅。",
     signIn: "登录",
 
@@ -3530,7 +3530,7 @@ const translations = {
 
     // Sigin (登录)
     signinTitle: "欢迎回来",
-    signinSubtitle: "登录您的 stream-in 账号",
+    signinSubtitle: "登录您的 teleprt 账号",
     emailSignin: "电子邮箱",
     passwordSignin: "密码",
     signInButton: "登录",
@@ -3541,7 +3541,7 @@ const translations = {
     googleTitle: "快速访问",
     googleSubtitle: "使用 Google 账号瞬间登录",
     signInWithGoogle: "使用 Google 账号继续",
-    areYouNew: "第一次使用 stream-in 吗？",
+    areYouNew: "第一次使用 teleprt 吗？",
     createAccountSignin: "创建账号",
     resetPassword: "重置密码",
     resetPasswordSubtitle: "输入您的注册邮箱，我们将发送重置链接。",
@@ -3554,7 +3554,7 @@ const translations = {
 
     // Register (注册)
     registerTitle: "创建账号",
-    subtitleRegister: "加入 stream-in 社区",
+    subtitleRegister: "加入 teleprt 社区",
     userName: "用户名",
     emailRegister: "电子邮箱",
     passwordRegister: "密码",
@@ -3594,7 +3594,7 @@ const translations = {
 
     // Help (帮助中心)
     helpCenter: "帮助中心",
-    helpSubtitle: "查找常见问题解答、使用指南，获取充分利用 stream-in 所需的一切。",
+    helpSubtitle: "查找常见问题解答、使用指南，获取充分利用 teleprt 所需的一切。",
     searchHelp: "在帮助中心搜索...",
     helpCategories: "帮助类别",
     faq: "常见问题",
@@ -3616,7 +3616,7 @@ const translations = {
     generalSettingsDesc: "通知、语言、主题和偏好。",
 
     // Help FAQ (常见问题)
-    faq1Q: "如何在 stream-in 创建账号？",
+    faq1Q: "如何在 teleprt 创建账号？",
     faq1A: "点击右上角的“注册”按钮。填写包含姓名、邮箱和密码的表格。您将收到一封激活账号的确认邮件。",
     faq2Q: "如何向平台上传视频？",
     faq2A: "登录后，点击导航栏中的上传图标（向上箭头）。选择视频文件，添加标题、描述和封面图，然后点击“发布”。",
@@ -3631,7 +3631,7 @@ const translations = {
     faq7Q: "如何找回密码？",
     faq7A: "在登录界面点击“忘记密码？”。输入注册邮箱，我们将向您发送重置链接。",
     faq8Q: "有手机 App 吗？",
-    faq8A: "我们正在开发适用于 Android 和 iOS 的 stream-in 移动版。即将推出！目前，您可以通过手机浏览器访问。",
+    faq8A: "我们正在开发适用于 Android 和 iOS 的 teleprt 移动版。即将推出！目前，您可以通过手机浏览器访问。",
 
     // Help Quick Links (快速链接)
     techSupport: "技术支持",
@@ -3646,7 +3646,7 @@ const translations = {
 
     // Us (Terms - 条款)
     termsTitle: "条款与条例",
-    termsSubtitle: "在 stream-in，我们希望您了解您的权利和责任。我们尽可能清晰地编写了这些条款。",
+    termsSubtitle: "在 teleprt，我们希望您了解您的权利和责任。我们尽可能清晰地编写了这些条款。",
     lastUpdated: "最近更新：2025年1月",
     termsAndConditions: "服务条款",
     termsPageSubtitle: "请仔细阅读这些条款，以了解如何使用我们的流媒体平台",
@@ -3656,10 +3656,10 @@ const translations = {
     propertyOf: "所有权属于",
     haveQuestions: "有任何疑问？",
     acceptTerms: "接受条款",
-    acceptTermsContent: "通过访问和使用 stream-in，即表示您完全接受这些条款。如果您不同意其中的任何部分，请不要使用该平台。",
-    acceptTermsHighlight: "📌 修订后继续使用 stream-in 即表示您接受更新后的条款。",
+    acceptTermsContent: "通过访问和使用 teleprt，即表示您完全接受这些条款。如果您不同意其中的任何部分，请不要使用该平台。",
+    acceptTermsHighlight: "📌 修订后继续使用 teleprt 即表示您接受更新后的条款。",
     serviceDescription: "服务说明",
-    serviceDescContent: "stream-in 是一个允许用户进行以下操作的流媒体平台：",
+    serviceDescContent: "teleprt 是一个允许用户进行以下操作的流媒体平台：",
     serviceDescItem1: "上传、分享和发现音频内容（播客、音乐等）",
     serviceDescItem2: "创建和自定义创作者主页",
     serviceDescItem3: "与其他用户和创作者互动",
@@ -3673,12 +3673,12 @@ const translations = {
     userAccountsItem4: "如发现未经授权的使用，立即通知我们",
     userAccountsHighlight: "⚠️ 我们保留暂停或删除违反条款或长期不活跃账号的权利。",
     contentIP: "内容与知识产权",
-    contentIPContent: "您保留对上传到 stream-in 内容的所有权。但通过发布内容，您授予我们一项全球性的、非排他的、免版税的许可，允许我们在平台内使用、复制、修改、分发和展示该内容。",
+    contentIPContent: "您保留对上传到 teleprt 内容的所有权。但通过发布内容，您授予我们一项全球性的、非排他的、免版税的许可，允许我们在平台内使用、复制、修改、分发和展示该内容。",
     contentIPCommit: "您承诺您的内容：",
     contentIPItem1: "是原创的，或者您拥有分享该内容的必要权利",
     contentIPItem2: "不侵犯第三方的版权、商标或其他权利",
     contentIPItem3: "不包含诽谤、淫秽或非法材料",
-    contentIPHighlight: "🎵 如果您上传不属于您的音乐或音频，请确保拥有相应许可。stream-in 不对用户的侵权行为负责。",
+    contentIPHighlight: "🎵 如果您上传不属于您的音乐或音频，请确保拥有相应许可。teleprt 不对用户的侵权行为负责。",
     prohibitedConduct: "禁止行为",
     prohibitedConductContent: "为保持安全尊重的环境，严禁以下行为：",
     prohibitedItem1: "上传宣扬仇恨、暴力或歧视的内容",
@@ -3690,10 +3690,10 @@ const translations = {
     prohibitedItem7: "冒充他人或实体",
     prohibitedFooter: "违规行为可能导致账号被暂停或永久删除，恕不另行通知。",
     monetizationPayments: "获利与付款",
-    monetizationContent: "stream-in 为符合条件的创作者提供获利选项。具体条款包括：",
+    monetizationContent: "teleprt 为符合条件的创作者提供获利选项。具体条款包括：",
     monetizationItem1: "收入根据平台指标计算",
     monetizationItem2: "付款按预定时间表处理",
-    monetizationItem3: "stream-in 保留修改获利比率的权利",
+    monetizationItem3: "teleprt 保留修改获利比率的权利",
     monetizationItem4: "创作者负责其税务义务",
     monetizationHighlight: "💰 获利细节见《创作者协议》，该协议是对通用条款的补充。",
     privacyData: "隐私与数据保护",
@@ -3704,13 +3704,13 @@ const translations = {
     privacyItem4: "Cookies 和类似技术",
     privacyFooter: "我们实施技术安全措施保护您的信息。但没有任何系统是 100% 安全的，我们无法保证数据的绝对安全。",
     liability: "责任限制",
-    liabilityContent: "stream-in 按“原样”且“在可用时”提供。在法律允许的最大范围内：",
+    liabilityContent: "teleprt 按“原样”且“在可用时”提供。在法律允许的最大范围内：",
     liabilityItem1: "我们不保证服务不中断、安全或无错误",
     liabilityItem2: "我们不对间接、偶然或结果性损失负责",
-    liabilityItem3: "我们的总责任不会超过您在过去12个月内支付给 stream-in 的金额",
+    liabilityItem3: "我们的总责任不会超过您在过去12个月内支付给 teleprt 的金额",
     liabilityHighlight: "🛡️ 本限制在您所在辖区适用法律允许的最大范围内适用。",
     indemnification: "补偿",
-    indemnificationContent: "您同意赔偿并使 stream-in 及其员工免受因以下原因产生的任何索赔或损失：",
+    indemnificationContent: "您同意赔偿并使 teleprt 及其员工免受因以下原因产生的任何索赔或损失：",
     indemnificationItem1: "您对平台的使用",
     indemnificationItem2: "您违反本条款的行为",
     indemnificationItem3: "您侵犯第三方权利的行为",
@@ -3724,7 +3724,7 @@ const translations = {
     contactDisputes: "联系与争议处理",
     contactDisputesContent: "如果您对条款有疑问或需要报告问题，可以通过以下方式联系：",
     contactDisputesHighlight: "⚖️ 任何争议将首先通过诚信谈判解决。如无法达成协议，将根据当地法律提交具有约束力的仲裁。",
-    termsFooter: "© 2025 stream-in. 保留所有权利。如果您有疑问，请随时",
+    termsFooter: "© 2025 teleprt. 保留所有权利。如果您有疑问，请随时",
     contactUsLink: "联系我们",
 
     // Terms Page Sections (条款页面章节标题)
@@ -3752,17 +3752,17 @@ const translations = {
     termsModificationsUs: "条款修订",
     contactAndDisputes: "联系与争议处理",
     termsTitleUs: "条款与协议",
-    termsSubtitleUs: "在 stream-in，我们希望您了解您的权利和责任。",
+    termsSubtitleUs: "在 teleprt，我们希望您了解您的权利和责任。",
     lastUpdatedUs: "最后更新：2025年1月",
 
-    usAboutPageTitle: "关于 stream-in",
+    usAboutPageTitle: "关于 teleprt",
     usAboutPageSubtitle:
-      "stream-in 是一个处于 Beta 阶段的新流媒体平台。在这里我们介绍愿景、如何兼顾观众与创作者体验，以及我们坚持的边界与底线。",
+      "teleprt 是一个处于 Beta 阶段的新流媒体平台。在这里我们介绍愿景、如何兼顾观众与创作者体验，以及我们坚持的边界与底线。",
     usAboutPageBetaLine: "Beta 版本 · 2026 年 4 月",
 
-    usSecWhatTitle: "什么是 stream-in？",
+    usSecWhatTitle: "什么是 teleprt？",
     usSecWhatP1:
-      "stream-in 作为一种流媒体新选择诞生：减少不透明、过度的限制，把重心放在真正服务观众与内容创作者的产品体验上。",
+      "teleprt 作为一种流媒体新选择诞生：减少不透明、过度的限制，把重心放在真正服务观众与内容创作者的产品体验上。",
     usSecWhatP2:
       "我们仍在 Beta：稳步迭代、倾听反馈，并随着平台成长不断完善功能。",
     usSecWhatHighlight:
@@ -3778,7 +3778,7 @@ const translations = {
     usSecExperienceP1:
       "我们不希望平台被广告塞满，也不希望信息流像无关利益的广告牌。我们需要可持续经营，也希望创作者能通过内容获得收益，因此在支持平台的前提下可以有广告。关键是平衡：广告要相关、克制、尊重用户，不应淹没你想看的内容。",
     usSecExperienceP2:
-      "stream-in 也希望与广告主共同成长：在保证品牌安全的同时坚持用户优先，让推广支持生态，而不是把“投放”变成平台的主产品。",
+      "teleprt 也希望与广告主共同成长：在保证品牌安全的同时坚持用户优先，让推广支持生态，而不是把“投放”变成平台的主产品。",
 
     usSecMoneyTitle: "创作者变现：在平台具备条件时推出",
     usSecMoneyP1:
@@ -3794,7 +3794,7 @@ const translations = {
 
     usSecLimitsTitle: "明确底线：哪些内容不允许",
     usSecLimitsP1:
-      "我们支持表达自由、反对过度审查，但 stream-in 不是无规则地带。我们反对任何旨在伤害、剥削或歧视的内容。",
+      "我们支持表达自由、反对过度审查，但 teleprt 不是无规则地带。我们反对任何旨在伤害、剥削或歧视的内容。",
     usSecLimitsIntroList: "禁止上传或传播（包括但不限于）：",
     usSecLimitsItemThreat: "威胁或煽动对个人/群体实施伤害。",
     usSecLimitsItemViolence: "纯粹以血腥冲击为目的的露骨暴力内容。",
@@ -3809,7 +3809,7 @@ const translations = {
       "如有一般问题、建议或平台相关举报，欢迎联系我们。我们重视与观众和创作者的直接沟通。",
 
     usAboutFooter:
-      "© 2026 stream-in — Beta 平台。感谢你参与这一段起步。",
+      "© 2026 teleprt — Beta 平台。感谢你参与这一段起步。",
 
     // Edit Video (编辑视频)
     editVideo: "编辑视频",
@@ -3836,7 +3836,7 @@ const translations = {
     imageMax10Mb: "图片最大 10 MB",
     videoMax800Mb: "视频最大 800 MB",
     uploadBetaLimitsHint:
-      "stream-in 测试版：单视频最大 800 MB，缩略图最大 10 MB。",
+      "teleprt 测试版：单视频最大 800 MB，缩略图最大 10 MB。",
     waitForUpload: "请等待上传完成",
     errorSaving: "保存出错",
     thumbnailImage: "视频封面",
@@ -3927,7 +3927,7 @@ const translations = {
 
     // Settings (设置)
     settingsTitle: "设置",
-    settingsSubtitle: "自定义您的 stream-in 体验",
+    settingsSubtitle: "自定义您的 teleprt 体验",
     appearance: "外观",
     appearanceDesc: "选择平台的视觉主题",
     dark: "深色",
@@ -4005,7 +4005,7 @@ const translations = {
     linkCopied: "链接已复制到剪贴板",
     close: "关闭",
     sharePlaylist: "分享播放列表",
-    sharePlaylistText: "快来 stream-in 看看这个包含 ${videoCount} 个视频的播放列表 \"${playlistName}\"！",
+    sharePlaylistText: "快来 teleprt 看看这个包含 ${videoCount} 个视频的播放列表 \"${playlistName}\"！",
 
     // Comments (评论)
     addComment: "写下你的评论...",
@@ -4055,7 +4055,7 @@ const translations = {
     noProfilesAvailable: "暂无个人资料",
     recent: "最新",
     noRecentVideos: "暂无最新视频",
-    discoverPopular: "发现 stream-in 上的热门内容",
+    discoverPopular: "发现 teleprt 上的热门内容",
     errorLoadingData: "加载数据出错",
     mostFollowedProfiles: "最多关注的个人资料",
     mostRecentVideos: "最新视频",
@@ -4118,7 +4118,7 @@ const translations = {
     lightTheme: "ライトモード",
     sunsetTheme: "サンセット",
     betaBannerMessage:
-      "stream-in は現在ベータ版です。プラットフォーム運営を支援したい場合は、寄付や貢献をお願いします。",
+      "teleprt は現在ベータ版です。プラットフォーム運営を支援したい場合は、寄付や貢献をお願いします。",
     betaBannerDonate: "プロジェクトを支援",
 
     // Sidebar (サイドバー)
@@ -4141,7 +4141,7 @@ const translations = {
     settings: "設定",
     report: "報告",
     help: "ヘルプ",
-    bestOf: "stream-in ベスト",
+    bestOf: "teleprt ベスト",
     signInPrompt: "ログインすると、評価、コメント、チャンネル登録ができます。",
     signIn: "ログイン",
 
@@ -4216,7 +4216,7 @@ const translations = {
 
     // Sigin (ログイン)
     signinTitle: "おかえりなさい",
-    signinSubtitle: "stream-in アカウントにログイン",
+    signinSubtitle: "teleprt アカウントにログイン",
     emailSignin: "メールアドレス",
     passwordSignin: "パスワード",
     signInButton: "ログイン",
@@ -4227,7 +4227,7 @@ const translations = {
     googleTitle: "クイックアクセス",
     googleSubtitle: "Google アカウントですぐにログイン",
     signInWithGoogle: "Google で続行",
-    areYouNew: "stream-in は初めてですか？",
+    areYouNew: "teleprt は初めてですか？",
     createAccountSignin: "アカウントを作成",
     resetPassword: "パスワードをリセット",
     resetPasswordSubtitle: "登録したメールアドレスを入力してください。リセット用リンクをお送りします。",
@@ -4240,7 +4240,7 @@ const translations = {
 
     // Register (登録)
     registerTitle: "アカウント作成",
-    subtitleRegister: "stream-in コミュニティに参加しましょう",
+    subtitleRegister: "teleprt コミュニティに参加しましょう",
     userName: "ユーザー名",
     emailRegister: "メールアドレス",
     passwordRegister: "パスワード",
@@ -4280,7 +4280,7 @@ const translations = {
 
     // Help (ヘルプ)
     helpCenter: "ヘルプセンター",
-    helpSubtitle: "質問への回答やガイドなど、stream-inを活用するための情報をご案内します。",
+    helpSubtitle: "質問への回答やガイドなど、teleprtを活用するための情報をご案内します。",
     searchHelp: "ヘルプを検索...",
     helpCategories: "カテゴリ",
     faq: "よくある質問",
@@ -4332,7 +4332,7 @@ const translations = {
 
     // Us (Terms - 利用規約)
     termsTitle: "利用規約",
-    termsSubtitle: "stream-in では、ユーザーの権利と責任を明確にするため、わかりやすい規約を心がけています。",
+    termsSubtitle: "teleprt では、ユーザーの権利と責任を明確にするため、わかりやすい規約を心がけています。",
     lastUpdated: "最終更新：2025年1月",
     termsAndConditions: "利用規約",
     termsPageSubtitle: "プラットフォームを正しくご利用いただくために、本規約をよくお読みください",
@@ -4342,10 +4342,10 @@ const translations = {
     propertyOf: "所有権：",
     haveQuestions: "ご質問がありますか？",
     acceptTerms: "規約への同意",
-    acceptTermsContent: "stream-in を利用することで、本規約に同意したものとみなされます。同意できない場合は利用を控えてください。",
+    acceptTermsContent: "teleprt を利用することで、本規約に同意したものとみなされます。同意できない場合は利用を控えてください。",
     acceptTermsHighlight: "📌 規約変更後の利用継続は、変更後の規約への同意を意味します。",
     serviceDescription: "サービス内容",
-    serviceDescContent: "stream-in は以下の機能を提供します：",
+    serviceDescContent: "teleprt は以下の機能を提供します：",
     serviceDescItem1: "音声・動画コンテンツ（ポッドキャスト、音楽等）の投稿・共有・発見",
     serviceDescItem2: "クリエイタープロフィールの作成・カスタマイズ",
     serviceDescItem3: "他のユーザーやクリエイターとの交流",
@@ -4406,7 +4406,7 @@ const translations = {
     contactDisputes: "連絡先と紛争解決",
     contactDisputesContent: "質問や問題報告は窓口までご連絡ください。",
     contactDisputesHighlight: "⚖️ 紛争はまず誠実な協議により解決を目指し、解決しない場合は管轄の法律に従い仲裁に委ねるものとします。",
-    termsFooter: "© 2025 stream-in. All Rights Reserved. ご不明な点は",
+    termsFooter: "© 2025 teleprt. All Rights Reserved. ご不明な点は",
     contactUsLink: "お問い合わせください",
 
     // Terms Page Sections
@@ -4434,17 +4434,17 @@ const translations = {
     termsModificationsUs: "規約の変更",
     contactAndDisputes: "連絡先と紛争解決",
     termsTitleUs: "利用規約",
-    termsSubtitleUs: "stream-in では、ユーザーの権利と責任を明確にすることを重視しています。",
+    termsSubtitleUs: "teleprt では、ユーザーの権利と責任を明確にすることを重視しています。",
     lastUpdatedUs: "最終更新：2025年1月",
 
-    usAboutPageTitle: "stream-in について",
+    usAboutPageTitle: "teleprt について",
     usAboutPageSubtitle:
-      "stream-in はベータ版として始まった新しいストリーミング・プラットフォームです。私たちのビジョン、視聴者とクリエイター双方の体験の考え方、そして守るべき境界線を説明します。",
+      "teleprt はベータ版として始まった新しいストリーミング・プラットフォームです。私たちのビジョン、視聴者とクリエイター双方の体験の考え方、そして守るべき境界線を説明します。",
     usAboutPageBetaLine: "ベータ版 · 2026年4月",
 
-    usSecWhatTitle: "stream-in とは？",
+    usSecWhatTitle: "teleprt とは？",
     usSecWhatP1:
-      "stream-in は、発言を不透明に縛る過度な制限を減らし、視聴者とクリエイターのための体験を第一に設計したストリーミングの新しい選択肢です。",
+      "teleprt は、発言を不透明に縛る過度な制限を減らし、視聴者とクリエイターのための体験を第一に設計したストリーミングの新しい選択肢です。",
     usSecWhatP2:
       "現在はベータ版です。慎重に改善を重ね、フィードバックを聞きながら機能を追加していきます。",
     usSecWhatHighlight:
@@ -4460,7 +4460,7 @@ const translations = {
     usSecExperienceP1:
       "広告だらけのサイトや、無関係な利害の看板のようなフィードにはしたくありません。一方で、プラットフォームの継続とクリエイターの収益のために、広告が支えになる場面はあります。要点はバランスで、広告は関連性があり、節度があり、見たいコンテンツを圧倒しないことです。",
     usSecExperienceP2:
-      "stream-in は広告主とも共に成長したいと考えています。ブランドセーフでユーザーファーストな体験の中で、広告がエコシステムを支え、主役にならない設計を目指します。",
+      "teleprt は広告主とも共に成長したいと考えています。ブランドセーフでユーザーファーストな体験の中で、広告がエコシステムを支え、主役にならない設計を目指します。",
 
     usSecMoneyTitle: "収益化は、持続可能になった段階で",
     usSecMoneyP1:
@@ -4476,7 +4476,7 @@ const translations = {
 
     usSecLimitsTitle: "明確な線引き：許容しないもの",
     usSecLimitsP1:
-      "私たちは表現の自由を尊重し、過度な検閲に反対しますが、stream-in は無秩序な場所ではありません。害を与える、搾取する、差別する目的のコンテンツには反対します。",
+      "私たちは表現の自由を尊重し、過度な検閲に反対しますが、teleprt は無秩序な場所ではありません。害を与える、搾取する、差別する目的のコンテンツには反対します。",
     usSecLimitsIntroList: "以下のアップロード／拡散は禁止です（例）：",
     usSecLimitsItemThreat: "個人または集団への脅迫、危害の扇動。",
     usSecLimitsItemViolence:
@@ -4493,7 +4493,7 @@ const translations = {
       "一般的な質問、提案、プラットフォームに関する報告はご連絡ください。視聴者とクリエイターの直接的な対話を大切にしています。",
 
     usAboutFooter:
-      "© 2026 stream-in — ベータ版プラットフォーム。立ち上げに参加してくれてありがとうございます。",
+      "© 2026 teleprt — ベータ版プラットフォーム。立ち上げに参加してくれてありがとうございます。",
 
     // Edit Video (動画編集)
     editVideo: "動画の編集",
@@ -4520,7 +4520,7 @@ const translations = {
     imageMax10Mb: "画像最大 10 MB",
     videoMax800Mb: "動画最大 800 MB",
     uploadBetaLimitsHint:
-      "stream-in ベータ：動画は最大 800 MB、サムネイルは最大 10 MB。",
+      "teleprt ベータ：動画は最大 800 MB、サムネイルは最大 10 MB。",
     waitForUpload: "アップロード完了をお待ちください",
     errorSaving: "保存エラー",
     thumbnailImage: "サムネイル画像",
@@ -4689,7 +4689,7 @@ const translations = {
     linkCopied: "リンクをクリップボードにコピーしました",
     close: "閉じる",
     sharePlaylist: "プレイリストを共有",
-    sharePlaylistText: "stream-in でプレイリスト「${playlistName}」（全 ${videoCount} 本）をチェック！",
+    sharePlaylistText: "teleprt でプレイリスト「${playlistName}」（全 ${videoCount} 本）をチェック！",
 
     // Comments
     addComment: "コメントを追加...",
@@ -4733,7 +4733,7 @@ const translations = {
     noProfilesAvailable: "利用可能なプロフィールなし",
     recent: "最新",
     noRecentVideos: "最近の動画なし",
-    discoverPopular: "stream-in の注目コンテンツをチェック",
+    discoverPopular: "teleprt の注目コンテンツをチェック",
     errorLoadingData: "データ読み込みエラー",
     mostFollowedProfiles: "人気プロフィール",
     mostRecentVideos: "最新動画",
@@ -4796,7 +4796,7 @@ const translations = {
     lightTheme: "Mode clair",
     sunsetTheme: "Coucher de soleil",
     betaBannerMessage:
-      "stream-in est en version bêta. Si vous souhaitez soutenir la maintenance de la plateforme, vous pouvez faire un don ou contribuer.",
+      "teleprt est en version bêta. Si vous souhaitez soutenir la maintenance de la plateforme, vous pouvez faire un don ou contribuer.",
     betaBannerDonate: "Soutenir le projet",
 
     // Sidebar (Barre latérale)
@@ -4819,7 +4819,7 @@ const translations = {
     settings: "Paramètres",
     report: "Signaler",
     help: "Aide",
-    bestOf: "Le meilleur de stream-in",
+    bestOf: "Le meilleur de teleprt",
     signInPrompt: "Connectez-vous pour aimer, commenter et vous abonner.",
     signIn: "Se connecter",
 
@@ -4894,7 +4894,7 @@ const translations = {
 
     // Sigin (Connexion)
     signinTitle: "Bon retour parmi nous",
-    signinSubtitle: "Connectez-vous à votre compte stream-in",
+    signinSubtitle: "Connectez-vous à votre compte teleprt",
     emailSignin: "E-mail",
     passwordSignin: "Mot de passe",
     signInButton: "Connexion",
@@ -4905,7 +4905,7 @@ const translations = {
     googleTitle: "Accès rapide",
     googleSubtitle: "Connectez-vous instantanément avec Google",
     signInWithGoogle: "Continuer avec Google",
-    areYouNew: "Nouveau sur stream-in ?",
+    areYouNew: "Nouveau sur teleprt ?",
     createAccountSignin: "Créer un compte",
     resetPassword: "Réinitialiser le mot de passe",
     resetPasswordSubtitle: "Entrez votre e-mail pour recevoir un lien de récupération.",
@@ -4918,7 +4918,7 @@ const translations = {
 
     // Register (Inscription)
     registerTitle: "Créer un compte",
-    subtitleRegister: "Rejoignez la communauté stream-in",
+    subtitleRegister: "Rejoignez la communauté teleprt",
     userName: "Nom d'utilisateur",
     emailRegister: "E-mail",
     passwordRegister: "Mot de passe",
@@ -4958,7 +4958,7 @@ const translations = {
 
     // Help (Centre d'aide)
     helpCenter: "Centre d'aide",
-    helpSubtitle: "Trouvez des réponses, des guides et tout le nécessaire pour profiter de stream-in.",
+    helpSubtitle: "Trouvez des réponses, des guides et tout le nécessaire pour profiter de teleprt.",
     searchHelp: "Chercher dans l'aide...",
     helpCategories: "Catégories",
     faq: "FAQ",
@@ -4993,7 +4993,7 @@ const translations = {
 
     // Us (Conditions de service)
     termsTitle: "Conditions Générales",
-    termsSubtitle: "Chez stream-in, nous voulons que vous compreniez vos droits et responsabilités.",
+    termsSubtitle: "Chez teleprt, nous voulons que vous compreniez vos droits et responsabilités.",
     lastUpdated: "Dernière mise à jour : Janvier 2025",
     termsAndConditions: "Conditions d'utilisation",
     termsPageSubtitle: "Veuillez lire attentivement ces conditions pour utiliser notre plateforme",
@@ -5003,9 +5003,9 @@ const translations = {
     propertyOf: "Propriété de",
     haveQuestions: "Des questions ?",
     acceptTerms: "Acceptation des conditions",
-    acceptTermsContent: "En utilisant stream-in, vous acceptez pleinement ces conditions. Si vous n'êtes pas d'accord, n'utilisez pas la plateforme.",
+    acceptTermsContent: "En utilisant teleprt, vous acceptez pleinement ces conditions. Si vous n'êtes pas d'accord, n'utilisez pas la plateforme.",
     serviceDescription: "Description du service",
-    serviceDescContent: "stream-in permet aux utilisateurs de :",
+    serviceDescContent: "teleprt permet aux utilisateurs de :",
     serviceDescItem1: "Uploader, partager et découvrir du contenu audio et vidéo",
     serviceDescItem2: "Créer et personnaliser des profils de créateurs",
     serviceDescItem3: "Interagir avec la communauté",
@@ -5021,8 +5021,8 @@ const translations = {
     privacyData: "Confidentialité et Données",
     privacyContent: "Vos données sont traitées selon notre politique de confidentialité.",
     liability: "Limitation de responsabilité",
-    liabilityContent: "stream-in est fourni 'en l'état' sans garantie absolue de fonctionnement ininterrompu.",
-    termsFooter: "© 2025 stream-in. Tous droits réservés. Des questions ? ",
+    liabilityContent: "teleprt est fourni 'en l'état' sans garantie absolue de fonctionnement ininterrompu.",
+    termsFooter: "© 2025 teleprt. Tous droits réservés. Des questions ? ",
     contactUsLink: "Contactez-nous",
 
     // Edit Video (Modification vidéo)
@@ -5050,7 +5050,7 @@ const translations = {
     imageMax10Mb: "Image max 10 Mo",
     videoMax800Mb: "Vidéo max 800 Mo",
     uploadBetaLimitsHint:
-      "Bêta stream-in : jusqu'à 800 Mo par vidéo et 10 Mo pour la miniature.",
+      "Bêta teleprt : jusqu'à 800 Mo par vidéo et 10 Mo pour la miniature.",
     waitForUpload: "Veuillez attendre la fin de l'upload",
     errorSaving: "Erreur lors de l'enregistrement",
     thumbnailImage: "Image de miniature",
@@ -5128,7 +5128,7 @@ const translations = {
 
     // Settings (Paramètres)
     settingsTitle: "Paramètres",
-    settingsSubtitle: "Personnalisez votre expérience stream-in",
+    settingsSubtitle: "Personnalisez votre expérience teleprt",
     appearance: "Apparence",
     appearanceDesc: "Choisissez le thème visuel",
     dark: "Sombre",
@@ -5256,15 +5256,15 @@ const translations = {
     playlistVideos: "Videos de la playlist",
     nowPlaying: "En cours de lecture",
 
-    // Us / About stream-in (Beta)
-    usAboutPageTitle: "À propos de stream-in",
+    // Us / About teleprt (Beta)
+    usAboutPageTitle: "À propos de teleprt",
     usAboutPageSubtitle:
-      "stream-in est une nouvelle plateforme de streaming en phase bêta. Ici, nous partageons notre vision, notre approche pour l’expérience des spectateurs et des créateurs, ainsi que les limites que nous défendons.",
+      "teleprt est une nouvelle plateforme de streaming en phase bêta. Ici, nous partageons notre vision, notre approche pour l’expérience des spectateurs et des créateurs, ainsi que les limites que nous défendons.",
     usAboutPageBetaLine: "Version bêta · Avril 2026",
 
-    usSecWhatTitle: "Qu’est-ce que stream-in ?",
+    usSecWhatTitle: "Qu’est-ce que teleprt ?",
     usSecWhatP1:
-      "stream-in est une alternative de streaming avec une idée simple : moins de barrières arbitraires sur ce qui peut être dit, et davantage de focus sur un produit qui sert réellement le public et les créateurs.",
+      "teleprt est une alternative de streaming avec une idée simple : moins de barrières arbitraires sur ce qui peut être dit, et davantage de focus sur un produit qui sert réellement le public et les créateurs.",
     usSecWhatP2:
       "Nous sommes en bêta : nous avançons avec soin, écoutons les retours et ajoutons des fonctionnalités au fil de la croissance.",
     usSecWhatHighlight:
@@ -5280,7 +5280,7 @@ const translations = {
     usSecExperienceP1:
       "Nous ne voulons pas d’un site saturé de pubs ni d’un fil qui ressemble à un panneau publicitaire d’intérêts sans rapport. Nous voulons être rentables et permettre aux créateurs de gagner grâce à leur contenu, donc la publicité peut exister lorsqu’elle soutient la plateforme. L’essentiel, c’est l’équilibre : pertinente, respectueuse, et jamais au point d’étouffer ce que vous êtes venu regarder.",
     usSecExperienceP2:
-      "stream-in est pensée pour grandir avec les annonceurs (pas contre eux) : une expérience « brand-safe » et centrée utilisateur, où la promotion soutient l’écosystème sans devenir le produit principal.",
+      "teleprt est pensée pour grandir avec les annonceurs (pas contre eux) : une expérience « brand-safe » et centrée utilisateur, où la promotion soutient l’écosystème sans devenir le produit principal.",
 
     usSecMoneyTitle: "Monétisation des créateurs quand ce sera viable",
     usSecMoneyP1:
@@ -5296,7 +5296,7 @@ const translations = {
 
     usSecLimitsTitle: "Limites claires : ce qui n’a pas sa place",
     usSecLimitsP1:
-      "Nous soutenons la liberté d’expression et refusons la censure excessive, mais stream-in n’est pas une zone sans règles. Nous refusons tout contenu visant à nuire, exploiter ou discriminer.",
+      "Nous soutenons la liberté d’expression et refusons la censure excessive, mais teleprt n’est pas une zone sans règles. Nous refusons tout contenu visant à nuire, exploiter ou discriminer.",
     usSecLimitsIntroList:
       "Il est interdit de publier ou de promouvoir, notamment :",
     usSecLimitsItemThreat: "Menaces ou incitation à nuire à des personnes ou groupes.",
@@ -5315,7 +5315,7 @@ const translations = {
       "Pour toute question générale, idée ou signalement lié à la plateforme, contactez-nous. Nous valorisons le dialogue direct avec les spectateurs et les créateurs.",
 
     usAboutFooter:
-      "© 2026 stream-in — Plateforme en bêta. Merci de faire partie du lancement.",
+      "© 2026 teleprt — Plateforme en bêta. Merci de faire partie du lancement.",
   },
 
   hi: {
@@ -5330,7 +5330,7 @@ const translations = {
     lightTheme: "लाइट मोड",
     sunsetTheme: "सूर्यास्त",
     betaBannerMessage:
-      "stream-in अभी बीटा संस्करण में है। यदि आप प्लेटफ़ॉर्म के रखरखाव में सहयोग करना चाहते हैं, तो दान या योगदान कर सकते हैं।",
+      "teleprt अभी बीटा संस्करण में है। यदि आप प्लेटफ़ॉर्म के रखरखाव में सहयोग करना चाहते हैं, तो दान या योगदान कर सकते हैं।",
     betaBannerDonate: "प्रोजेक्ट को सहयोग दें",
 
     // Sidebar (साइडबार)
@@ -5353,7 +5353,7 @@ const translations = {
     settings: "सेटिंग्स",
     report: "रिपोर्ट करें",
     help: "सहायता",
-    bestOf: "stream-in का सर्वश्रेष्ठ",
+    bestOf: "teleprt का सर्वश्रेष्ठ",
     signInPrompt: "वीडियो पसंद करने, कमेंट करने और सब्सक्राइब करने के लिए लॉगिन करें।",
     signIn: "लॉगिन करें",
 
@@ -5428,7 +5428,7 @@ const translations = {
 
     // Signin (लॉगिन)
     signinTitle: "वापसी पर स्वागत है",
-    signinSubtitle: "अपने stream-in अकाउंट में लॉगिन करें",
+    signinSubtitle: "अपने teleprt अकाउंट में लॉगिन करें",
     emailSignin: "ईमेल",
     passwordSignin: "पासवर्ड",
     signInButton: "लॉगिन करें",
@@ -5439,7 +5439,7 @@ const translations = {
     googleTitle: "त्वरित पहुँच",
     googleSubtitle: "Google के साथ तुरंत लॉगिन करें",
     signInWithGoogle: "Google के साथ जारी रखें",
-    areYouNew: "stream-in पर नए हैं?",
+    areYouNew: "teleprt पर नए हैं?",
     createAccountSignin: "अकाउंट बनाएं",
     resetPassword: "पासवर्ड रीसेट करें",
     resetPasswordSubtitle: "अपना ईमेल दर्ज करें, हम आपको रीसेट लिंक भेजेंगे।",
@@ -5452,7 +5452,7 @@ const translations = {
 
     // Register (रजिस्टर)
     registerTitle: "अकाउंट बनाएं",
-    subtitleRegister: "stream-in समुदाय में शामिल हों",
+    subtitleRegister: "teleprt समुदाय में शामिल हों",
     userName: "यूज़रनेम",
     emailRegister: "ईमेल",
     passwordRegister: "पासवर्ड",
@@ -5492,7 +5492,7 @@ const translations = {
 
     // Help (सहायता केंद्र)
     helpCenter: "सहायता केंद्र",
-    helpSubtitle: "उत्तर, गाइड और stream-in का अधिकतम लाभ उठाने के लिए आवश्यक सब कुछ खोजें।",
+    helpSubtitle: "उत्तर, गाइड और teleprt का अधिकतम लाभ उठाने के लिए आवश्यक सब कुछ खोजें।",
     searchHelp: "सहायता खोजें...",
     helpCategories: "सहायता श्रेणियाँ",
     faq: "अक्सर पूछे जाने वाले प्रश्न (FAQ)",
@@ -5523,7 +5523,7 @@ const translations = {
 
     // Us (शर्तें - Terms)
     termsTitle: "नियम और शर्तें",
-    termsSubtitle: "stream-in में, हम चाहते हैं कि आप अपने अधिकारों और जिम्मेदारियों को समझें।",
+    termsSubtitle: "teleprt में, हम चाहते हैं कि आप अपने अधिकारों और जिम्मेदारियों को समझें।",
     lastUpdated: "अंतिम अपडेट: जनवरी 2025",
     termsAndConditions: "उपयोग की शर्तें",
     termsPageSubtitle: "प्लेटफ़ॉर्म का उपयोग करने के लिए कृपया इन शर्तों को ध्यान से पढ़ें",
@@ -5533,9 +5533,9 @@ const translations = {
     propertyOf: "की संपत्ति",
     haveQuestions: "कोई प्रश्न है?",
     acceptTerms: "शर्तों की स्वीकृति",
-    acceptTermsContent: "stream-in का उपयोग करके, आप इन शर्तों को पूरी तरह स्वीकार करते हैं।",
+    acceptTermsContent: "teleprt का उपयोग करके, आप इन शर्तों को पूरी तरह स्वीकार करते हैं।",
     serviceDescription: "सेवा का विवरण",
-    serviceDescContent: "stream-in उपयोगकर्ताओं को अनुमति देता है:",
+    serviceDescContent: "teleprt उपयोगकर्ताओं को अनुमति देता है:",
     serviceDescItem1: "ऑडियो और वीडियो सामग्री अपलोड, साझा और खोजना",
     serviceDescItem2: "रचनाकार प्रोफाइल बनाना और कस्टमाइज़ करना",
     serviceDescItem3: "समुदाय के साथ बातचीत करना",
@@ -5550,8 +5550,8 @@ const translations = {
     privacyData: "गोपनीयता और डेटा",
     privacyContent: "आपका डेटा हमारी गोपनीयता नीति के अनुसार संसाधित किया जाता है।",
     liability: "देयता की सीमा",
-    liabilityContent: "stream-in को 'जैसा है' वैसा ही प्रदान किया जाता है।",
-    termsFooter: "© 2025 stream-in. सर्वाधिकार सुरक्षित। प्रश्न? ",
+    liabilityContent: "teleprt को 'जैसा है' वैसा ही प्रदान किया जाता है।",
+    termsFooter: "© 2025 teleprt. सर्वाधिकार सुरक्षित। प्रश्न? ",
     contactUsLink: "संपर्क करें",
 
     // Edit Video (वीडियो संपादित करें)
@@ -5579,7 +5579,7 @@ const translations = {
     imageMax10Mb: "छवि अधिकतम 10 MB",
     videoMax800Mb: "वीडियो अधिकतम 800 MB",
     uploadBetaLimitsHint:
-      "stream-in बीटा: प्रति वीडियो 800 MB तक, थंबनेल 10 MB तक।",
+      "teleprt बीटा: प्रति वीडियो 800 MB तक, थंबनेल 10 MB तक।",
     waitForUpload: "कृपया अपलोड समाप्त होने की प्रतीक्षा करें",
     errorSaving: "सहेजने में त्रुटि",
     thumbnailImage: "थंबनेल छवि",
@@ -5657,7 +5657,7 @@ const translations = {
 
     // Settings (सेटिंग्स)
     settingsTitle: "सेटिंग्स",
-    settingsSubtitle: "अपने stream-in अनुभव को कस्टमाइज़ करें",
+    settingsSubtitle: "अपने teleprt अनुभव को कस्टमाइज़ करें",
     appearance: "दिखावट (Appearance)",
     appearanceDesc: "दृश्य थीम चुनें",
     dark: "डार्क",
@@ -5785,15 +5785,15 @@ const translations = {
     playlistVideos: "प्लेलिस्ट वीडियो",
     nowPlaying: "अभी चल रहा है",
 
-    // Us / About stream-in (Beta)
-    usAboutPageTitle: "stream-in के बारे में",
+    // Us / About teleprt (Beta)
+    usAboutPageTitle: "teleprt के बारे में",
     usAboutPageSubtitle:
-      "stream-in एक नई स्ट्रीमिंग प्लेटफ़ॉर्म है जो बीटा चरण में है। यहाँ हम अपना विज़न, दर्शकों और क्रिएटर्स के अनुभव को लेकर हमारा दृष्टिकोण, और जिन सीमाओं पर हम स्पष्ट हैं, साझा करते हैं।",
+      "teleprt एक नई स्ट्रीमिंग प्लेटफ़ॉर्म है जो बीटा चरण में है। यहाँ हम अपना विज़न, दर्शकों और क्रिएटर्स के अनुभव को लेकर हमारा दृष्टिकोण, और जिन सीमाओं पर हम स्पष्ट हैं, साझा करते हैं।",
     usAboutPageBetaLine: "बीटा रिलीज़ · अप्रैल 2026",
 
-    usSecWhatTitle: "stream-in क्या है?",
+    usSecWhatTitle: "teleprt क्या है?",
     usSecWhatP1:
-      "stream-in एक स्ट्रीमिंग विकल्प के रूप में बना है—जहाँ अभिव्यक्ति पर अनावश्यक/मनमानी रोक कम हो और असली फोकस दर्शकों व कंटेंट क्रिएटर्स के लिए बेहतर अनुभव पर हो।",
+      "teleprt एक स्ट्रीमिंग विकल्प के रूप में बना है—जहाँ अभिव्यक्ति पर अनावश्यक/मनमानी रोक कम हो और असली फोकस दर्शकों व कंटेंट क्रिएटर्स के लिए बेहतर अनुभव पर हो।",
     usSecWhatP2:
       "हम बीटा में हैं: सोच-समझकर सुधार करते हैं, फीडबैक सुनते हैं, और प्लेटफ़ॉर्म के बढ़ने के साथ फीचर्स जोड़ते हैं।",
     usSecWhatHighlight:
@@ -5809,7 +5809,7 @@ const translations = {
     usSecExperienceP1:
       "हम नहीं चाहते कि प्लेटफ़ॉर्म विज्ञापनों से भरा हो या फ़ीड किसी बिलबोर्ड जैसा लगे। हम टिकाऊ बिज़नेस बनना चाहते हैं और क्रिएटर्स को उनके कंटेंट से कमाई करने देना चाहते हैं, इसलिए प्लेटफ़ॉर्म को सपोर्ट करने के लिए विज्ञापन हो सकते हैं। मुद्दा संतुलन है: विज्ञापन प्रासंगिक और सम्मानजनक हों, और आपका देखने का अनुभव दबे नहीं।",
     usSecExperienceP2:
-      "stream-in को विज्ञापनदाताओं के साथ (उनके खिलाफ नहीं) बढ़ने के लिए बनाया गया है: brand-safe और user-first अनुभव, जहाँ प्रमोशन इकोसिस्टम को सपोर्ट करे—मुख्य उत्पाद न बन जाए।",
+      "teleprt को विज्ञापनदाताओं के साथ (उनके खिलाफ नहीं) बढ़ने के लिए बनाया गया है: brand-safe और user-first अनुभव, जहाँ प्रमोशन इकोसिस्टम को सपोर्ट करे—मुख्य उत्पाद न बन जाए।",
 
     usSecMoneyTitle: "क्रिएटर मॉनेटाइज़ेशन—जब प्लेटफ़ॉर्म सक्षम हो",
     usSecMoneyP1:
@@ -5825,7 +5825,7 @@ const translations = {
 
     usSecLimitsTitle: "स्पष्ट सीमाएँ: क्या स्वीकार नहीं",
     usSecLimitsP1:
-      "हम अभिव्यक्ति की स्वतंत्रता का समर्थन करते हैं और अति-सेंसरशिप के खिलाफ हैं, लेकिन stream-in बिना नियम का क्षेत्र नहीं है। हम नुकसान पहुँचाने, शोषण करने या भेदभाव करने वाले कंटेंट के खिलाफ हैं।",
+      "हम अभिव्यक्ति की स्वतंत्रता का समर्थन करते हैं और अति-सेंसरशिप के खिलाफ हैं, लेकिन teleprt बिना नियम का क्षेत्र नहीं है। हम नुकसान पहुँचाने, शोषण करने या भेदभाव करने वाले कंटेंट के खिलाफ हैं।",
     usSecLimitsIntroList:
       "इन चीज़ों को अपलोड/प्रमोट करना मना है (उदाहरण सहित):",
     usSecLimitsItemThreat: "धमकियाँ या लोगों/समूहों को नुकसान पहुँचाने के लिए उकसाना।",
@@ -5844,7 +5844,7 @@ const translations = {
       "सामान्य सवाल, सुझाव या प्लेटफ़ॉर्म से जुड़े रिपोर्ट के लिए आप हमसे संपर्क कर सकते हैं। हम दर्शकों और क्रिएटर्स के साथ सीधे संवाद को महत्व देते हैं।",
 
     usAboutFooter:
-      "© 2026 stream-in — बीटा प्लेटफ़ॉर्म। इस शुरुआत का हिस्सा बनने के लिए धन्यवाद।",
+      "© 2026 teleprt — बीटा प्लेटफ़ॉर्म। इस शुरुआत का हिस्सा बनने के लिए धन्यवाद।",
   },
 
   ar: {
@@ -5859,7 +5859,7 @@ const translations = {
     lightTheme: "الوضع الفاتح",
     sunsetTheme: "غروب الشمس",
     betaBannerMessage:
-      "stream-in ما زال في النسخة التجريبية. إذا أردت دعم استمرارية المنصة، يمكنك التبرع أو المساهمة.",
+      "teleprt ما زال في النسخة التجريبية. إذا أردت دعم استمرارية المنصة، يمكنك التبرع أو المساهمة.",
     betaBannerDonate: "ادعم المشروع",
 
     // Sidebar (الشريط الجانبي)
@@ -5882,7 +5882,7 @@ const translations = {
     settings: "الإعدادات",
     report: "إبلاغ",
     help: "مساعدة",
-    bestOf: "الأفضل على stream-in",
+    bestOf: "الأفضل على teleprt",
     signInPrompt: "سجل الدخول لتتمكن من الإعجاب، التعليق والاشتراك.",
     signIn: "تسجيل الدخول",
 
@@ -5957,7 +5957,7 @@ const translations = {
 
     // Signin (الدخول)
     signinTitle: "مرحباً بعودتك",
-    signinSubtitle: "سجل الدخول إلى حساب stream-in الخاص بك",
+    signinSubtitle: "سجل الدخول إلى حساب teleprt الخاص بك",
     emailSignin: "البريد الإلكتروني",
     passwordSignin: "كلمة المرور",
     signInButton: "تسجيل الدخول",
@@ -5968,7 +5968,7 @@ const translations = {
     googleTitle: "وصول سريع",
     googleSubtitle: "سجل دخولك فوراً عبر Google",
     signInWithGoogle: "المتابعة باستخدام Google",
-    areYouNew: "هل أنت جديد في stream-in؟",
+    areYouNew: "هل أنت جديد في teleprt؟",
     createAccountSignin: "إنشاء حساب",
     resetPassword: "إعادة تعيين كلمة المرور",
     resetPasswordSubtitle: "أدخل بريدك الإلكتروني وسنرسل لك رابط الاستعادة.",
@@ -5981,7 +5981,7 @@ const translations = {
 
     // Register (التسجيل)
     registerTitle: "إنشاء حساب",
-    subtitleRegister: "انضم إلى مجتمع stream-in",
+    subtitleRegister: "انضم إلى مجتمع teleprt",
     userName: "اسم المستخدم",
     emailRegister: "البريد الإلكتروني",
     passwordRegister: "كلمة المرور",
@@ -6021,7 +6021,7 @@ const translations = {
 
     // Help (مركز المساعدة)
     helpCenter: "مركز المساعدة",
-    helpSubtitle: "ابحث عن الإجابات، الأدلة، وكل ما تحتاجه لتحقيق أقصى استفادة من stream-in.",
+    helpSubtitle: "ابحث عن الإجابات، الأدلة، وكل ما تحتاجه لتحقيق أقصى استفادة من teleprt.",
     searchHelp: "ابحث في المساعدة...",
     helpCategories: "فئات المساعدة",
     faq: "الأسئلة الشائعة",
@@ -6052,7 +6052,7 @@ const translations = {
 
     // Us (الشروط - Terms)
     termsTitle: "الشروط والأحكام",
-    termsSubtitle: "في stream-in، نريد منك أن تفهم حقوقك ومسؤولياتك.",
+    termsSubtitle: "في teleprt، نريد منك أن تفهم حقوقك ومسؤولياتك.",
     lastUpdated: "آخر تحديث: يناير 2025",
     termsAndConditions: "شروط الاستخدام",
     termsPageSubtitle: "يرجى قراءة هذه الشروط بعناية لاستخدام منصتنا",
@@ -6062,9 +6062,9 @@ const translations = {
     propertyOf: "ملك لـ",
     haveQuestions: "هل لديك أسئلة؟",
     acceptTerms: "قبول الشروط",
-    acceptTermsContent: "باستخدام stream-in، فإنك تقبل هذه الشروط بالكامل.",
+    acceptTermsContent: "باستخدام teleprt، فإنك تقبل هذه الشروط بالكامل.",
     serviceDescription: "وصف الخدمة",
-    serviceDescContent: "تسمح منصة stream-in للمستخدمين بـ:",
+    serviceDescContent: "تسمح منصة teleprt للمستخدمين بـ:",
     serviceDescItem1: "رفع ومشاركة واكتشاف المحتوى الصوتي والمرئي",
     serviceDescItem2: "إنشاء وتخصيص ملفات تعريف الصناع",
     serviceDescItem3: "التفاعل مع المجتمع",
@@ -6079,8 +6079,8 @@ const translations = {
     privacyData: "الخصوصية والبيانات",
     privacyContent: "تتم معالجة بياناتك وفقاً لسياسة الخصوصية الخاصة بنا.",
     liability: "إخلاء المسؤولية",
-    liabilityContent: "يتم تقديم stream-in 'كما هي' دون ضمانات مطلقة.",
-    termsFooter: "© 2025 stream-in. جميع الحقوق محفوظة. هل لديك أسئلة؟ ",
+    liabilityContent: "يتم تقديم teleprt 'كما هي' دون ضمانات مطلقة.",
+    termsFooter: "© 2025 teleprt. جميع الحقوق محفوظة. هل لديك أسئلة؟ ",
     contactUsLink: "اتصل بنا",
 
     // Edit Video (تعديل الفيديو)
@@ -6108,7 +6108,7 @@ const translations = {
     imageMax10Mb: "الحد الأقصى 10 ميجابايت للصورة",
     videoMax800Mb: "الحد الأقصى 800 ميجابايت للفيديو",
     uploadBetaLimitsHint:
-      "نسخة بيتا stream-in: حتى 800 ميجابايت للفيديو و10 ميجابايت للصورة المصغرة.",
+      "نسخة بيتا teleprt: حتى 800 ميجابايت للفيديو و10 ميجابايت للصورة المصغرة.",
     waitForUpload: "يرجى الانتظار حتى ينتهي الرفع",
     errorSaving: "خطأ أثناء الحفظ",
     thumbnailImage: "صورة الفيديو",
@@ -6186,7 +6186,7 @@ const translations = {
 
     // Settings (الإعدادات)
     settingsTitle: "الإعدادات",
-    settingsSubtitle: "خصص تجربتك في stream-in",
+    settingsSubtitle: "خصص تجربتك في teleprt",
     appearance: "المظهر",
     appearanceDesc: "اختر سمة الواجهة",
     dark: "داكن",
@@ -6314,15 +6314,15 @@ const translations = {
     playlistVideos: "فيديوهات قائمة التشغيل",
     nowPlaying: "يتم التشغيل الآن",
 
-    // Us / About stream-in (Beta)
-    usAboutPageTitle: "حول stream-in",
+    // Us / About teleprt (Beta)
+    usAboutPageTitle: "حول teleprt",
     usAboutPageSubtitle:
-      "stream-in منصة بث جديدة في مرحلة البيتا. نشارك هنا رؤيتنا وكيف نفكر بتجربة المشاهدين وصُنّاع المحتوى، وما هي الحدود التي نتمسك بها بوضوح.",
+      "teleprt منصة بث جديدة في مرحلة البيتا. نشارك هنا رؤيتنا وكيف نفكر بتجربة المشاهدين وصُنّاع المحتوى، وما هي الحدود التي نتمسك بها بوضوح.",
     usAboutPageBetaLine: "إصدار بيتا · أبريل 2026",
 
-    usSecWhatTitle: "ما هو stream-in؟",
+    usSecWhatTitle: "ما هو teleprt؟",
     usSecWhatP1:
-      "stream-in بُني كخيار بث بديل بفكرة حديثة: تقليل القيود التعسفية على ما يمكن قوله، وزيادة التركيز على خدمة الجمهور وصُنّاع المحتوى فعلياً.",
+      "teleprt بُني كخيار بث بديل بفكرة حديثة: تقليل القيود التعسفية على ما يمكن قوله، وزيادة التركيز على خدمة الجمهور وصُنّاع المحتوى فعلياً.",
     usSecWhatP2:
       "نحن في مرحلة البيتا: نطوّر بعناية، نستمع للملاحظات، ونضيف الميزات مع نمو المنصة.",
     usSecWhatHighlight:
@@ -6338,7 +6338,7 @@ const translations = {
     usSecExperienceP1:
       "لا نريد منصة ممتلئة بالإعلانات أو موجزاً يبدو كلوحة إعلانية لمصالح لا علاقة لها بما جئت لمشاهدته. نريد أن نكون مشروعاً مستداماً وأن يحصل صُنّاع المحتوى على أرباح من أعمالهم، لذلك قد توجد إعلانات عندما تدعم المنصة. الفكرة هي التوازن: إعلانات ذات صلة ومحترمة دون أن تطغى على التجربة.",
     usSecExperienceP2:
-      "stream-in مصممة للنمو مع المعلنين (لا ضدهم): بيئة آمنة للعلامات التجارية وتجربة تضع المستخدم أولاً، حيث يدعم الإعلان النظام البيئي بدل أن يصبح المنتج الأساسي.",
+      "teleprt مصممة للنمو مع المعلنين (لا ضدهم): بيئة آمنة للعلامات التجارية وتجربة تضع المستخدم أولاً، حيث يدعم الإعلان النظام البيئي بدل أن يصبح المنتج الأساسي.",
 
     usSecMoneyTitle: "تحقيق الدخل للمبدعين عندما تصبح المنصة قادرة",
     usSecMoneyP1:
@@ -6354,7 +6354,7 @@ const translations = {
 
     usSecLimitsTitle: "حدود واضحة: ما لا مكان له",
     usSecLimitsP1:
-      "نحن مع حرية التعبير وضد الرقابة المفرطة، لكن stream-in ليست مساحة بلا قواعد. نحن ضد أي محتوى يهدف إلى الإيذاء أو الاستغلال أو التمييز.",
+      "نحن مع حرية التعبير وضد الرقابة المفرطة، لكن teleprt ليست مساحة بلا قواعد. نحن ضد أي محتوى يهدف إلى الإيذاء أو الاستغلال أو التمييز.",
     usSecLimitsIntroList:
       "يُمنع رفع أو الترويج لما يلي (ومن ذلك على سبيل المثال):",
     usSecLimitsItemThreat: "التهديدات أو التحريض على إيذاء أشخاص أو مجموعات.",
@@ -6373,7 +6373,7 @@ const translations = {
       "للأسئلة العامة أو الأفكار أو البلاغات المتعلقة بالمنصة، يمكنك التواصل معنا. نحن نقدر الحوار المباشر مع المشاهدين والمبدعين.",
 
     usAboutFooter:
-      "© 2026 stream-in — منصة في مرحلة البيتا. شكراً لكونك جزءاً من هذه البداية.",
+      "© 2026 teleprt — منصة في مرحلة البيتا. شكراً لكونك جزءاً من هذه البداية.",
   },
 
   it: {
@@ -6388,7 +6388,7 @@ const translations = {
     lightTheme: "Tema chiaro",
     sunsetTheme: "Tramonto",
     betaBannerMessage:
-      "stream-in è in versione beta. Se vuoi supportare la manutenzione della piattaforma, puoi fare una donazione o contribuire.",
+      "teleprt è in versione beta. Se vuoi supportare la manutenzione della piattaforma, puoi fare una donazione o contribuire.",
     betaBannerDonate: "Supporta il progetto",
 
     // Sidebar (Barra laterale)
@@ -6411,7 +6411,7 @@ const translations = {
     settings: "Impostazioni",
     report: "Segnala",
     help: "Guida",
-    bestOf: "Il meglio di stream-in",
+    bestOf: "Il meglio di teleprt",
     signInPrompt: "Accedi per mettere mi piace, commentare e iscriverti.",
     signIn: "Accedi",
 
@@ -6486,7 +6486,7 @@ const translations = {
 
     // Signin (Accesso)
     signinTitle: "Bentornato",
-    signinSubtitle: "Accedi al tuo account stream-in",
+    signinSubtitle: "Accedi al tuo account teleprt",
     emailSignin: "E-mail",
     passwordSignin: "Password",
     signInButton: "Accedi",
@@ -6497,7 +6497,7 @@ const translations = {
     googleTitle: "Accesso rapido",
     googleSubtitle: "Accedi istantaneamente con Google",
     signInWithGoogle: "Continua con Google",
-    areYouNew: "Nuovo su stream-in?",
+    areYouNew: "Nuovo su teleprt?",
     createAccountSignin: "Crea un account",
     resetPassword: "Reimposta password",
     resetPasswordSubtitle: "Inserisci la tua e-mail per ricevere il link di ripristino.",
@@ -6510,7 +6510,7 @@ const translations = {
 
     // Register (Registrazione)
     registerTitle: "Crea un account",
-    subtitleRegister: "Unisciti alla community di stream-in",
+    subtitleRegister: "Unisciti alla community di teleprt",
     userName: "Nome utente",
     emailRegister: "E-mail",
     passwordRegister: "Password",
@@ -6550,7 +6550,7 @@ const translations = {
 
     // Help (Centro assistenza)
     helpCenter: "Centro Assistenza",
-    helpSubtitle: "Trova risposte, guide e tutto il necessario per usare stream-in.",
+    helpSubtitle: "Trova risposte, guide e tutto il necessario per usare teleprt.",
     searchHelp: "Cerca nella guida...",
     helpCategories: "Categorie",
     faq: "Domande frequenti (FAQ)",
@@ -6584,7 +6584,7 @@ const translations = {
 
     // Us (Termini e Condizioni)
     termsTitle: "Termini e Condizioni",
-    termsSubtitle: "In stream-in, vogliamo che tu comprenda i tuoi diritti e le tue responsabilità.",
+    termsSubtitle: "In teleprt, vogliamo che tu comprenda i tuoi diritti e le tue responsabilità.",
     lastUpdated: "Ultimo aggiornamento: Gennaio 2025",
     termsAndConditions: "Condizioni d'uso",
     termsPageSubtitle: "Leggi attentamente queste condizioni per utilizzare la nostra piattaforma",
@@ -6594,9 +6594,9 @@ const translations = {
     propertyOf: "Proprietà di",
     haveQuestions: "Hai domande?",
     acceptTerms: "Accettazione dei termini",
-    acceptTermsContent: "Utilizzando stream-in, accetti integralmente queste condizioni. Se non sei d'accordo, non utilizzare la piattaforma.",
+    acceptTermsContent: "Utilizzando teleprt, accetti integralmente queste condizioni. Se non sei d'accordo, non utilizzare la piattaforma.",
     serviceDescription: "Descrizione del servizio",
-    serviceDescContent: "stream-in permette agli utenti di:",
+    serviceDescContent: "teleprt permette agli utenti di:",
     serviceDescItem1: "Caricare, condividere e scoprire contenuti audio e video",
     serviceDescItem2: "Creare e personalizzare profili creatore",
     serviceDescItem3: "Interagire con la community",
@@ -6611,8 +6611,8 @@ const translations = {
     privacyData: "Privacy e Dati",
     privacyContent: "I tuoi dati sono trattati secondo la nostra politica sulla privacy.",
     liability: "Limitazione di responsabilità",
-    liabilityContent: "stream-in è fornito 'così com'è' senza garanzie assolute di funzionamento ininterrotto.",
-    termsFooter: "© 2025 stream-in. Tutti i diritti riservati. Domande? ",
+    liabilityContent: "teleprt è fornito 'così com'è' senza garanzie assolute di funzionamento ininterrotto.",
+    termsFooter: "© 2025 teleprt. Tutti i diritti riservati. Domande? ",
     contactUsLink: "Contattaci",
 
     // Edit Video (Modifica video)
@@ -6640,7 +6640,7 @@ const translations = {
     imageMax10Mb: "Immagine max 10 MB",
     videoMax800Mb: "Video max 800 MB",
     uploadBetaLimitsHint:
-      "Beta stream-in: fino a 800 MB per video e 10 MB per la miniatura.",
+      "Beta teleprt: fino a 800 MB per video e 10 MB per la miniatura.",
     waitForUpload: "Attendi la fine del caricamento",
     errorSaving: "Errore durante il salvataggio",
     thumbnailImage: "Immagine miniatura",
@@ -6718,7 +6718,7 @@ const translations = {
 
     // Settings (Impostazioni)
     settingsTitle: "Impostazioni",
-    settingsSubtitle: "Personalizza la tua esperienza su stream-in",
+    settingsSubtitle: "Personalizza la tua esperienza su teleprt",
     appearance: "Aspetto",
     appearanceDesc: "Scegli il tema visivo",
     dark: "Scuro",
@@ -6842,15 +6842,15 @@ const translations = {
     playlistVideos: "Video della playlist",
     nowPlaying: "In riproduzione",
 
-    // Us / About stream-in (Beta)
-    usAboutPageTitle: "Informazioni su stream-in",
+    // Us / About teleprt (Beta)
+    usAboutPageTitle: "Informazioni su teleprt",
     usAboutPageSubtitle:
-      "stream-in è una nuova piattaforma di streaming in fase beta. Qui condividiamo la nostra visione, come pensiamo all’esperienza di spettatori e creator, e quali limiti difendiamo.",
+      "teleprt è una nuova piattaforma di streaming in fase beta. Qui condividiamo la nostra visione, come pensiamo all’esperienza di spettatori e creator, e quali limiti difendiamo.",
     usAboutPageBetaLine: "Versione beta · Aprile 2026",
 
-    usSecWhatTitle: "Cos’è stream-in?",
+    usSecWhatTitle: "Cos’è teleprt?",
     usSecWhatP1:
-      "stream-in nasce come alternativa di streaming con un’idea moderna: meno barriere arbitrarie su ciò che si può dire e più focus su un prodotto che serva davvero il pubblico e chi crea contenuti.",
+      "teleprt nasce come alternativa di streaming con un’idea moderna: meno barriere arbitrarie su ciò che si può dire e più focus su un prodotto che serva davvero il pubblico e chi crea contenuti.",
     usSecWhatP2:
       "Siamo in beta: rilasciamo con cura, ascoltiamo i feedback e aggiungiamo funzionalità man mano che la piattaforma cresce.",
     usSecWhatHighlight:
@@ -6866,7 +6866,7 @@ const translations = {
     usSecExperienceP1:
       "Non vogliamo un sito pieno di annunci o un feed che sembri un cartellone di interessi estranei a ciò per cui sei qui. Vogliamo un business sostenibile e vogliamo che i creator guadagnino dai loro contenuti, quindi la pubblicità può esistere quando sostiene la piattaforma. Il punto è il bilanciamento: annunci pertinenti e rispettosi che non soffochino l’esperienza.",
     usSecExperienceP2:
-      "stream-in è progettata per crescere insieme agli inserzionisti (non contro di loro): un’esperienza brand-safe e user-first, dove la promozione supporta l’ecosistema invece di diventare il prodotto principale.",
+      "teleprt è progettata per crescere insieme agli inserzionisti (non contro di loro): un’esperienza brand-safe e user-first, dove la promozione supporta l’ecosistema invece di diventare il prodotto principale.",
 
     usSecMoneyTitle: "Monetizzazione per i creator quando sarà sostenibile",
     usSecMoneyP1:
@@ -6882,7 +6882,7 @@ const translations = {
 
     usSecLimitsTitle: "Limiti chiari: cosa non è ammesso",
     usSecLimitsP1:
-      "Sosteniamo la libertà di espressione e rifiutiamo l’eccesso di censura, ma stream-in non è una zona senza regole. Siamo contrari a contenuti pensati per nuocere, sfruttare o discriminare.",
+      "Sosteniamo la libertà di espressione e rifiutiamo l’eccesso di censura, ma teleprt non è una zona senza regole. Siamo contrari a contenuti pensati per nuocere, sfruttare o discriminare.",
     usSecLimitsIntroList:
       "È vietato caricare o promuovere (tra le altre cose):",
     usSecLimitsItemThreat: "Minacce o istigazione a fare del male a persone o gruppi.",
@@ -6901,7 +6901,7 @@ const translations = {
       "Per domande generali, idee o segnalazioni legate alla piattaforma, contattaci. Valorizziamo il dialogo diretto con spettatori e creator.",
 
     usAboutFooter:
-      "© 2026 stream-in — Piattaforma in beta. Grazie per far parte di questo inizio.",
+      "© 2026 teleprt — Piattaforma in beta. Grazie per far parte di questo inizio.",
   },
 
   ko: {
@@ -6917,7 +6917,7 @@ const translations = {
     lightTheme: "라이트 모드",
     sunsetTheme: "선셋 모드",
     betaBannerMessage:
-      "stream-in은 현재 베타 버전입니다. 플랫폼 운영을 지원하고 싶다면 기부나 기여를 할 수 있습니다.",
+      "teleprt은 현재 베타 버전입니다. 플랫폼 운영을 지원하고 싶다면 기부나 기여를 할 수 있습니다.",
     betaBannerDonate: "프로젝트 후원",
 
     // Sidebar (사이드바)
@@ -6940,7 +6940,7 @@ const translations = {
     settings: "설정",
     report: "신고",
     help: "도움말",
-    bestOf: "stream-in 인기 콘텐츠",
+    bestOf: "teleprt 인기 콘텐츠",
     signInPrompt: "좋아요, 댓글 및 구독을 하려면 로그인하세요.",
     signIn: "로그인",
 
@@ -7015,7 +7015,7 @@ const translations = {
 
     // Signin (로그인)
     signinTitle: "다시 오신 것을 환영합니다",
-    signinSubtitle: "stream-in 계정에 로그인하세요",
+    signinSubtitle: "teleprt 계정에 로그인하세요",
     emailSignin: "이메일",
     passwordSignin: "비밀번호",
     signInButton: "로그인",
@@ -7026,7 +7026,7 @@ const translations = {
     googleTitle: "빠른 로그인",
     googleSubtitle: "Google 계정으로 즉시 로그인",
     signInWithGoogle: "Google로 계속하기",
-    areYouNew: "stream-in이 처음이신가요?",
+    areYouNew: "teleprt이 처음이신가요?",
     createAccountSignin: "계정 만들기",
     resetPassword: "비밀번호 재설정",
     resetPasswordSubtitle: "이메일을 입력하시면 재설정 링크를 보내드립니다.",
@@ -7039,7 +7039,7 @@ const translations = {
 
     // Register (회원가입)
     registerTitle: "계정 만들기",
-    subtitleRegister: "stream-in 커뮤니티에 참여하세요",
+    subtitleRegister: "teleprt 커뮤니티에 참여하세요",
     userName: "사용자 이름",
     emailRegister: "이메일",
     passwordRegister: "비밀번호",
@@ -7079,7 +7079,7 @@ const translations = {
 
     // Help (도움말 센터)
     helpCenter: "도움말 센터",
-    helpSubtitle: "stream-in을 최대한 활용하는 데 필요한 답변과 가이드를 찾아보세요.",
+    helpSubtitle: "teleprt을 최대한 활용하는 데 필요한 답변과 가이드를 찾아보세요.",
     searchHelp: "도움말 검색...",
     helpCategories: "도움말 카테고리",
     faq: "자주 묻는 질문",
@@ -7110,7 +7110,7 @@ const translations = {
 
     // Us (이용약관)
     termsTitle: "이용약관",
-    termsSubtitle: "stream-in은 사용자가 자신의 권리와 책임을 이해하기를 바랍니다.",
+    termsSubtitle: "teleprt은 사용자가 자신의 권리와 책임을 이해하기를 바랍니다.",
     lastUpdated: "최종 수정일: 2025년 1월",
     termsAndConditions: "서비스 이용약관",
     termsPageSubtitle: "플랫폼 이용을 위해 다음 약관을 주의 깊게 읽어주세요",
@@ -7120,9 +7120,9 @@ const translations = {
     propertyOf: "소유자:",
     haveQuestions: "질문이 있으신가요?",
     acceptTerms: "약관 동의",
-    acceptTermsContent: "stream-in을 사용함으로써 귀하는 본 약관에 완전히 동의하게 됩니다.",
+    acceptTermsContent: "teleprt을 사용함으로써 귀하는 본 약관에 완전히 동의하게 됩니다.",
     serviceDescription: "서비스 설명",
-    serviceDescContent: "stream-in은 사용자에게 다음 기능을 제공합니다:",
+    serviceDescContent: "teleprt은 사용자에게 다음 기능을 제공합니다:",
     serviceDescItem1: "오디오 및 비디오 콘텐츠 업로드, 공유 및 발견",
     serviceDescItem2: "크리에이터 프로필 생성 및 맞춤 설정",
     serviceDescItem3: "커뮤니티와 소통",
@@ -7137,8 +7137,8 @@ const translations = {
     privacyData: "개인정보 및 데이터",
     privacyContent: "귀하의 데이터는 당사의 개인정보 처리방침에 따라 처리됩니다.",
     liability: "책임 제한",
-    liabilityContent: "stream-in은 '있는 그대로' 제공되며 중단 없는 운영을 보장하지 않습니다.",
-    termsFooter: "© 2025 stream-in. 모든 권리 보유. 문의 사항이 있으신가요? ",
+    liabilityContent: "teleprt은 '있는 그대로' 제공되며 중단 없는 운영을 보장하지 않습니다.",
+    termsFooter: "© 2025 teleprt. 모든 권리 보유. 문의 사항이 있으신가요? ",
     contactUsLink: "문의하기",
 
     // Edit Video (동영상 수정)
@@ -7166,7 +7166,7 @@ const translations = {
     imageMax10Mb: "이미지 최대 10MB",
     videoMax800Mb: "동영상 최대 800MB",
     uploadBetaLimitsHint:
-      "stream-in 베타: 동영상 최대 800MB, 썸네일 최대 10MB.",
+      "teleprt 베타: 동영상 최대 800MB, 썸네일 최대 10MB.",
     waitForUpload: "업로드가 완료될 때까지 기다려 주세요",
     errorSaving: "저장 중 오류 발생",
     thumbnailImage: "썸네일 이미지",
@@ -7244,7 +7244,7 @@ const translations = {
 
     // Settings (설정)
     settingsTitle: "설정",
-    settingsSubtitle: "stream-in 경험을 맞춤 설정하세요",
+    settingsSubtitle: "teleprt 경험을 맞춤 설정하세요",
     appearance: "디자인",
     appearanceDesc: "시각 테마 선택",
     dark: "어둡게",
@@ -7372,15 +7372,15 @@ const translations = {
     playlistVideos: "재생목록 영상",
     nowPlaying: "현재 재생 중",
 
-    // Us / About stream-in (Beta)
-    usAboutPageTitle: "stream-in 소개",
+    // Us / About teleprt (Beta)
+    usAboutPageTitle: "teleprt 소개",
     usAboutPageSubtitle:
-      "stream-in은 베타 단계의 새로운 스트리밍 플랫폼입니다. 여기에서 우리의 비전, 시청자와 크리에이터 경험에 대한 방향, 그리고 우리가 지키는 명확한 기준을 소개합니다.",
+      "teleprt은 베타 단계의 새로운 스트리밍 플랫폼입니다. 여기에서 우리의 비전, 시청자와 크리에이터 경험에 대한 방향, 그리고 우리가 지키는 명확한 기준을 소개합니다.",
     usAboutPageBetaLine: "베타 버전 · 2026년 4월",
 
-    usSecWhatTitle: "stream-in은 무엇인가요?",
+    usSecWhatTitle: "teleprt은 무엇인가요?",
     usSecWhatP1:
-      "stream-in은 최신 관점의 스트리밍 대안입니다. 말할 수 있는 것에 대한 과도하고 임의적인 장벽을 줄이고, 시청자와 콘텐츠 크리에이터에게 실제로 도움이 되는 제품 경험에 집중합니다.",
+      "teleprt은 최신 관점의 스트리밍 대안입니다. 말할 수 있는 것에 대한 과도하고 임의적인 장벽을 줄이고, 시청자와 콘텐츠 크리에이터에게 실제로 도움이 되는 제품 경험에 집중합니다.",
     usSecWhatP2:
       "현재는 베타입니다. 신중하게 개선하고 피드백을 듣으며, 플랫폼이 성장하는 만큼 기능을 더해 갑니다.",
     usSecWhatHighlight:
@@ -7396,7 +7396,7 @@ const translations = {
     usSecExperienceP1:
       "우리는 광고로 가득 찬 플랫폼이나, 피드가 ‘관심 없는 이해관계의 광고판’처럼 보이길 원치 않습니다. 동시에 플랫폼도 지속 가능해야 하고, 크리에이터도 자신의 콘텐츠로 수익을 얻을 수 있어야 합니다. 그래서 광고는 플랫폼을 유지하는 범위에서 존재할 수 있습니다. 핵심은 균형입니다: 관련성 있고 절제된 광고, 그리고 시청 경험을 압도하지 않는 광고.",
     usSecExperienceP2:
-      "stream-in은 광고주와도 함께 성장하도록 설계되었습니다(대립이 아니라). 브랜드 세이프하고 사용자 중심의 경험 속에서, 프로모션이 생태계를 지원하되 ‘플랫폼의 본질’이 되지 않게 합니다.",
+      "teleprt은 광고주와도 함께 성장하도록 설계되었습니다(대립이 아니라). 브랜드 세이프하고 사용자 중심의 경험 속에서, 프로모션이 생태계를 지원하되 ‘플랫폼의 본질’이 되지 않게 합니다.",
 
     usSecMoneyTitle: "크리에이터 수익화: 가능한 시점에",
     usSecMoneyP1:
@@ -7412,7 +7412,7 @@ const translations = {
 
     usSecLimitsTitle: "명확한 한계: 허용되지 않는 콘텐츠",
     usSecLimitsP1:
-      "우리는 표현의 자유를 지지하고 과도한 검열에 반대하지만, stream-in은 규칙 없는 공간이 아닙니다. 해를 끼치거나, 착취하거나, 차별하려는 콘텐츠에는 반대합니다.",
+      "우리는 표현의 자유를 지지하고 과도한 검열에 반대하지만, teleprt은 규칙 없는 공간이 아닙니다. 해를 끼치거나, 착취하거나, 차별하려는 콘텐츠에는 반대합니다.",
     usSecLimitsIntroList: "다음과 같은 업로드/홍보는 금지됩니다(예시):",
     usSecLimitsItemThreat: "개인 또는 집단에 대한 위협, 위해를 선동하는 내용.",
     usSecLimitsItemViolence:
@@ -7430,7 +7430,7 @@ const translations = {
       "일반 문의, 제안, 플랫폼 관련 신고는 연락해 주세요. 시청자와 크리에이터와의 직접적인 소통을 중요하게 생각합니다.",
 
     usAboutFooter:
-      "© 2026 stream-in — 베타 플랫폼. 이 시작에 함께해 주셔서 감사합니다.",
+      "© 2026 teleprt — 베타 플랫폼. 이 시작에 함께해 주셔서 감사합니다.",
   },
 }
 

@@ -106,7 +106,7 @@ function App() {
           <BrowserRouter>
             <Main>
               <Navbar themeMode={themeMode} setThemeMode={setThemeMode} />
-              <BetaNoticeBar donationUrl="https://ko-fi.com/streamincom" />
+              <BetaNoticeBar donationUrl="https://ko-fi.com/teleprt" />
               <BackButton />
               <SEOHead />
               <Wrapper>

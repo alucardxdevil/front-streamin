@@ -27,7 +27,7 @@ function isBackendRequest(config) {
 
   return (
     url.startsWith('/') ||
-    full.includes('api.stream-in.com') ||
+    full.includes('api.teleprt.com') ||
     full.includes('localhost') ||
     (API_URL && full.includes(API_URL))
   )

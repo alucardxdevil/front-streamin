@@ -1,4 +1,4 @@
-const STORAGE_KEY = "streamin_watch_tag_weights_v1";
+const STORAGE_KEY = "teleprt_watch_tag_weights_v1";
 
 /**
  * Suma peso a cada etiqueta (p. ej. al abrir un video o al contabilizar la vista).

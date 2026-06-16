@@ -412,7 +412,7 @@ export const UploadProfile = ({ setOpen }) => {
           />
           {inputs.name && (
             <SlugPreview>
-              stream-in.com/@{newSlug}
+              teleprt.com/@{newSlug}
             </SlugPreview>
           )}
           {nameChecking && (

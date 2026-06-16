@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import LogoImg from "../img/logo.png";
+import LogoImg from "../img/logo-light.png";
 import { useLanguage } from "../utils/LanguageContext";
 
 const fadeIn = keyframes`
@@ -234,7 +234,7 @@ const ResetPassword = () => {
   return (
     <PageWrapper>
       <Card>
-        <Logo src={LogoImg} alt="stream-in" />
+        <Logo src={LogoImg} alt="teleprt" />
         <Title>{t("resetPasswordPageTitle")}</Title>
         <Subtitle>{t("resetPasswordPageSubtitle")}</Subtitle>
 

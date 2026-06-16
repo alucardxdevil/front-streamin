@@ -378,14 +378,14 @@ const Terms = () => {
           <BulletList>
             <BulletItem>
               {t("support")}:{" "}
-              <ContactLink href="mailto:support@stream-in.com">
-                support@stream-in.com
+              <ContactLink href="mailto:support@teleprt.com">
+                support@teleprt.com
               </ContactLink>
             </BulletItem>
             <BulletItem>
               {t("contact")}:{" "}
-              <ContactLink href="mailto:contact@stream-in.com">
-                contact@stream-in.com
+              <ContactLink href="mailto:contact@teleprt.com">
+                contact@teleprt.com
               </ContactLink>
             </BulletItem>
           </BulletList>
@@ -427,12 +427,12 @@ const Terms = () => {
 
       <Footer>
         <FooterText>
-          © 2026 stream-in. {t("allRightsReserved")}. stream-in {t("isAStreamingPlatform")}(reproductor de video) {t("propertyOf")} <b>stream-in Media Inc y DNA's Interactive.</b>
+          © 2026 teleprt. {t("allRightsReserved")}. teleprt {t("isAStreamingPlatform")}(reproductor de video) {t("propertyOf")} <b>teleprt Media Inc y DNA's Interactive.</b>
         </FooterText>
 
         <SocialLinks>
           <SocialLink
-            href="https://facebook.com/streamin"
+            href="https://facebook.com/teleprt"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -446,14 +446,14 @@ const Terms = () => {
             <span>Twitter/X</span>
           </SocialLink>
           <SocialLink
-            href="https://instagram.com/streamin"
+            href="https://instagram.com/teleprt"
             target="_blank"
             rel="noopener noreferrer"
           >
             <span>Instagram</span>
           </SocialLink>
           <SocialLink
-            href="https://youtube.com/streamin"
+            href="https://youtube.com/teleprt"
             target="_blank"
             rel="noopener noreferrer"
           >

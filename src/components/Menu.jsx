@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import LogoMenu from "../img/logo-menu.png";
+import LogoMenu from "../img/logo-dark.png";
 import HomeIcon from "@mui/icons-material/Home";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import SubscriptionsOutlinedIcon from "@mui/icons-material/SubscriptionsOutlined";
@@ -156,7 +156,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
             <Hr />
           </>
           }
-        <Title>BEST OF stream-in</Title>
+        <Title>BEST OF teleprt</Title>
         <Item>
           <LibraryMusicOutlinedIcon />
           Music

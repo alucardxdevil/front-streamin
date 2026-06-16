@@ -1,4 +1,4 @@
-# 🔍 Estrategia SEO Completa — stream-in
+# 🔍 Estrategia SEO Completa — teleprt
 
 ## Índice
 
@@ -50,9 +50,9 @@ front/src/
 
 ### Páginas de Video
 
-Al compartir `https://stream-in.com/video/abc123` en redes sociales:
+Al compartir `https://teleprt.com/video/abc123` en redes sociales:
 
-- **og:title** → `"Mi Video Genial | stream-in"`
+- **og:title** → `"Mi Video Genial | teleprt"`
 - **og:description** → Primeros 150 caracteres de la descripción
 - **og:image** → Miniatura del video (`imgUrl`)
 - **og:type** → `video.other`
@@ -61,7 +61,7 @@ Al compartir `https://stream-in.com/video/abc123` en redes sociales:
 
 ### Páginas de Perfil
 
-Al compartir `https://stream-in.com/profileUser/juan`:
+Al compartir `https://teleprt.com/profileUser/juan`:
 
 - **og:type** → `profile`
 - **og:image** → Foto de perfil del usuario
@@ -85,7 +85,7 @@ Cada página de video inyecta automáticamente un `<script type="application/ld+
   "uploadDate": "2026-03-15T10:30:00.000Z",
   "contentUrl": "https://cdn.example.com/hls/abc123/master.m3u8",
   "embedUrl": "https://cdn.example.com/hls/abc123/master.m3u8",
-  "url": "https://stream-in.com/video/abc123",
+  "url": "https://teleprt.com/video/abc123",
   "duration": "PT5M30S",
   "interactionStatistic": {
     "@type": "InteractionCounter",
@@ -95,14 +95,14 @@ Cada página de video inyecta automáticamente un `<script type="application/ld+
   "author": {
     "@type": "Person",
     "name": "Juan Pérez",
-    "url": "https://stream-in.com/profileUser/juan"
+    "url": "https://teleprt.com/profileUser/juan"
   },
   "publisher": {
     "@type": "Organization",
-    "name": "stream-in",
+    "name": "teleprt",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://stream-in.com/logo-pest.jpg"
+      "url": "https://teleprt.com/logo-pest.jpg"
     }
   },
   "keywords": "gaming, tutorial, react"
@@ -321,14 +321,14 @@ const ContainerO = styled.main`
 ### Frontend (`front/.env.production`)
 
 ```env
-REACT_APP_SITE_URL=https://stream-in.com
-REACT_APP_API_URL=https://api.stream-in.com
+VITE_SITE_URL=https://teleprt.com
+VITE_API_URL=https://api.teleprt.com
 ```
 
 ### Servidor (`.env`)
 
 ```env
-SITE_URL=https://stream-in.com
+SITE_URL=https://teleprt.com
 ```
 
 ---
@@ -350,7 +350,7 @@ SITE_URL=https://stream-in.com
 - [ ] Ejecutar `npm install` en `front/` para instalar `react-helmet-async`
 - [ ] (Opcional) Instalar `react-snap` para prerenderizado
 - [ ] (Opcional) Instalar `sharp` en servidor para conversión WebP
-- [ ] Agregar `REACT_APP_SITE_URL` a `.env.production`
+- [ ] Agregar `VITE_SITE_URL` a `.env.production`
 - [ ] Agregar `SITE_URL` al `.env` del servidor
 - [ ] Validar JSON-LD en Google Rich Results Test
 - [ ] Migrar styled.div → styled.main/article/section en componentes clave

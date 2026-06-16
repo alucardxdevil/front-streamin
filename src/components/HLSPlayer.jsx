@@ -134,7 +134,7 @@ const HLSPlayer = ({
     if (!Hls.isSupported() && video.canPlayType('application/vnd.apple.mpegurl')) {
       // Safari soporta HLS nativamente (sin MSE, hls.js no funciona).
       // PROTECCIN: el token de sesin viaja por cookie HttpOnly
-      // `stream_session` (Domain=.stream-in.com). El atributo
+      // `stream_session` (Domain=.teleprt.com). El atributo
       // crossOrigin="use-credentials" del <video> (ms abajo) le indica
       // a Safari que adjunte cookies en las peticiones de media. As la
       // URL es idntica entre usuarios y Cloudflare puede cachearla.
@@ -203,7 +203,7 @@ const HLSPlayer = ({
       levelLoadingMaxRetry: 3,
       fragLoadingRetryDelay: 1000,
       // PROTECCIN: el token de sesin viaja como cookie HttpOnly
-      // `stream_session` (Domain=.stream-in.com). Slo necesitamos enviar
+      // `stream_session` (Domain=.teleprt.com). Slo necesitamos enviar
       // credenciales en cada XHR (GET simple, sin headers custom = sin
       // preflight CORS). As todas las URLs son idnticas entre usuarios
       // y Cloudflare puede cachearlas y compartirlas, mejorando el HIT

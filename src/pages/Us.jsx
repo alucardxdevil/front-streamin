@@ -275,13 +275,13 @@ const Us = () => {
           <Paragraph>{t("usSecContactP1")}</Paragraph>
           <BulletList>
             <BulletItem>
-              <ContactLink href="mailto:support@stream-in.com">
-                support@stream-in.com
+              <ContactLink href="mailto:support@teleprt.com">
+                support@teleprt.com
               </ContactLink>
             </BulletItem>
             <BulletItem>
-              <ContactLink href="mailto:legal@stream-in.com">
-                legal@stream-in.com
+              <ContactLink href="mailto:legal@teleprt.com">
+                legal@teleprt.com
               </ContactLink>
             </BulletItem>
           </BulletList>

@@ -18,9 +18,9 @@
 
 // ── Configuración ──────────────────────────────────────────────────────────────
 
-const API_BASE = 'https://api.stream-in.com';
-const SITE_URL = 'https://stream-in.com';
-const SITE_NAME = 'stream-in';
+const API_BASE = 'https://api.teleprt.com';
+const SITE_URL = 'https://teleprt.com';
+const SITE_NAME = 'teleprt';
 
 // User-Agent patterns de crawlers conocidos
 const CRAWLER_PATTERNS = [
@@ -127,7 +127,7 @@ function build404Html(pathname) {
   <meta name="robots" content="noindex, nofollow" />
   <meta property="og:title" content="Page Not Found | ${SITE_NAME}" />
   <meta property="og:description" content="The page you are looking for does not exist." />
-  <meta property="og:image" content="${SITE_URL}/logo-pest.png" />
+  <meta property="og:image" content="${SITE_URL}/logo-icon.png" />
   <meta property="og:url" content="${SITE_URL}" />
   <link rel="canonical" href="${SITE_URL}" />
 </head>
@@ -153,8 +153,8 @@ export async function onRequest(context) {
   }
 
   // 2. Proxy del sitemap dinámico desde el servidor API
-  //    Esto permite que el sitemap esté accesible en https://stream-in.com/sitemap.xml
-  //    (mismo dominio) además de https://api.stream-in.com/sitemap.xml
+  //    Esto permite que el sitemap esté accesible en https://teleprt.com/sitemap.xml
+  //    (mismo dominio) además de https://api.teleprt.com/sitemap.xml
   if (pathname === '/sitemap.xml') {
     try {
       const sitemapResponse = await fetch(`${API_BASE}/sitemap.xml`, {

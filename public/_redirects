@@ -1,5 +1,5 @@
 # Cloudflare Pages — Redirects
-# Los archivos estáticos en public/ (robots.txt, logo-pest.png, etc.)
+# Los archivos estáticos en public/ (robots.txt, logo-icon.png, etc.)
 # se sirven automáticamente ANTES de estas reglas.
 
 # Perfiles legacy → formato universal @slug (301 para SEO)

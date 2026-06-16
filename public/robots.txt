@@ -1,4 +1,4 @@
-# stream-in — robots.txt
+# teleprt — robots.txt
 # Última actualización: 2026-04-05
 
 User-agent: *
@@ -33,5 +33,5 @@ Disallow: /search
 Disallow: /profile$
 
 # ── Sitemap ─────────────────────────────────────────────────────────────────
-# Proxy dinámico desde api.stream-in.com vía Cloudflare Pages Function
-Sitemap: https://stream-in.com/sitemap.xml
+# Proxy dinámico desde api.teleprt.com vía Cloudflare Pages Function
+Sitemap: https://teleprt.com/sitemap.xml

@@ -1,7 +1,7 @@
 /**
  * Utilidad para construir URLs del proxy de streaming
  *
- * Producción: URLs absolutas al VPS (api.stream-in.com)
+ * Producción: URLs absolutas al VPS (api.teleprt.com)
  * Desarrollo: rutas relativas /api/* (proxy Vite → localhost:5000)
  */
 

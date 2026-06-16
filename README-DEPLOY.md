@@ -1,141 +1,138 @@
-# Guía de Despliegue — Cloudflare Pages
+# Guía de Despliegue — teleprt (Cloudflare Pages + API)
 
-## Configuración en Cloudflare Pages
-
-### 1. Conectar el repositorio
-
-1. Ve a [Cloudflare Pages](https://pages.cloudflare.com/)
-2. Crea un nuevo proyecto → **Connect to Git**
-3. Selecciona el repositorio de GitHub
-4. Configura el **Root directory** como `front`
-
-### 2. Configuración del Build
-
-| Campo | Valor |
-|-------|-------|
-| **Framework preset** | Create React App |
-| **Build command** | `npm run build` |
-| **Build output directory** | `build` |
-| **Root directory** | `front` |
-| **Node.js version** | `18` (o superior) |
-
-> **IMPORTANTE:** El proyecto usa **npm** (no yarn). El archivo `yarn.lock` fue eliminado para evitar conflictos con Yarn 4 en Cloudflare Pages. Cloudflare Pages detectará el `package-lock.json` y usará npm automáticamente.
->
-> **NO usar** `npx wrangler deploy` — ese comando es para Cloudflare Workers, no para Pages. Cloudflare Pages hace el deploy automáticamente al hacer push al repositorio.
-
-### 3. Variables de Entorno (Production)
-
-En **Settings → Environment Variables → Production**, agrega:
-
-| Variable | Valor |
-|----------|-------|
-| `REACT_APP_API_URL` | `http://89.167.94.4` |
-| `REACT_APP_ENV` | `production` |
-
-> **Nota:** El archivo `.env.production` ya incluye estas variables y se sube al repositorio.
-> Las variables de Cloudflare Pages tienen prioridad sobre el archivo `.env.production`.
-
-### 4. Configuración del Backend (servidor en 89.167.94.4)
-
-En el archivo `.env` del servidor, asegúrate de incluir el dominio de Cloudflare Pages en `ALLOWED_ORIGINS`:
-
-```env
-ALLOWED_ORIGINS=https://stream-in.pages.dev,https://tu-dominio-personalizado.com
-NODE_ENV=production
-```
-
----
-
-## Arquitectura de Producción
+## Arquitectura de producción
 
 ```
 Usuario
   │
   ▼
-Cloudflare Pages (Frontend React)
-  │  https://stream-in.pages.dev
+Cloudflare Pages (Frontend Vite/React)
+  │  https://teleprt.com  (custom domain)
+  │  https://front-teleprt.pages.dev  (preview Pages)
   │
-  ├─── Llamadas API ──────────────────────────────────────────────────────────►
-  │                                                                    Backend
-  │                                                              http://89.167.94.4
-  │                                                                    │
-  │                                                                    ├── /api/auth
-  │                                                                    ├── /api/users
-  │                                                                    ├── /api/videos
-  │                                                                    ├── /api/comments
-  │                                                                    ├── /api/upload
-  │                                                                    ├── /api/transcode
-  │                                                                    └── /api/stream (proxy HLS)
+  ├─── API REST + HLS proxy ──────────────────────────────►
+  │                                              https://api.teleprt.com
+  │                                                    (VPS + Nginx + SSL)
   │
-  └─── Assets estáticos ──────────────────────────────────────────────────────►
-                                                                  Cloudflare CDN
+  └─── Admin UI (opcional) ───────────────────────────────►
+                                              https://admin.teleprt.com
 ```
 
-## Archivos de Configuración Incluidos
+---
+
+## 1. Frontend (`front/`)
+
+### Cloudflare Pages
+
+| Campo | Valor |
+|-------|-------|
+| **Root directory** | `front` |
+| **Build command** | `npm run build` |
+| **Build output directory** | `build` |
+| **Node.js version** | `18` o superior |
+
+### Variables de entorno (Production)
+
+En **Settings → Environment Variables → Production**:
+
+| Variable | Valor |
+|----------|-------|
+| `VITE_API_URL` | `https://api.teleprt.com` |
+| `VITE_SITE_URL` | `https://teleprt.com` |
+| `VITE_ENV` | `production` |
+
+> El archivo `front/.env.production` ya contiene estos valores para builds locales.
+> Las variables en Cloudflare Pages tienen prioridad.
+
+### Dominio custom
+
+1. Cloudflare Pages → Custom domains → `teleprt.com` y `www.teleprt.com`
+2. Redirigir `www` → apex si lo prefieres
+
+---
+
+## 2. API principal (`server/`)
+
+### Variables críticas en el VPS (`.env`)
+
+Ver plantilla completa en `server/.env.example`.
+
+```env
+NODE_ENV=production
+PORT=3000
+SITE_URL=https://teleprt.com
+COOKIE_DOMAIN=.teleprt.com
+ALLOWED_ORIGINS=https://teleprt.com,https://www.teleprt.com,https://front-teleprt.pages.dev,https://admin.teleprt.com
+```
+
+### DNS
+
+| Registro | Destino |
+|----------|---------|
+| `teleprt.com` | Cloudflare Pages (frontend) |
+| `www.teleprt.com` | Cloudflare Pages |
+| `api.teleprt.com` | IP del VPS (proxy Nginx → :3000) |
+| `admin.teleprt.com` | Panel admin (opcional) |
+
+### Nginx (ejemplo api.teleprt.com)
+
+```nginx
+server {
+  listen 443 ssl http2;
+  server_name api.teleprt.com;
+  # certbot / Cloudflare origin cert...
+
+  location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+```
+
+---
+
+## 3. Firebase (Google Sign-In)
+
+1. [Firebase Console](https://console.firebase.google.com/) → proyecto `stream-inbeta-a37dd`
+2. Authentication → Settings → **Authorized domains**
+3. Agregar:
+   - `teleprt.com`
+   - `www.teleprt.com`
+   - `front-teleprt.pages.dev`
+
+---
+
+## 4. Mixed Content (HTTPS → HTTP)
+
+El frontend en Cloudflare usa **HTTPS**. La API **debe** estar en HTTPS (`https://api.teleprt.com`).
+No uses `http://IP` en `VITE_API_URL` en producción.
+
+---
+
+## 5. Archivos de configuración incluidos
 
 | Archivo | Propósito |
 |---------|-----------|
-| `front/.env.production` | Variables de entorno para producción |
-| `front/public/_redirects` | Enrutamiento SPA (evita 404 al recargar) |
-| `front/public/_headers` | Headers de seguridad HTTP |
-| `front/wrangler.toml` | Configuración de Cloudflare Pages |
-| `front/src/utils/axiosConfig.js` | Configuración global de axios con baseURL |
-
-## Flujo de Llamadas API
-
-En producción, todas las llamadas axios usan:
-- **baseURL**: `http://89.167.94.4/api`
-- Las rutas relativas como `/videos/random` se resuelven como `http://89.167.94.4/api/videos/random`
-
-En desarrollo, el proxy de CRA redirige:
-- `/api/*` → `http://localhost:5000/api/*`
-
-## Notas Importantes
-
-### ⚠️ CRÍTICO: Mixed Content (HTTPS → HTTP)
-
-El frontend en Cloudflare Pages usa **HTTPS**. Si el backend (`89.167.94.4`) usa **HTTP**, los navegadores bloquearán todas las peticiones con el error:
-```
-Mixed Content: The page at 'https://...' was loaded over HTTPS, but requested an insecure XMLHttpRequest endpoint 'http://89.167.94.4/api/...'
-```
-
-**Soluciones (elige una):**
-
-**Opción A — Cloudflare Tunnel (recomendada, gratis):**
-1. Instala `cloudflared` en el servidor: `curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared`
-2. Autentica: `cloudflared tunnel login`
-3. Crea un tunnel: `cloudflared tunnel create stream-in-backend`
-4. Configura el tunnel para exponer el puerto 5000 con un subdominio HTTPS
-5. Actualiza `REACT_APP_API_URL` en `.env.production` con la URL HTTPS del tunnel
-
-**Opción B — Nginx + Let's Encrypt:**
-```bash
-# En el servidor 89.167.94.4
-apt install nginx certbot python3-certbot-nginx
-certbot --nginx -d api.tudominio.com
-# Configura Nginx como reverse proxy al puerto 5000
-```
-Luego actualiza `REACT_APP_API_URL=https://api.tudominio.com`
-
-**Opción C — Certificado SSL directo en Node.js:**
-Configura HTTPS directamente en el servidor Express con un certificado SSL.
+| `front/.env.production` | Variables Vite para build |
+| `front/public/_redirects` | SPA routing (Cloudflare Pages) |
+| `front/public/_headers` | Headers de seguridad + cache |
+| `front/functions/[[path]].js` | OG tags para crawlers |
+| `front/wrangler.toml` | Nombre proyecto Pages: `teleprt-frontend` |
+| `server/.env.example` | Plantilla API producción |
 
 ---
 
-### ⚠️ Firebase OAuth: Dominio no autorizado
+## 6. Checklist pre-lanzamiento
 
-Si usas Google Sign-In con Firebase, debes agregar el dominio de Cloudflare Pages a los dominios autorizados:
-
-1. Ve a [Firebase Console](https://console.firebase.google.com/)
-2. Selecciona el proyecto `stream-inbeta-a37dd`
-3. Authentication → Settings → **Authorized domains**
-4. Agrega: `front-streamin.pages.dev` (y el subdominio específico si es necesario)
-
----
-
-### CORS en el backend
-
-El backend debe tener el dominio de Cloudflare Pages en `ALLOWED_ORIGINS`:
-```env
-ALLOWED_ORIGINS=https://front-streamin.pages.dev,https://a9e4016b.front-streamin.pages.dev
-```
+- [ ] `VITE_API_URL=https://api.teleprt.com` en Cloudflare Pages
+- [ ] `VITE_SITE_URL=https://teleprt.com` en Cloudflare Pages
+- [ ] `COOKIE_DOMAIN=.teleprt.com` en server `.env`
+- [ ] `ALLOWED_ORIGINS` incluye teleprt.com + Pages preview
+- [ ] SSL en `api.teleprt.com`
+- [ ] Dominios Firebase autorizados
+- [ ] `TELEPRT_PANEL_API_KEY` igual en API y panel admin
+- [ ] B2 CORS actualizado (`npm run setup-b2-cors --prefix server`)

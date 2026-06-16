@@ -798,12 +798,12 @@ export const PlaylistPlayerPage = () => {
   useEffect(() => {
     const item = playlist?.videos?.[currentIndex];
     if (item?.videoTitle && !isVideoDeleted(item)) {
-      document.title = `${item.videoTitle} | stream-in`;
+      document.title = `${item.videoTitle} | teleprt`;
     } else if (playlist?.name) {
-      document.title = `${playlist.name} | stream-in`;
+      document.title = `${playlist.name} | teleprt`;
     }
     return () => {
-      document.title = "stream-in";
+      document.title = "teleprt";
     };
   }, [playlist, currentIndex]);
 

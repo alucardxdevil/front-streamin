@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import LogoStream from "../img/logo.png";
+import LogoStream from "../img/logo-light.png";
 
 // const Container = styled.div`
 //   position: sticky;

@@ -60,7 +60,7 @@ const DonationButton = styled.a`
   }
 `;
 
-const BetaNoticeBar = ({ donationUrl = "https://ko-fi.com/streamincom" }) => {
+const BetaNoticeBar = ({ donationUrl = "https://ko-fi.com/teleprt" }) => {
   const { t } = useLanguage();
   const location = useLocation();
   const barRef = useRef(null);

@@ -9,7 +9,7 @@ import { useLanguage } from "../utils/LanguageContext";
 import { useSelector } from "react-redux";
 import { AiOutlineVideoCameraAdd } from "react-icons/ai";
 import Navbbar from "./Navbbar";
-import LogoNav from "../img/logo-banner.png";
+import LogoNav from "../img/logo-navbar.png";
 import defaultProfile from '../img/profileUser.png'
 
 const Container = styled.div`

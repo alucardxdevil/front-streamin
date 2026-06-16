@@ -663,7 +663,7 @@ const Advertise = () => {
           <ContactButton href="https://wa.me/529961234567" target="_blank" whatsapp>
             <WhatsAppIcon /> {t("advertiseContactWhatsApp")}
           </ContactButton>
-          <ContactButton href="mailto:publicidad@stream-in.com" email>
+          <ContactButton href="mailto:publicidad@teleprt.com" email>
             <EmailOutlinedIcon /> {t("advertiseContactEmail")}
           </ContactButton>
         </ContactOptions>

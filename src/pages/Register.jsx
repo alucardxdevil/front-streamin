@@ -12,7 +12,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import LogoImg from "../img/logo.png";
+import LogoImg from "../img/logo-light.png";
 import { useLanguage } from "../utils/LanguageContext";
 import { buildGoogleAuthPayload, getAuthErrorMessage } from "../utils/authHelpers";
 
@@ -495,7 +495,7 @@ const Register = () => {
           {/* Left: Register Form */}
           <LeftPanel>
             <FormBox>
-              <Logo src={LogoImg} alt="stream-in" />
+              <Logo src={LogoImg} alt="teleprt" />
               <Title>{t("registerTitle")}</Title>
               <Subtitle>{t("subtitleRegister")}</Subtitle>
 
