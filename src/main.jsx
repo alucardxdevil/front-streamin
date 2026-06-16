@@ -5,6 +5,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App.jsx';
 import { persistor, store } from './redux/store';
+import './index.css';
 import './utils/axiosConfig';
 import { initCsrf } from './utils/csrf';
 

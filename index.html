@@ -57,10 +57,6 @@
     <meta name="twitter:image" content="https://teleprt.com/logo-icon.png" />
 
     <!-- Fuentes -->
-    <!-- Cargamos Roboto sin bloquear el render: el navegador descarga la hoja
-         con media="print" (baja prioridad, no bloquea) y al terminar la
-         promovemos a media="all" con onload. <noscript> garantiza la fuente
-         sin JS. Ahorra ~200–400 ms de FCP en cold visit. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -75,30 +71,14 @@
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
       />
     </noscript>
-    <style>
-      /* Sólo aplicamos la fuente a elementos visibles + reset de margen global.
-         Mantener `font-family` en `*` obliga a recalcular estilos en cada nodo
-         (incluye scripts/meta), así que lo limitamos a html/body y heredamos. */
-      * {
-        margin: 0;
-      }
-      html,
-      body {
-        font-family: "Roboto", sans-serif;
-      }
-    </style>
   </head>
   <body>
     <noscript>teleprt is the platform for uploading, sharing, and discovering videos from independent creators. Explore trends,
     follow your favorite creators, and enjoy high-quality content.</noscript>
     <div id="root"></div>
 
-    <!-- App: el módulo principal arranca primero (es lo que pinta la UI). -->
     <script type="module" src="/src/main.jsx"></script>
 
-    <!-- Google Adsense: cargado al final del body y con defer para que NO
-         compita con el render inicial de la app. AdSense no es crítico para
-         el FCP, así que lo bajamos de prioridad. -->
     <script
       defer
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7445263311603329"
