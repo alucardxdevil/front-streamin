@@ -7,6 +7,7 @@ export const darkTheme = {
   navBg: "#0d0d0d",
   navBorder: "#333",
   accent: "#0b67dc",
+  isLightTheme: false,
 };
 
 export const lightTheme = {
@@ -18,6 +19,7 @@ export const lightTheme = {
   navBg: "#ffffff",
   navBorder: "#d0d3da",
   accent: "#e94560",
+  isLightTheme: true,
 };
 
 export const sunsetTheme = {
@@ -29,6 +31,7 @@ export const sunsetTheme = {
   navBg: "#120818",
   navBorder: "#5a2040",
   accent: "#e94560",
+  isLightTheme: false,
 };
 
 export const sunriseTheme = {
@@ -40,6 +43,7 @@ export const sunriseTheme = {
   navBg: "#ffecd2",
   navBorder: "#f0c27b",
   accent: "#e94560",
+  isLightTheme: true,
 };
 
 export const vintageTheme = {
@@ -51,6 +55,7 @@ export const vintageTheme = {
   navBg: "#f0c27b",
   navBorder: "#deb887",
   accent: "#e94560",
+  isLightTheme: true,
 };
 
 export const cyberpunkTheme = {
@@ -62,4 +67,5 @@ export const cyberpunkTheme = {
   navBg: "#0f0f0f",
   navBorder: "#333333",
   accent: "#e94560",
+  isLightTheme: false,
 };

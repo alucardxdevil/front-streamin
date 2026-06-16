@@ -4,7 +4,7 @@ import * as AiIcons from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { getSidebarData } from "./SidebarData";
 import "../App.css";
-import LogoNav from "../img/logo-light.png";
+import LogoNav from "../img/logo-navbar.png";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { useLanguage } from "../utils/LanguageContext";

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -271,15 +271,14 @@ const NameChannel = styled.span`
   }
 `;
 
-const LIGHT_THEMES = ["light", "sunrise", "vintage"];
-
 const Navbar = ({ themeMode, setThemeMode }) => {
+  const theme = useTheme();
   const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const { t } = useLanguage();
-  const logoSrc = LIGHT_THEMES.includes(themeMode) ? LogoLight : LogoDark;
+  const logoSrc = theme.isLightTheme ? LogoLight : LogoDark;
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -307,7 +306,7 @@ const Navbar = ({ themeMode, setThemeMode }) => {
         <Wrapper>
           <Left>
             <Navbbar />
-            <ImgLogo src={logoSrc} alt="Logo de stream-In" onClick={() => navigate(`/`)} />
+            <ImgLogo key={themeMode} src={logoSrc} alt="Logo de stream-In" onClick={() => navigate(`/`)} />
           </Left>
 
           <Center>
