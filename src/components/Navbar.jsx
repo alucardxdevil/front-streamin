@@ -9,7 +9,8 @@ import { useLanguage } from "../utils/LanguageContext";
 import { useSelector } from "react-redux";
 import { AiOutlineVideoCameraAdd } from "react-icons/ai";
 import Navbbar from "./Navbbar";
-import LogoNav from "../img/logo-navbar.png";
+import LogoDark from "../img/logo-dark.png";
+import LogoLight from "../img/logo-light.png";
 import defaultProfile from '../img/profileUser.png'
 
 const Container = styled.div`
@@ -270,12 +271,15 @@ const NameChannel = styled.span`
   }
 `;
 
+const LIGHT_THEMES = ["light", "sunrise", "vintage"];
+
 const Navbar = ({ themeMode, setThemeMode }) => {
   const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const { t } = useLanguage();
+  const logoSrc = LIGHT_THEMES.includes(themeMode) ? LogoLight : LogoDark;
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -303,7 +307,7 @@ const Navbar = ({ themeMode, setThemeMode }) => {
         <Wrapper>
           <Left>
             <Navbbar />
-            <ImgLogo src={LogoNav} alt="Logo de stream-In" onClick={() => navigate(`/`)} />
+            <ImgLogo src={logoSrc} alt="Logo de stream-In" onClick={() => navigate(`/`)} />
           </Left>
 
           <Center>
