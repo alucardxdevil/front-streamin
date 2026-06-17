@@ -10,7 +10,7 @@ import {
   SEO_DEFAULT_TITLE,
   SEO_DEFAULT_DESCRIPTION,
   SEO_DEFAULT_KEYWORDS,
-} from '../../../shared/seoBrand.js'
+} from '../../shared/seoBrand.js'
 
 const seoConfig = {
   siteName: BRAND_NAME,
