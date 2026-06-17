@@ -15,6 +15,7 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import LogoImg from "../img/logo-light.png";
 import { useLanguage } from "../utils/LanguageContext";
 import { buildGoogleAuthPayload, getAuthErrorMessage } from "../utils/authHelpers";
+import { initCsrf } from "../utils/csrf";
 
 /* ============= Animations ============= */
 const fadeIn = keyframes`
@@ -470,10 +471,8 @@ const Register = () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken(true);
-      const res = await axios.post("/auth/google", {
-        ...buildGoogleAuthPayload(result.user),
-        idToken,
-      });
+      await initCsrf();
+      const res = await axios.post("/auth/google", buildGoogleAuthPayload(result.user, idToken));
       const { accessToken: _token, ...user } = res.data || {};
       dispatch(loginSuccess(user));
       navigate("/");
