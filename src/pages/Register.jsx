@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, useTheme } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice";
@@ -12,7 +12,8 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import LogoImg from "../img/logo-light.png";
+import LogoDark from "../img/logo-dark.png";
+import LogoLight from "../img/logo-light.png";
 import { useLanguage } from "../utils/LanguageContext";
 import { buildGoogleAuthPayload, getAuthErrorMessage } from "../utils/authHelpers";
 import { initCsrf } from "../utils/csrf";
@@ -373,6 +374,8 @@ const StrengthBar = styled.div`
 
 /* ============= Component ============= */
 const Register = () => {
+  const theme = useTheme();
+  const logoSrc = theme.isLightTheme ? LogoLight : LogoDark;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -494,7 +497,7 @@ const Register = () => {
           {/* Left: Register Form */}
           <LeftPanel>
             <FormBox>
-              <Logo src={LogoImg} alt="teleprt" />
+              <Logo src={logoSrc} alt="teleprt" />
               <Title>{t("registerTitle")}</Title>
               <Subtitle>{t("subtitleRegister")}</Subtitle>
 

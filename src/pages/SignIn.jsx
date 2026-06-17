@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, useTheme } from "styled-components";
 import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice";
 import { auth, provider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
@@ -11,7 +11,8 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import LogoImg from "../img/logo-light.png";
+import LogoDark from "../img/logo-dark.png";
+import LogoLight from "../img/logo-light.png";
 import { useLanguage } from "../utils/LanguageContext";
 import { buildGoogleAuthPayload, getAuthErrorMessage } from "../utils/authHelpers";
 import { initCsrf } from "../utils/csrf";
@@ -394,6 +395,8 @@ const PrimaryButtonSmall = styled(PrimaryButton)`
 
 /* ============= Component ============= */
 const SignIn = () => {
+  const theme = useTheme();
+  const logoSrc = theme.isLightTheme ? LogoLight : LogoDark;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -489,7 +492,7 @@ const SignIn = () => {
           {/* Left: Email Login */}
           <LeftPanel>
             <FormBox>
-              <Logo src={LogoImg} alt="teleprt" />
+              <Logo src={logoSrc} alt="teleprt" />
               <Title>{t("signinTitle")}</Title>
               <Subtitle>{t("signinSubtitle")}</Subtitle>
 

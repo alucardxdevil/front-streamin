@@ -69,6 +69,14 @@ const MenuBars = styled.div`
   &:hover {
     transform: scale(1.1);
   }
+
+  @media (max-width: 768px) {
+    font-size: 1.35rem;
+    padding: 8px 6px 8px 0;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+  }
 `;
 
 const NavMenu = styled.nav`
@@ -97,6 +105,12 @@ const Navbar = styled.div`
   padding: 0 16px;
   position: relative;
   z-index: 1050;
+
+  @media (max-width: 768px) {
+    height: auto;
+    padding: 0;
+    flex-shrink: 0;
+  }
 `;
 
 const NavbarToggle = styled.div`

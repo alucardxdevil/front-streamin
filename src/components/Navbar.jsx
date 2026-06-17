@@ -23,6 +23,11 @@ const Container = styled.div`
   z-index: 10;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   transition: all 0.3s ease;
+
+  @media (max-width: 768px) {
+    height: 56px;
+    overflow: hidden;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -32,12 +37,26 @@ const Wrapper = styled.div`
   height: 100%;
   padding: 0 20px;
   width: 100%;
+
+  @media (max-width: 768px) {
+    position: relative;
+    padding: 0 10px;
+    gap: 0;
+  }
 `;
 
 const Left = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
+  min-width: 0;
+
+  @media (max-width: 768px) {
+    flex: 0 1 auto;
+    gap: 2px;
+    z-index: 2;
+    max-width: calc(50% - 24px);
+  }
 `;
 
 const Center = styled.div`
@@ -45,6 +64,23 @@ const Center = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  min-width: 0;
+
+  @media (max-width: 768px) {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    flex: none;
+    width: auto;
+    z-index: 3;
+    pointer-events: none;
+
+    & a,
+    & > * {
+      pointer-events: auto;
+    }
+  }
 `;
 
 const Right = styled.div`
@@ -53,6 +89,19 @@ const Right = styled.div`
   justify-content: flex-end;
   align-items: center;
   gap: 20px;
+  min-width: 0;
+
+  @media (max-width: 768px) {
+    flex: 0 1 auto;
+    margin-left: auto;
+    gap: 6px;
+    z-index: 2;
+    max-width: calc(50% - 24px);
+  }
+
+  @media (max-width: 400px) {
+    gap: 4px;
+  }
 `;
 
 const ImgLogo = styled.img`
@@ -65,7 +114,16 @@ const ImgLogo = styled.img`
   }
 
   @media (max-width: 768px) {
-    height: 70px;
+    height: 44px;
+    width: auto;
+    max-width: 120px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 400px) {
+    height: 38px;
+    max-width: 96px;
   }
 `;
 
@@ -109,10 +167,13 @@ const SearchIconWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
     border-radius: 50%;
     background-color: ${({ theme }) => theme.bgLighter || "#1a1a1a"};
+    font-size: 22px;
+    flex-shrink: 0;
   }
 `;
 
@@ -163,6 +224,8 @@ const MobileSearchContainer = styled.div`
 
   @media (max-width: 768px) {
     display: ${({ show }) => (show ? "flex" : "none")};
+    height: 56px;
+    padding: 0 10px;
   }
 `;
 
@@ -224,6 +287,17 @@ const MobileButton = styled.button`
 
   @media (max-width: 768px) {
     display: flex;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 10px;
+    white-space: nowrap;
+    line-height: 1.2;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 380px) {
+    padding: 5px 8px;
+    font-size: 11px;
   }
 `;
 
@@ -242,6 +316,10 @@ const SettingsIcon = styled.div`
     color: ${({ theme }) => theme.accent || "#e94560"};
     background-color: ${({ theme }) => theme.soft || "#333"};
   }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const User = styled.div`
@@ -253,7 +331,8 @@ const User = styled.div`
   cursor: pointer;
 
   @media (max-width: 768px) {
-    padding: 5px;
+    padding: 0;
+    gap: 0;
   }
 `;
 
@@ -263,6 +342,28 @@ const Avatar = styled.img`
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid ${({ theme }) => theme.accent || "#e94560"};
+
+  @media (max-width: 768px) {
+    width: 36px;
+    height: 36px;
+    border-width: 2px;
+  }
+`;
+
+const UploadIcon = styled(AiOutlineVideoCameraAdd)`
+  font-size: 28px;
+  color: #e94560;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    padding: 6px;
+    box-sizing: border-box;
+  }
 `;
 
 const NameChannel = styled.span`
@@ -338,10 +439,7 @@ const Navbar = ({ themeMode, setThemeMode }) => {
             </SearchIconWrapper>
 
             {currentUser ? (
-              <AiOutlineVideoCameraAdd
-                style={{ fontSize: 28, color: "#e94560", cursor: "pointer" }}
-                onClick={() => navigate("/upload")}
-              />
+              <UploadIcon onClick={() => navigate("/upload")} title={t("upload")} />
             ) : (
               <>
                 <Link to="/signin" style={{ textDecoration: "none" }}>
