@@ -6,20 +6,14 @@
 export const isProd = import.meta.env.PROD
 export const isDev = import.meta.env.DEV
 
-const LEGACY_API_HOST = 'api.stream-in.com'
 const PROD_API_URL = 'https://api.teleprt.com'
 const PROD_SITE_URL = 'https://teleprt.com'
 
-/** Normaliza URLs legacy del rebrand stream-in → teleprt */
+/** Normaliza URLs legacy del rebrand stream-in → teleprt (sin log en consola) */
 function normalizeBrandUrl(url, { api = false } = {}) {
   if (!url) return url
   let normalized = String(url).trim().replace(/\/$/, '')
   if (normalized.includes('stream-in.com')) {
-    if (isProd) {
-      console.warn(
-        `[env] URL legacy detectada (${normalized}); usando ${api ? PROD_API_URL : PROD_SITE_URL}`
-      )
-    }
     normalized = api ? PROD_API_URL : PROD_SITE_URL
   }
   return normalized

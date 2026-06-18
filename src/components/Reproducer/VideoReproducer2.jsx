@@ -150,22 +150,6 @@ const PlayerWrapper = styled.div`
     max-height: calc(100dvh - var(--player-top-offset, 56px) - var(--beta-notice-height, 0px));
   }
 
-  /* Pantalla completa: ocupar viewport real (sin padding 16:9 ni límites móviles) */
-  ${({ $fullscreen }) =>
-    $fullscreen &&
-    `
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100vw !important;
-    height: 100dvh !important;
-    max-width: 100vw !important;
-    max-height: 100dvh !important;
-    padding-top: 0 !important;
-    border-radius: 0 !important;
-    transform: none !important;
-    box-shadow: none !important;
-  `}
-
   &:fullscreen,
   &:-webkit-full-screen {
     width: 100vw;
@@ -176,6 +160,10 @@ const PlayerWrapper = styled.div`
     border-radius: 0;
     transform: none;
     box-shadow: none;
+    bottom: auto !important;
+    right: auto !important;
+    inset: 0;
+    z-index: auto;
   }
 `;
 
@@ -384,11 +372,10 @@ const BottomControls = styled.div`
     padding: 0 8px max(8px, env(safe-area-inset-bottom, 0px));
   }
 
-  ${({ $fullscreen }) =>
-    $fullscreen &&
-    `
+  ${PlayerWrapper}:fullscreen &,
+  ${PlayerWrapper}:-webkit-full-screen & {
     padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
-  `}
+  }
 `;
 
 /* ===== Timeline / Progress Bar ===== */
@@ -1556,7 +1543,25 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
   useEffect(() => {
     if (!screenfull.isEnabled) return;
-    const onChange = () => setIsFullscreen(screenfull.isFullscreen);
+    const onChange = () => {
+      const fs = screenfull.isFullscreen;
+      setIsFullscreen(fs);
+      if (fs) {
+        setIsStickyActive(false);
+      }
+      const video = videoElRef.current;
+      if (!video || !playingRef.current) return;
+      requestAnimationFrame(() => {
+        if (video.paused) {
+          video.play().catch(() => {});
+        }
+        try {
+          hlsRef.current?.startLoad?.(-1);
+        } catch (_) {
+          /* noop */
+        }
+      });
+    };
     screenfull.on("change", onChange);
     return () => screenfull.off("change", onChange);
   }, []);
@@ -2220,6 +2225,10 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        if (screenfull.isEnabled && screenfull.isFullscreen) {
+          setIsStickyActive(false);
+          return;
+        }
         const isVisible = entry.isIntersecting;
         // Activar mini-player solo en desktop cuando el player sale del viewport
         if (!isVisible && playingRef.current && !stickyDismissed && isDesktop()) {
@@ -2397,13 +2406,12 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           onClickCapture={handleMobileClickCapture}
           onPointerUp={handleStagePointerUp}
           $hideCursor={hidePlayerCursor}
-          $sticky={isStickyActive}
-          $fullscreen={isFullscreen}
+          $sticky={isStickyActive && !isFullscreen}
           $menuOpen={menuOpen}
         >
           {/* Botón para cerrar el mini-player (solo desktop) */}
           <StickyCloseBtn
-            $visible={isStickyActive}
+            $visible={isStickyActive && !isFullscreen}
             data-player-control
             onClick={(e) => {
               e.stopPropagation();
@@ -2644,7 +2652,7 @@ export default function VideoReproducer({ onVideoEnd, countdown = 5, onViewCount
           </CenterControls>
 
           {/* Bottom controls */}
-          <BottomControls $fullscreen={isFullscreen}>
+          <BottomControls>
             {/* Timeline: se oculta en mini-player */}
             <MiniTimelineContainer $sticky={isStickyActive}>
               <TimelineContainer
