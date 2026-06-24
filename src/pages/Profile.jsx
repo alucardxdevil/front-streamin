@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/userSlice";
 import styled, { keyframes } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { FaPencilAlt, FaTwitter, FaInstagram, FaFacebook, FaGlobe, FaTimes, FaCheck, FaSearchPlus } from "react-icons/fa";
+import { FaPencilAlt, FaTwitter, FaInstagram, FaFacebook, FaGlobe, FaTimes, FaCheck, FaSearchPlus, FaEllipsisV, FaSignOutAlt, FaUserTimes } from "react-icons/fa";
 import { UploadProfile } from "../components/UploadProfile";
 import axios from "axios";
 import defaultProfile from "../img/profileUser.png";
@@ -480,86 +480,88 @@ const CancelButton = styled.button`
   }
 `;
 
-const LogoutButton = styled.button`
-  background: transparent;
-  border: 1px solid #e74c3c;
-  color: #e74c3c;
-  font-weight: 500;
-  font-size: 15px;
-  border-radius: 12px;
-  padding: 10px 18px;
-  cursor: pointer;
+const ProfileMenu = styled.div`
   position: absolute;
-  right: 20px;
-  top: 20px;
-  transition: background 0.25s ease, transform 0.25s ease;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+
+  @media (max-width: 768px) {
+    top: 12px;
+    right: 12px;
+  }
+`;
+
+const MenuTrigger = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: ${({ theme }) => theme.text || "#fff"};
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
 
   &:hover {
-    background: rgba(231, 76, 60, 0.1);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.12);
+    transform: scale(1.05);
   }
 
   @media (max-width: 768px) {
-    position: relative;
-    right: auto;
-    top: auto;
-    margin-top: 16px;
-    width: 100%;
-    justify-content: center;
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
   }
 `;
 
-const DangerZone = styled.div`
-  width: 85%;
-  margin: 18px auto 0;
-  padding: 14px;
+const DropdownMenu = styled.div`
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 210px;
+  background: ${({ theme }) => theme.bgLighter || "#222"};
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  background: rgba(231, 76, 60, 0.08);
-  border: 1px solid rgba(231, 76, 60, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  animation: ${fadeIn} 0.2s ease;
+  z-index: 20;
+
+  @media (max-width: 768px) {
+    min-width: 190px;
+  }
+`;
+
+const MenuOption = styled.button`
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${({ $danger, theme }) => ($danger ? "#e74c3c" : theme.text || "#fff")};
+  cursor: pointer;
+  transition: background 0.2s ease;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 10px;
 
-  @media (max-width: 480px) {
-    width: 100%;
-  }
-`;
-
-const DangerTitle = styled.h3`
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.text || "#fff"};
-`;
-
-const DangerText = styled.p`
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.4;
-  color: ${({ theme }) => theme.textSoft || "#bbb"};
-`;
-
-const DeleteAccountButton = styled.button`
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #e74c3c;
-  background: transparent;
-  color: #e74c3c;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.25s ease, transform 0.25s ease;
-
   &:hover {
-    background: rgba(231, 76, 60, 0.12);
-    transform: translateY(-1px);
+    background: ${({ $danger }) =>
+      $danger ? "rgba(231, 76, 60, 0.12)" : "rgba(255, 255, 255, 0.08)"};
   }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    transform: none;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   }
 `;
 
@@ -654,7 +656,9 @@ export const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const accountMenuRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [deleteAccountError, setDeleteAccountError] = useState("");
@@ -706,7 +710,32 @@ export const Profile = () => {
     fetchUserStats();
   }, [currentUser?.slug]);
 
+  useEffect(() => {
+    if (!accountMenuOpen) return;
+
+    const handleClickOutside = (e) => {
+      if (accountMenuRef.current && !accountMenuRef.current.contains(e.target)) {
+        setAccountMenuOpen(false);
+      }
+    };
+
+    const handleEscape = (e) => {
+      if (e.key === "Escape") setAccountMenuOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [accountMenuOpen]);
+
   const handleLogout = async () => {
+    setAccountMenuOpen(false);
     try {
       await axios.post("/auth/logout");
       dispatch(logout());
@@ -790,6 +819,39 @@ export const Profile = () => {
         </LeftImageContainer>
 
         <ContentContainer>
+          <ProfileMenu ref={accountMenuRef}>
+            <MenuTrigger
+              type="button"
+              onClick={() => setAccountMenuOpen((prev) => !prev)}
+              aria-label={t("accountOptions") || "Account options"}
+              aria-expanded={accountMenuOpen}
+              aria-haspopup="menu"
+            >
+              <FaEllipsisV />
+            </MenuTrigger>
+            {accountMenuOpen && (
+              <DropdownMenu role="menu">
+                <MenuOption type="button" role="menuitem" onClick={handleLogout}>
+                  <FaSignOutAlt size={14} />
+                  {t("closeSession")}
+                </MenuOption>
+                <MenuOption
+                  type="button"
+                  role="menuitem"
+                  $danger
+                  onClick={() => {
+                    setAccountMenuOpen(false);
+                    setShowDeleteModal(true);
+                  }}
+                  disabled={isDeletingAccount}
+                >
+                  <FaUserTimes size={14} />
+                  {t("deleteAccount")}
+                </MenuOption>
+              </DropdownMenu>
+            )}
+          </ProfileMenu>
+
           <ProfileImageWrapper onClick={() => setShowProfilePreview(true)} aria-label="Preview profile image">
             <ProfileImage
               src={currentUser?.img || defaultProfile}
@@ -912,16 +974,6 @@ export const Profile = () => {
               </>
             )}
           </SocialLinksContainer>
-
-          <DangerZone>
-            <DangerTitle>{t("deleteAccount")}</DangerTitle>
-            <DangerText>{t("deleteAccountDesc")}</DangerText>
-            <DeleteAccountButton onClick={() => setShowDeleteModal(true)} disabled={isDeletingAccount}>
-              {t("deleteAccount")}
-            </DeleteAccountButton>
-          </DangerZone>
-
-          <LogoutButton onClick={handleLogout}>{t("closeSession")}</LogoutButton>
         </ContentContainer>
       </Container>
 
