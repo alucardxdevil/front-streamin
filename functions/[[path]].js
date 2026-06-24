@@ -18,15 +18,15 @@
 
 // ── Configuración (fuente única: shared/seoBrand.js) ────────────────────────────
 
+import { assertNoLegacyBrand } from './seoBrand.js';
 import {
-  BRAND_NAME,
-  SEO_DEFAULT_TITLE,
-  SEO_DEFAULT_DESCRIPTION,
-} from './seoBrand.js';
-
-const API_BASE = 'https://api.teleprt.com'
-const SITE_URL = 'https://teleprt.com'
-const SITE_NAME = BRAND_NAME
+  API_BASE,
+  SITE_URL,
+  SITE_NAME,
+  buildDefaultOgHtml,
+  buildOgHtmlFromPathname,
+  ogResponse,
+} from './ogHtml.js';
 
 // User-Agent patterns de crawlers conocidos
 const CRAWLER_PATTERNS = [
@@ -169,7 +169,10 @@ export async function onRequest(context) {
         signal: AbortSignal.timeout(10000),
       });
       if (sitemapResponse.ok) {
-        const xml = await sitemapResponse.text();
+        const xml = (await sitemapResponse.text()).replace(
+          /https:\/\/stream-in\.com/gi,
+          SITE_URL
+        );
         return new Response(xml, {
           status: 200,
           headers: {
@@ -203,44 +206,56 @@ export async function onRequest(context) {
   const ogEndpoint = getOgEndpoint(pathname);
   if (ogEndpoint) {
     try {
-      const ogResponse = await fetch(ogEndpoint, {
-        headers: {
-          'User-Agent': 'CloudflarePages-OGProxy/1.0',
-          'Accept': 'text/html',
-        },
-        signal: AbortSignal.timeout(5000),
-      });
+      let html = null;
 
-      if (ogResponse.ok) {
-        const html = await ogResponse.text();
-        return new Response(html, {
-          status: 200,
+      try {
+        const ogResponse = await fetch(ogEndpoint, {
           headers: {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Cache-Control': 'public, max-age=3600, s-maxage=86400',
-            'Vary': 'User-Agent',
+            'User-Agent': 'CloudflarePages-OGProxy/1.0',
+            Accept: 'text/html',
           },
+          signal: AbortSignal.timeout(5000),
         });
+
+        if (ogResponse.ok) {
+          const apiHtml = await ogResponse.text();
+          try {
+            assertNoLegacyBrand(apiHtml);
+            html = apiHtml;
+          } catch {
+            console.warn(`Legacy brand in OG API for ${pathname}, rebuilding locally`);
+          }
+        } else if (ogResponse.status === 404) {
+          html = await buildOgHtmlFromPathname(pathname);
+          if (!html) {
+            return new Response(build404Html(pathname), {
+              status: 404,
+              headers: {
+                'Content-Type': 'text/html; charset=utf-8',
+                'Cache-Control': 'public, max-age=300',
+                Vary: 'User-Agent',
+              },
+            });
+          }
+        } else {
+          console.error(`OG endpoint returned ${ogResponse.status} for ${ogEndpoint}`);
+        }
+      } catch (err) {
+        console.error(`Error fetching OG API: ${err.message}`);
       }
 
-      // Si el recurso no existe en el servidor (404), devolver 404 al crawler
-      if (ogResponse.status === 404) {
-        return new Response(build404Html(pathname), {
-          status: 404,
-          headers: {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Cache-Control': 'public, max-age=300',
-            'Vary': 'User-Agent',
-          },
-        });
+      if (!html) {
+        html = await buildOgHtmlFromPathname(pathname);
       }
 
-      // Otros errores del servidor → fallback a SPA
-      console.error(`OG endpoint returned ${ogResponse.status} for ${ogEndpoint}`);
-      return next();
+      if (html) {
+        return ogResponse(html);
+      }
+
+      return ogResponse(buildDefaultOgHtml());
     } catch (err) {
-      console.error(`Error fetching OG: ${err.message}`);
-      return next();
+      console.error(`Error building OG for ${pathname}: ${err.message}`);
+      return ogResponse(buildDefaultOgHtml());
     }
   }
 

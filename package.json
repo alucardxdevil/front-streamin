@@ -40,6 +40,7 @@
     "predev": "node scripts/copy-seo-brand.js",
     "prebuild": "node scripts/copy-seo-brand.js",
     "prebuild:prod": "node scripts/copy-seo-brand.js",
+    "validate:seo": "node scripts/validate-crawler-og.js",
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
